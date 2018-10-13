@@ -1,0 +1,39 @@
+package com.github.nelsonwilliam.invscp.presenter;
+
+import com.github.nelsonwilliam.invscp.view.View;
+
+/**
+ * Presenters são responsáveis pela ‘conexão’ entre a View e os Models. Cada
+ * Presenter é mapeado diretamente a uma interface de View específica
+ * (&lt;V&gt;). <br>
+ * <br>
+ * Seu fluxo padrão é: inscrever-se na View para receber notificações sobre as
+ * interações de usuário; para cada interação, fazer as atualizações apropriadas
+ * no Model; obter os dados atualizados do Model e utilizar a interface da View
+ * para atualizar os dados que são exibidos. <br>
+ * <br>
+ * Além disso, o Presenter pode controlar o fluxo da aplicação, decidindo quais
+ * Views exibir de acordo com o estado atual.
+ * 
+ * @param <V>
+ *            Tipo da interface de View associada a este Presenter.
+ */
+public abstract class Presenter<V extends View> {
+
+	protected V view;
+
+	public Presenter(V view) {
+		this.view = view;
+		setupViewListeners();
+	}
+
+	/**
+	 * Adiciona os ouvintes da View, para que o Presenter seja notificado das ações
+	 * do usuário.
+	 */
+	protected abstract void setupViewListeners();
+
+	public V getView() {
+		return this.view;
+	}
+}
