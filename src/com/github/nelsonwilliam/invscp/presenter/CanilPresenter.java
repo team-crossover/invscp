@@ -40,8 +40,7 @@ public class CanilPresenter extends Presenter<CanilView> {
 				dog.setId((Integer) model.getValueAt(row, 0));
 				dog.setName((String) model.getValueAt(row, 1));
 				dog.setAge((Integer) model.getValueAt(row, 2));
-				dogRepository.update(dog);
-				updateDogs();
+				onUpdatedDog(dog);
 			}
 		});
 	}
@@ -68,6 +67,14 @@ public class CanilPresenter extends Presenter<CanilView> {
 	private void onDeleteDogs() {
 		List<Dog> dogs = dogRepository.getAll();
 		dogRepository.remove(dogs);
+		updateDogs();
+	}
+
+	/**
+	 * Persiste o cachorro atualizado e atualiza a lsita de cachorros.
+	 */
+	private void onUpdatedDog(Dog dog) {
+		dogRepository.update(dog);
 		updateDogs();
 	}
 
