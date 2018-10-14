@@ -1,6 +1,6 @@
-# invscp
+# InvSCP (Protótipo)
 
-Projeto InvSCP da disciplina "Integração 1" de Engenharia de Software, 2018/2
+Protótipo para testar a arquitetura do projeto InvSCP da disciplina "Integração 1" de Engenharia de Software, 2018/2
 
 ## Ambiente
 
