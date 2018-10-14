@@ -1,149 +1,87 @@
 package com.github.nelsonwilliam.invscp.model.repository;
 
-import java.util.Collections;
 import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 
 import com.github.nelsonwilliam.invscp.model.Model;
 
 /**
- * Os Repositories responsáveis por fazer a comunicação com o Banco de dados,
- * oferecendo todas as consultas necessárias acerca de determinado Model, com
- * base nas necessidades das regras de negócio.
+ * Os Repositories são responsáveis por fazer a comunicação com o Banco de
+ * dados, oferecendo todas as consultas necessárias acerca de determinado Model,
+ * com base nas necessidades das regras de negócio.
  * 
  * @param <M>
  */
-public abstract class Repository<M extends Model> {
-
+public interface Repository<M extends Model> {
 	/**
-	 * Retorna o objeto Class para a classe do Model deste Repository.
+	 * Obtém todos os itens.
 	 * 
 	 * @return
 	 */
-	public abstract Class<M> getModelClass();
-
-	/**
-	 * Obtém todos os itens do Model deste Repository.
-	 * 
-	 * @return
-	 */
-	public List<M> getAll() {
-		EntityManager em = PersistenceManager.getEntityManager();
-		em.getTransaction().begin();
-		try {
-			CriteriaBuilder cb = em.getCriteriaBuilder();
-			CriteriaQuery<M> cq = cb.createQuery(getModelClass());
-			Root<M> rootEntry = cq.from(getModelClass());
-			CriteriaQuery<M> all = cq.select(rootEntry);
-			TypedQuery<M> allQuery = em.createQuery(all);
-			return allQuery.getResultList();
-		} finally {
-			em.getTransaction().commit();
-			em.close();
-		}
-	}
+	List<M> getAll();
 
 	/**
 	 * Obtém o item com o ID especificado.
-	 * 
+	 *
 	 * @param id
 	 * @return
 	 */
-	public M getById(Integer id) {
-		EntityManager em = PersistenceManager.getEntityManager();
-		em.getTransaction().begin();
-		try {
-			return em.find(getModelClass(), id);
-		} finally {
-			em.getTransaction().commit();
-			em.close();
-		}
-	}
+	M getById(Integer id);
 
 	/**
-	 * Adiciona um novo item ao Repository.
-	 * 
+	 * Adiciona um novo item ao Repository. <br>
+	 * Caso o ID do item não seja especificado, o banco de dados gerará um ID
+	 * automáticamente.
+	 *
 	 * @param item
+	 *            Item a ser adicionado.
+	 * @return True se o item foi adicionado com sucesso.
 	 */
-	public void add(M item) {
-		add(Collections.singletonList(item));
-	}
+	boolean add(M item);
 
 	/**
-	 * Adiciona múltiplos novos itens ao Repository.
-	 * 
+	 * Adiciona múltiplos novos itens ao Repository. <br>
+	 * Caso o ID de algum item não seja especificado, o banco de dados gerará um ID
+	 * automáticamente.
+	 *
 	 * @param items
+	 *            Itens a serem adicionados.
+	 * @return True se pelo menos um dos itens tiver sido adicionado com sucesso.
 	 */
-	public void add(Iterable<M> items) {
-		EntityManager em = PersistenceManager.getEntityManager();
-		em.getTransaction().begin();
-		try {
-			for (M item : items) {
-				em.persist(item);
-			}
-		} finally {
-			em.getTransaction().commit();
-			em.close();
-		}
-	}
+	boolean add(Iterable<M> items);
 
 	/**
 	 * Atualiza um item do Repository.
-	 * 
+	 *
 	 * @param item
+	 *            Item a ser atualizado.
+	 * @return True se o item foi atualizado com sucesso.
 	 */
-	public void update(M item) {
-		update(Collections.singletonList(item));
-	}
+	boolean update(M item);
 
 	/**
 	 * Atualiza múltiplos novos itens do Repository.
-	 * 
+	 *
 	 * @param items
+	 *            Itens a serem atualizados.
+	 * @return True se pelo menos um dos itens tiver sido atualizado com sucesso.
 	 */
-	public void update(Iterable<M> items) {
-		EntityManager em = PersistenceManager.getEntityManager();
-		em.getTransaction().begin();
-		try {
-			for (M item : items) {
-				em.merge(item);
-			}
-		} finally {
-			em.getTransaction().commit();
-			em.close();
-		}
-	}
+	boolean update(Iterable<M> items);
 
 	/**
 	 * Remove um item do Repository.
-	 * 
+	 *
 	 * @param item
+	 *            Item a ser removido.
+	 * @return True se o item foi removido com sucesso.
 	 */
-	public void remove(M item) {
-		remove(Collections.singletonList(item));
-	}
+	boolean remove(M item);
 
 	/**
 	 * Remove múltiplos novos itens do Repository.
-	 * 
+	 *
 	 * @param items
+	 *            Itens a serem removidos.
+	 * @return True se pelo menos um dos itens tiver sido removido com sucesso.
 	 */
-	public void remove(Iterable<M> items) {
-		EntityManager em = PersistenceManager.getEntityManager();
-		em.getTransaction().begin();
-		try {
-			for (M item : items) {
-				M managedItem = em.merge(item);
-				em.remove(managedItem);
-			}
-		} finally {
-			em.getTransaction().commit();
-			em.close();
-		}
-	}
+	boolean remove(Iterable<M> items);
 }

@@ -1,18 +1,9 @@
 package com.github.nelsonwilliam.invscp.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-@Entity
-@Table(name = "dog")
 public class Dog implements Model {
 
 	private static final long serialVersionUID = 1698598770917624810L;
 
-	@Id
-	@GeneratedValue
 	protected Integer id;
 
 	private String name;
