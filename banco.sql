@@ -19,20 +19,23 @@ CREATE TABLE localizacao (
 
 CREATE TABLE predio (
     id serial PRIMARY KEY,
-    nome character varying(255)
+    nome character varying(255),
+    id_local integer references departamento(id)
 );
 
 CREATE TABLE sala (
     id serial PRIMARY KEY,
     nome character varying(255),
     tipo nome character varying(255),
-    de_deposito boolean
+    de_deposito boolean,
+    id_predio integer references predio(id)
 );
 
 CREATE TABLE departamento (
     id serial PRIMARY KEY,
     nome character varying(255),
-    de_patrimonio boolean
+    de_patrimonio boolean,
+    id_departamento integer references predio(id)
 );
 
 CREATE TABLE usuario (
