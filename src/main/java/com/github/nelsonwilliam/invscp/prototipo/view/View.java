@@ -1,4 +1,4 @@
-package com.github.nelsonwilliam.invscp.view;
+package com.github.nelsonwilliam.invscp.prototipo.view;
 
 /**
  * Views são responsáveis pela interação entre o sistema e o usuário. A View é

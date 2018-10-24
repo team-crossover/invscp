@@ -1,4 +1,4 @@
-package com.github.nelsonwilliam.invscp.view.swing;
+package com.github.nelsonwilliam.invscp.prototipo.view.swing;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
@@ -12,8 +12,8 @@ import javax.swing.JTable;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 
-import com.github.nelsonwilliam.invscp.model.Dog;
-import com.github.nelsonwilliam.invscp.view.CanilView;
+import com.github.nelsonwilliam.invscp.prototipo.model.Dog;
+import com.github.nelsonwilliam.invscp.prototipo.view.CanilView;
 
 /**
  * Implementação em Swing da CanilView.

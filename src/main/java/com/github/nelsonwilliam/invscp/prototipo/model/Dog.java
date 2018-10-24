@@ -1,4 +1,4 @@
-package com.github.nelsonwilliam.invscp.model;
+package com.github.nelsonwilliam.invscp.prototipo.model;
 
 public class Dog implements Model {
 

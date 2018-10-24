@@ -1,4 +1,4 @@
-package com.github.nelsonwilliam.invscp.model.repository;
+package com.github.nelsonwilliam.invscp.prototipo.model.repository;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

@@ -1,11 +1,11 @@
-package com.github.nelsonwilliam.invscp.view;
+package com.github.nelsonwilliam.invscp.prototipo.view;
 
 import java.awt.event.ActionListener;
 import java.util.List;
 
 import javax.swing.event.TableModelListener;
 
-import com.github.nelsonwilliam.invscp.model.Dog;
+import com.github.nelsonwilliam.invscp.prototipo.model.Dog;
 
 public interface CanilView extends View {
 

@@ -1,12 +1,12 @@
-package com.github.nelsonwilliam.invscp;
+package com.github.nelsonwilliam.invscp.prototipo;
 
 import java.awt.EventQueue;
 
-import com.github.nelsonwilliam.invscp.model.repository.DatabaseConnection;
-import com.github.nelsonwilliam.invscp.presenter.CanilPresenter;
-import com.github.nelsonwilliam.invscp.view.swing.CanilSwingView;
+import com.github.nelsonwilliam.invscp.prototipo.model.repository.DatabaseConnection;
+import com.github.nelsonwilliam.invscp.prototipo.presenter.CanilPresenter;
+import com.github.nelsonwilliam.invscp.prototipo.view.swing.CanilSwingView;
 
-public class Programa {
+public class Prototipo {
 
 	@SuppressWarnings("unused")
 	public static void main(String[] args) {

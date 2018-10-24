@@ -1,4 +1,4 @@
-package com.github.nelsonwilliam.invscp.presenter;
+package com.github.nelsonwilliam.invscp.prototipo.presenter;
 
 import java.awt.event.ActionEvent;
 import java.util.List;
@@ -7,9 +7,9 @@ import java.util.Random;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.TableModel;
 
-import com.github.nelsonwilliam.invscp.model.Dog;
-import com.github.nelsonwilliam.invscp.model.repository.DogRepository;
-import com.github.nelsonwilliam.invscp.view.CanilView;
+import com.github.nelsonwilliam.invscp.prototipo.model.Dog;
+import com.github.nelsonwilliam.invscp.prototipo.model.repository.DogRepository;
+import com.github.nelsonwilliam.invscp.prototipo.view.CanilView;
 
 public class CanilPresenter extends Presenter<CanilView> {
 

@@ -1,6 +1,6 @@
-package com.github.nelsonwilliam.invscp.presenter;
+package com.github.nelsonwilliam.invscp.prototipo.presenter;
 
-import com.github.nelsonwilliam.invscp.view.View;
+import com.github.nelsonwilliam.invscp.prototipo.view.View;
 
 /**
  * Presenters são responsáveis pela ‘conexão’ entre a View e os Models. Cada

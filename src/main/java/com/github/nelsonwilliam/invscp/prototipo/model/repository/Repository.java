@@ -1,8 +1,8 @@
-package com.github.nelsonwilliam.invscp.model.repository;
+package com.github.nelsonwilliam.invscp.prototipo.model.repository;
 
 import java.util.List;
 
-import com.github.nelsonwilliam.invscp.model.Model;
+import com.github.nelsonwilliam.invscp.prototipo.model.Model;
 
 /**
  * Os Repositories são responsáveis por fazer a comunicação com o Banco de

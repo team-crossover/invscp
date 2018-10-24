@@ -1,4 +1,4 @@
-package com.github.nelsonwilliam.invscp.model.repository;
+package com.github.nelsonwilliam.invscp.prototipo.model.repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.nelsonwilliam.invscp.model.Dog;
+import com.github.nelsonwilliam.invscp.prototipo.model.Dog;
 
 public class DogRepository implements Repository<Dog> {
 
