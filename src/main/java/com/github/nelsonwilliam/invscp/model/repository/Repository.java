@@ -1,17 +1,19 @@
-package com.github.nelsonwilliam.invscp.prototipo.model.repository;
+package com.github.nelsonwilliam.invscp.model.repository;
 
 import java.util.List;
 
-import com.github.nelsonwilliam.invscp.prototipo.model.Model;
+import com.github.nelsonwilliam.invscp.model.Model;
 
 /**
- * Os Repositories são responsáveis por fazer a comunicação com o Banco de
- * dados, oferecendo todas as consultas necessárias acerca de determinado Model,
- * com base nas necessidades das regras de negócio.
+ * Repositories são responsáveis por fazer a comunicação com o Banco de dados,
+ * oferecendo todas as consultas necessárias acerca de determinado Model, com
+ * base nas necessidades das regras de negócio.
  * 
  * @param <M>
+ *            Classe do Model atendido por este Repository.
  */
 public interface Repository<M extends Model> {
+
 	/**
 	 * Obtém todos os itens.
 	 * 
@@ -84,4 +86,5 @@ public interface Repository<M extends Model> {
 	 * @return True se pelo menos um dos itens tiver sido removido com sucesso.
 	 */
 	boolean remove(Iterable<M> items);
+
 }

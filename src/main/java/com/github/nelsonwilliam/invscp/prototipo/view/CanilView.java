@@ -6,6 +6,7 @@ import java.util.List;
 import javax.swing.event.TableModelListener;
 
 import com.github.nelsonwilliam.invscp.prototipo.model.Dog;
+import com.github.nelsonwilliam.invscp.view.View;
 
 public interface CanilView extends View {
 

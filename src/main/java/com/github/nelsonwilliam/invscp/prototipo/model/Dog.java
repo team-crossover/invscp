@@ -1,5 +1,7 @@
 package com.github.nelsonwilliam.invscp.prototipo.model;
 
+import com.github.nelsonwilliam.invscp.model.Model;
+
 public class Dog implements Model {
 
 	private static final long serialVersionUID = 1698598770917624810L;

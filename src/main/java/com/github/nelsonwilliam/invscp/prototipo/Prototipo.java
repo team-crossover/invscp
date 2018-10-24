@@ -1,18 +1,17 @@
 package com.github.nelsonwilliam.invscp.prototipo;
 
 import java.awt.EventQueue;
+import java.sql.SQLException;
 
-import com.github.nelsonwilliam.invscp.prototipo.model.repository.DatabaseConnection;
 import com.github.nelsonwilliam.invscp.prototipo.presenter.CanilPresenter;
 import com.github.nelsonwilliam.invscp.prototipo.view.swing.CanilSwingView;
+import com.github.nelsonwilliam.invscp.util.DatabaseConnection;
 
 public class Prototipo {
 
 	@SuppressWarnings("unused")
-	public static void main(String[] args) {
-		if (!DatabaseConnection.openConnection()) {
-			System.exit(1);
-		}
+	public static void main(String[] args) throws ClassNotFoundException, SQLException {
+		DatabaseConnection.openConnection();
 
 		EventQueue.invokeLater(() -> {
 			try {

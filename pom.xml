@@ -15,7 +15,7 @@
 	<properties>
 		<project.githubUser>nelsonwilliam</project.githubUser>
 		<project.githubRepository>invscp</project.githubRepository>
-		<project.mainClassName>prototipo.Prototipo</project.mainClassName> <!-- Atualizar este valor após remover o protótipo -->
+		<project.mainClassName>InvSCP</project.mainClassName> <!-- Atualizar este valor após remover o protótipo -->
 		<project.mainClass>${project.groupId}.${project.artifactId}.${project.mainClassName}</project.mainClass>
 
 		<java.version>1.8</java.version>

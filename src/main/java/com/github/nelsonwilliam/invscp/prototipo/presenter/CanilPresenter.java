@@ -7,6 +7,7 @@ import java.util.Random;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.TableModel;
 
+import com.github.nelsonwilliam.invscp.presenter.Presenter;
 import com.github.nelsonwilliam.invscp.prototipo.model.Dog;
 import com.github.nelsonwilliam.invscp.prototipo.model.repository.DogRepository;
 import com.github.nelsonwilliam.invscp.prototipo.view.CanilView;

@@ -6,7 +6,9 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.github.nelsonwilliam.invscp.model.repository.Repository;
 import com.github.nelsonwilliam.invscp.prototipo.model.Dog;
+import com.github.nelsonwilliam.invscp.util.DatabaseConnection;
 
 public class DogRepository implements Repository<Dog> {
 
