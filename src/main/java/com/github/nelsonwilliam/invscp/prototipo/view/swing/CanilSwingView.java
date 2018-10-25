@@ -20,6 +20,7 @@ import com.github.nelsonwilliam.invscp.prototipo.view.CanilView;
  */
 public class CanilSwingView implements CanilView {
 
+	private JFrame frame;
 	private JTable tableDogs;
 	private JButton btnAddDog;
 	private JButton btnDeleteDogs;
@@ -32,7 +33,7 @@ public class CanilSwingView implements CanilView {
 
 	@SuppressWarnings({ "serial", "rawtypes", "unchecked" })
 	private void initializeFrame() {
-		JFrame frame = new JFrame();
+		frame = new JFrame();
 
 		BorderLayout borderLayout = (BorderLayout) frame.getContentPane().getLayout();
 		borderLayout.setVgap(5);
@@ -106,5 +107,10 @@ public class CanilSwingView implements CanilView {
 		for (Dog dog : dogs) {
 			tableModel.addRow(new Object[] { dog.getId(), dog.getName(), dog.getAge() });
 		}
+	}
+
+	@Override
+	public void setVisible(boolean visible) {
+		frame.setVisible(visible);
 	}
 }

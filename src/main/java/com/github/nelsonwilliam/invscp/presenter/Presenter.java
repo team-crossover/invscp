@@ -20,20 +20,14 @@ import com.github.nelsonwilliam.invscp.view.View;
  */
 public abstract class Presenter<V extends View> {
 
-	protected V view;
+	protected final V view;
 
 	public Presenter(V view) {
 		this.view = view;
-		setupViewListeners();
 	}
-
-	/**
-	 * Adiciona os ouvintes da View, para que o Presenter seja notificado das ações
-	 * do usuário.
-	 */
-	protected abstract void setupViewListeners();
 
 	public V getView() {
 		return this.view;
 	}
+
 }

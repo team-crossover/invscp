@@ -2,12 +2,13 @@ package com.github.nelsonwilliam.invscp.view;
 
 import java.awt.event.ActionListener;
 
-import com.github.nelsonwilliam.invscp.model.Usuario;
+import com.github.nelsonwilliam.invscp.model.Funcionario;
 
 /**
- * View da tela de início que é a primeira a ser exibida ao usuário.
+ * Interface da View do menu que contém as opções para alterar quais entidades
+ * estão sendo mantidas e para login/logout.
  */
-public interface InicioView extends View {
+public interface MenuView extends View {
 
 	// ----------------------------------------
 	// Métodos para notificar ações do usuário.
@@ -51,9 +52,9 @@ public interface InicioView extends View {
 
 	/**
 	 * Adiciona um Listener para o quando o usuário informar que deseja acessar a
-	 * listagem de usuários.
+	 * listagem de funcionários.
 	 */
-	void addUsuariosListener(ActionListener listener);
+	void addFuncionariosListener(ActionListener listener);
 
 	// -------------------------------------------
 	// Métodos para atualizar os valores exibidos.
@@ -61,13 +62,8 @@ public interface InicioView extends View {
 
 	/**
 	 * Define qual usuário está logado atualmente. Caso nenhum esteja logado, o
-	 * valor é null.
+	 * valor deve ser null.
 	 */
-	void setUsuarioLogado(Usuario usuario);
-
-	// ---------------------------------------------
-	// Métodos para obter os valores de formulários.
-	// ---------------------------------------------
-	// Nenhum.
+	void updateFuncionarioLogado(Funcionario funcionario);
 
 }

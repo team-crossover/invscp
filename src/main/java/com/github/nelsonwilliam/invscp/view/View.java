@@ -10,4 +10,7 @@ package com.github.nelsonwilliam.invscp.view;
  * interações do usuário; e atualizar os dados que são exibidos na View.
  */
 public interface View {
+
+	void setVisible(boolean visible);
+
 }

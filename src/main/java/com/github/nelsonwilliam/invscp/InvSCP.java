@@ -5,10 +5,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import com.github.nelsonwilliam.invscp.presenter.InicioPresenter;
+import com.github.nelsonwilliam.invscp.presenter.MainPresenter;
 import com.github.nelsonwilliam.invscp.util.DatabaseConnection;
-import com.github.nelsonwilliam.invscp.view.InicioView;
-import com.github.nelsonwilliam.invscp.view.swing.InicioSwingView;
+import com.github.nelsonwilliam.invscp.view.MainView;
+import com.github.nelsonwilliam.invscp.view.MenuView;
+import com.github.nelsonwilliam.invscp.view.swing.MainSwingView;
+import com.github.nelsonwilliam.invscp.view.swing.MenuSwingView;
 
 /**
  * Classe responsável por iniciar a execução do InvSCP, começando exibindo a
@@ -19,17 +21,16 @@ public class InvSCP {
 	private static boolean forceInitializeDatabase;
 
 	public static void main(String[] args) {
-
-		// TODO Remover este parâmetro criado apenas para testes iniciais.
+		// TODO Remover isto (criado apenas para testes iniciais com banco)
 		for (int i = 0; i < args.length; i++) {
-			if (args[i].equals("--forceInitialize")) {
+			if (args[i].equals("--forceInitialization")) {
 				forceInitializeDatabase = true;
 			}
 		}
 
 		connectDatabase();
 		initializeDatabase();
-		showInicio();
+		showMainView();
 	}
 
 	/**
@@ -77,14 +78,17 @@ public class InvSCP {
 	}
 
 	/**
-	 * Exibe a tela de início.
+	 * Exibe a tela principal.
 	 */
 	@SuppressWarnings("unused")
-	private static void showInicio() {
+	private static void showMainView() {
 		EventQueue.invokeLater(() -> {
 			try {
-				InicioView inicioView = new InicioSwingView();
-				InicioPresenter inicioPresenter = new InicioPresenter(inicioView);
+				MenuView menuView = new MenuSwingView();
+				MainView mainView = new MainSwingView(menuView);
+				MainPresenter mainPresenter = new MainPresenter(mainView, menuView);
+				menuView.setVisible(true);
+				mainView.setVisible(true);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

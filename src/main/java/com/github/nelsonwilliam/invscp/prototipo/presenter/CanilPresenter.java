@@ -14,16 +14,12 @@ import com.github.nelsonwilliam.invscp.prototipo.view.CanilView;
 
 public class CanilPresenter extends Presenter<CanilView> {
 
-	private DogRepository dogRepository;
-
 	public CanilPresenter(CanilView view) {
 		super(view);
-		dogRepository = new DogRepository();
-
+		setupViewListeners();
 		updateDogs();
 	}
 
-	@Override
 	protected void setupViewListeners() {
 		view.addAddDogListener((ActionEvent e) -> {
 			onAddDog();
@@ -54,6 +50,7 @@ public class CanilPresenter extends Presenter<CanilView> {
 	 * Adiciona um novo cachorro e atualiza a lista de cachorros.
 	 */
 	private void onAddDog() {
+		DogRepository dogRepository = new DogRepository();
 		Random r = new Random();
 		Dog dog = new Dog();
 		dog.setAge(r.nextInt(16));
@@ -66,6 +63,7 @@ public class CanilPresenter extends Presenter<CanilView> {
 	 * Deleta todos os cachorros e atualiza a lista de cachorros.
 	 */
 	private void onDeleteDogs() {
+		DogRepository dogRepository = new DogRepository();
 		List<Dog> dogs = dogRepository.getAll();
 		dogRepository.remove(dogs);
 		updateDogs();
@@ -75,6 +73,7 @@ public class CanilPresenter extends Presenter<CanilView> {
 	 * Persiste o cachorro atualizado e atualiza a lsita de cachorros.
 	 */
 	private void onUpdatedDog(Dog dog) {
+		DogRepository dogRepository = new DogRepository();
 		dogRepository.update(dog);
 		updateDogs();
 	}
@@ -87,6 +86,7 @@ public class CanilPresenter extends Presenter<CanilView> {
 	 * Atualiza a lista de cachorros.
 	 */
 	private void updateDogs() {
+		DogRepository dogRepository = new DogRepository();
 		view.setDogs(dogRepository.getAll());
 	}
 
