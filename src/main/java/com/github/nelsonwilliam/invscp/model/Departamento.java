@@ -1,5 +1,9 @@
 package com.github.nelsonwilliam.invscp.model;
 
+import java.util.List;
+
+import com.github.nelsonwilliam.invscp.model.repository.FuncionarioRepository;
+
 public class Departamento implements Model {
 
 	private static final long serialVersionUID = -4732191299693035638L;
@@ -55,4 +59,31 @@ public class Departamento implements Model {
 	public void setDePatrimonio(Boolean dePatrimonio) {
 		this.dePatrimonio = dePatrimonio;
 	}
+
+	public Funcionario getChefe() {
+		if (idChefe == null) {
+			return null;
+		}
+		FuncionarioRepository funcRepo = new FuncionarioRepository();
+		return funcRepo.getById(idChefe);
+	}
+
+	public Funcionario getChefeSubstituto() {
+		if (idChefeSubstituto == null) {
+			return null;
+		}
+		FuncionarioRepository funcRepo = new FuncionarioRepository();
+		return funcRepo.getById(idChefeSubstituto);
+	}
+
+	public List<Funcionario> getFuncionarios() {
+		FuncionarioRepository funcRepo = new FuncionarioRepository();
+		return funcRepo.getByDepartamento(this);
+	}
+
+	public List<Funcionario> getFuncionariosExcetoChefes() {
+		FuncionarioRepository funcRepo = new FuncionarioRepository();
+		return funcRepo.getByDepartamentoExcetoChefes(this);
+	}
+
 }

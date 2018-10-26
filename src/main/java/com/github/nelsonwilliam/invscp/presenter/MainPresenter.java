@@ -44,10 +44,8 @@ public class MainPresenter extends Presenter<MainView> {
 		loginPresenter.setSucessfullLoginCallback((Funcionario funcionario) -> {
 			funcionarioLogado = funcionario;
 			menuView.updateFuncionarioLogado(funcionario);
-			loginView.close();
 			showNothing();
 		});
-
 		loginView.setVisible(true);
 	}
 

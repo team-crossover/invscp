@@ -1,15 +1,21 @@
 package com.github.nelsonwilliam.invscp.view.swing;
 
 import java.awt.FlowLayout;
+import java.awt.Point;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 import javax.swing.table.DefaultTableModel;
 
 import com.github.nelsonwilliam.invscp.model.Departamento;
@@ -22,6 +28,8 @@ public class DepartamentosSwingView extends JPanel implements DepartamentosView 
 	private JTable table;
 	private JButton btnAdicionar;
 	private JButton btnDeletar;
+	private JPopupMenu popupMenu; // Popup exibido ao clicar com o botão direito em um item da tabela
+	private JMenuItem popupItemAlterar;
 
 	public DepartamentosSwingView() {
 		initialize();
@@ -51,6 +59,37 @@ public class DepartamentosSwingView extends JPanel implements DepartamentosView 
 		});
 		scrollPane.setViewportView(table);
 
+		popupItemAlterar = new JMenuItem("Alterar");
+
+		popupMenu = new JPopupMenu();
+		popupMenu.addPopupMenuListener(new PopupMenuListener() {
+			@Override
+			public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+				// Garante que ao clicar com o botão direito em um item para exibir o menu, o
+				// o único item selecionado da tabela.
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						int rowAtPoint = table
+								.rowAtPoint(SwingUtilities.convertPoint(popupMenu, new Point(0, 0), table));
+						if (rowAtPoint > -1) {
+							table.setRowSelectionInterval(rowAtPoint, rowAtPoint);
+						}
+					}
+				});
+			}
+
+			@Override
+			public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+			}
+
+			@Override
+			public void popupMenuCanceled(PopupMenuEvent e) {
+			}
+		});
+		popupMenu.add(popupItemAlterar);
+		table.setComponentPopupMenu(popupMenu);
+
 		btnAdicionar = new JButton("Adicionar novo");
 		add(btnAdicionar);
 
@@ -66,6 +105,11 @@ public class DepartamentosSwingView extends JPanel implements DepartamentosView 
 	@Override
 	public void addDeletarDepartamentosListener(ActionListener listener) {
 		btnDeletar.addActionListener(listener);
+	}
+
+	@Override
+	public void addAlterarDepartamentoListener(ActionListener listener) {
+		popupItemAlterar.addActionListener(listener);
 	}
 
 	@Override

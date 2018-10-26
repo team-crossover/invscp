@@ -15,6 +15,14 @@ public interface DepartamentosView extends View {
 
 	void addDeletarDepartamentosListener(ActionListener listener);
 
+	/**
+	 * Adiciona o Listener para quando o usuário informar que quer alterar um
+	 * departamento. Espera-se que quando este evento for invocado, haja exatamente
+	 * UM departamento selecionado (obtível através do método
+	 * getSelectedDepartamentosIds.
+	 */
+	void addAlterarDepartamentoListener(ActionListener listener);
+
 	// -------------------------------------------
 	// Métodos para atualizar os valores exibidos.
 	// -------------------------------------------

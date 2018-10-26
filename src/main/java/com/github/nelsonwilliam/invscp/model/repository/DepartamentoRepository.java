@@ -3,6 +3,7 @@ package com.github.nelsonwilliam.invscp.model.repository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
@@ -102,11 +103,20 @@ public class DepartamentoRepository implements Repository<Departamento> {
 			PreparedStatement s;
 			if (item.getId() == null) {
 				s = connection.prepareStatement(
-						"INSERT INTO departamento(nome,de_patrimonio,id_chefe,id_chefe_substituto) VALUES (?,?,?,?)");
+						"INSERT INTO departamento(nome,de_patrimonio,id_chefe,id_chefe_substituto) VALUES (?,?,?,?)",
+						Statement.RETURN_GENERATED_KEYS);
 				s.setObject(1, item.getNome(), Types.VARCHAR);
 				s.setObject(2, item.getDePatrimonio(), Types.BOOLEAN);
 				s.setObject(3, item.getIdChefe(), Types.INTEGER);
 				s.setObject(4, item.getIdChefeSubstituto(), Types.INTEGER);
+				s.executeUpdate();
+				// Atualiza o item adicionado com seu novo ID
+				ResultSet rs = s.getGeneratedKeys();
+				if (rs.next()) {
+					Integer id = rs.getInt(1);
+					item.setId(id);
+				}
+
 			} else {
 				s = connection.prepareStatement(
 						"INSERT INTO departamento(id,nome,de_patrimonio,id_chefe,id_chefe_substituto) VALUES (?,?,?,?,?)");
@@ -115,8 +125,9 @@ public class DepartamentoRepository implements Repository<Departamento> {
 				s.setObject(3, item.getDePatrimonio(), Types.BOOLEAN);
 				s.setObject(4, item.getIdChefe(), Types.INTEGER);
 				s.setObject(5, item.getIdChefeSubstituto(), Types.INTEGER);
+				s.executeUpdate();
 			}
-			s.executeUpdate();
+
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();

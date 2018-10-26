@@ -46,6 +46,7 @@ public class LoginPresenter extends Presenter<LoginView> {
 			return;
 		}
 
+		view.close();
 		sucessfullLoginCallback.accept(funcionario);
 	}
 
