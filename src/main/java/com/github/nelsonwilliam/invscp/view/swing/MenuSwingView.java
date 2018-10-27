@@ -18,6 +18,10 @@ public class MenuSwingView extends JPanel implements MenuView {
 	private JButton btnLogin;
 	private JButton btnLogout;
 	private JButton btnDepartamentos;
+	private JButton btnSalas;
+	private JButton btnPredios;
+	private JButton btnLocalizacoes;
+	private JButton btnFuncionarios;
 
 	public MenuSwingView() {
 		initialize();
@@ -31,6 +35,10 @@ public class MenuSwingView extends JPanel implements MenuView {
 		btnLogin = new JButton("Login");
 		btnLogout = new JButton("Logout");
 		btnDepartamentos = new JButton("Departamentos");
+		btnSalas = new JButton("Salas");
+		btnPredios = new JButton("Prédios");
+		btnLocalizacoes = new JButton("Localizações");
+		btnFuncionarios = new JButton("Funcionarios");
 	}
 
 	@Override
@@ -52,12 +60,21 @@ public class MenuSwingView extends JPanel implements MenuView {
 			lblSessao.setText("Sessão de " + funcionario.getNome());
 			add(lblSessao);
 			add(btnLogout);
+			// Botoes de chefia
 			add(btnDepartamentos);
+			add(btnSalas);
+			add(btnPredios);
+			add(btnLocalizacoes);
 
 			if (isChefeDeDepartamento) {
-				// ...
+				// add(btnDepartamentos);
+				// add(btnSalas);
+				// add(btnPredios);
+				// add(btnLocalizacoes);
+				// add(btnFuncionarios); -> só do seu dpt
 			} else if (isChefeDePatrimonio) {
-				// ...
+				// Mantem funcionarios pra qualquer departamento
+				// Emite inventario e baixa bem patrimonial
 			}
 		}
 
@@ -82,19 +99,19 @@ public class MenuSwingView extends JPanel implements MenuView {
 
 	@Override
 	public void addLocalizacoesListener(ActionListener listener) {
-		// TODO Auto-generated method stub
+		btnLocalizacoes.addActionListener(listener);
 
 	}
 
 	@Override
 	public void addPrediosListener(ActionListener listener) {
-		// TODO Auto-generated method stub
+		btnPredios.addActionListener(listener);
 
 	}
 
 	@Override
 	public void addSalasListener(ActionListener listener) {
-		// TODO Auto-generated method stub
+		btnSalas.addActionListener(listener);
 
 	}
 
@@ -105,7 +122,7 @@ public class MenuSwingView extends JPanel implements MenuView {
 
 	@Override
 	public void addFuncionariosListener(ActionListener listener) {
-		// TODO Auto-generated method stub
+		btnFuncionarios.addActionListener(listener);
 
 	}
 
