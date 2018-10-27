@@ -1,66 +1,67 @@
 package com.github.nelsonwilliam.invscp.model;
 
-public class Sala {
-	
-	private Integer id = null;
+public class Sala implements Model {
 
-	private String nome = "Sala";
-	
-	private boolean deDeposito = false;
-	
-	private SalasEnum tipoSala;
-	
-	private Integer idPredio = null;
-	
-	private Integer idDepartamento = null;
+    private static final long serialVersionUID = 509047893405447267L;
 
-	public Integer getIdPredio() {
-		return idPredio;
-	}
+    private Integer id = null;
 
-	public void setIdPredio(Integer idPredio) {
-		this.idPredio = idPredio;
-	}
+    private String nome = "Sala";
 
-	public Integer getIdDepartamento() {
-		return idDepartamento;
-	}
+    private boolean deDeposito = false;
 
-	public void setIdDepartamento(Integer idDepartamento) {
-		this.idDepartamento = idDepartamento;
-	}
+    private SalasEnum tipoSala;
 
-	public SalasEnum getTipoSala() {
-		return tipoSala;
-	}
+    private Integer idPredio = null;
 
-	public void setTipoSala(SalasEnum tipoSala) {
-		this.tipoSala = tipoSala;
-	}
+    private Integer idDepartamento = null;
 
-	public Integer getId() {
-		return id;
-	}
+    public Integer getIdPredio() {
+        return idPredio;
+    }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    public void setIdPredio(Integer idPredio) {
+        this.idPredio = idPredio;
+    }
 
-	public String getNome() {
-		return nome;
-	}
+    public Integer getIdDepartamento() {
+        return idDepartamento;
+    }
 
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
+    public void setIdDepartamento(Integer idDepartamento) {
+        this.idDepartamento = idDepartamento;
+    }
 
-	public boolean isDeDeposito() {
-		return deDeposito;
-	}
+    public SalasEnum getTipoSala() {
+        return tipoSala;
+    }
 
-	public void setDeDeposito(boolean deDeposito) {
-		this.deDeposito = deDeposito;
-	}
+    public void setTipoSala(SalasEnum tipoSala) {
+        this.tipoSala = tipoSala;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public boolean isDeDeposito() {
+        return deDeposito;
+    }
+
+    public void setDeDeposito(boolean deDeposito) {
+        this.deDeposito = deDeposito;
+    }
 
 }
-

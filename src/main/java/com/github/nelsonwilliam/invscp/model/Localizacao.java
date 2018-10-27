@@ -1,79 +1,81 @@
 package com.github.nelsonwilliam.invscp.model;
 
-public class Localizacao {
-		
-	private Integer id = null;
+public class Localizacao implements Model {
 
-	private String nome = "Localizacao";
-	
-	private String endereco;
-	
-	private String cep;
-	
-	private String cidade;
-	
-	private String  uf;
-	
-	private String pais;
+    private static final long serialVersionUID = 6358078005778674613L;
 
-	public Integer getId() {
-		return id;
-	}
+    private Integer id = null;
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    private String nome = "Localizacao";
 
-	public String getNome() {
-		return nome;
-	}
+    private String endereco;
 
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
+    private String cep;
 
-	public String getEndereco() {
-		return endereco;
-	}
+    private String cidade;
 
-	public void setEndereco(String endereco) {
-		this.endereco = endereco;
-	}
+    private String uf;
 
-	public String getCep() {
-		return cep;
-	}
+    private String pais;
 
-	public void setCep(String cep) {
-		this.cep = cep;
-	}
+    public Integer getId() {
+        return id;
+    }
 
-	public String getCidade() {
-		return cidade;
-	}
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	public void setCidade(String cidade) {
-		this.cidade = cidade;
-	}
+    public String getNome() {
+        return nome;
+    }
 
-	public String getUf() {
-		return uf;
-	}
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
 
-	public void setUf(String uf) {
-		this.uf = uf;
-	}
+    public String getEndereco() {
+        return endereco;
+    }
 
-	public String getPais() {
-		return pais;
-	}
+    public void setEndereco(String endereco) {
+        this.endereco = endereco;
+    }
 
-	public void setPais(String pais) {
-		this.pais = pais;
-	}
-	
-//	public List<Predio> getPredios() {
-//	PredioRepository predRepo = new PredioRepository()
-//	return 
-//}
+    public String getCep() {
+        return cep;
+    }
+
+    public void setCep(String cep) {
+        this.cep = cep;
+    }
+
+    public String getCidade() {
+        return cidade;
+    }
+
+    public void setCidade(String cidade) {
+        this.cidade = cidade;
+    }
+
+    public String getUf() {
+        return uf;
+    }
+
+    public void setUf(String uf) {
+        this.uf = uf;
+    }
+
+    public String getPais() {
+        return pais;
+    }
+
+    public void setPais(String pais) {
+        this.pais = pais;
+    }
+
+    // public List<Predio> getPredios() {
+    // PredioRepository predRepo = new PredioRepository()
+    // return
+    // }
 }

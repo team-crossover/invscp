@@ -1,40 +1,42 @@
 package com.github.nelsonwilliam.invscp.model;
 
-public class Predio {
-	
-	private Integer id = null;
+public class Predio implements Model {
 
-	private String nome = "Predio";
-	
-	private Integer idLocalizacao = null;
+    private static final long serialVersionUID = -2918874149512056756L;
 
-	public Integer getId() {
-		return id;
-	}
+    private Integer id = null;
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    private String nome = "Predio";
 
-	public String getNome() {
-		return nome;
-	}
+    private Integer idLocalizacao = null;
 
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
+    public Integer getId() {
+        return id;
+    }
 
-	public Integer getIdLocalizacao() {
-		return idLocalizacao;
-	}
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	public void setIdLocalizacao(Integer idLocalizacao) {
-		this.idLocalizacao = idLocalizacao;
-	}
+    public String getNome() {
+        return nome;
+    }
 
-//	public List<Sala> getSalas() {
-//		SalaRepository salaRepo = new SalaRepository()
-//		return 
-//	}
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public Integer getIdLocalizacao() {
+        return idLocalizacao;
+    }
+
+    public void setIdLocalizacao(Integer idLocalizacao) {
+        this.idLocalizacao = idLocalizacao;
+    }
+
+    // public List<Sala> getSalas() {
+    // SalaRepository salaRepo = new SalaRepository()
+    // return
+    // }
 
 }
