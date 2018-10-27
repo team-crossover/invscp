@@ -21,9 +21,9 @@ import javax.swing.table.DefaultTableModel;
 import com.github.nelsonwilliam.invscp.model.Localizacao;
 import com.github.nelsonwilliam.invscp.view.LocalizacoesView;
 
-public class LocalizacoesSwingView extends JPanel implements LocalizacoesView{
+public class LocalizacoesSwingView extends JPanel implements LocalizacoesView {
 	private static final long serialVersionUID = 6205631788210174691L;
-	
+
 	private JTable table;
 	private JButton btnAdicionar;
 	private JButton btnDeletar;
@@ -33,7 +33,7 @@ public class LocalizacoesSwingView extends JPanel implements LocalizacoesView{
 	public LocalizacoesSwingView() {
 		initialize();
 	}
-	
+
 	private void initialize() {
 		setBounds(0, 0, 500, 500);
 		setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
@@ -43,20 +43,15 @@ public class LocalizacoesSwingView extends JPanel implements LocalizacoesView{
 
 		table = new JTable();
 		table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-		table.setModel(new DefaultTableModel(
-			new Object[][] {
-			},
-			new String[] {
-				"ID", "Nome", "Endereco", "CEP", "Cidade", "UF", "Pais"
-			}
-		) {
+		table.setModel(new DefaultTableModel(new Object[][] {},
+				new String[] { "ID", "Nome", "Endereco", "CEP", "Cidade", "UF", "Pais" }) {
 			/**
 			 * 
 			 */
 			private static final long serialVersionUID = -4354695674337186996L;
-			Class<?>[] columnTypes = new Class[] {
-				Integer.class, String.class, String.class, String.class, String.class, String.class, String.class
-			};
+			Class<?>[] columnTypes = new Class[] { Integer.class, String.class, String.class, String.class,
+					String.class, String.class, String.class };
+
 			public Class<?> getColumnClass(int columnIndex) {
 				return columnTypes[columnIndex];
 			}
@@ -100,13 +95,11 @@ public class LocalizacoesSwingView extends JPanel implements LocalizacoesView{
 		btnDeletar = new JButton("Deletar selecionada(s)");
 		add(btnDeletar);
 	}
-	
-	
 
 	@Override
 	public void addAdicionarLocalizacaoListener(ActionListener listener) {
 		btnAdicionar.addActionListener(listener);
-		
+
 	}
 
 	@Override
@@ -122,7 +115,7 @@ public class LocalizacoesSwingView extends JPanel implements LocalizacoesView{
 	@Override
 	public void updateLocalizacoes(List<Localizacao> localizacoes) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override

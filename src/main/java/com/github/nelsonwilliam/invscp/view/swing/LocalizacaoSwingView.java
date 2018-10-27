@@ -7,7 +7,6 @@ import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -24,7 +23,7 @@ import com.github.nelsonwilliam.invscp.model.UFEnum;
 public class LocalizacaoSwingView extends JDialog implements LocalizacaoView {
 
 	private static final long serialVersionUID = 5247921139046485177L;
-	
+
 	private final boolean isAdicionar;
 
 	private Integer idLocalizacao;
@@ -42,15 +41,13 @@ public class LocalizacaoSwingView extends JDialog implements LocalizacaoView {
 	private JLabel lblPais;
 	private JTextField fieldEndereco;
 	private JComboBox<UFEnum> comboBox;
-	
+
 	/**
-	 * @param localizacao
-	 *            Localizações cujos valores serão exibidos inicialmente.
+	 * @param localizacao Localizações cujos valores serão exibidos inicialmente.
 	 * 
-	 * @param isAdicionar
-	 *            Indica se a janela que será exibida será para adição de uma nova
-	 *            localização (true) ou para atualização de uma localização
-	 *            existente (false).
+	 * @param isAdicionar Indica se a janela que será exibida será para adição de
+	 *                    uma nova localização (true) ou para atualização de uma
+	 *                    localização existente (false).
 	 */
 	public LocalizacaoSwingView(Window owner, Localizacao localizacao, boolean isAdicionar) {
 		super(owner, isAdicionar ? "Adicionar localizacao" : "Alterar localizacao", ModalityType.APPLICATION_MODAL);
@@ -64,7 +61,7 @@ public class LocalizacaoSwingView extends JDialog implements LocalizacaoView {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[] { 25, 102, 0, 25, 0 };
-		gridBagLayout.rowHeights = new int[] {30, 25, 0, 0, 0, 0, 0, 0, 25, 30, 0};
+		gridBagLayout.rowHeights = new int[] { 30, 25, 0, 0, 0, 0, 0, 0, 25, 30, 0 };
 		gridBagLayout.columnWeights = new double[] { 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE };
 		gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		getContentPane().setLayout(gridBagLayout);
@@ -96,7 +93,7 @@ public class LocalizacaoSwingView extends JDialog implements LocalizacaoView {
 		gbc_txtfldNome.gridy = 1;
 		getContentPane().add(fieldNome, gbc_txtfldNome);
 		fieldNome.setColumns(10);
-		
+
 		lblEndereco = new JLabel("Endereco:");
 		GridBagConstraints gbc_lblEndereco = new GridBagConstraints();
 		gbc_lblEndereco.insets = new Insets(0, 0, 5, 5);
@@ -104,7 +101,7 @@ public class LocalizacaoSwingView extends JDialog implements LocalizacaoView {
 		gbc_lblEndereco.gridx = 1;
 		gbc_lblEndereco.gridy = 2;
 		getContentPane().add(lblEndereco, gbc_lblEndereco);
-		
+
 		fieldEndereco = new JTextField();
 		fieldEndereco.setColumns(10);
 		GridBagConstraints gbc_txtfldEndereco = new GridBagConstraints();
@@ -113,7 +110,7 @@ public class LocalizacaoSwingView extends JDialog implements LocalizacaoView {
 		gbc_txtfldEndereco.gridx = 2;
 		gbc_txtfldEndereco.gridy = 2;
 		getContentPane().add(fieldEndereco, gbc_txtfldEndereco);
-		
+
 		lblCep = new JLabel("CEP:");
 		GridBagConstraints gbc_lblCep = new GridBagConstraints();
 		gbc_lblCep.insets = new Insets(0, 0, 5, 5);
@@ -121,7 +118,7 @@ public class LocalizacaoSwingView extends JDialog implements LocalizacaoView {
 		gbc_lblCep.gridx = 1;
 		gbc_lblCep.gridy = 3;
 		getContentPane().add(lblCep, gbc_lblCep);
-		
+
 		fieldCEP = new JTextField();
 		fieldCEP.setText((String) null);
 		fieldCEP.setColumns(10);
@@ -131,7 +128,7 @@ public class LocalizacaoSwingView extends JDialog implements LocalizacaoView {
 		gbc_fieldCEP.gridx = 2;
 		gbc_fieldCEP.gridy = 3;
 		getContentPane().add(fieldCEP, gbc_fieldCEP);
-		
+
 		lblCidade = new JLabel("Cidade:");
 		GridBagConstraints gbc_lblCidade = new GridBagConstraints();
 		gbc_lblCidade.insets = new Insets(0, 0, 5, 5);
@@ -139,7 +136,7 @@ public class LocalizacaoSwingView extends JDialog implements LocalizacaoView {
 		gbc_lblCidade.gridx = 1;
 		gbc_lblCidade.gridy = 4;
 		getContentPane().add(lblCidade, gbc_lblCidade);
-		
+
 		fieldCidade = new JTextField();
 		fieldCidade.setText((String) null);
 		fieldCidade.setColumns(10);
@@ -149,7 +146,7 @@ public class LocalizacaoSwingView extends JDialog implements LocalizacaoView {
 		gbc_fieldCidade.gridx = 2;
 		gbc_fieldCidade.gridy = 4;
 		getContentPane().add(fieldCidade, gbc_fieldCidade);
-		
+
 		lblUf = new JLabel("UF:");
 		GridBagConstraints gbc_lblUf = new GridBagConstraints();
 		gbc_lblUf.insets = new Insets(0, 0, 5, 5);
@@ -157,7 +154,7 @@ public class LocalizacaoSwingView extends JDialog implements LocalizacaoView {
 		gbc_lblUf.gridx = 1;
 		gbc_lblUf.gridy = 5;
 		getContentPane().add(lblUf, gbc_lblUf);
-		
+
 		comboBox = new JComboBox<UFEnum>();
 		comboBox.setModel(new DefaultComboBoxModel<UFEnum>(UFEnum.values()));
 		GridBagConstraints gbc_comboBox = new GridBagConstraints();
@@ -166,7 +163,7 @@ public class LocalizacaoSwingView extends JDialog implements LocalizacaoView {
 		gbc_comboBox.gridx = 2;
 		gbc_comboBox.gridy = 5;
 		getContentPane().add(comboBox, gbc_comboBox);
-		
+
 		lblPais = new JLabel("Pais:");
 		GridBagConstraints gbc_lblPais = new GridBagConstraints();
 		gbc_lblPais.insets = new Insets(0, 0, 5, 5);
@@ -174,7 +171,7 @@ public class LocalizacaoSwingView extends JDialog implements LocalizacaoView {
 		gbc_lblPais.gridx = 1;
 		gbc_lblPais.gridy = 6;
 		getContentPane().add(lblPais, gbc_lblPais);
-		
+
 		fieldPais = new JTextField();
 		fieldPais.setText((String) null);
 		fieldPais.setColumns(10);
@@ -201,16 +198,16 @@ public class LocalizacaoSwingView extends JDialog implements LocalizacaoView {
 		gbc_btnConfirmar.gridy = 8;
 		getContentPane().add(btnConfirmar, gbc_btnConfirmar);
 	}
-	
+
 	@Override
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
 	}
-	
+
 	@Override
 	public void addConfirmarListener(ActionListener listener) {
 		// btnConfirmar.addActionListener(listener);
-		
+
 	}
 
 	@Override
@@ -252,7 +249,7 @@ public class LocalizacaoSwingView extends JDialog implements LocalizacaoView {
 		Localizacao localizacao = new Localizacao();
 		localizacao.setId(idLocalizacao);
 		localizacao.setNome(fieldNome.getText());
-		
+
 		return localizacao;
 	}
 
