@@ -85,5 +85,10 @@ public class Departamento implements Model {
 		FuncionarioRepository funcRepo = new FuncionarioRepository();
 		return funcRepo.getByDepartamentoExcetoChefes(this);
 	}
+	
+//	public List<Sala> getSalas() {
+//		SalaRepository salaRepo = new SalaRepository();
+//		return
+//	}
 
 }

@@ -9,6 +9,26 @@ public class Sala {
 	private boolean deDeposito = false;
 	
 	private SalasEnum tipoSala;
+	
+	private Integer idPredio = null;
+	
+	private Integer idDepartamento = null;
+
+	public Integer getIdPredio() {
+		return idPredio;
+	}
+
+	public void setIdPredio(Integer idPredio) {
+		this.idPredio = idPredio;
+	}
+
+	public Integer getIdDepartamento() {
+		return idDepartamento;
+	}
+
+	public void setIdDepartamento(Integer idDepartamento) {
+		this.idDepartamento = idDepartamento;
+	}
 
 	public SalasEnum getTipoSala() {
 		return tipoSala;

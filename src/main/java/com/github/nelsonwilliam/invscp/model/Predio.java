@@ -5,6 +5,8 @@ public class Predio {
 	private Integer id = null;
 
 	private String nome = "Predio";
+	
+	private Integer idLocalizacao = null;
 
 	public Integer getId() {
 		return id;
@@ -22,5 +24,17 @@ public class Predio {
 		this.nome = nome;
 	}
 
-	
+	public Integer getIdLocalizacao() {
+		return idLocalizacao;
+	}
+
+	public void setIdLocalizacao(Integer idLocalizacao) {
+		this.idLocalizacao = idLocalizacao;
+	}
+
+//	public List<Sala> getSalas() {
+//		SalaRepository salaRepo = new SalaRepository()
+//		return 
+//	}
+
 }

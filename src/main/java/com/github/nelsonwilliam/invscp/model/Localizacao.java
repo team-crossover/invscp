@@ -72,4 +72,8 @@ public class Localizacao {
 		this.pais = pais;
 	}
 	
+//	public List<Predio> getPredios() {
+//	PredioRepository predRepo = new PredioRepository()
+//	return 
+//}
 }
