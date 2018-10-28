@@ -12,39 +12,39 @@ GRANT ALL ON SCHEMA public TO public;
 
 CREATE TABLE localizacao (
     id serial PRIMARY KEY,
-    nome character varying(255),
-    endereco text,
-    cep integer,
-    cidade character varying(255),
-    uf character varying(2),
-    pais character varying(2)
+    nome character varying(255) NOT NULL,
+    endereco text NOT NULL,
+    cep integer NOT NULL,
+    cidade character varying(255) NOT NULL,
+    uf character varying(2) NOT NULL,
+    pais character varying(2) NOT NULL
 );
 
 CREATE TABLE predio (
     id serial PRIMARY KEY,
-    nome character varying(255)
+    nome character varying(255) NOT NULL
 );
 
 CREATE TABLE sala (
     id serial PRIMARY KEY,
-    nome character varying(255),
-    tipo character varying(255),
-    de_deposito boolean
+    nome character varying(255) NOT NULL,
+    tipo character varying(255) NOT NULL,
+    de_deposito boolean NOT NULL
 );
 
 CREATE TABLE funcionario (
     id serial PRIMARY KEY,
-    login character varying(255),
-    senha character varying(255),
-    nome character varying(255),
-    cpf character varying(11),
-    email character varying(255)
+    login character varying(255) NOT NULL,
+    senha character varying(255) NOT NULL,
+    nome character varying(255) NOT NULL,
+    cpf character varying(11) NOT NULL,
+    email character varying(255) NOT NULL
 );
 
 CREATE TABLE departamento (
     id serial PRIMARY KEY,
-    nome character varying(255),
-    de_patrimonio boolean
+    nome character varying(255) NOT NULL,
+    de_patrimonio boolean NOT NULL
 );
 
 /* Adiciona as chaves estrangeiras */
