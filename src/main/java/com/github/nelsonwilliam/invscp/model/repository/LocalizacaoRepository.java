@@ -49,7 +49,7 @@ public class LocalizacaoRepository implements Repository<Localizacao> {
 	@Override
 	public Localizacao getById(Integer id) {
 		Connection connection = DatabaseConnection.getConnection();
-		Localizacao loc = null;
+		Localizacao local = null;
 		try {
 			PreparedStatement s = connection.prepareStatement(
 					"SELECT id,nome,endereco,cep,cidade,uf,pais FROM localizacao WHERE id=?");
@@ -64,19 +64,19 @@ public class LocalizacaoRepository implements Repository<Localizacao> {
 				String uf = r.getString("uf");
 				String pais = r.getString("pais");
 
-				loc = new Localizacao();
-				loc.setId(id);
-				loc.setNome(nome);
-				loc.setEndereco(endereco);
-				loc.setCep(cep);
-				loc.setCidade(cidade);
-				loc.setUf(uf);
-				loc.setPais(pais);
+				local = new Localizacao();
+				local.setId(id);
+				local.setNome(nome);
+				local.setEndereco(endereco);
+				local.setCep(cep);
+				local.setCidade(cidade);
+				local.setUf(uf);
+				local.setPais(pais);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return loc;
+		return local;
 	}
 
 	@Override
@@ -104,7 +104,7 @@ public class LocalizacaoRepository implements Repository<Localizacao> {
 
 			} else {
 				s = connection.prepareStatement(
-						"INSERT INTO localizacao(nome,endereco,cep,cidade,uf,pais) VALUES (?,?,?,?,?,?,?)");
+						"INSERT INTO localizacao(id,nome,endereco,cep,cidade,uf,pais) VALUES (?,?,?,?,?,?,?)");
 				s.setObject(1, item.getId(), Types.INTEGER);
 				s.setObject(2, item.getNome(), Types.VARCHAR);
 				s.setObject(3, item.getEndereco(), Types.VARCHAR);
