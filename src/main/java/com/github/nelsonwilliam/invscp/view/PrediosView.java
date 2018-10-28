@@ -33,8 +33,8 @@ public interface PrediosView extends View {
     // ---------------------------------------------
 
     /**
-     * Obtém uma lista com os IDs de todos os departamentos atualmente
-     * selecionados na tabela.
+     * Obtém uma lista com os IDs de todos os prédios atualmente selecionados na
+     * tabela.
      */
     List<Integer> getSelectedPrediosIds();
 
