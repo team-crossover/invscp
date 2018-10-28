@@ -12,7 +12,9 @@ public class Sala implements Model {
 
     private SalasEnum tipoSala;
 
-    private Integer idPredio = null;
+    private String tipo;
+
+	private Integer idPredio = null;
 
     private Integer idDepartamento = null;
 
@@ -63,5 +65,13 @@ public class Sala implements Model {
     public void setDeDeposito(boolean deDeposito) {
         this.deDeposito = deDeposito;
     }
+
+    public String getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
+	}
 
 }
