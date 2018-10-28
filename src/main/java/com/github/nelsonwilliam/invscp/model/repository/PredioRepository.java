@@ -19,7 +19,7 @@ public class PredioRepository implements Repository<Predio> {
 		List<Predio> predios = new ArrayList<Predio>();
 		try {
 			PreparedStatement s = connection.prepareStatement(
-					"SELECT id,nome,id_localizacao FROM predio ORDER_BY id");
+					"SELECT id,nome,id_localizacao FROM predio ORDER BY id");
 			ResultSet r = s.executeQuery();
 			if (r.next()) {
 				Integer id = r.getInt("id");

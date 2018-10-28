@@ -19,7 +19,7 @@ public class LocalizacaoRepository implements Repository<Localizacao> {
 		List<Localizacao> locals = new ArrayList<Localizacao>();
 		try {
 			PreparedStatement s = connection.prepareStatement(
-					"SELECT id,nome,endereco,cep,cidade,uf,pais FROM localizacao ORDER_BY id");
+					"SELECT id,nome,endereco,cep,cidade,uf,pais FROM localizacao ORDER BY id");
 			ResultSet r = s.executeQuery();
 			if (r.next()) {
 				Integer id = r.getInt("id");

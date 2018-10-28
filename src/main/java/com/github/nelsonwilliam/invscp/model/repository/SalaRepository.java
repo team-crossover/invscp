@@ -20,7 +20,7 @@ public class SalaRepository implements Repository<Sala> {
 		List<Sala> salas = new ArrayList<Sala>();
 		try {
 			PreparedStatement s = connection.prepareStatement(
-					"SELECT id,nome,tipo,de_deposito,id_predio,id_departamento FROM sala ORDER_BY id");
+					"SELECT id,nome,tipo,de_deposito,id_predio,id_departamento FROM sala ORDER BY id");
 			ResultSet r = s.executeQuery();
 			if (r.next()) {
 				Integer id = r.getInt("id");
