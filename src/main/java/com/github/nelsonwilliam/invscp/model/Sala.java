@@ -14,7 +14,7 @@ public class Sala implements Model {
 
     private String tipo;
 
-	private Integer idPredio = null;
+    private Integer idPredio = null;
 
     private Integer idDepartamento = null;
 
@@ -67,11 +67,11 @@ public class Sala implements Model {
     }
 
     public String getTipo() {
-		return tipo;
-	}
+	return tipo;
+    }
 
-	public void setTipo(String tipo) {
-		this.tipo = tipo;
-	}
+    public void setTipo(String tipo) {
+	this.tipo = tipo;
+    }
 
 }
