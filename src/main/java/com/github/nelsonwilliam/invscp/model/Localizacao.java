@@ -1,5 +1,7 @@
 package com.github.nelsonwilliam.invscp.model;
 
+import com.github.nelsonwilliam.invscp.model.UFEnum;
+
 public class Localizacao implements Model {
 
     private static final long serialVersionUID = 6358078005778674613L;
@@ -14,7 +16,7 @@ public class Localizacao implements Model {
 
     private String cidade;
 
-    private String uf;
+    private UFEnum uf;
 
     private String pais;
 
@@ -58,12 +60,20 @@ public class Localizacao implements Model {
         this.cidade = cidade;
     }
 
-    public String getUf() {
+    public UFEnum getUf() {
         return uf;
     }
 
+    public String getUfString() {
+    	return uf.toString();
+    }
+
     public void setUf(String uf) {
-        this.uf = uf;
+        this.uf = UFEnum.valueOf(uf);
+    }
+
+    public void setUf(UFEnum uf) {
+    	this.uf = uf;
     }
 
     public String getPais() {
