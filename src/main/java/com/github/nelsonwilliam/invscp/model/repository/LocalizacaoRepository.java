@@ -92,7 +92,7 @@ public class LocalizacaoRepository implements Repository<Localizacao> {
 				s.setObject(2, item.getEndereco(), Types.VARCHAR);
 				s.setObject(3, item.getCep(), Types.INTEGER);
 				s.setObject(4, item.getCidade(), Types.VARCHAR);
-				s.setObject(5, item.getUf(), Types.VARCHAR);
+				s.setObject(5, item.getUfString(), Types.VARCHAR);
 				s.setObject(6, item.getPais(), Types.VARCHAR);
 				s.executeUpdate();
 				// Atualiza o item adicionado com seu novo ID
@@ -110,7 +110,7 @@ public class LocalizacaoRepository implements Repository<Localizacao> {
 				s.setObject(3, item.getEndereco(), Types.VARCHAR);
 				s.setObject(4, item.getCep(), Types.INTEGER);
 				s.setObject(5, item.getCidade(), Types.VARCHAR);
-				s.setObject(6, item.getUf(), Types.VARCHAR);
+				s.setObject(6, item.getUfString(), Types.VARCHAR);
 				s.setObject(7, item.getPais(), Types.VARCHAR);
 				s.executeUpdate();
 			}
@@ -145,7 +145,7 @@ public class LocalizacaoRepository implements Repository<Localizacao> {
 			s.setObject(2, item.getEndereco(), Types.VARCHAR);
 			s.setObject(3, item.getCep(), Types.INTEGER);
 			s.setObject(4, item.getCidade(), Types.VARCHAR);
-			s.setObject(5, item.getUf(), Types.VARCHAR);
+			s.setObject(5, item.getUfString(), Types.VARCHAR);
 			s.setObject(6, item.getPais(), Types.VARCHAR);
 			s.executeUpdate();
 			return true;
