@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.nelsonwilliam.invscp.model.Sala;
-//import com.github.nelsonwilliam.invscp.model.SalasEnum;
 import com.github.nelsonwilliam.invscp.util.DatabaseConnection;
 
 public class SalaRepository implements Repository<Sala> {
@@ -33,7 +32,7 @@ public class SalaRepository implements Repository<Sala> {
 				Sala sala = new Sala();
 				sala.setId(id);
 				sala.setNome(nome);
-				sala.setTipo(tipo);
+				sala.setTipoSala(tipo);
 				sala.setDeDeposito(deDeposito);
 				sala.setIdPredio(idPredio);
 				sala.setIdDepartamento(idDepartamento);
@@ -64,7 +63,7 @@ public class SalaRepository implements Repository<Sala> {
 				Sala sala = new Sala();
 				sala.setId(id);
 				sala.setNome(nome);
-				sala.setTipo(tipo);
+				sala.setTipoSala(tipo);
 				sala.setDeDeposito(deDeposito);
 				sala.setIdPredio(idPredio);
 				sala.setIdDepartamento(idDepartamento);
@@ -85,7 +84,7 @@ public class SalaRepository implements Repository<Sala> {
 						"INSERT INTO sala(nome,tipo,de_deposito,id_predio,id_departamento) VALUES (?,?,?,?,?)",
 						Statement.RETURN_GENERATED_KEYS);
 				s.setObject(1, item.getNome(), Types.VARCHAR);
-				s.setObject(2, item.getTipo(), Types.VARCHAR);
+				s.setObject(2, item.getTipoSalaString(), Types.VARCHAR);
 				s.setObject(3, item.isDeDeposito(), Types.BOOLEAN);
 				s.setObject(4, item.getIdPredio(), Types.INTEGER);
 				s.setObject(5, item.getIdDepartamento(), Types.INTEGER);
@@ -101,7 +100,7 @@ public class SalaRepository implements Repository<Sala> {
 				s = connection.prepareStatement(
 						"INSERT INTO sala(id,nome,tipo,de_deposito,id_predio,id_departamento) VALUES (?,?,?,?,?,?)");
 				s.setObject(1, item.getNome(), Types.VARCHAR);
-				s.setObject(2, item.getTipo(), Types.VARCHAR);
+				s.setObject(2, item.getTipoSalaString(), Types.VARCHAR);
 				s.setObject(3, item.isDeDeposito(), Types.BOOLEAN);
 				s.setObject(4, item.getIdPredio(), Types.INTEGER);
 				s.setObject(5, item.getIdDepartamento(), Types.INTEGER);
@@ -135,7 +134,7 @@ public class SalaRepository implements Repository<Sala> {
 			s = connection.prepareStatement(
 					"UPDATE sala SET nome=?, tipo=?, de_deposito=?, id_predio=?, id_departamento");
 			s.setObject(1, item.getNome(), Types.VARCHAR);
-			s.setObject(2, item.getTipo(), Types.VARCHAR);
+			s.setObject(2, item.getTipoSalaString(), Types.VARCHAR);
 			s.setObject(3, item.isDeDeposito(), Types.BOOLEAN);
 			s.setObject(4, item.getIdPredio(), Types.INTEGER);
 			s.setObject(5, item.getIdDepartamento(), Types.INTEGER);
