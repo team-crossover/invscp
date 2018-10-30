@@ -29,8 +29,8 @@ As seguintes atividades estão planejadas para a implementação do projeto:
 
 | Data | Responsável(eis) | Descrição | Status |
 |---|---|---|---|
-| 30/10 | João Pedro | Criar o script do banco de dados e os Models para Localização, Prédio, Sala, Departamento e Usuário | Em andamento |
-| 30/10 | Larissa e Sofia | Criar as Views para login e para manter e executar casos de uso relacionados aos Models acima | Em andamento |
+| 30/10 | João Pedro | ~~Criar o script do banco de dados e os Models para Localização, Prédio, Sala, Departamento e Usuário~~ | Concluído |
+| 30/10 | Larissa e Sofia | ~~Criar as Views para login e para manter e executar casos de uso relacionados aos Models acima~~ | Concluído |
 | 06/11 | Nelson | Criar os Presenters para as Views acima e ~~implementar o controle de acesso e execução do script do banco~~ | Em andamento |
 | 06/11 | Natália | Documentar casos de testes (total de pelo menos 5) | Em andamento |
 
