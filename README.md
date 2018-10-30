@@ -63,4 +63,4 @@ O ambiente de execução deve estar executando o banco de dados PostgreSQL 10.5 
 Deve existir o usuário com nome "invscpAdmin" e senha "12345" (com autorização para efetuar login).
 Além disso, deve existir um banco de dados nomeado "inventory" e cujo owner é o usuário "invscpAdmin".
 
-Ao ser executado, o InvSCP detectará se o banco de dados "inventory" foi inicializado (teve todas as tabelas criadas). Caso contrário, o script "[createDatabase](src/main/resources/sql/createDatabase.sql)" será executado automaticamente para inicializá-lo.
+Ao ser executado, o InvSCP detectará se o banco de dados "inventory" foi inicializado (teve todas as tabelas criadas). Caso contrário, o script "[createDatabase](src/main/resources/sql/createDatabase.sql)" será executado automaticamente para inicializá-lo. Por padrão, o script popula o banco com um Departamento de Patrimônio e um usuário responsável por ser o Chefe de Patrimônio, cujo login é "admin" e a senha é "admin".
