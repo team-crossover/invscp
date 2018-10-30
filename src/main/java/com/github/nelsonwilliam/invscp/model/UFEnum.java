@@ -2,9 +2,9 @@ package com.github.nelsonwilliam.invscp.model;
 
 public enum UFEnum {
 
-    AL(0), AM(1), AP(3), BA(4), CE(5), DF(6), ES(7), GO(8), MA(9), MG(10), MS(
-            11), MT(12), PA(13), PB(14), PE(15), PI(16), PR(17), RJ(18), RN(
-                    19), RO(20), RR(21), RS(22), SC(23), SE(24), SP(25), TO(26);
+    AL(0), AM(1), AP(2), BA(3), CE(4), DF(5), ES(6), GO(7), MA(8), MG(9), MS(
+            10), MT(11), PA(12), PB(13), PE(14), PI(15), PR(16), RJ(17), RN(
+                    18), RO(19), RR(20), RS(21), SC(22), SE(23), SP(24), TO(25);
 
     private final int valor;
 
