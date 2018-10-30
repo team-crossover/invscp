@@ -1,42 +1,18 @@
 package com.github.nelsonwilliam.invscp.model;
 
-public enum UFEnum {	
-	
-	RO(1),
-	AC(2),
-	AM(3),
-	RR(4),
-	PA(5),
-	AP(6),
-	TO(7),
-	MA(8),
-	PI(9),
-	CE(10),
-	RN(11),
-	PB(12),
-	PE(13),
-	AL(14),
-	SE(15),
-	BA(16),
-	MG(17),
-	ES(18),
-	RJ(19),
-	SP(20),
-	PR(21),
-	SC(22),
-	RS(23),
-	MS(24),
-	MT(25),
-	GO(26),
-	DF(27);
+public enum UFEnum {
 
-	private final int valor;
+    AL(0), AM(1), AP(3), BA(4), CE(5), DF(6), ES(7), GO(8), MA(9), MG(10), MS(
+            11), MT(12), PA(13), PB(14), PE(15), PI(16), PR(17), RJ(18), RN(
+                    19), RO(20), RR(21), RS(22), SC(23), SE(24), SP(25), TO(26);
 
-	UFEnum(int valorOpcao){
-		valor = valorOpcao;
-	}
+    private final int valor;
 
-	public int getValor() {
-		return valor;
-	}
+    UFEnum(int valorOpcao) {
+        valor = valorOpcao;
+    }
+
+    public int getValor() {
+        return valor;
+    }
 }
