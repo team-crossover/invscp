@@ -4,30 +4,30 @@ import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.function.Consumer;
 
-import com.github.nelsonwilliam.invscp.model.Sala;
+import com.github.nelsonwilliam.invscp.model.Funcionario;
 
-public interface SalasView extends View {
+public interface FuncionariosView extends View {
 
     // ----------------------------------------
     // Métodos para notificar ações do usuário.
     // ----------------------------------------
 
-    void addAdicionarSalaListener(ActionListener listener);
+    void addAdicionarFuncionarioListener(ActionListener listener);
 
-    void addDeletarSalasListener(ActionListener listener);
+    void addDeletarFuncionariosListener(ActionListener listener);
 
     /**
-     * Adiciona o Listener para quando o usuário informar que quer alterar uma sala. Espera-se que
-     * quando este evento for invocado, haja exatamente UMA sala selecionado (obtível através do
-     * método getSelectedPrediosIds.
+     * Adiciona o Listener para quando o usuário informar que quer alterar um funcionario. Espera-se
+     * que quando este evento for invocado, haja exatamente UM funcionario selecionado (obtível
+     * através do método getSelectedFuncionariosIds.
      */
-    void addAlterarSalaListener(ActionListener listener);
+    void addAlterarFuncionarioListener(ActionListener listener);
 
     // -------------------------------------------
     // Métodos para atualizar os valores exibidos.
     // -------------------------------------------
 
-    void updateSalas(List<Sala> sala);
+    void updateFuncionarios(List<Funcionario> funcionarios);
 
     void showError(String message);
 
@@ -42,8 +42,8 @@ public interface SalasView extends View {
     // ---------------------------------------------
 
     /**
-     * Obtém uma lista com os IDs de todos as salas atualmente selecionados na tabela.
+     * Obtém uma lista com os IDs de todos os funcionarios atualmente selecionados na tabela.
      */
-    List<Integer> getSelectedSalasIds();
+    List<Integer> getSelectedFuncionariosIds();
 
 }

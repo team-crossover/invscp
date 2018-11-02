@@ -1,14 +1,17 @@
 package com.github.nelsonwilliam.invscp.view.swing;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.DefaultListCellRenderer;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -34,18 +37,17 @@ public class PredioSwingView extends JDialog implements PredioView {
     private JButton btnConfirmar;
     private JButton btnCancelar;
     private JTextField fieldNome;
-    private JList<Localizacao> listLocais;
-    private JScrollPane scrollPane;
+    private JList<Localizacao> listLocalizacoes;
+    private JScrollPane scrollLocalizacoes;
 
     /**
      * @param departamento Prédios cujos valores serão exibidos inicialmente.
-     * 
-     * @param isAdicionar Indica se a janela que será exibida será para adição
-     *        de um novo predio (true) ou para atualização de um predio
-     *        existente (false).
+     *
+     * @param isAdicionar Indica se a janela que será exibida será para adição de um novo predio
+     *        (true) ou para atualização de um predio existente (false).
      */
 
-    public PredioSwingView(Window owner, Predio predio, boolean isAdicionar) {
+    public PredioSwingView(final JFrame owner, final Predio predio, final boolean isAdicionar) {
         super(owner, isAdicionar ? "Adicionar prédio" : "Alterar prédio",
                 ModalityType.APPLICATION_MODAL);
         this.isAdicionar = isAdicionar;
@@ -54,30 +56,27 @@ public class PredioSwingView extends JDialog implements PredioView {
     }
 
     private void initialize() {
-        setBounds(150, 150, 422, 328);
+        setBounds(0, 0, 500, 300);
+        setLocationRelativeTo(getOwner());
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        GridBagLayout gridBagLayout = new GridBagLayout();
-        gridBagLayout.columnWidths = new int[] { 25, 102, 0, 25, 0 };
-        gridBagLayout.rowHeights = new int[] { 25, 25, 0, 0, 0, 25, 25, 0 };
-        gridBagLayout.columnWeights = new double[] { 0.0, 0.0, 1.0, 0.0,
-                Double.MIN_VALUE };
-        gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0, 1.0, 0.0, 0.0,
-                0.0, Double.MIN_VALUE };
+        final GridBagLayout gridBagLayout = new GridBagLayout();
+        gridBagLayout.columnWidths = new int[] { 30, 102, 0, 30 };
+        gridBagLayout.rowHeights = new int[] { 30, 0, 0, 15, 0, 30 };
+        gridBagLayout.columnWeights = new double[] { 0.0, 0.0, 1.0, 0.0 };
+        gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 1.0, 0.0, 0.0, 0.0 };
         getContentPane().setLayout(gridBagLayout);
 
         btnConfirmar = new JButton("Confirmar");
-        btnConfirmar.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent arg0) {
-            }
+        btnConfirmar.addActionListener(arg0 -> {
         });
 
         btnCancelar = new JButton("Cancelar");
-        btnCancelar.addActionListener((ActionEvent e) -> {
+        btnCancelar.addActionListener((final ActionEvent e) -> {
             close();
         });
 
-        JLabel lblNome = new JLabel("Nome:");
-        GridBagConstraints gbc_lblNome = new GridBagConstraints();
+        final JLabel lblNome = new JLabel("Nome:");
+        final GridBagConstraints gbc_lblNome = new GridBagConstraints();
         gbc_lblNome.anchor = GridBagConstraints.EAST;
         gbc_lblNome.insets = new Insets(0, 0, 5, 5);
         gbc_lblNome.gridx = 1;
@@ -85,7 +84,7 @@ public class PredioSwingView extends JDialog implements PredioView {
         getContentPane().add(lblNome, gbc_lblNome);
 
         fieldNome = new JTextField();
-        GridBagConstraints gbc_txtfldNome = new GridBagConstraints();
+        final GridBagConstraints gbc_txtfldNome = new GridBagConstraints();
         gbc_txtfldNome.insets = new Insets(0, 0, 5, 5);
         gbc_txtfldNome.fill = GridBagConstraints.HORIZONTAL;
         gbc_txtfldNome.gridx = 2;
@@ -93,70 +92,69 @@ public class PredioSwingView extends JDialog implements PredioView {
         getContentPane().add(fieldNome, gbc_txtfldNome);
         fieldNome.setColumns(10);
 
-        JLabel lblChefe = new JLabel("Localização:");
-        GridBagConstraints gbc_lblChefe = new GridBagConstraints();
+        final JLabel lblChefe = new JLabel("Localização:");
+        final GridBagConstraints gbc_lblChefe = new GridBagConstraints();
         gbc_lblChefe.anchor = GridBagConstraints.EAST;
         gbc_lblChefe.insets = new Insets(0, 0, 5, 5);
         gbc_lblChefe.gridx = 1;
-        gbc_lblChefe.gridy = 3;
+        gbc_lblChefe.gridy = 2;
         getContentPane().add(lblChefe, gbc_lblChefe);
 
-        // Ajustar !!!!!!!!!!!!!
-        ListCellRenderer<? super Localizacao> localizacaoListRenderer = new DefaultListCellRenderer() {
+        final ListCellRenderer<? super Localizacao> localizacaoListRenderer = new DefaultListCellRenderer() {
             private static final long serialVersionUID = 337686638048057981L;
 
             @Override
-            public Component getListCellRendererComponent(JList<?> list,
-                    Object value, int index, boolean isSelected,
-                    boolean cellHasFocus) {
+            public Component getListCellRendererComponent(final JList<?> list, final Object value,
+                    final int index, final boolean isSelected, final boolean cellHasFocus) {
                 if (value == null) {
-                    return super.getListCellRendererComponent(list, "Nenhum",
-                            index, isSelected, cellHasFocus);
+                    return super.getListCellRendererComponent(list, "Nenhum", index, isSelected,
+                            cellHasFocus);
                 } else {
-                    String nome = ((Predio) value).getNome();
-                    return super.getListCellRendererComponent(list, nome, index,
-                            isSelected, cellHasFocus);
+                    final String nome = ((Localizacao) value).getNome();
+                    return super.getListCellRendererComponent(list, nome, index, isSelected,
+                            cellHasFocus);
                 }
             }
         };
 
-        scrollPane = new JScrollPane();
-        GridBagConstraints gbc_scrollPane = new GridBagConstraints();
+        scrollLocalizacoes = new JScrollPane();
+        final GridBagConstraints gbc_scrollPane = new GridBagConstraints();
         gbc_scrollPane.fill = GridBagConstraints.BOTH;
         gbc_scrollPane.insets = new Insets(0, 0, 5, 5);
         gbc_scrollPane.gridx = 2;
-        gbc_scrollPane.gridy = 3;
-        getContentPane().add(scrollPane, gbc_scrollPane);
+        gbc_scrollPane.gridy = 2;
+        getContentPane().add(scrollLocalizacoes, gbc_scrollPane);
 
-        // listLocais = new JList<Localizacao>();
-        // listLocais.setModel(new DefaultListModel<Localizacao>());
-        // listLocais.setCellRenderer(localizacaoListRenderer);
-        // scrollPane.setViewportView(listLocalizacao);
+        listLocalizacoes = new JList<Localizacao>();
+        listLocalizacoes.setModel(new DefaultListModel<Localizacao>());
+        listLocalizacoes.setCellRenderer(localizacaoListRenderer);
+        scrollLocalizacoes.setBorder(BorderFactory.createLineBorder(Color.gray, 1));
+        scrollLocalizacoes.setViewportView(listLocalizacoes);
 
-        GridBagConstraints gbc_btnCancelar = new GridBagConstraints();
+        final GridBagConstraints gbc_btnCancelar = new GridBagConstraints();
         gbc_btnCancelar.anchor = GridBagConstraints.WEST;
         gbc_btnCancelar.insets = new Insets(0, 0, 5, 5);
         gbc_btnCancelar.fill = GridBagConstraints.VERTICAL;
         gbc_btnCancelar.gridx = 1;
-        gbc_btnCancelar.gridy = 5;
+        gbc_btnCancelar.gridy = 4;
         getContentPane().add(btnCancelar, gbc_btnCancelar);
 
-        GridBagConstraints gbc_btnConfirmar = new GridBagConstraints();
+        final GridBagConstraints gbc_btnConfirmar = new GridBagConstraints();
         gbc_btnConfirmar.insets = new Insets(0, 0, 5, 5);
         gbc_btnConfirmar.anchor = GridBagConstraints.EAST;
         gbc_btnConfirmar.fill = GridBagConstraints.VERTICAL;
         gbc_btnConfirmar.gridx = 2;
-        gbc_btnConfirmar.gridy = 5;
+        gbc_btnConfirmar.gridy = 4;
         getContentPane().add(btnConfirmar, gbc_btnConfirmar);
     }
 
     @Override
-    public void addConfirmarListener(ActionListener listener) {
+    public void addConfirmarListener(final ActionListener listener) {
         btnConfirmar.addActionListener(listener);
     }
 
     @Override
-    public void updatePredio(Predio predio) {
+    public void updatePredio(final Predio predio) {
         if (predio == null) {
             throw new NullPointerException();
         }
@@ -168,29 +166,55 @@ public class PredioSwingView extends JDialog implements PredioView {
 
         fieldNome.setText(predio.getNome());
 
+        // Exibe as localizacoes na lista de localizacoes e seleciona o atual, se
+        // tiver, ou 'Nenhum', se não tiver.
+        final List<Localizacao> localizacoes = predio.getPossiveisLocalizacoes();
+        final Localizacao localizacao = predio.getLocalizacao();
+        final DefaultListModel<Localizacao> listLocalizacoesModel = (DefaultListModel<Localizacao>) listLocalizacoes
+                .getModel();
+        listLocalizacoesModel.clear();
+        if (localizacao == null) {
+            listLocalizacoesModel.add(0, null);
+            listLocalizacoes.setSelectedIndex(0);
+        } else {
+            listLocalizacoesModel.add(0, localizacao);
+            listLocalizacoes.setSelectedIndex(0);
+        }
+        for (final Localizacao l : localizacoes) {
+            if (localizacao != null && !l.getId().equals(localizacao.getId())) {
+                listLocalizacoesModel.addElement(l);
+            }
+        }
+
+        revalidate();
+        repaint();
     }
 
     @Override
-    public void showError(String message) {
-        String titulo = "Erro";
-        String messageCompleta = "Erro: " + message;
-        JOptionPane.showMessageDialog(this, messageCompleta, titulo,
-                JOptionPane.ERROR_MESSAGE);
+    public void showError(final String message) {
+        final String titulo = "Erro";
+        final String messageCompleta = "Erro: " + message;
+        JOptionPane.showMessageDialog(this, messageCompleta, titulo, JOptionPane.ERROR_MESSAGE);
 
     }
 
     @Override
     public void showSucesso() {
-        String titulo = "Sucesso";
-        String messageCompleta = isAdicionar ? "Predio adicionado!"
-                : "Predio alterado!";
+        final String titulo = "Sucesso";
+        final String messageCompleta = isAdicionar ? "Predio adicionado!" : "Predio alterado!";
         JOptionPane.showMessageDialog(this, messageCompleta, titulo,
                 JOptionPane.INFORMATION_MESSAGE);
 
     }
 
     @Override
-    public void setVisible(boolean visible) {
+    public void showInfo(final String message) {
+        final String titulo = "Informação";
+        JOptionPane.showMessageDialog(this, message, titulo, JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    @Override
+    public void setVisible(final boolean visible) {
         super.setVisible(visible);
     }
 
@@ -202,9 +226,11 @@ public class PredioSwingView extends JDialog implements PredioView {
 
     @Override
     public Predio getPredio() {
-        Predio predio = new Predio();
+        final Predio predio = new Predio();
         predio.setId(idPredio);
         predio.setNome(fieldNome.getText());
+        predio.setIdLocalizacao(listLocalizacoes.getSelectedValue() == null ? null
+                : listLocalizacoes.getSelectedValue().getId());
 
         return predio;
     }

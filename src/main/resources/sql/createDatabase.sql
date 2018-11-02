@@ -1,23 +1,20 @@
-/* Cria as tabelas do InvSCP */
+/* Cria as tabelas e valores iniciais do InvSCP */
 
 /* Deleta as tabelas anteriores */
 
 DROP SCHEMA public CASCADE;
 CREATE SCHEMA public;
-
-GRANT ALL ON SCHEMA public TO postgres;
-GRANT ALL ON SCHEMA public TO public;
+ALTER SCHEMA public OWNER TO "invscpAdmin";
 
 /* Cria as novas tabelas */
 
 CREATE TABLE localizacao (
     id serial PRIMARY KEY,
     nome character varying(255) NOT NULL,
-    endereco text NOT NULL,
-    cep integer NOT NULL,
+    endereco character varying(255) NOT NULL,
+    cep character varying(8) NOT NULL,
     cidade character varying(255) NOT NULL,
-    uf character varying(2) NOT NULL,
-    pais character varying(2) NOT NULL
+    uf character varying(2) NOT NULL
 );
 
 CREATE TABLE predio (
@@ -28,13 +25,12 @@ CREATE TABLE predio (
 CREATE TABLE sala (
     id serial PRIMARY KEY,
     nome character varying(255) NOT NULL,
-    tipo character varying(255) NOT NULL,
-    de_deposito boolean NOT NULL
+    tipo character varying(255) NOT NULL
 );
 
 CREATE TABLE funcionario (
     id serial PRIMARY KEY,
-    login character varying(255) NOT NULL,
+    login character varying(255) UNIQUE NOT NULL,
     senha character varying(255) NOT NULL,
     nome character varying(255) NOT NULL,
     cpf character varying(11) NOT NULL,
@@ -68,16 +64,55 @@ ALTER TABLE departamento
 DO $$
 DECLARE chefeId integer;
 DECLARE departamentoId integer;
+DECLARE localizacaoId integer;
+DECLARE predioId integer;
+DECLARE salaId integer;
 BEGIN
-    INSERT INTO funcionario (login, senha, nome)
-        VALUES ('admin', 'admin', 'Administrador') 
+    INSERT INTO funcionario (login, senha, nome, cpf, email)
+        VALUES ('admin', 'admin', 'Administrador', '00000000000', 'admin@invscp.com') 
         RETURNING id INTO chefeId;
 
-    INSERT INTO departamento (nome, de_patrimonio, id_chefe)
-        VALUES ('Departamento de Patrimônio', TRUE, chefeId)
+    INSERT INTO departamento (nome, de_patrimonio)
+        VALUES ('Departamento de Patrimônio', TRUE)
         RETURNING id INTO departamentoId;
+
+    INSERT INTO localizacao (nome, endereco, cep, cidade, uf)
+        VALUES ('Localização do Depósito', 'Sem endereço', '00000000', 'Acrelândia', 'AC')
+        RETURNING id INTO localizacaoId;
+
+    INSERT INTO predio (nome)
+        VALUES ('Prédio do Depósito')
+        RETURNING id INTO predioId;
+
+    INSERT INTO sala (nome, tipo)
+        VALUES ('Depósito', 'DEPOSITO')
+        RETURNING id INTO salaId;
+
+    UPDATE predio
+        SET id_localizacao = localizacaoId
+        WHERE id = predioId;
+
+    UPDATE sala
+        SET id_predio = predioId, id_departamento = departamentoId
+        WHERE id = salaId;
 
     UPDATE funcionario
         SET id_departamento = departamentoId
         WHERE id = chefeId;
+
+    UPDATE departamento
+        SET id_chefe = chefeId
+        WHERE id = departamentoId;
 END $$;
+
+/* Adiciona as restrições de not-null que não existiam antes para permitir a inserção dos valores iniciais */
+
+ALTER TABLE predio
+    ALTER COLUMN id_localizacao SET NOT NULL;
+
+ALTER TABLE sala
+    ALTER COLUMN id_predio SET NOT NULL,
+    ALTER COLUMN id_departamento SET NOT NULL;
+    
+ALTER TABLE departamento
+    ALTER COLUMN id_chefe SET NOT NULL;

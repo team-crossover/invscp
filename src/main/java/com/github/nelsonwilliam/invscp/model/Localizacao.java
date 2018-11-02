@@ -1,6 +1,6 @@
 package com.github.nelsonwilliam.invscp.model;
 
-import com.github.nelsonwilliam.invscp.model.UFEnum;
+import com.github.nelsonwilliam.invscp.model.enums.UFEnum;
 
 public class Localizacao implements Model {
 
@@ -8,23 +8,23 @@ public class Localizacao implements Model {
 
     private Integer id = null;
 
-    private String nome = "Localizacao";
+    private String nome = null;
 
-    private String endereco;
+    private String endereco = null;
 
-    private String cep;
+    private String cep = null;
 
-    private String cidade;
+    private String cidade = null;
 
-    private UFEnum uf;
+    private UFEnum uf = null;
 
-    private String pais;
-
+    @Override
     public Integer getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    @Override
+    public void setId(final Integer id) {
         this.id = id;
     }
 
@@ -32,7 +32,7 @@ public class Localizacao implements Model {
         return nome;
     }
 
-    public void setNome(String nome) {
+    public void setNome(final String nome) {
         this.nome = nome;
     }
 
@@ -40,7 +40,7 @@ public class Localizacao implements Model {
         return endereco;
     }
 
-    public void setEndereco(String endereco) {
+    public void setEndereco(final String endereco) {
         this.endereco = endereco;
     }
 
@@ -48,7 +48,7 @@ public class Localizacao implements Model {
         return cep;
     }
 
-    public void setCep(String cep) {
+    public void setCep(final String cep) {
         this.cep = cep;
     }
 
@@ -56,7 +56,7 @@ public class Localizacao implements Model {
         return cidade;
     }
 
-    public void setCidade(String cidade) {
+    public void setCidade(final String cidade) {
         this.cidade = cidade;
     }
 
@@ -65,23 +65,15 @@ public class Localizacao implements Model {
     }
 
     public String getUfString() {
-    	return uf.toString();
+        return uf.toString();
     }
 
-    public void setUf(String uf) {
+    public void setUf(final String uf) {
         this.uf = UFEnum.valueOf(uf);
     }
 
-    public void setUf(UFEnum uf) {
-    	this.uf = uf;
-    }
-
-    public String getPais() {
-        return pais;
-    }
-
-    public void setPais(String pais) {
-        this.pais = pais;
+    public void setUf(final UFEnum uf) {
+        this.uf = uf;
     }
 
     // public List<Predio> getPredios() {

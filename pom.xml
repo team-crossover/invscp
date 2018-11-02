@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
@@ -15,7 +16,7 @@
 	<properties>
 		<project.githubUser>nelsonwilliam</project.githubUser>
 		<project.githubRepository>invscp</project.githubRepository>
-		<project.mainClassName>InvSCP</project.mainClassName> <!-- Atualizar este valor após remover o protótipo -->
+		<project.mainClassName>InvSCP</project.mainClassName>
 		<project.mainClass>${project.groupId}.${project.artifactId}.${project.mainClassName}</project.mainClass>
 
 		<java.version>1.8</java.version>
@@ -27,6 +28,12 @@
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<version>42.2.5</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.pushing-pixels</groupId>
+			<artifactId>radiance-substance</artifactId>
+			<version>1.0.2</version>
 		</dependency>
 	</dependencies>
 
@@ -41,7 +48,8 @@
 		</repository>
 	</distributionManagement>
 
-	<!-- Note que para gerar .jars executáveis, é necessário definir os profiles 'executavel-unico' ou 'executavel-dir'. -->
+	<!-- Note que para gerar .jars executáveis, é necessário definir os profiles 
+		'executavel-unico' ou 'executavel-dir'. -->
 
 	<build>
 		<!-- Define o nome do arquivo a ser gerado (.jar é acrescentada) -->

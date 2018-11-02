@@ -2,9 +2,9 @@ package com.github.nelsonwilliam.invscp.view;
 
 import java.awt.event.ActionListener;
 
-import com.github.nelsonwilliam.invscp.model.Departamento;
+import com.github.nelsonwilliam.invscp.model.Funcionario;
 
-public interface DepartamentoView extends View {
+public interface FuncionarioView extends View {
 
     // ----------------------------------------
     // Métodos para notificar ações do usuário.
@@ -17,9 +17,9 @@ public interface DepartamentoView extends View {
     // -------------------------------------------
 
     /**
-     * Atualiza todos os valores da janela para exibir os dados do departamento passado.
+     * Atualiza todos os valores da janela para exibir os dados do funcionário passado.
      */
-    void updateDepartamento(Departamento departamento);
+    void updateFuncionario(Funcionario funcionario);
 
     /**
      * Exibe uma mensagem de erro com a mensagem especificada. Por exemplo, pode ser chamado para
@@ -44,9 +44,8 @@ public interface DepartamentoView extends View {
     // ---------------------------------------------
 
     /**
-     * Obtém o departamento com os valores atualmente exibidos no formulário que o usuário pode ou
+     * Obtém o funcionário com os valores atualmente exibidos no formulário que o usuário pode ou
      * não ter alterado.
      */
-    Departamento getDepartamento();
-
+    Funcionario getFuncionario();
 }

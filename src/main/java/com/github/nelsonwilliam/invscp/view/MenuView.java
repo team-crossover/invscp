@@ -5,65 +5,61 @@ import java.awt.event.ActionListener;
 import com.github.nelsonwilliam.invscp.model.Funcionario;
 
 /**
- * Interface da View do menu que contém as opções para alterar quais entidades
- * estão sendo mantidas e para login/logout.
+ * Interface da View do menu que contém as opções para alterar quais entidades estão sendo mantidas
+ * e para login/logout.
  */
 public interface MenuView extends View {
 
-	// ----------------------------------------
-	// Métodos para notificar ações do usuário.
-	// ----------------------------------------
+    // ----------------------------------------
+    // Métodos para notificar ações do usuário.
+    // ----------------------------------------
 
-	/**
-	 * Adiciona um Listener para o quando o usuário informar que deseja efetuar
-	 * login.
-	 */
-	void addLoginListener(ActionListener listener);
+    /**
+     * Adiciona um Listener para o quando o usuário informar que deseja efetuar login.
+     */
+    void addLoginListener(ActionListener listener);
 
-	/**
-	 * Adiciona um Listener para o quando o usuário informar que deseja efetuar
-	 * logout.
-	 */
-	void addLogoutListener(ActionListener listener);
+    /**
+     * Adiciona um Listener para o quando o usuário informar que deseja efetuar logout.
+     */
+    void addLogoutListener(ActionListener listener);
 
-	/**
-	 * Adiciona um Listener para o quando o usuário informar que deseja acessar a
-	 * listagem de localizações.
-	 */
-	void addLocalizacoesListener(ActionListener listener);
+    /**
+     * Adiciona um Listener para o quando o usuário informar que deseja acessar a listagem de
+     * localizações.
+     */
+    void addLocalizacoesListener(ActionListener listener);
 
-	/**
-	 * Adiciona um Listener para o quando o usuário informar que deseja acessar a
-	 * listagem de prédios.
-	 */
-	void addPrediosListener(ActionListener listener);
+    /**
+     * Adiciona um Listener para o quando o usuário informar que deseja acessar a listagem de
+     * prédios.
+     */
+    void addPrediosListener(ActionListener listener);
 
-	/**
-	 * Adiciona um Listener para o quando o usuário informar que deseja acessar a
-	 * listagem de salas.
-	 */
-	void addSalasListener(ActionListener listener);
+    /**
+     * Adiciona um Listener para o quando o usuário informar que deseja acessar a listagem de salas.
+     */
+    void addSalasListener(ActionListener listener);
 
-	/**
-	 * Adiciona um Listener para o quando o usuário informar que deseja acessar a
-	 * listagem de departamentos.
-	 */
-	void addDepartamentosListener(ActionListener listener);
+    /**
+     * Adiciona um Listener para o quando o usuário informar que deseja acessar a listagem de
+     * departamentos.
+     */
+    void addDepartamentosListener(ActionListener listener);
 
-	/**
-	 * Adiciona um Listener para o quando o usuário informar que deseja acessar a
-	 * listagem de funcionários.
-	 */
-	void addFuncionariosListener(ActionListener listener);
+    /**
+     * Adiciona um Listener para o quando o usuário informar que deseja acessar a listagem de
+     * funcionários.
+     */
+    void addFuncionariosListener(ActionListener listener);
 
-	// -------------------------------------------
-	// Métodos para atualizar os valores exibidos.
-	// -------------------------------------------
+    // -------------------------------------------
+    // Métodos para atualizar os valores exibidos.
+    // -------------------------------------------
 
-	/**
-	 * Define qual usuário está logado atualmente. Caso nenhum esteja logado, o
-	 * valor deve ser null.
-	 */
-	void updateFuncionarioLogado(Funcionario funcionario);
+    /**
+     * Define qual usuário está logado atualmente. Caso nenhum esteja logado, o valor deve ser null.
+     */
+    void updateFuncionarioLogado(Funcionario funcionario);
 
 }

@@ -1,24 +1,33 @@
 package com.github.nelsonwilliam.invscp.view.swing;
 
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.ListCellRenderer;
 
+import com.github.nelsonwilliam.invscp.model.Departamento;
+import com.github.nelsonwilliam.invscp.model.Predio;
 import com.github.nelsonwilliam.invscp.model.Sala;
-import com.github.nelsonwilliam.invscp.model.SalasEnum;
+import com.github.nelsonwilliam.invscp.model.enums.TipoSalaEnum;
 import com.github.nelsonwilliam.invscp.view.SalaView;
 
 public class SalaSwingView extends JDialog implements SalaView {
@@ -32,19 +41,19 @@ public class SalaSwingView extends JDialog implements SalaView {
     private JButton btnConfirmar;
     private JButton btnCancelar;
     private JTextField fieldNome;
-    private JCheckBox chckbxDeposito;
-    private JComboBox<SalasEnum> tipo;
-    private JLabel lblTipo;
-    private JLabel lblDepsito;
+    private JComboBox<TipoSalaEnum> tipo;
+    private JList<Predio> listPredios;
+    private JScrollPane scrollPredios;
+    private JList<Departamento> listDepartamentos;
+    private JScrollPane scrollDepartamentos;
 
     /**
      * @param sala Salas cujos valores serão exibidos inicialmente.
-     * 
-     * @param isAdicionar Indica se a janela que será exibida será para adição
-     *        de uma nova sala (true) ou para atualização de uma sala existente
-     *        (false).
+     *
+     * @param isAdicionar Indica se a janela que será exibida será para adição de uma nova sala
+     *        (true) ou para atualização de uma sala existente (false).
      */
-    public SalaSwingView(Window owner, Sala sala, boolean isAdicionar) {
+    public SalaSwingView(final JFrame owner, final Sala sala, final boolean isAdicionar) {
         super(owner, isAdicionar ? "Adicionar sala" : "Alterar sala",
                 ModalityType.APPLICATION_MODAL);
         this.isAdicionar = isAdicionar;
@@ -53,31 +62,19 @@ public class SalaSwingView extends JDialog implements SalaView {
     }
 
     private void initialize() {
-        setBounds(150, 150, 422, 328);
+        setBounds(0, 0, 500, 300);
+        setLocationRelativeTo(getOwner());
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        GridBagLayout gridBagLayout = new GridBagLayout();
-        gridBagLayout.columnWidths = new int[] { 25, 102, 0, 25, 0 };
-        gridBagLayout.rowHeights = new int[] { 25, 25, 0, 0, 0, 20, 0, -26, 25,
-                0 };
-        gridBagLayout.columnWeights = new double[] { 0.0, 0.0, 1.0, 0.0,
+        final GridBagLayout gridBagLayout = new GridBagLayout();
+        gridBagLayout.columnWidths = new int[] { 25, 100, 0, 25 };
+        gridBagLayout.columnWeights = new double[] { 0.0, 0.0, 1.0, 0.0 };
+        gridBagLayout.rowHeights = new int[] { 30, 0, 0, 0, 0, 30, 0, 30, 0 };
+        gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0,
                 Double.MIN_VALUE };
-        gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                0.0, 0.0, 0.0, Double.MIN_VALUE };
         getContentPane().setLayout(gridBagLayout);
 
-        btnConfirmar = new JButton("Confirmar");
-        btnConfirmar.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent arg0) {
-            }
-        });
-
-        btnCancelar = new JButton("Cancelar");
-        btnCancelar.addActionListener((ActionEvent e) -> {
-            close();
-        });
-
-        JLabel lblNome = new JLabel("Nome:");
-        GridBagConstraints gbc_lblNome = new GridBagConstraints();
+        final JLabel lblNome = new JLabel("Nome:");
+        final GridBagConstraints gbc_lblNome = new GridBagConstraints();
         gbc_lblNome.anchor = GridBagConstraints.EAST;
         gbc_lblNome.insets = new Insets(0, 0, 5, 5);
         gbc_lblNome.gridx = 1;
@@ -85,7 +82,7 @@ public class SalaSwingView extends JDialog implements SalaView {
         getContentPane().add(lblNome, gbc_lblNome);
 
         fieldNome = new JTextField();
-        GridBagConstraints gbc_txtfldNome = new GridBagConstraints();
+        final GridBagConstraints gbc_txtfldNome = new GridBagConstraints();
         gbc_txtfldNome.insets = new Insets(0, 0, 5, 5);
         gbc_txtfldNome.fill = GridBagConstraints.HORIZONTAL;
         gbc_txtfldNome.gridx = 2;
@@ -93,68 +90,139 @@ public class SalaSwingView extends JDialog implements SalaView {
         getContentPane().add(fieldNome, gbc_txtfldNome);
         fieldNome.setColumns(10);
 
-        lblTipo = new JLabel("Tipo:");
-        GridBagConstraints gbc_lblTipo = new GridBagConstraints();
+        final JLabel lblTipo = new JLabel("Tipo:");
+        final GridBagConstraints gbc_lblTipo = new GridBagConstraints();
         gbc_lblTipo.insets = new Insets(0, 0, 5, 5);
         gbc_lblTipo.anchor = GridBagConstraints.EAST;
         gbc_lblTipo.gridx = 1;
-        gbc_lblTipo.gridy = 3;
+        gbc_lblTipo.gridy = 2;
         getContentPane().add(lblTipo, gbc_lblTipo);
 
-        tipo = new JComboBox<SalasEnum>();
-        tipo.setModel(new DefaultComboBoxModel<SalasEnum>(SalasEnum.values()));
-        GridBagConstraints gbc_tipo = new GridBagConstraints();
+        tipo = new JComboBox<TipoSalaEnum>();
+        tipo.setModel(new DefaultComboBoxModel<TipoSalaEnum>(TipoSalaEnum.values()));
+        final GridBagConstraints gbc_tipo = new GridBagConstraints();
         gbc_tipo.insets = new Insets(0, 0, 5, 5);
         gbc_tipo.fill = GridBagConstraints.HORIZONTAL;
         gbc_tipo.gridx = 2;
-        gbc_tipo.gridy = 3;
+        gbc_tipo.gridy = 2;
         getContentPane().add(tipo, gbc_tipo);
 
-        lblDepsito = new JLabel("Depósito:");
-        GridBagConstraints gbc_lblDepsito = new GridBagConstraints();
-        gbc_lblDepsito.anchor = GridBagConstraints.EAST;
-        gbc_lblDepsito.insets = new Insets(0, 0, 5, 5);
-        gbc_lblDepsito.gridx = 1;
-        gbc_lblDepsito.gridy = 5;
-        getContentPane().add(lblDepsito, gbc_lblDepsito);
+        final ListCellRenderer<? super Predio> predioListRenderer = new DefaultListCellRenderer() {
+            private static final long serialVersionUID = 337686638148057981L;
 
-        chckbxDeposito = new JCheckBox("");
-        GridBagConstraints gbc_chckbxDeposito = new GridBagConstraints();
-        gbc_chckbxDeposito.anchor = GridBagConstraints.WEST;
-        gbc_chckbxDeposito.insets = new Insets(0, 0, 5, 5);
-        gbc_chckbxDeposito.gridx = 2;
-        gbc_chckbxDeposito.gridy = 5;
-        getContentPane().add(chckbxDeposito, gbc_chckbxDeposito);
+            @Override
+            public Component getListCellRendererComponent(final JList<?> list, final Object value,
+                    final int index, final boolean isSelected, final boolean cellHasFocus) {
+                if (value == null) {
+                    return super.getListCellRendererComponent(list, "Nenhum", index, isSelected,
+                            cellHasFocus);
+                } else {
+                    final String nome = ((Predio) value).getNome();
+                    return super.getListCellRendererComponent(list, nome, index, isSelected,
+                            cellHasFocus);
+                }
+            }
+        };
 
-        GridBagConstraints gbc_btnCancelar = new GridBagConstraints();
+        final ListCellRenderer<? super Departamento> deptListRenderer = new DefaultListCellRenderer() {
+            private static final long serialVersionUID = 437686638148057981L;
+
+            @Override
+            public Component getListCellRendererComponent(final JList<?> list, final Object value,
+                    final int index, final boolean isSelected, final boolean cellHasFocus) {
+                if (value == null) {
+                    return super.getListCellRendererComponent(list, "Nenhum", index, isSelected,
+                            cellHasFocus);
+                } else {
+                    final String nome = ((Departamento) value).getNome();
+                    return super.getListCellRendererComponent(list, nome, index, isSelected,
+                            cellHasFocus);
+                }
+            }
+        };
+
+        final JLabel lblPrdio = new JLabel("Prédio:");
+        final GridBagConstraints gbc_lblPrdio = new GridBagConstraints();
+        gbc_lblPrdio.anchor = GridBagConstraints.EAST;
+        gbc_lblPrdio.insets = new Insets(0, 0, 5, 5);
+        gbc_lblPrdio.gridx = 1;
+        gbc_lblPrdio.gridy = 3;
+        getContentPane().add(lblPrdio, gbc_lblPrdio);
+
+        scrollPredios = new JScrollPane();
+        final GridBagConstraints gbc_scrollPanePredios = new GridBagConstraints();
+        gbc_scrollPanePredios.fill = GridBagConstraints.BOTH;
+        gbc_scrollPanePredios.insets = new Insets(0, 0, 5, 5);
+        gbc_scrollPanePredios.gridx = 2;
+        gbc_scrollPanePredios.gridy = 3;
+        getContentPane().add(scrollPredios, gbc_scrollPanePredios);
+
+        final JLabel lblDepartamento = new JLabel("Departamento:");
+        final GridBagConstraints gbc_lblDepartamento = new GridBagConstraints();
+        gbc_lblDepartamento.anchor = GridBagConstraints.EAST;
+        gbc_lblDepartamento.insets = new Insets(0, 0, 5, 5);
+        gbc_lblDepartamento.gridx = 1;
+        gbc_lblDepartamento.gridy = 4;
+        getContentPane().add(lblDepartamento, gbc_lblDepartamento);
+
+        scrollDepartamentos = new JScrollPane();
+        final GridBagConstraints gbc_scrollPaneDepts = new GridBagConstraints();
+        gbc_scrollPaneDepts.fill = GridBagConstraints.BOTH;
+        gbc_scrollPaneDepts.insets = new Insets(0, 0, 5, 5);
+        gbc_scrollPaneDepts.gridx = 2;
+        gbc_scrollPaneDepts.gridy = 4;
+        getContentPane().add(scrollDepartamentos, gbc_scrollPaneDepts);
+
+        listDepartamentos = new JList<Departamento>();
+        listDepartamentos.setModel(new DefaultListModel<Departamento>());
+        listDepartamentos.setCellRenderer(deptListRenderer);
+        scrollDepartamentos.setBorder(BorderFactory.createLineBorder(Color.gray, 1));
+        scrollDepartamentos.setViewportView(listDepartamentos);
+
+        listPredios = new JList<Predio>();
+        listPredios.setModel(new DefaultListModel<Predio>());
+        listPredios.setCellRenderer(predioListRenderer);
+        scrollPredios.setBorder(BorderFactory.createLineBorder(Color.gray, 1));
+        scrollPredios.setViewportView(listPredios);
+
+        btnCancelar = new JButton("Cancelar");
+        btnCancelar.addActionListener((final ActionEvent e) -> {
+            close();
+        });
+
+        final GridBagConstraints gbc_btnCancelar = new GridBagConstraints();
         gbc_btnCancelar.anchor = GridBagConstraints.WEST;
         gbc_btnCancelar.insets = new Insets(0, 0, 5, 5);
         gbc_btnCancelar.fill = GridBagConstraints.VERTICAL;
         gbc_btnCancelar.gridx = 1;
-        gbc_btnCancelar.gridy = 7;
+        gbc_btnCancelar.gridy = 6;
         getContentPane().add(btnCancelar, gbc_btnCancelar);
 
-        GridBagConstraints gbc_btnConfirmar = new GridBagConstraints();
+        btnConfirmar = new JButton("Confirmar");
+        btnConfirmar.addActionListener(arg0 -> {
+        });
+
+        final GridBagConstraints gbc_btnConfirmar = new GridBagConstraints();
         gbc_btnConfirmar.insets = new Insets(0, 0, 5, 5);
         gbc_btnConfirmar.anchor = GridBagConstraints.EAST;
         gbc_btnConfirmar.fill = GridBagConstraints.VERTICAL;
         gbc_btnConfirmar.gridx = 2;
-        gbc_btnConfirmar.gridy = 7;
+        gbc_btnConfirmar.gridy = 6;
         getContentPane().add(btnConfirmar, gbc_btnConfirmar);
     }
 
     @Override
-    public void setVisible(boolean visible) {
+    public void setVisible(final boolean visible) {
         super.setVisible(visible);
     }
 
     @Override
-    public void addConfirmarListener(ActionListener listener) {
+    public void addConfirmarListener(final ActionListener listener) {
         btnConfirmar.addActionListener(listener);
     }
 
     @Override
-    public void updateSala(Sala sala) {
+    public void updateSala(final Sala sala) {
         if (sala == null) {
             throw new NullPointerException();
         }
@@ -165,23 +233,72 @@ public class SalaSwingView extends JDialog implements SalaView {
         idSala = sala.getId();
 
         fieldNome.setText(sala.getNome());
+        tipo.setSelectedItem(sala.getTipo());
+
+        // Exibe os predios na lista de predios e seleciona o atual, se
+        // tiver, ou 'Nenhum', se não tiver.
+        final List<Predio> predios = sala.getPossiveisPredios();
+        final Predio predio = sala.getPredio();
+        final DefaultListModel<Predio> listPrediosModel = (DefaultListModel<Predio>) listPredios
+                .getModel();
+        listPrediosModel.clear();
+        if (predio == null) {
+            listPrediosModel.add(0, null);
+            listPredios.setSelectedIndex(0);
+        } else {
+            listPrediosModel.add(0, predio);
+            listPredios.setSelectedIndex(0);
+        }
+        for (final Predio p : predios) {
+            if (predio != null && !p.getId().equals(predio.getId())) {
+                listPrediosModel.addElement(p);
+            }
+        }
+
+        // Exibe os departamentos na lista de departamentos e seleciona o atual, se
+        // tiver, ou 'Nenhum', se não tiver.
+        final List<Departamento> departamentos = sala.getPossiveisDepartamentos();
+        final Departamento departamento = sala.getDepartamento();
+        final DefaultListModel<Departamento> listDeptsModel = (DefaultListModel<Departamento>) listDepartamentos
+                .getModel();
+        listDeptsModel.clear();
+        if (departamento == null) {
+            listDeptsModel.add(0, null);
+            listDepartamentos.setSelectedIndex(0);
+        } else {
+            listDeptsModel.add(0, departamento);
+            listDepartamentos.setSelectedIndex(0);
+        }
+        for (final Departamento p : departamentos) {
+            if (departamento != null && !p.getId().equals(departamento.getId())) {
+                listDeptsModel.addElement(p);
+            }
+        }
+
+        revalidate();
+        repaint();
+
     }
 
     @Override
-    public void showError(String message) {
-        String titulo = "Erro";
-        String messageCompleta = "Erro: " + message;
-        JOptionPane.showMessageDialog(this, messageCompleta, titulo,
-                JOptionPane.ERROR_MESSAGE);
+    public void showError(final String message) {
+        final String titulo = "Erro";
+        final String messageCompleta = "Erro: " + message;
+        JOptionPane.showMessageDialog(this, messageCompleta, titulo, JOptionPane.ERROR_MESSAGE);
     }
 
     @Override
     public void showSucesso() {
-        String titulo = "Sucesso";
-        String messageCompleta = isAdicionar ? "Sala adicionada!"
-                : "Sala alterada!";
+        final String titulo = "Sucesso";
+        final String messageCompleta = isAdicionar ? "Sala adicionada!" : "Sala alterada!";
         JOptionPane.showMessageDialog(this, messageCompleta, titulo,
                 JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    @Override
+    public void showInfo(final String message) {
+        final String titulo = "Informação";
+        JOptionPane.showMessageDialog(this, message, titulo, JOptionPane.INFORMATION_MESSAGE);
     }
 
     @Override
@@ -192,12 +309,14 @@ public class SalaSwingView extends JDialog implements SalaView {
 
     @Override
     public Sala getSala() {
-        Sala sala = new Sala();
+        final Sala sala = new Sala();
         sala.setId(idSala);
         sala.setNome(fieldNome.getText());
-        sala.setDeDeposito(chckbxDeposito.isSelected());
-        sala.setTipoSala(sala.getTipoSala());
-
+        sala.setTipo((TipoSalaEnum) tipo.getSelectedItem());
+        sala.setIdPredio(listPredios.getSelectedValue() == null ? null
+                : listPredios.getSelectedValue().getId());
+        sala.setIdDepartamento(listDepartamentos.getSelectedValue() == null ? null
+                : listDepartamentos.getSelectedValue().getId());
         return sala;
     }
 

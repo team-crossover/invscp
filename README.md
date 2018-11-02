@@ -31,7 +31,7 @@ As seguintes atividades estão planejadas para a implementação do projeto:
 |---|---|---|---|
 | 30/10 | João Pedro | ~~Criar o script do banco de dados e os Models para Localização, Prédio, Sala, Departamento e Usuário~~ | Concluído |
 | 30/10 | Larissa e Sofia | ~~Criar as Views para login e para manter e executar casos de uso relacionados aos Models acima~~ | Concluído |
-| 06/11 | Nelson | Criar os Presenters para as Views acima e ~~implementar o controle de acesso e execução do script do banco~~ | Em andamento |
+| 06/11 | Nelson | ~~Criar os Presenters para as Views acima e implementar o controle de acesso e execução do script do banco~~ | Concluído |
 | 06/11 | Natália | Documentar casos de testes (total de pelo menos 5) | Em andamento |
 
 **Sprint 2**
@@ -52,7 +52,7 @@ As seguintes atividades estão planejadas para a implementação do projeto:
 | 04/12 | Nelson | Criar os Presenters para as Views acima | Pendente |
 | 04/12 | Natália | Documentar mais casos de testes e implementar todos com JUnit (total de pelo menos 10) | Pendente |
 
-## Ambiente
+## Ambientes
 
 O ambiente de desenvolvimento deve possuir o [JDK (Java SE Development Kit)](https://www.oracle.com/technetwork/pt/java/javase/downloads/jdk8-downloads-2133151.html) versão 8 ou superior, enquanto o ambiente de execução deve possuir o [JRE (Java SE Runtime Environment)](https://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html) versão 8 ou superior.
 
@@ -64,3 +64,16 @@ Deve existir o usuário com nome "invscpAdmin" e senha "12345" (com autorizaçã
 Além disso, deve existir um banco de dados nomeado "inventory" e cujo owner é o usuário "invscpAdmin".
 
 Ao ser executado, o InvSCP detectará se o banco de dados "inventory" foi inicializado (teve todas as tabelas criadas). Caso contrário, o script "[createDatabase](src/main/resources/sql/createDatabase.sql)" será executado automaticamente para inicializá-lo. Por padrão, o script popula o banco com um Departamento de Patrimônio e um usuário responsável por ser o Chefe de Patrimônio, cujo login é "admin" e a senha é "admin".
+
+### Build e execução
+
+É possível construir uma build do projeto em um arquivo JAR através do Maven. Para isto, podem ser utilizados um dos seguintes comandos:
+
+ - ```mvn package -P executavel-unico``` (gera um arquivo JAR único, incluindo todas as dependências)
+ - ```mvn package -P executavel-dir``` (gera um arquivo JAR mas mantém as dependências separadas em uma pasta externa)
+ 
+Para rodar o projeto, basta executar o JAR:
+
+```java -jar nomeDoArquivo.jar```
+
+O parâmetro opcional ```--forceInitialization``` pode ser passado para forçar o banco de dados a ser recriado com os dados iniciais. Esta inicialização é executada automaticamente quando o sistema detecta que o banco de dados nunca foi inicializado.

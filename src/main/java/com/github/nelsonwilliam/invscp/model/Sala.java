@@ -1,16 +1,20 @@
 package com.github.nelsonwilliam.invscp.model;
 
+import java.util.List;
+
+import com.github.nelsonwilliam.invscp.model.enums.TipoSalaEnum;
+import com.github.nelsonwilliam.invscp.model.repository.DepartamentoRepository;
+import com.github.nelsonwilliam.invscp.model.repository.PredioRepository;
+
 public class Sala implements Model {
 
     private static final long serialVersionUID = 509047893405447267L;
 
     private Integer id = null;
 
-    private String nome = "Sala";
+    private String nome = null;
 
-    private boolean deDeposito = false;
-
-    private SalasEnum tipoSala;
+    private TipoSalaEnum tipo = null;;
 
     private Integer idPredio = null;
 
@@ -20,7 +24,12 @@ public class Sala implements Model {
         return idPredio;
     }
 
-    public void setIdPredio(Integer idPredio) {
+    public Predio getPredio() {
+        final PredioRepository predioRepo = new PredioRepository();
+        return predioRepo.getById(idPredio);
+    }
+
+    public void setIdPredio(final Integer idPredio) {
         this.idPredio = idPredio;
     }
 
@@ -28,31 +37,38 @@ public class Sala implements Model {
         return idDepartamento;
     }
 
-    public void setIdDepartamento(Integer idDepartamento) {
+    public Departamento getDepartamento() {
+        final DepartamentoRepository deptRepo = new DepartamentoRepository();
+        return deptRepo.getById(idDepartamento);
+    }
+
+    public void setIdDepartamento(final Integer idDepartamento) {
         this.idDepartamento = idDepartamento;
     }
 
-    public SalasEnum getTipoSala() {
-        return tipoSala;
+    public TipoSalaEnum getTipo() {
+        return tipo;
     }
 
-    public String getTipoSalaString() {
-    	return tipoSala.toString();
+    public String getTipoString() {
+        return tipo.toString();
     }
 
-    public void setTipoSala(SalasEnum tipoSala) {
-        this.tipoSala = tipoSala;
+    public void setTipo(final TipoSalaEnum tipo) {
+        this.tipo = tipo;
     }
 
-    public void setTipoSala(String tipo) {
-    	this.tipoSala = SalasEnum.valueOf(tipo);
+    public void setTipo(final String tipo) {
+        this.tipo = TipoSalaEnum.valueOf(tipo);
     }
 
+    @Override
     public Integer getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    @Override
+    public void setId(final Integer id) {
         this.id = id;
     }
 
@@ -60,16 +76,17 @@ public class Sala implements Model {
         return nome;
     }
 
-    public void setNome(String nome) {
+    public void setNome(final String nome) {
         this.nome = nome;
     }
 
-    public boolean isDeDeposito() {
-        return deDeposito;
+    public List<Predio> getPossiveisPredios() {
+        final PredioRepository predioRepo = new PredioRepository();
+        return predioRepo.getAll();
     }
 
-    public void setDeDeposito(boolean deDeposito) {
-        this.deDeposito = deDeposito;
+    public List<Departamento> getPossiveisDepartamentos() {
+        final DepartamentoRepository deptRepo = new DepartamentoRepository();
+        return deptRepo.getAll();
     }
-
 }

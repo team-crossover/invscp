@@ -16,14 +16,13 @@ public interface PredioView extends View {
     // -------------------------------------------
 
     /**
-     * Atualiza todos os valores da janela para exibir os dados do predio
-     * passado.
+     * Atualiza todos os valores da janela para exibir os dados do predio passado.
      */
     void updatePredio(Predio predio);
 
     /**
-     * Exibe uma mensagem de erro com a mensagem especificada. Por exemplo, pode
-     * ser chamado para avisar que algum campo obrigatório foi deixado vazio.
+     * Exibe uma mensagem de erro com a mensagem especificada. Por exemplo, pode ser chamado para
+     * avisar que algum campo obrigatório foi deixado vazio.
      */
     void showError(String message);
 
@@ -31,6 +30,8 @@ public interface PredioView extends View {
      * Exibe uma mensagem de que o item foi alterado/adicionado com sucesso.
      */
     void showSucesso();
+
+    void showInfo(String message);
 
     /**
      * Fecha a View.
@@ -42,8 +43,8 @@ public interface PredioView extends View {
     // ---------------------------------------------
 
     /**
-     * Obtém o departamento com os valores atualmente exibidos no formulário que
-     * o usuário pode ou não ter alterado.
+     * Obtém o departamento com os valores atualmente exibidos no formulário que o usuário pode ou
+     * não ter alterado.
      */
     Predio getPredio();
 }

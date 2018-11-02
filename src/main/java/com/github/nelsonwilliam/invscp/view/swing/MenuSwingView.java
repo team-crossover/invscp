@@ -1,129 +1,195 @@
 package com.github.nelsonwilliam.invscp.view.swing;
 
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
+import com.github.nelsonwilliam.invscp.model.Departamento;
 import com.github.nelsonwilliam.invscp.model.Funcionario;
 import com.github.nelsonwilliam.invscp.view.MenuView;
 
 public class MenuSwingView extends JPanel implements MenuView {
 
-	private static final long serialVersionUID = 8975992154717828680L;
+    private static final long serialVersionUID = 8975992154717828680L;
 
-	private JLabel lblSessao;
-	private JButton btnLogin;
-	private JButton btnLogout;
-	private JButton btnDepartamentos;
-	private JButton btnSalas;
-	private JButton btnPredios;
-	private JButton btnLocalizacoes;
-	private JButton btnFuncionarios;
+    private JLabel lblSessaoAnonima;
+    private JLabel lblDepartamento;
+    private JLabel lblCargo;
+    private JLabel lblFuncionario;
+    private JButton btnLogin;
+    private JButton btnLogout;
+    private JButton btnDepartamentos;
+    private JButton btnSalas;
+    private JButton btnPredios;
+    private JButton btnLocalizacoes;
+    private JButton btnFuncionarios;
+    private JPanel pnlSession;
+    private JPanel pnlButtons;
+    private JPanel pnlLoginLogout;
 
-	public MenuSwingView() {
-		initialize();
-		updateFuncionarioLogado(null);
-	}
+    public MenuSwingView() {
+        initialize();
+        updateFuncionarioLogado(null);
+    }
 
-	private void initialize() {
-		setLayout(new GridLayout(10, 1, 10, 10));
+    private void initialize() {
+        lblSessaoAnonima = new JLabel("Sessão anônima");
+        lblSessaoAnonima.setHorizontalAlignment(SwingConstants.CENTER);
+        lblFuncionario = new JLabel("Funcionario");
+        lblFuncionario.setHorizontalAlignment(SwingConstants.CENTER);
+        lblCargo = new JLabel("Cargo");
+        lblCargo.setHorizontalAlignment(SwingConstants.CENTER);
+        lblDepartamento = new JLabel("Departamento");
+        lblDepartamento.setHorizontalAlignment(SwingConstants.CENTER);
+        btnFuncionarios = new JButton("Funcionarios");
+        btnDepartamentos = new JButton("Departamentos");
+        btnLocalizacoes = new JButton("Localizações");
+        btnPredios = new JButton("Prédios");
+        btnSalas = new JButton("Salas");
+        btnLogout = new JButton("Logout");
+        btnLogin = new JButton("Login");
 
-		lblSessao = new JLabel("Sessão desconhecida");
-		btnLogin = new JButton("Login");
-		btnLogout = new JButton("Logout");
-		btnDepartamentos = new JButton("Departamentos");
-		btnSalas = new JButton("Salas");
-		btnPredios = new JButton("Prédios");
-		btnLocalizacoes = new JButton("Localizações");
-		btnFuncionarios = new JButton("Funcionarios");
-	}
+        final GridBagLayout gridBagLayout = new GridBagLayout();
+        gridBagLayout.columnWidths = new int[] { 200 };
+        gridBagLayout.columnWeights = new double[] { 1.0 };
+        gridBagLayout.rowHeights = new int[] { 500, 0, 10, 0 };
+        gridBagLayout.rowWeights = new double[] { 1.0, 0.0, 0.0, 0.0 };
+        setLayout(gridBagLayout);
 
-	@Override
-	public void updateFuncionarioLogado(Funcionario funcionario) {
-		removeAll();
+        pnlButtons = new JPanel();
+        final GridBagConstraints gbc_panel_1 = new GridBagConstraints();
+        gbc_panel_1.anchor = GridBagConstraints.NORTH;
+        gbc_panel_1.fill = GridBagConstraints.HORIZONTAL;
+        gbc_panel_1.insets = new Insets(0, 0, 5, 5);
+        gbc_panel_1.gridx = 0;
+        gbc_panel_1.gridy = 0;
+        add(pnlButtons, gbc_panel_1);
+        pnlButtons.setLayout(new GridLayout(0, 1, 10, 10));
 
-		boolean isInteressado = (funcionario == null);
-		boolean isFuncionario = (funcionario != null);
-		boolean isChefeDeDepartamento = isFuncionario && funcionario.isChefeDeDepartamento();
-		boolean isChefeDePatrimonio = isFuncionario && funcionario.isChefeDePatrimonio();
+        pnlSession = new JPanel();
+        final GridBagConstraints gbc_panel = new GridBagConstraints();
+        gbc_panel.anchor = GridBagConstraints.NORTH;
+        gbc_panel.fill = GridBagConstraints.HORIZONTAL;
+        gbc_panel.insets = new Insets(0, 0, 5, 5);
+        gbc_panel.gridx = 0;
+        gbc_panel.gridy = 1;
+        add(pnlSession, gbc_panel);
+        pnlSession.setLayout(new GridLayout(0, 1, 10, 5));
 
-		// TODO Exibir os botões adequados dependendo do papel do funcionário logado.
+        pnlLoginLogout = new JPanel();
+        final GridBagConstraints gbc_panel_2 = new GridBagConstraints();
+        gbc_panel_2.anchor = GridBagConstraints.NORTH;
+        gbc_panel_2.fill = GridBagConstraints.HORIZONTAL;
+        gbc_panel_2.insets = new Insets(0, 0, 5, 5);
+        gbc_panel_2.gridx = 0;
+        gbc_panel_2.gridy = 3;
+        add(pnlLoginLogout, gbc_panel_2);
+        pnlLoginLogout.setLayout(new GridLayout(0, 1, 10, 0));
+    }
 
-		if (isInteressado) {
-			lblSessao.setText("Sessão anônima");
-			add(lblSessao);
-			add(btnLogin);
-		} else {
-			lblSessao.setText("Sessão de " + funcionario.getNome());
-			add(lblSessao);
-			add(btnLogout);
-			// Botoes de chefia
-			add(btnDepartamentos);
-			add(btnSalas);
-			add(btnPredios);
-			add(btnLocalizacoes);
+    @Override
+    public void updateFuncionarioLogado(final Funcionario funcionario) {
+        pnlSession.removeAll();
+        pnlButtons.removeAll();
+        pnlLoginLogout.removeAll();
 
-			if (isChefeDeDepartamento) {
-				// add(btnDepartamentos);
-				// add(btnSalas);
-				// add(btnPredios);
-				// add(btnLocalizacoes);
-				// add(btnFuncionarios); -> só do seu dpt
-			} else if (isChefeDePatrimonio) {
-				// Mantem funcionarios pra qualquer departamento
-				// Emite inventario e baixa bem patrimonial
-			}
-		}
+        final boolean isFuncionario = (funcionario != null);
+        final boolean isChefe = isFuncionario && funcionario.isChefe();
+        final boolean isChefeDePatrimonio = isFuncionario && funcionario.isChefeDePatrimonio();
 
-		revalidate();
-		repaint();
-	}
+        // Exibe os botões adequados dependendo do papel do funcionário logado.
+        if (!isFuncionario) {
+            // Session
+            pnlSession.add(lblSessaoAnonima);
 
-	@Override
-	public void setVisible(boolean visible) {
-		super.setVisible(visible);
-	}
+            // Buttons
+            // ...
 
-	@Override
-	public void addLoginListener(ActionListener listener) {
-		btnLogin.addActionListener(listener);
-	}
+            // Logout
+            pnlLoginLogout.add(btnLogin);
 
-	@Override
-	public void addLogoutListener(ActionListener listener) {
-		btnLogout.addActionListener(listener);
-	}
+        } else {
+            // Session
+            lblFuncionario.setText(funcionario.getNome());
+            pnlSession.add(lblFuncionario);
+            lblCargo.setText(funcionario.getCargo());
+            pnlSession.add(lblCargo);
+            final Departamento dept = funcionario.getDepartamento();
+            if (dept != null) {
+                lblDepartamento.setText(dept.getNome());
+                pnlSession.add(lblDepartamento);
+            }
 
-	@Override
-	public void addLocalizacoesListener(ActionListener listener) {
-		btnLocalizacoes.addActionListener(listener);
+            // Buttons
+            if (isChefe) {
+                pnlButtons.add(btnFuncionarios);
+                pnlButtons.add(btnDepartamentos);
+                pnlButtons.add(btnLocalizacoes);
+                pnlButtons.add(btnPredios);
+                pnlButtons.add(btnSalas);
 
-	}
+                if (isChefeDePatrimonio) {
+                    // Emitir inventario
+                }
+            }
 
-	@Override
-	public void addPrediosListener(ActionListener listener) {
-		btnPredios.addActionListener(listener);
+            // Logout
+            pnlLoginLogout.add(btnLogout);
+        }
 
-	}
+        revalidate();
+        repaint();
+    }
 
-	@Override
-	public void addSalasListener(ActionListener listener) {
-		btnSalas.addActionListener(listener);
+    @Override
+    public void setVisible(final boolean visible) {
+        super.setVisible(visible);
+    }
 
-	}
+    @Override
+    public void addLoginListener(final ActionListener listener) {
+        btnLogin.addActionListener(listener);
+    }
 
-	@Override
-	public void addDepartamentosListener(ActionListener listener) {
-		btnDepartamentos.addActionListener(listener);
-	}
+    @Override
+    public void addLogoutListener(final ActionListener listener) {
+        btnLogout.addActionListener(listener);
+    }
 
-	@Override
-	public void addFuncionariosListener(ActionListener listener) {
-		btnFuncionarios.addActionListener(listener);
+    @Override
+    public void addLocalizacoesListener(final ActionListener listener) {
+        btnLocalizacoes.addActionListener(listener);
 
-	}
+    }
+
+    @Override
+    public void addPrediosListener(final ActionListener listener) {
+        btnPredios.addActionListener(listener);
+
+    }
+
+    @Override
+    public void addSalasListener(final ActionListener listener) {
+        btnSalas.addActionListener(listener);
+
+    }
+
+    @Override
+    public void addDepartamentosListener(final ActionListener listener) {
+        btnDepartamentos.addActionListener(listener);
+    }
+
+    @Override
+    public void addFuncionariosListener(final ActionListener listener) {
+        btnFuncionarios.addActionListener(listener);
+
+    }
 
 }

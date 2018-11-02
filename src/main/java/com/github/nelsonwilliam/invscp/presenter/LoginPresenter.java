@@ -9,45 +9,40 @@ import com.github.nelsonwilliam.invscp.view.LoginView;
 
 public class LoginPresenter extends Presenter<LoginView> {
 
-	private Consumer<Funcionario> sucessfullLoginCallback;
+    private Consumer<Funcionario> sucessfullLoginCallback;
 
-	public LoginPresenter(LoginView view) {
-		super(view);
-		setupViewListeners();
-	}
+    private final MainPresenter mainPresenter;
 
-	/**
-	 * Define a função que será chamada quando o login for efetuado com sucesso. O
-	 * parâmetro da função é o funcionário que foi autenticado.
-	 */
-	public void setSucessfullLoginCallback(Consumer<Funcionario> callback) {
-		this.sucessfullLoginCallback = callback;
-	}
+    public LoginPresenter(final LoginView view, final MainPresenter mainPresenter) {
+        super(view);
+        this.mainPresenter = mainPresenter;
+        setupViewListeners();
+    }
 
-	private void setupViewListeners() {
-		view.addConfirmListener((ActionEvent e) -> {
-			onConfirmLogin();
-		});
-	}
+    private void setupViewListeners() {
+        view.addConfirmListener((final ActionEvent e) -> {
+            onConfirmLogin();
+        });
+    }
 
-	private void onConfirmLogin() {
-		FuncionarioRepository funcRepo = new FuncionarioRepository();
+    private void onConfirmLogin() {
+        final FuncionarioRepository funcRepo = new FuncionarioRepository();
 
-		String login = view.getLogin();
-		Funcionario funcionario = funcRepo.getByLogin(login);
-		if (funcionario == null) {
-			view.showLoginFailed("Login desconhecido.");
-			return;
-		}
+        final String login = view.getLogin();
+        final Funcionario funcionario = funcRepo.getByLogin(login);
+        if (funcionario == null) {
+            view.showLoginFailed("Login desconhecido.");
+            return;
+        }
 
-		String senha = view.getSenha();
-		if (!senha.equals(funcionario.getSenha())) {
-			view.showLoginFailed("Senha incorreta.");
-			return;
-		}
+        final String senha = view.getSenha();
+        if (!senha.equals(funcionario.getSenha())) {
+            view.showLoginFailed("Senha incorreta.");
+            return;
+        }
 
-		view.close();
-		sucessfullLoginCallback.accept(funcionario);
-	}
+        view.close();
+        mainPresenter.setIdFuncionarioLogado(funcionario.getId());
+    }
 
 }
