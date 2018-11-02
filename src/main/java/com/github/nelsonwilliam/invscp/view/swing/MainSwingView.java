@@ -31,6 +31,7 @@ public class MainSwingView extends JFrame implements MainView {
 
     private void initialize() {
         setTitle("InvSCP");
+        setBounds(0, 0, 800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
 
