@@ -24,9 +24,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
 
-import com.github.nelsonwilliam.invscp.model.Departamento;
-import com.github.nelsonwilliam.invscp.model.Predio;
-import com.github.nelsonwilliam.invscp.model.Sala;
+import com.github.nelsonwilliam.invscp.model.dto.DepartamentoDTO;
+import com.github.nelsonwilliam.invscp.model.dto.PredioDTO;
+import com.github.nelsonwilliam.invscp.model.dto.SalaDTO;
 import com.github.nelsonwilliam.invscp.model.enums.TipoSalaEnum;
 import com.github.nelsonwilliam.invscp.view.SalaView;
 
@@ -42,35 +42,38 @@ public class SalaSwingView extends JDialog implements SalaView {
     private JButton btnCancelar;
     private JTextField fieldNome;
     private JComboBox<TipoSalaEnum> tipo;
-    private JList<Predio> listPredios;
+    private JList<PredioDTO> listPredios;
     private JScrollPane scrollPredios;
-    private JList<Departamento> listDepartamentos;
+    private JList<DepartamentoDTO> listDepartamentos;
     private JScrollPane scrollDepartamentos;
 
     /**
      * @param sala Salas cujos valores serão exibidos inicialmente.
-     *
-     * @param isAdicionar Indica se a janela que será exibida será para adição de uma nova sala
-     *        (true) ou para atualização de uma sala existente (false).
+     * @param isAdicionar Indica se a janela que será exibida será para adição
+     *        de uma nova sala (true) ou para atualização de uma sala existente
+     *        (false).
      */
-    public SalaSwingView(final JFrame owner, final Sala sala, final boolean isAdicionar) {
+    public SalaSwingView(final JFrame owner, final SalaDTO sala,
+            final boolean isAdicionar, final List<PredioDTO> predios,
+            final List<DepartamentoDTO> departamentos) {
+
         super(owner, isAdicionar ? "Adicionar sala" : "Alterar sala",
                 ModalityType.APPLICATION_MODAL);
         this.isAdicionar = isAdicionar;
         initialize();
-        updateSala(sala);
+        updateSala(sala, predios, departamentos);
     }
 
     private void initialize() {
-        setBounds(0, 0, 500, 300);
+        setBounds(0, 0, 500, 400);
         setLocationRelativeTo(getOwner());
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         final GridBagLayout gridBagLayout = new GridBagLayout();
         gridBagLayout.columnWidths = new int[] { 25, 100, 0, 25 };
         gridBagLayout.columnWeights = new double[] { 0.0, 0.0, 1.0, 0.0 };
         gridBagLayout.rowHeights = new int[] { 30, 0, 0, 0, 0, 30, 0, 30, 0 };
-        gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0,
-                Double.MIN_VALUE };
+        gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0, 1.0, 1.0, 0.0,
+                0.0, 0.0, Double.MIN_VALUE };
         getContentPane().setLayout(gridBagLayout);
 
         final JLabel lblNome = new JLabel("Nome:");
@@ -99,7 +102,8 @@ public class SalaSwingView extends JDialog implements SalaView {
         getContentPane().add(lblTipo, gbc_lblTipo);
 
         tipo = new JComboBox<TipoSalaEnum>();
-        tipo.setModel(new DefaultComboBoxModel<TipoSalaEnum>(TipoSalaEnum.values()));
+        tipo.setModel(
+                new DefaultComboBoxModel<TipoSalaEnum>(TipoSalaEnum.values()));
         final GridBagConstraints gbc_tipo = new GridBagConstraints();
         gbc_tipo.insets = new Insets(0, 0, 5, 5);
         gbc_tipo.fill = GridBagConstraints.HORIZONTAL;
@@ -107,36 +111,38 @@ public class SalaSwingView extends JDialog implements SalaView {
         gbc_tipo.gridy = 2;
         getContentPane().add(tipo, gbc_tipo);
 
-        final ListCellRenderer<? super Predio> predioListRenderer = new DefaultListCellRenderer() {
+        final ListCellRenderer<? super PredioDTO> predioListRenderer = new DefaultListCellRenderer() {
             private static final long serialVersionUID = 337686638148057981L;
 
             @Override
-            public Component getListCellRendererComponent(final JList<?> list, final Object value,
-                    final int index, final boolean isSelected, final boolean cellHasFocus) {
+            public Component getListCellRendererComponent(final JList<?> list,
+                    final Object value, final int index,
+                    final boolean isSelected, final boolean cellHasFocus) {
                 if (value == null) {
-                    return super.getListCellRendererComponent(list, "Nenhum", index, isSelected,
-                            cellHasFocus);
+                    return super.getListCellRendererComponent(list, "Nenhum",
+                            index, isSelected, cellHasFocus);
                 } else {
-                    final String nome = ((Predio) value).getNome();
-                    return super.getListCellRendererComponent(list, nome, index, isSelected,
-                            cellHasFocus);
+                    final String nome = ((PredioDTO) value).getNome();
+                    return super.getListCellRendererComponent(list, nome, index,
+                            isSelected, cellHasFocus);
                 }
             }
         };
 
-        final ListCellRenderer<? super Departamento> deptListRenderer = new DefaultListCellRenderer() {
+        final ListCellRenderer<? super DepartamentoDTO> deptListRenderer = new DefaultListCellRenderer() {
             private static final long serialVersionUID = 437686638148057981L;
 
             @Override
-            public Component getListCellRendererComponent(final JList<?> list, final Object value,
-                    final int index, final boolean isSelected, final boolean cellHasFocus) {
+            public Component getListCellRendererComponent(final JList<?> list,
+                    final Object value, final int index,
+                    final boolean isSelected, final boolean cellHasFocus) {
                 if (value == null) {
-                    return super.getListCellRendererComponent(list, "Nenhum", index, isSelected,
-                            cellHasFocus);
+                    return super.getListCellRendererComponent(list, "Nenhum",
+                            index, isSelected, cellHasFocus);
                 } else {
-                    final String nome = ((Departamento) value).getNome();
-                    return super.getListCellRendererComponent(list, nome, index, isSelected,
-                            cellHasFocus);
+                    final String nome = ((DepartamentoDTO) value).getNome();
+                    return super.getListCellRendererComponent(list, nome, index,
+                            isSelected, cellHasFocus);
                 }
             }
         };
@@ -157,7 +163,7 @@ public class SalaSwingView extends JDialog implements SalaView {
         gbc_scrollPanePredios.gridy = 3;
         getContentPane().add(scrollPredios, gbc_scrollPanePredios);
 
-        final JLabel lblDepartamento = new JLabel("Departamento:");
+        final JLabel lblDepartamento = new JLabel("DepartamentoDTO:");
         final GridBagConstraints gbc_lblDepartamento = new GridBagConstraints();
         gbc_lblDepartamento.anchor = GridBagConstraints.EAST;
         gbc_lblDepartamento.insets = new Insets(0, 0, 5, 5);
@@ -173,14 +179,15 @@ public class SalaSwingView extends JDialog implements SalaView {
         gbc_scrollPaneDepts.gridy = 4;
         getContentPane().add(scrollDepartamentos, gbc_scrollPaneDepts);
 
-        listDepartamentos = new JList<Departamento>();
-        listDepartamentos.setModel(new DefaultListModel<Departamento>());
+        listDepartamentos = new JList<DepartamentoDTO>();
+        listDepartamentos.setModel(new DefaultListModel<DepartamentoDTO>());
         listDepartamentos.setCellRenderer(deptListRenderer);
-        scrollDepartamentos.setBorder(BorderFactory.createLineBorder(Color.gray, 1));
+        scrollDepartamentos
+                .setBorder(BorderFactory.createLineBorder(Color.gray, 1));
         scrollDepartamentos.setViewportView(listDepartamentos);
 
-        listPredios = new JList<Predio>();
-        listPredios.setModel(new DefaultListModel<Predio>());
+        listPredios = new JList<PredioDTO>();
+        listPredios.setModel(new DefaultListModel<PredioDTO>());
         listPredios.setCellRenderer(predioListRenderer);
         scrollPredios.setBorder(BorderFactory.createLineBorder(Color.gray, 1));
         scrollPredios.setViewportView(listPredios);
@@ -222,7 +229,8 @@ public class SalaSwingView extends JDialog implements SalaView {
     }
 
     @Override
-    public void updateSala(final Sala sala) {
+    public void updateSala(final SalaDTO sala, final List<PredioDTO> predios,
+            final List<DepartamentoDTO> departamentos) {
         if (sala == null) {
             throw new NullPointerException();
         }
@@ -237,9 +245,8 @@ public class SalaSwingView extends JDialog implements SalaView {
 
         // Exibe os predios na lista de predios e seleciona o atual, se
         // tiver, ou 'Nenhum', se não tiver.
-        final List<Predio> predios = sala.getPossiveisPredios();
-        final Predio predio = sala.getPredio();
-        final DefaultListModel<Predio> listPrediosModel = (DefaultListModel<Predio>) listPredios
+        final PredioDTO predio = sala.getPredio();
+        final DefaultListModel<PredioDTO> listPrediosModel = (DefaultListModel<PredioDTO>) listPredios
                 .getModel();
         listPrediosModel.clear();
         if (predio == null) {
@@ -249,17 +256,19 @@ public class SalaSwingView extends JDialog implements SalaView {
             listPrediosModel.add(0, predio);
             listPredios.setSelectedIndex(0);
         }
-        for (final Predio p : predios) {
-            if (predio != null && !p.getId().equals(predio.getId())) {
-                listPrediosModel.addElement(p);
+        if (predios != null) {
+            for (final PredioDTO p : predios) {
+                if (predio == null || !p.getId().equals(predio.getId())) {
+                    listPrediosModel.addElement(p);
+                }
             }
         }
 
-        // Exibe os departamentos na lista de departamentos e seleciona o atual, se
+        // Exibe os departamentos na lista de departamentos e seleciona o atual,
+        // se
         // tiver, ou 'Nenhum', se não tiver.
-        final List<Departamento> departamentos = sala.getPossiveisDepartamentos();
-        final Departamento departamento = sala.getDepartamento();
-        final DefaultListModel<Departamento> listDeptsModel = (DefaultListModel<Departamento>) listDepartamentos
+        final DepartamentoDTO departamento = sala.getDepartamento();
+        final DefaultListModel<DepartamentoDTO> listDeptsModel = (DefaultListModel<DepartamentoDTO>) listDepartamentos
                 .getModel();
         listDeptsModel.clear();
         if (departamento == null) {
@@ -269,9 +278,12 @@ public class SalaSwingView extends JDialog implements SalaView {
             listDeptsModel.add(0, departamento);
             listDepartamentos.setSelectedIndex(0);
         }
-        for (final Departamento p : departamentos) {
-            if (departamento != null && !p.getId().equals(departamento.getId())) {
-                listDeptsModel.addElement(p);
+        if (departamentos != null) {
+            for (final DepartamentoDTO p : departamentos) {
+                if (departamento == null
+                        || !p.getId().equals(departamento.getId())) {
+                    listDeptsModel.addElement(p);
+                }
             }
         }
 
@@ -284,13 +296,15 @@ public class SalaSwingView extends JDialog implements SalaView {
     public void showError(final String message) {
         final String titulo = "Erro";
         final String messageCompleta = "Erro: " + message;
-        JOptionPane.showMessageDialog(this, messageCompleta, titulo, JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, messageCompleta, titulo,
+                JOptionPane.ERROR_MESSAGE);
     }
 
     @Override
     public void showSucesso() {
         final String titulo = "Sucesso";
-        final String messageCompleta = isAdicionar ? "Sala adicionada!" : "Sala alterada!";
+        final String messageCompleta = isAdicionar ? "SalaDTO adicionada!"
+                : "SalaDTO alterada!";
         JOptionPane.showMessageDialog(this, messageCompleta, titulo,
                 JOptionPane.INFORMATION_MESSAGE);
     }
@@ -298,7 +312,8 @@ public class SalaSwingView extends JDialog implements SalaView {
     @Override
     public void showInfo(final String message) {
         final String titulo = "Informação";
-        JOptionPane.showMessageDialog(this, message, titulo, JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this, message, titulo,
+                JOptionPane.INFORMATION_MESSAGE);
     }
 
     @Override
@@ -308,15 +323,15 @@ public class SalaSwingView extends JDialog implements SalaView {
     }
 
     @Override
-    public Sala getSala() {
-        final Sala sala = new Sala();
+    public SalaDTO getSala() {
+        final SalaDTO sala = new SalaDTO();
         sala.setId(idSala);
         sala.setNome(fieldNome.getText());
         sala.setTipo((TipoSalaEnum) tipo.getSelectedItem());
-        sala.setIdPredio(listPredios.getSelectedValue() == null ? null
-                : listPredios.getSelectedValue().getId());
-        sala.setIdDepartamento(listDepartamentos.getSelectedValue() == null ? null
-                : listDepartamentos.getSelectedValue().getId());
+        sala.setPredio(listPredios.getSelectedValue() == null ? null
+                : listPredios.getSelectedValue());
+        sala.setDepartamento(listDepartamentos.getSelectedValue() == null ? null
+                : listDepartamentos.getSelectedValue());
         return sala;
     }
 

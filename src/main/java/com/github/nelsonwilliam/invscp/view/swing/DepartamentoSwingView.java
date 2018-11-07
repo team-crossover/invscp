@@ -46,14 +46,16 @@ public class DepartamentoSwingView extends JDialog implements DepartamentoView {
     private JScrollPane scrollPane_1;
 
     /**
-     * @param departamento Departamento cujos valores serão exibidos inicialmente.
-     *
-     * @param isAdicionar Indica se a janela que será exibida será para adição de um novo
-     *        departamento (true) ou para atualização de um departamento existente (false).
+     * @param departamento Departamento cujos valores serão exibidos
+     *        inicialmente.
+     * @param isAdicionar Indica se a janela que será exibida será para adição
+     *        de um novo departamento (true) ou para atualização de um
+     *        departamento existente (false).
      */
-    public DepartamentoSwingView(final JFrame owner, final Departamento departamento,
-            final boolean isAdicionar) {
-        super(owner, isAdicionar ? "Adicionar departamento" : "Alterar departamento",
+    public DepartamentoSwingView(final JFrame owner,
+            final Departamento departamento, final boolean isAdicionar) {
+        super(owner,
+                isAdicionar ? "Adicionar departamento" : "Alterar departamento",
                 ModalityType.APPLICATION_MODAL);
         this.isAdicionar = isAdicionar;
         initialize();
@@ -67,9 +69,10 @@ public class DepartamentoSwingView extends JDialog implements DepartamentoView {
         gridBagLayout = new GridBagLayout();
         gridBagLayout.columnWidths = new int[] { 25, 102, 0, 25, 0 };
         gridBagLayout.rowHeights = new int[] { 25, 25, 0, 0, 0, 25, 25, 0 };
-        gridBagLayout.columnWeights = new double[] { 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE };
-        gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0,
+        gridBagLayout.columnWeights = new double[] { 0.0, 0.0, 1.0, 0.0,
                 Double.MIN_VALUE };
+        gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0, 1.0, 1.0, 0.0,
+                0.0, Double.MIN_VALUE };
         getContentPane().setLayout(gridBagLayout);
 
         btnConfirmar = new JButton("Confirmar");
@@ -112,15 +115,16 @@ public class DepartamentoSwingView extends JDialog implements DepartamentoView {
             private static final long serialVersionUID = 337686638048057981L;
 
             @Override
-            public Component getListCellRendererComponent(final JList<?> list, final Object value,
-                    final int index, final boolean isSelected, final boolean cellHasFocus) {
+            public Component getListCellRendererComponent(final JList<?> list,
+                    final Object value, final int index,
+                    final boolean isSelected, final boolean cellHasFocus) {
                 if (value == null) {
-                    return super.getListCellRendererComponent(list, "Nenhum", index, isSelected,
-                            cellHasFocus);
+                    return super.getListCellRendererComponent(list, "Nenhum",
+                            index, isSelected, cellHasFocus);
                 } else {
                     final String nome = ((Funcionario) value).getNome();
-                    return super.getListCellRendererComponent(list, nome, index, isSelected,
-                            cellHasFocus);
+                    return super.getListCellRendererComponent(list, nome, index,
+                            isSelected, cellHasFocus);
                 }
             }
         };
@@ -200,10 +204,12 @@ public class DepartamentoSwingView extends JDialog implements DepartamentoView {
             throw new NullPointerException();
         }
 
-        // O ID do departamento sendo exibido é armazenado para que seja possível
+        // O ID do departamento sendo exibido é armazenado para que seja
+        // possível
         // retorná-lo na hora de salvar o departamento.
         idDepartamento = departamento.getId();
-        deDepartamento = departamento.getId() != null && departamento.getDePatrimonio();
+        deDepartamento = departamento.getId() != null
+                && departamento.getDePatrimonio();
 
         getContentPane().remove(lblDePatrimonio);
         if (deDepartamento) {
@@ -221,7 +227,8 @@ public class DepartamentoSwingView extends JDialog implements DepartamentoView {
 
         fieldNome.setText(departamento.getNome());
 
-        final List<Funcionario> possiveisChefes = departamento.getPossiveisChefes();
+        final List<Funcionario> possiveisChefes = departamento
+                .getPossiveisChefes();
         final Funcionario chefe = departamento.getChefe();
         final Funcionario chefeSubstituto = departamento.getChefeSubstituto();
 
@@ -238,10 +245,13 @@ public class DepartamentoSwingView extends JDialog implements DepartamentoView {
             listChefe.setSelectedIndex(0);
         }
         for (final Funcionario funcionario : possiveisChefes) {
-            listChefeModel.addElement(funcionario);
+            if (chefe == null || !funcionario.getId().equals(chefe.getId())) {
+                listChefeModel.addElement(funcionario);
+            }
         }
 
-        // Exibe os funcionários na lista de chefes substitutos e seleciona o atual, se
+        // Exibe os funcionários na lista de chefes substitutos e seleciona o
+        // atual, se
         // tiver, ou 'Nenhum', se não tiver.
         final DefaultListModel<Funcionario> listChefeSubstitutoModel = (DefaultListModel<Funcionario>) listChefeSubstituto
                 .getModel();
@@ -256,7 +266,10 @@ public class DepartamentoSwingView extends JDialog implements DepartamentoView {
         }
 
         for (final Funcionario funcionario : possiveisChefes) {
-            listChefeSubstitutoModel.addElement(funcionario);
+            if (chefeSubstituto == null
+                    || !funcionario.getId().equals(chefeSubstituto.getId())) {
+                listChefeSubstitutoModel.addElement(funcionario);
+            }
         }
 
         revalidate();
@@ -267,13 +280,15 @@ public class DepartamentoSwingView extends JDialog implements DepartamentoView {
     public void showError(final String message) {
         final String titulo = "Erro";
         final String messageCompleta = "Erro: " + message;
-        JOptionPane.showMessageDialog(this, messageCompleta, titulo, JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, messageCompleta, titulo,
+                JOptionPane.ERROR_MESSAGE);
     }
 
     @Override
     public void showInfo(final String message) {
         final String titulo = "Informação";
-        JOptionPane.showMessageDialog(this, message, titulo, JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this, message, titulo,
+                JOptionPane.INFORMATION_MESSAGE);
     }
 
     @Override
@@ -293,8 +308,10 @@ public class DepartamentoSwingView extends JDialog implements DepartamentoView {
         departamento.setDePatrimonio(deDepartamento);
         final Funcionario chefe = listChefe.getSelectedValue();
         departamento.setIdChefe(chefe == null ? null : chefe.getId());
-        final Funcionario chefeSubstituto = listChefeSubstituto.getSelectedValue();
-        departamento.setIdChefeSubstituto(chefeSubstituto == null ? null : chefeSubstituto.getId());
+        final Funcionario chefeSubstituto = listChefeSubstituto
+                .getSelectedValue();
+        departamento.setIdChefeSubstituto(
+                chefeSubstituto == null ? null : chefeSubstituto.getId());
         return departamento;
 
     }

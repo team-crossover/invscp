@@ -3,20 +3,20 @@ package com.github.nelsonwilliam.invscp.presenter;
 import java.awt.event.ActionEvent;
 import java.util.List;
 
-import javax.swing.JFrame;
-
+import com.github.nelsonwilliam.invscp.InvSCP;
 import com.github.nelsonwilliam.invscp.model.Localizacao;
 import com.github.nelsonwilliam.invscp.model.repository.LocalizacaoRepository;
 import com.github.nelsonwilliam.invscp.model.repository.PredioRepository;
 import com.github.nelsonwilliam.invscp.view.LocalizacaoView;
 import com.github.nelsonwilliam.invscp.view.LocalizacoesView;
-import com.github.nelsonwilliam.invscp.view.swing.LocalizacaoSwingView;
+import com.github.nelsonwilliam.invscp.view.ViewFactory;
 
 public class LocalizacoesPresenter extends Presenter<LocalizacoesView> {
 
     private final MainPresenter mainPresenter;
 
-    public LocalizacoesPresenter(final LocalizacoesView view, final MainPresenter mainPresenter) {
+    public LocalizacoesPresenter(final LocalizacoesView view,
+            final MainPresenter mainPresenter) {
         super(view);
         this.mainPresenter = mainPresenter;
         setupViewListeners();
@@ -38,16 +38,17 @@ public class LocalizacoesPresenter extends Presenter<LocalizacoesView> {
     @SuppressWarnings("unused")
     private void onAdicionarLocalizacao() {
         final Localizacao novoLoca = new Localizacao();
-        final LocalizacaoView locaView = new LocalizacaoSwingView((JFrame) mainPresenter.getView(),
-                novoLoca, true);
-        final LocalizacaoPresenter locaPresenter = new LocalizacaoPresenter(locaView, mainPresenter,
-                this);
+        final LocalizacaoView locaView = ViewFactory.createLocalizacao(
+                InvSCP.VIEW_IMPL, mainPresenter.getView(), novoLoca, true);
+        final LocalizacaoPresenter locaPresenter = new LocalizacaoPresenter(
+                locaView, mainPresenter, this);
         locaView.setVisible(true);
     }
 
     private void onDeletarLocalizacoes() {
         final List<Integer> selectedLocaIds = view.getSelectedLocalizacoesIds();
-        view.showConfirmacao("Deletar " + selectedLocaIds.size() + " localizações(s)?",
+        view.showConfirmacao(
+                "Deletar " + selectedLocaIds.size() + " localizações(s)?",
                 (final Boolean confirmado) -> {
                     if (confirmado) {
                         deletarLocalizacoes(selectedLocaIds);
@@ -64,7 +65,8 @@ public class LocalizacoesPresenter extends Presenter<LocalizacoesView> {
 
             // VALIDAÇÃO DE DADOS
             if (predioRepo.getByLocalizacao(loca).size() > 0) {
-                view.showError("Não é possível deletar a localização " + loca.getNome()
+                view.showError("Não é possível deletar a localização "
+                        + loca.getNome()
                         + " pois existem prédios com esta localização.");
                 continue;
             }
@@ -90,11 +92,13 @@ public class LocalizacoesPresenter extends Presenter<LocalizacoesView> {
         }
 
         final LocalizacaoRepository locaRepo = new LocalizacaoRepository();
-        final Localizacao selectedLocalizacao = locaRepo.getById(selectedLocaIds.get(0));
-        final LocalizacaoView locaView = new LocalizacaoSwingView((JFrame) mainPresenter.getView(),
-                selectedLocalizacao, false);
-        final LocalizacaoPresenter locaPresenter = new LocalizacaoPresenter(locaView, mainPresenter,
-                this);
+        final Localizacao selectedLocalizacao = locaRepo
+                .getById(selectedLocaIds.get(0));
+        final LocalizacaoView locaView = ViewFactory.createLocalizacao(
+                InvSCP.VIEW_IMPL, mainPresenter.getView(), selectedLocalizacao,
+                false);
+        final LocalizacaoPresenter locaPresenter = new LocalizacaoPresenter(
+                locaView, mainPresenter, this);
         locaView.setVisible(true);
     }
 

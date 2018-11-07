@@ -3,20 +3,20 @@ package com.github.nelsonwilliam.invscp.presenter;
 import java.awt.event.ActionEvent;
 import java.util.List;
 
-import javax.swing.JFrame;
-
+import com.github.nelsonwilliam.invscp.InvSCP;
 import com.github.nelsonwilliam.invscp.model.Predio;
 import com.github.nelsonwilliam.invscp.model.repository.PredioRepository;
 import com.github.nelsonwilliam.invscp.model.repository.SalaRepository;
 import com.github.nelsonwilliam.invscp.view.PredioView;
 import com.github.nelsonwilliam.invscp.view.PrediosView;
-import com.github.nelsonwilliam.invscp.view.swing.PredioSwingView;
+import com.github.nelsonwilliam.invscp.view.ViewFactory;
 
 public class PrediosPresenter extends Presenter<PrediosView> {
 
     private final MainPresenter mainPresenter;
 
-    public PrediosPresenter(final PrediosView view, final MainPresenter mainPresenter) {
+    public PrediosPresenter(final PrediosView view,
+            final MainPresenter mainPresenter) {
         super(view);
         this.mainPresenter = mainPresenter;
         setupViewListeners();
@@ -38,16 +38,17 @@ public class PrediosPresenter extends Presenter<PrediosView> {
     @SuppressWarnings("unused")
     private void onAdicionarPredio() {
         final Predio novoPredio = new Predio();
-        final PredioView predioView = new PredioSwingView((JFrame) mainPresenter.getView(),
-                novoPredio, true);
-        final PredioPresenter predioPresenter = new PredioPresenter(predioView, mainPresenter,
-                this);
+        final PredioView predioView = ViewFactory.createPredio(InvSCP.VIEW_IMPL,
+                mainPresenter.getView(), novoPredio, true);
+        final PredioPresenter predioPresenter = new PredioPresenter(predioView,
+                mainPresenter, this);
         predioView.setVisible(true);
     }
 
     private void onDeletarPredios() {
         final List<Integer> selectedPrdiosIds = view.getSelectedPrediosIds();
-        view.showConfirmacao("Deletar " + selectedPrdiosIds.size() + " prédios(s)?",
+        view.showConfirmacao(
+                "Deletar " + selectedPrdiosIds.size() + " prédios(s)?",
                 (final Boolean confirmado) -> {
                     if (confirmado) {
                         deletarPredios(selectedPrdiosIds);
@@ -64,8 +65,9 @@ public class PrediosPresenter extends Presenter<PrediosView> {
 
             // VALIDAÇÃO DE DADOS
             if (salaRepo.getByPredio(predio).size() > 0) {
-                view.showError("Não é possível deletar o prédio " + predio.getNome()
-                        + " pois existem salas com este prédio.");
+                view.showError(
+                        "Não é possível deletar o prédio " + predio.getNome()
+                                + " pois existem salas com este prédio.");
                 continue;
             }
 
@@ -91,11 +93,12 @@ public class PrediosPresenter extends Presenter<PrediosView> {
         }
 
         final PredioRepository predioRepo = new PredioRepository();
-        final Predio selectedPredio = predioRepo.getById(selectedPredioIds.get(0));
-        final PredioView predioView = new PredioSwingView((JFrame) mainPresenter.getView(),
-                selectedPredio, false);
-        final PredioPresenter predioPresenter = new PredioPresenter(predioView, mainPresenter,
-                this);
+        final Predio selectedPredio = predioRepo
+                .getById(selectedPredioIds.get(0));
+        final PredioView predioView = ViewFactory.createPredio(InvSCP.VIEW_IMPL,
+                mainPresenter.getView(), selectedPredio, false);
+        final PredioPresenter predioPresenter = new PredioPresenter(predioView,
+                mainPresenter, this);
         predioView.setVisible(true);
     }
 

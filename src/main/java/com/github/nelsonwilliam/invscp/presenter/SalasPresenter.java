@@ -1,21 +1,28 @@
 package com.github.nelsonwilliam.invscp.presenter;
 
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JFrame;
-
+import com.github.nelsonwilliam.invscp.InvSCP;
+import com.github.nelsonwilliam.invscp.exception.IllegalDeleteException;
+import com.github.nelsonwilliam.invscp.model.Departamento;
+import com.github.nelsonwilliam.invscp.model.Funcionario;
+import com.github.nelsonwilliam.invscp.model.Predio;
 import com.github.nelsonwilliam.invscp.model.Sala;
-import com.github.nelsonwilliam.invscp.model.enums.TipoSalaEnum;
+import com.github.nelsonwilliam.invscp.model.dto.DepartamentoDTO;
+import com.github.nelsonwilliam.invscp.model.dto.PredioDTO;
+import com.github.nelsonwilliam.invscp.model.dto.SalaDTO;
 import com.github.nelsonwilliam.invscp.model.repository.SalaRepository;
 import com.github.nelsonwilliam.invscp.view.SalaView;
 import com.github.nelsonwilliam.invscp.view.SalasView;
-import com.github.nelsonwilliam.invscp.view.swing.SalaSwingView;
+import com.github.nelsonwilliam.invscp.view.ViewFactory;
 
 public class SalasPresenter extends Presenter<SalasView> {
     private final MainPresenter mainPresenter;
 
-    public SalasPresenter(final SalasView view, final MainPresenter mainPresenter) {
+    public SalasPresenter(final SalasView view,
+            final MainPresenter mainPresenter) {
         super(view);
         this.mainPresenter = mainPresenter;
         setupViewListeners();
@@ -37,15 +44,37 @@ public class SalasPresenter extends Presenter<SalasView> {
     @SuppressWarnings("unused")
     private void onAdicionarSala() {
         final Sala novoSala = new Sala();
-        final SalaView salaView = new SalaSwingView((JFrame) mainPresenter.getView(), novoSala,
-                true);
-        final SalaPresenter salaPresenter = new SalaPresenter(salaView, mainPresenter, this);
+        final SalaDTO novoSalaDTO = new SalaDTO();
+        novoSalaDTO.fromModel(novoSala);
+
+        final List<Predio> predios = novoSala.getPossiveisPredios();
+        final List<PredioDTO> prediosDTOs = new ArrayList<PredioDTO>();
+        for (final Predio p : predios) {
+            final PredioDTO predioDTO = new PredioDTO();
+            predioDTO.fromModel(p);
+            prediosDTOs.add(predioDTO);
+        }
+
+        final List<Departamento> depts = novoSala.getPossiveisDepartamentos();
+        final List<DepartamentoDTO> deptsDTOs = new ArrayList<DepartamentoDTO>();
+        for (final Departamento d : depts) {
+            final DepartamentoDTO deptDTO = new DepartamentoDTO();
+            deptDTO.fromModel(d);
+            deptsDTOs.add(deptDTO);
+        }
+
+        final SalaView salaView = ViewFactory.createSala(InvSCP.VIEW_IMPL,
+                mainPresenter.getView(), novoSalaDTO, false, prediosDTOs,
+                deptsDTOs);
+        final SalaPresenter salaPresenter = new SalaPresenter(salaView,
+                mainPresenter, this);
         salaView.setVisible(true);
     }
 
     private void onDeletarSalas() {
         final List<Integer> selectedPrdiosIds = view.getSelectedSalasIds();
-        view.showConfirmacao("Deletar " + selectedPrdiosIds.size() + " salas(s)?",
+        view.showConfirmacao(
+                "Deletar " + selectedPrdiosIds.size() + " salas(s)?",
                 (final Boolean confirmado) -> {
                     if (confirmado) {
                         deletarSalas(selectedPrdiosIds);
@@ -54,22 +83,21 @@ public class SalasPresenter extends Presenter<SalasView> {
     }
 
     private void deletarSalas(final List<Integer> salasIds) {
+        final Funcionario usuario = mainPresenter.getUsuario();
         final SalaRepository salaRepo = new SalaRepository();
+
         int deletados = 0;
         for (int i = 0; i < salasIds.size(); i++) {
-            final Sala sala = salaRepo.getById(salasIds.get(i));
+            final Integer idSala = salasIds.get(i);
 
-            // VALIDAÇÃO DE DADOS
-
-            if (sala.getTipo() == TipoSalaEnum.DEPOSITO) {
-                view.showError("Não é possível remover a sala de depósito.");
+            try {
+                Sala.validarDeletar(usuario, idSala);
+            } catch (final IllegalDeleteException e) {
+                view.showError(e.getMessage());
                 continue;
             }
 
-            // TODO Verificar se algum bem depende dessa sala.
-
-            // REMOVE O ITEM
-
+            final Sala sala = salaRepo.getById(idSala);
             salaRepo.remove(sala);
             deletados++;
         }
@@ -90,16 +118,44 @@ public class SalasPresenter extends Presenter<SalasView> {
 
         final SalaRepository salaRepo = new SalaRepository();
         final Sala selectedSala = salaRepo.getById(selectedSalaIds.get(0));
-        final SalaView salaView = new SalaSwingView((JFrame) mainPresenter.getView(), selectedSala,
-                false);
-        final SalaPresenter salaPresenter = new SalaPresenter(salaView, mainPresenter, this);
+        final SalaDTO selectedSalaDTO = new SalaDTO();
+        selectedSalaDTO.fromModel(selectedSala);
+
+        final List<Predio> predios = selectedSala.getPossiveisPredios();
+        final List<PredioDTO> prediosDTOs = new ArrayList<PredioDTO>();
+        for (final Predio p : predios) {
+            final PredioDTO predioDTO = new PredioDTO();
+            predioDTO.fromModel(p);
+            prediosDTOs.add(predioDTO);
+        }
+
+        final List<Departamento> depts = selectedSala
+                .getPossiveisDepartamentos();
+        final List<DepartamentoDTO> deptsDTOs = new ArrayList<DepartamentoDTO>();
+        for (final Departamento d : depts) {
+            final DepartamentoDTO deptDTO = new DepartamentoDTO();
+            deptDTO.fromModel(d);
+            deptsDTOs.add(deptDTO);
+        }
+
+        final SalaView salaView = ViewFactory.createSala(InvSCP.VIEW_IMPL,
+                mainPresenter.getView(), selectedSalaDTO, false, prediosDTOs,
+                deptsDTOs);
+        final SalaPresenter salaPresenter = new SalaPresenter(salaView,
+                mainPresenter, this);
         salaView.setVisible(true);
     }
 
     public void updateSalas() {
         final SalaRepository salaRepo = new SalaRepository();
         final List<Sala> salas = salaRepo.getAll();
-        view.updateSalas(salas);
+        final List<SalaDTO> salasDTOs = new ArrayList<SalaDTO>();
+        for (final Sala s : salas) {
+            final SalaDTO salaDTO = new SalaDTO();
+            salaDTO.fromModel(s);
+            salasDTOs.add(salaDTO);
+        }
+        view.updateSalas(salasDTOs);
     }
 
 }

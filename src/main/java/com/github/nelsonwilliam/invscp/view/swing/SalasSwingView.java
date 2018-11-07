@@ -26,7 +26,7 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.table.DefaultTableModel;
 
-import com.github.nelsonwilliam.invscp.model.Sala;
+import com.github.nelsonwilliam.invscp.model.dto.SalaDTO;
 import com.github.nelsonwilliam.invscp.view.SalasView;
 
 public class SalasSwingView extends JPanel implements SalasView {
@@ -67,8 +67,8 @@ public class SalasSwingView extends JPanel implements SalasView {
         table.setModel(new DefaultTableModel(new Object[][] {},
                 new String[] { "ID", "Nome", "Prédio", "Departamento" }) {
             private static final long serialVersionUID = -6152171932737868693L;
-            Class<?>[] columnTypes = new Class[] { Integer.class, String.class, String.class,
-                    String.class };
+            Class<?>[] columnTypes = new Class[] { Integer.class, String.class,
+                    String.class, String.class };
 
             @Override
             public Class<?> getColumnClass(final int columnIndex) {
@@ -105,11 +105,12 @@ public class SalasSwingView extends JPanel implements SalasView {
         popupMenu.addPopupMenuListener(new PopupMenuListener() {
             @Override
             public void popupMenuWillBecomeVisible(final PopupMenuEvent e) {
-                // Garante que ao clicar com o botão direito em um item para exibir o menu, o o
+                // Garante que ao clicar com o botão direito em um item para
+                // exibir o menu, o o
                 // único item selecionado da tabela.
                 SwingUtilities.invokeLater(() -> {
-                    final int rowAtPoint = table.rowAtPoint(
-                            SwingUtilities.convertPoint(popupMenu, new Point(0, 0), table));
+                    final int rowAtPoint = table.rowAtPoint(SwingUtilities
+                            .convertPoint(popupMenu, new Point(0, 0), table));
                     if (rowAtPoint > -1) {
                         table.setRowSelectionInterval(rowAtPoint, rowAtPoint);
                     }
@@ -160,13 +161,15 @@ public class SalasSwingView extends JPanel implements SalasView {
     }
 
     @Override
-    public void updateSalas(final List<Sala> sala) {
-        final DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+    public void updateSalas(final List<SalaDTO> salas) {
+        final DefaultTableModel tableModel = (DefaultTableModel) table
+                .getModel();
         tableModel.setNumRows(0);
-        for (final Sala s : sala) {
+        for (final SalaDTO s : salas) {
             tableModel.addRow(new Object[] { s.getId(), s.getNome(),
-                    s.getIdPredio() == null ? "Nenhum" : s.getPredio().getNome(),
-                    s.getIdDepartamento() == null ? "Nenhum" : s.getDepartamento().getNome() });
+                    s.getPredio() == null ? "Nenhum" : s.getPredio().getNome(),
+                    s.getDepartamento() == null ? "Nenhum"
+                            : s.getDepartamento().getNome() });
         }
 
         revalidate();
@@ -178,7 +181,8 @@ public class SalasSwingView extends JPanel implements SalasView {
     public void showError(final String message) {
         final String titulo = "Erro";
         final String messageCompleta = "Erro: " + message;
-        JOptionPane.showMessageDialog(this, messageCompleta, titulo, JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, messageCompleta, titulo,
+                JOptionPane.ERROR_MESSAGE);
     }
 
     @Override
@@ -190,17 +194,20 @@ public class SalasSwingView extends JPanel implements SalasView {
     }
 
     @Override
-    public void showConfirmacao(final String message, final Consumer<Boolean> responseCallback) {
+    public void showConfirmacao(final String message,
+            final Consumer<Boolean> responseCallback) {
         final String titulo = "Confirmação";
-        final int resposta = JOptionPane.showConfirmDialog(this, message, titulo,
-                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        final int resposta = JOptionPane.showConfirmDialog(this, message,
+                titulo, JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE);
         responseCallback.accept(resposta == JOptionPane.YES_OPTION);
     }
 
     @Override
     public void showInfo(final String message) {
         final String titulo = "Informação";
-        JOptionPane.showMessageDialog(this, message, titulo, JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this, message, titulo,
+                JOptionPane.INFORMATION_MESSAGE);
     }
 
     @Override

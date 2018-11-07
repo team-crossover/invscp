@@ -2,8 +2,7 @@ package com.github.nelsonwilliam.invscp.presenter;
 
 import java.awt.event.ActionEvent;
 
-import javax.swing.JFrame;
-
+import com.github.nelsonwilliam.invscp.InvSCP;
 import com.github.nelsonwilliam.invscp.model.Funcionario;
 import com.github.nelsonwilliam.invscp.model.repository.FuncionarioRepository;
 import com.github.nelsonwilliam.invscp.view.DepartamentosView;
@@ -14,12 +13,7 @@ import com.github.nelsonwilliam.invscp.view.MainView;
 import com.github.nelsonwilliam.invscp.view.MenuView;
 import com.github.nelsonwilliam.invscp.view.PrediosView;
 import com.github.nelsonwilliam.invscp.view.SalasView;
-import com.github.nelsonwilliam.invscp.view.swing.DepartamentosSwingView;
-import com.github.nelsonwilliam.invscp.view.swing.FuncionariosSwingView;
-import com.github.nelsonwilliam.invscp.view.swing.LocalizacoesSwingView;
-import com.github.nelsonwilliam.invscp.view.swing.LoginSwingView;
-import com.github.nelsonwilliam.invscp.view.swing.PrediosSwingView;
-import com.github.nelsonwilliam.invscp.view.swing.SalasSwingView;
+import com.github.nelsonwilliam.invscp.view.ViewFactory;
 
 /**
  * Presenter responsável pela MainView e pela MenuView contida nela.
@@ -28,7 +22,7 @@ public class MainPresenter extends Presenter<MainView> {
 
     private final MenuView menuView;
 
-    private Integer idFuncionarioLogado;
+    private Integer idUsuario;
 
     public MainPresenter(final MainView mainView, final MenuView menuView) {
         super(mainView);
@@ -36,21 +30,21 @@ public class MainPresenter extends Presenter<MainView> {
         setupViewListeners();
     }
 
-    public void setIdFuncionarioLogado(final Integer id) {
-        idFuncionarioLogado = id;
+    public void setIdUsuario(final Integer id) {
+        idUsuario = id;
 
-        final Funcionario func = getFuncionarioLogado();
-        menuView.updateFuncionarioLogado(func);
+        final Funcionario func = getUsuario();
+        menuView.updateUsuario(func);
         showNothing();
     }
 
-    public Integer getIdFuncionarioLogado() {
-        return idFuncionarioLogado;
+    public Integer getIdUsuario() {
+        return idUsuario;
     }
 
-    public Funcionario getFuncionarioLogado() {
+    public Funcionario getUsuario() {
         final FuncionarioRepository funcRepo = new FuncionarioRepository();
-        return funcRepo.getById(idFuncionarioLogado);
+        return funcRepo.getById(idUsuario);
     }
 
     private void setupViewListeners() {
@@ -83,79 +77,95 @@ public class MainPresenter extends Presenter<MainView> {
 
     @SuppressWarnings("unused")
     private void showLogin() {
-        final LoginView loginView = new LoginSwingView((JFrame) getView());
-        final LoginPresenter loginPresenter = new LoginPresenter(loginView, this);
+        final LoginView loginView = ViewFactory.createLogin(InvSCP.VIEW_IMPL,
+                view);
+        final LoginPresenter loginPresenter = new LoginPresenter(loginView,
+                this);
         loginView.setVisible(true);
     }
 
     private void showLogout() {
-        setIdFuncionarioLogado(null);
-        menuView.updateFuncionarioLogado(null);
+        setIdUsuario(null);
+        menuView.updateUsuario(null);
         showNothing();
     }
 
     @SuppressWarnings("unused")
     private void showDepartamentos() {
         // Apenas chefes podem manter departamentos
-        if (getFuncionarioLogado() == null || !getFuncionarioLogado().isChefe()) {
+        if (getUsuario() == null
+                || !getUsuario().isChefe()) {
             showNothing();
             return;
         }
 
-        final DepartamentosView deptView = new DepartamentosSwingView();
-        final DepartamentosPresenter deptPresenter = new DepartamentosPresenter(deptView, this);
+        final DepartamentosView deptView = ViewFactory
+                .createDepartamentos(InvSCP.VIEW_IMPL);
+        final DepartamentosPresenter deptPresenter = new DepartamentosPresenter(
+                deptView, this);
         view.updateSelectedView(deptView);
     }
 
     @SuppressWarnings("unused")
     private void showFuncionarios() {
         // Apenas chefes podem manter departamentos
-        if (getFuncionarioLogado() == null || !getFuncionarioLogado().isChefe()) {
+        if (getUsuario() == null
+                || !getUsuario().isChefe()) {
             showNothing();
             return;
         }
 
-        final FuncionariosView funcView = new FuncionariosSwingView();
-        final FuncionariosPresenter funcPresenter = new FuncionariosPresenter(funcView, this);
+        final FuncionariosView funcView = ViewFactory
+                .createFuncionarios(InvSCP.VIEW_IMPL);
+        final FuncionariosPresenter funcPresenter = new FuncionariosPresenter(
+                funcView, this);
         view.updateSelectedView(funcView);
     }
 
     @SuppressWarnings("unused")
     private void showLocalizacoes() {
         // Apenas chefes podem manter departamentos
-        if (getFuncionarioLogado() == null || !getFuncionarioLogado().isChefe()) {
+        if (getUsuario() == null
+                || !getUsuario().isChefe()) {
             showNothing();
             return;
         }
 
-        final LocalizacoesView locaView = new LocalizacoesSwingView();
-        final LocalizacoesPresenter locaPresenter = new LocalizacoesPresenter(locaView, this);
+        final LocalizacoesView locaView = ViewFactory
+                .createLocalizacoes(InvSCP.VIEW_IMPL);
+        final LocalizacoesPresenter locaPresenter = new LocalizacoesPresenter(
+                locaView, this);
         view.updateSelectedView(locaView);
     }
 
     @SuppressWarnings("unused")
     private void showPredios() {
         // Apenas chefes podem manter departamentos
-        if (getFuncionarioLogado() == null || !getFuncionarioLogado().isChefe()) {
+        if (getUsuario() == null
+                || !getUsuario().isChefe()) {
             showNothing();
             return;
         }
 
-        final PrediosView predView = new PrediosSwingView();
-        final PrediosPresenter predPresenter = new PrediosPresenter(predView, this);
+        final PrediosView predView = ViewFactory
+                .createPredios(InvSCP.VIEW_IMPL);
+        final PrediosPresenter predPresenter = new PrediosPresenter(predView,
+                this);
         view.updateSelectedView(predView);
     }
 
     @SuppressWarnings("unused")
     private void showSalas() {
         // Apenas chefes podem manter salas
-        if (getFuncionarioLogado() == null || !getFuncionarioLogado().isChefe()) {
+        if (getUsuario() == null
+                || !getUsuario().isChefe()) {
             showNothing();
             return;
         }
 
-        final SalasView salasView = new SalasSwingView();
-        final SalasPresenter salasPresenter = new SalasPresenter(salasView, this);
+        final SalasView salasView = ViewFactory.createSalas(InvSCP.VIEW_IMPL);
+        final SalasPresenter salasPresenter = new SalasPresenter(salasView,
+                this);
         view.updateSelectedView(salasView);
     }
 }

@@ -60,6 +60,6 @@ public interface MenuView extends View {
     /**
      * Define qual usuário está logado atualmente. Caso nenhum esteja logado, o valor deve ser null.
      */
-    void updateFuncionarioLogado(Funcionario funcionario);
+    void updateUsuario(Funcionario funcionario);
 
 }

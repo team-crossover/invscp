@@ -4,7 +4,7 @@ import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.function.Consumer;
 
-import com.github.nelsonwilliam.invscp.model.Sala;
+import com.github.nelsonwilliam.invscp.model.dto.SalaDTO;
 
 public interface SalasView extends View {
 
@@ -17,9 +17,9 @@ public interface SalasView extends View {
     void addDeletarSalasListener(ActionListener listener);
 
     /**
-     * Adiciona o Listener para quando o usuário informar que quer alterar uma sala. Espera-se que
-     * quando este evento for invocado, haja exatamente UMA sala selecionado (obtível através do
-     * método getSelectedPrediosIds.
+     * Adiciona o Listener para quando o usuário informar que quer alterar uma
+     * sala. Espera-se que quando este evento for invocado, haja exatamente UMA
+     * sala selecionado (obtível através do método getSelectedPrediosIds.
      */
     void addAlterarSalaListener(ActionListener listener);
 
@@ -27,7 +27,7 @@ public interface SalasView extends View {
     // Métodos para atualizar os valores exibidos.
     // -------------------------------------------
 
-    void updateSalas(List<Sala> sala);
+    void updateSalas(List<SalaDTO> sala);
 
     void showError(String message);
 
@@ -42,7 +42,8 @@ public interface SalasView extends View {
     // ---------------------------------------------
 
     /**
-     * Obtém uma lista com os IDs de todos as salas atualmente selecionados na tabela.
+     * Obtém uma lista com os IDs de todos as salas atualmente selecionados na
+     * tabela.
      */
     List<Integer> getSelectedSalasIds();
 

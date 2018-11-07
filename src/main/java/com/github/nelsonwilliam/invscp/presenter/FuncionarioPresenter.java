@@ -30,7 +30,7 @@ public class FuncionarioPresenter extends Presenter<FuncionarioView> {
     private void onConfirmar() {
         final FuncionarioRepository funcRepo = new FuncionarioRepository();
         final Funcionario func = view.getFuncionario();
-        final Funcionario funcLogado = mainPresenter.getFuncionarioLogado();
+        final Funcionario funcLogado = mainPresenter.getUsuario();
         final Funcionario funcAntigo = funcRepo.getById(func.getId());
         final boolean eraChefePrincipal = funcAntigo != null
                 && (funcAntigo.isChefeDeDepartamentoPrincipal()
@@ -109,7 +109,7 @@ public class FuncionarioPresenter extends Presenter<FuncionarioView> {
         // Se o funcionário atualizado é o que estava logado, atualiza o main para garantir dados
         // atualizados são exibidos no menu.
         if (funcLogado.getId().equals(func.getId())) {
-            mainPresenter.setIdFuncionarioLogado(funcLogado.getId());
+            mainPresenter.setIdUsuario(funcLogado.getId());
             return;
         }
 

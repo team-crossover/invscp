@@ -42,7 +42,7 @@ public class LoginPresenter extends Presenter<LoginView> {
         }
 
         view.close();
-        mainPresenter.setIdFuncionarioLogado(funcionario.getId());
+        mainPresenter.setIdUsuario(funcionario.getId());
     }
 
 }

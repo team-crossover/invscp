@@ -36,7 +36,7 @@ public class MenuSwingView extends JPanel implements MenuView {
 
     public MenuSwingView() {
         initialize();
-        updateFuncionarioLogado(null);
+        updateUsuario(null);
     }
 
     private void initialize() {
@@ -95,7 +95,7 @@ public class MenuSwingView extends JPanel implements MenuView {
     }
 
     @Override
-    public void updateFuncionarioLogado(final Funcionario funcionario) {
+    public void updateUsuario(final Funcionario funcionario) {
         pnlSession.removeAll();
         pnlButtons.removeAll();
         pnlLoginLogout.removeAll();

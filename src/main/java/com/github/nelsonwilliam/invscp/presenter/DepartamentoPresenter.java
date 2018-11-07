@@ -33,7 +33,7 @@ public class DepartamentoPresenter extends Presenter<DepartamentoView> {
         final Departamento dept = view.getDepartamento();
         final Departamento deptAntigo = deptRepo.getById(dept.getId());
 
-        final Funcionario funcLogado = mainPresenter.getFuncionarioLogado();
+        final Funcionario funcLogado = mainPresenter.getUsuario();
         final Integer funcLogadoDeptId = funcLogado.getIdDepartamento();
         final boolean funcLogadoEraChefeDept = funcLogado.isChefeDeDepartamento();
         final boolean funcLogadoEraChefePatrimonio = funcLogado.isChefeDePatrimonio();
@@ -109,7 +109,7 @@ public class DepartamentoPresenter extends Presenter<DepartamentoView> {
         // Se o departamento do funcionario logado tiver sido alterado, força a reatualização da
         // exibição da tela para este usuário
         if (funcLogado.getIdDepartamento().equals(dept.getId())) {
-            mainPresenter.setIdFuncionarioLogado(funcLogado.getId());
+            mainPresenter.setIdUsuario(funcLogado.getId());
             return;
         }
     }

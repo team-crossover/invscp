@@ -15,7 +15,7 @@ public interface Repository<M extends Model> {
 
     /**
      * Obtém todos os itens.
-     * 
+     *
      * @return
      */
     List<M> getAll();

@@ -47,13 +47,14 @@ public class FuncionarioSwingView extends JDialog implements FuncionarioView {
 
     /**
      * @param funcionario Funcionario cujos valores serão exibidos inicialmente.
-     *
-     * @param isAdicionar Indica se a janela que será exibida será para adição de um novo
-     *        funcionario (true) ou para atualização de um funcionario existente (false).
+     * @param isAdicionar Indica se a janela que será exibida será para adição
+     *        de um novo funcionario (true) ou para atualização de um
+     *        funcionario existente (false).
      */
-    public FuncionarioSwingView(final JFrame owner, final Funcionario funcionario,
-            final boolean isAdicionar) {
-        super(owner, isAdicionar ? "Adicionar funcionário" : "Alterar funcionário",
+    public FuncionarioSwingView(final JFrame owner,
+            final Funcionario funcionario, final boolean isAdicionar) {
+        super(owner,
+                isAdicionar ? "Adicionar funcionário" : "Alterar funcionário",
                 ModalityType.APPLICATION_MODAL);
         this.isAdicionar = isAdicionar;
         initialize();
@@ -67,8 +68,10 @@ public class FuncionarioSwingView extends JDialog implements FuncionarioView {
         final GridBagLayout gridBagLayout = new GridBagLayout();
         gridBagLayout.columnWidths = new int[] { 25, 102, 0, 25, 0 };
         gridBagLayout.rowHeights = new int[] { 25, 25, 0, 0, 0, 25, 25, 0, 25 };
-        gridBagLayout.columnWeights = new double[] { 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE };
-        gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0 };
+        gridBagLayout.columnWeights = new double[] { 0.0, 0.0, 1.0, 0.0,
+                Double.MIN_VALUE };
+        gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                1.0, 0.0, 0.0 };
         getContentPane().setLayout(gridBagLayout);
 
         btnConfirmar = new JButton("Confirmar");
@@ -177,15 +180,16 @@ public class FuncionarioSwingView extends JDialog implements FuncionarioView {
             private static final long serialVersionUID = 337686638048057981L;
 
             @Override
-            public Component getListCellRendererComponent(final JList<?> list, final Object value,
-                    final int index, final boolean isSelected, final boolean cellHasFocus) {
+            public Component getListCellRendererComponent(final JList<?> list,
+                    final Object value, final int index,
+                    final boolean isSelected, final boolean cellHasFocus) {
                 if (value == null) {
-                    return super.getListCellRendererComponent(list, "Nenhum", index, isSelected,
-                            cellHasFocus);
+                    return super.getListCellRendererComponent(list, "Nenhum",
+                            index, isSelected, cellHasFocus);
                 } else {
                     final String nome = ((Departamento) value).getNome();
-                    return super.getListCellRendererComponent(list, nome, index, isSelected,
-                            cellHasFocus);
+                    return super.getListCellRendererComponent(list, nome, index,
+                            isSelected, cellHasFocus);
                 }
             }
         };
@@ -201,7 +205,8 @@ public class FuncionarioSwingView extends JDialog implements FuncionarioView {
         listDepartamentos = new JList<Departamento>();
         listDepartamentos.setModel(new DefaultListModel<Departamento>());
         listDepartamentos.setCellRenderer(deptListRenderer);
-        scrollDepartamentos.setBorder(BorderFactory.createLineBorder(Color.gray, 1));
+        scrollDepartamentos
+                .setBorder(BorderFactory.createLineBorder(Color.gray, 1));
         scrollDepartamentos.setViewportView(listDepartamentos);
 
         final GridBagConstraints gbc_btnCancelar = new GridBagConstraints();
@@ -253,10 +258,12 @@ public class FuncionarioSwingView extends JDialog implements FuncionarioView {
         fieldLogin.setText(funcionario.getLogin());
         fieldSenha.setText(funcionario.getSenha());
 
-        final List<Departamento> outrosDepartamentos = funcionario.getOutrosDepartamentos();
+        final List<Departamento> outrosDepartamentos = funcionario
+                .getOutrosDepartamentos();
         final Departamento departamento = funcionario.getDepartamento();
 
-        // Exibe os departamentos na lista de departamentos e seleciona o atual, se
+        // Exibe os departamentos na lista de departamentos e seleciona o atual,
+        // se
         // tiver, ou 'Nenhum', se não tiver.
         final DefaultListModel<Departamento> listDepartamentoModel = (DefaultListModel<Departamento>) listDepartamentos
                 .getModel();
@@ -269,7 +276,10 @@ public class FuncionarioSwingView extends JDialog implements FuncionarioView {
             listDepartamentos.setSelectedIndex(1);
         }
         for (final Departamento d : outrosDepartamentos) {
-            listDepartamentoModel.addElement(d);
+            if (departamento == null
+                    || !d.getId().equals(departamento.getId())) {
+                listDepartamentoModel.addElement(d);
+            }
         }
 
         revalidate();
@@ -280,7 +290,8 @@ public class FuncionarioSwingView extends JDialog implements FuncionarioView {
     public void showError(final String message) {
         final String titulo = "Erro";
         final String messageCompleta = "Erro: " + message;
-        JOptionPane.showMessageDialog(this, messageCompleta, titulo, JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, messageCompleta, titulo,
+                JOptionPane.ERROR_MESSAGE);
     }
 
     @Override
@@ -295,7 +306,8 @@ public class FuncionarioSwingView extends JDialog implements FuncionarioView {
     @Override
     public void showInfo(final String message) {
         final String titulo = "Informação";
-        JOptionPane.showMessageDialog(this, message, titulo, JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this, message, titulo,
+                JOptionPane.INFORMATION_MESSAGE);
     }
 
     @Override
@@ -308,7 +320,8 @@ public class FuncionarioSwingView extends JDialog implements FuncionarioView {
         funcionario.setLogin(fieldLogin.getText());
         funcionario.setSenha(new String(fieldSenha.getPassword()));
         final Departamento departamento = listDepartamentos.getSelectedValue();
-        funcionario.setIdDepartamento(departamento == null ? null : departamento.getId());
+        funcionario.setIdDepartamento(
+                departamento == null ? null : departamento.getId());
         return funcionario;
     }
 

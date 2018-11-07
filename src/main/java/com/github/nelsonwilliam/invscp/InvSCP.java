@@ -14,13 +14,16 @@ import com.github.nelsonwilliam.invscp.presenter.MainPresenter;
 import com.github.nelsonwilliam.invscp.util.DatabaseConnection;
 import com.github.nelsonwilliam.invscp.view.MainView;
 import com.github.nelsonwilliam.invscp.view.MenuView;
-import com.github.nelsonwilliam.invscp.view.swing.MainSwingView;
-import com.github.nelsonwilliam.invscp.view.swing.MenuSwingView;
+import com.github.nelsonwilliam.invscp.view.ViewFactory;
+import com.github.nelsonwilliam.invscp.view.ViewFactory.ViewImplementation;
 
 /**
- * Classe responsável por iniciar a execução do InvSCP, começando exibindo a tela inicial.
+ * Classe responsável por iniciar a execução do InvSCP, começando exibindo a
+ * tela inicial.
  */
 public class InvSCP {
+
+    public static final ViewImplementation VIEW_IMPL = ViewImplementation.SWING;
 
     private static boolean forceInitializeDatabase;
 
@@ -34,7 +37,7 @@ public class InvSCP {
         }
 
         // TODO Remover isto (usado apenas para desenvolvimento)
-        forceInitializeDatabase = true;
+        // forceInitializeDatabase = true;
 
         initializeDatabase();
         showMainView();
@@ -48,11 +51,13 @@ public class InvSCP {
             DatabaseConnection.openConnection();
             System.out.println("Conexão com o banco de dados estabelecida.");
         } catch (final ClassNotFoundException e) {
-            System.out.println("O JDBC Driver do PostgreSQL não foi encontrado.");
+            System.out
+                    .println("O JDBC Driver do PostgreSQL não foi encontrado.");
             e.printStackTrace();
             System.exit(1);
         } catch (final SQLException e) {
-            System.out.println("Não foi possível connectar com o banco de dados.");
+            System.out.println(
+                    "Não foi possível connectar com o banco de dados.");
             e.printStackTrace();
             System.exit(1);
         }
@@ -65,9 +70,11 @@ public class InvSCP {
         boolean databaseWasInitialized = true;
 
         try {
-            databaseWasInitialized = DatabaseConnection.databaseWasInitialized();
+            databaseWasInitialized = DatabaseConnection
+                    .databaseWasInitialized();
         } catch (FileNotFoundException | SQLException e) {
-            System.out.println("Não foi possível verificar se o banco de dados foi inicializado.");
+            System.out.println(
+                    "Não foi possível verificar se o banco de dados foi inicializado.");
             e.printStackTrace();
             System.exit(1);
         }
@@ -78,7 +85,8 @@ public class InvSCP {
                 System.out.println(
                         "O banco de dados foi inicializado (o script de criação foi executado).");
             } catch (SQLException | IOException e) {
-                System.out.println("Não foi possível inicializar o banco de dados.");
+                System.out.println(
+                        "Não foi possível inicializar o banco de dados.");
                 e.printStackTrace();
                 System.exit(1);
             }
@@ -100,9 +108,12 @@ public class InvSCP {
 
             // Cria e exibe a tela main com o menu
             try {
-                final MenuView menuView = new MenuSwingView();
-                final MainView mainView = new MainSwingView(menuView);
-                final MainPresenter mainPresenter = new MainPresenter(mainView, menuView);
+                final MenuView menuView = ViewFactory
+                        .createMenu(InvSCP.VIEW_IMPL);
+                final MainView mainView = ViewFactory
+                        .createMain(InvSCP.VIEW_IMPL, menuView);
+                final MainPresenter mainPresenter = new MainPresenter(mainView,
+                        menuView);
                 menuView.setVisible(true);
                 mainView.setVisible(true);
             } catch (final Exception e) {

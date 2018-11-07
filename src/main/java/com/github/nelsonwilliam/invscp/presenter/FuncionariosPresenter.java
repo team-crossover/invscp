@@ -4,21 +4,21 @@ import java.awt.event.ActionEvent;
 import java.security.AccessControlException;
 import java.util.List;
 
-import javax.swing.JFrame;
-
+import com.github.nelsonwilliam.invscp.InvSCP;
 import com.github.nelsonwilliam.invscp.model.Departamento;
 import com.github.nelsonwilliam.invscp.model.Funcionario;
 import com.github.nelsonwilliam.invscp.model.repository.DepartamentoRepository;
 import com.github.nelsonwilliam.invscp.model.repository.FuncionarioRepository;
 import com.github.nelsonwilliam.invscp.view.FuncionarioView;
 import com.github.nelsonwilliam.invscp.view.FuncionariosView;
-import com.github.nelsonwilliam.invscp.view.swing.FuncionarioSwingView;
+import com.github.nelsonwilliam.invscp.view.ViewFactory;
 
 public class FuncionariosPresenter extends Presenter<FuncionariosView> {
 
     private final MainPresenter mainPresenter;
 
-    public FuncionariosPresenter(final FuncionariosView view, final MainPresenter mainPresenter) {
+    public FuncionariosPresenter(final FuncionariosView view,
+            final MainPresenter mainPresenter) {
         super(view);
         this.mainPresenter = mainPresenter;
         setupViewListeners();
@@ -39,18 +39,19 @@ public class FuncionariosPresenter extends Presenter<FuncionariosView> {
 
     @SuppressWarnings("unused")
     private void onAdicionarFuncionario() {
-        final Funcionario funcLogado = mainPresenter.getFuncionarioLogado();
+        final Funcionario funcLogado = mainPresenter.getUsuario();
         final Funcionario novoFunc = new Funcionario();
-        final FuncionarioView funcView = new FuncionarioSwingView((JFrame) mainPresenter.getView(),
-                novoFunc, true);
-        final FuncionarioPresenter funcPresenter = new FuncionarioPresenter(funcView, mainPresenter,
-                this);
+        final FuncionarioView funcView = ViewFactory.createFuncionario(
+                InvSCP.VIEW_IMPL, mainPresenter.getView(), novoFunc, true);
+        final FuncionarioPresenter funcPresenter = new FuncionarioPresenter(
+                funcView, mainPresenter, this);
         funcView.setVisible(true);
     }
 
     private void onDeletarFuncionarios() {
         final List<Integer> selectedFuncIds = view.getSelectedFuncionariosIds();
-        view.showConfirmacao("Deletar " + selectedFuncIds.size() + " funcionário(s)?",
+        view.showConfirmacao(
+                "Deletar " + selectedFuncIds.size() + " funcionário(s)?",
                 (final Boolean confirmado) -> {
                     if (confirmado) {
                         deletarFuncionarios(selectedFuncIds);
@@ -67,7 +68,8 @@ public class FuncionariosPresenter extends Presenter<FuncionariosView> {
 
             // VALIDAÇÃO DE DADOS
 
-            if (func.isChefeDeDepartamentoPrincipal() || func.isChefeDePatrimonioPrincipal()) {
+            if (func.isChefeDeDepartamentoPrincipal()
+                    || func.isChefeDePatrimonioPrincipal()) {
                 view.showError("O funcionário " + func.getNome()
                         + " não pode ser deletado pois é chefe principal do departamento "
                         + func.getDepartamento().getNome() + ".");
@@ -76,12 +78,14 @@ public class FuncionariosPresenter extends Presenter<FuncionariosView> {
 
             // PRÉ-ATUALIZAÇÕES
 
-            if (func.isChefeDeDepartamentoSubstituto() || func.isChefeDePatrimonioSubstituto()) {
+            if (func.isChefeDeDepartamentoSubstituto()
+                    || func.isChefeDePatrimonioSubstituto()) {
                 final Departamento dept = func.getDepartamento();
                 dept.setIdChefeSubstituto(null);
                 deptRepo.update(dept);
-                view.showInfo("O departamento " + func.getDepartamento().getNome()
-                        + " não possui mais um chefe substituto.");
+                view.showInfo(
+                        "O departamento " + func.getDepartamento().getNome()
+                                + " não possui mais um chefe substituto.");
             }
 
             // REMOVE O ITEM
@@ -105,16 +109,18 @@ public class FuncionariosPresenter extends Presenter<FuncionariosView> {
         }
 
         final FuncionarioRepository funcRepo = new FuncionarioRepository();
-        final Funcionario selectedFuncionario = funcRepo.getById(selectedFuncIds.get(0));
-        final FuncionarioView funcView = new FuncionarioSwingView((JFrame) mainPresenter.getView(),
-                selectedFuncionario, false);
-        final FuncionarioPresenter funcPresenter = new FuncionarioPresenter(funcView, mainPresenter,
-                this);
+        final Funcionario selectedFuncionario = funcRepo
+                .getById(selectedFuncIds.get(0));
+        final FuncionarioView funcView = ViewFactory.createFuncionario(
+                InvSCP.VIEW_IMPL, mainPresenter.getView(), selectedFuncionario,
+                false);
+        final FuncionarioPresenter funcPresenter = new FuncionarioPresenter(
+                funcView, mainPresenter, this);
         funcView.setVisible(true);
     }
 
     public void updateFuncionarios() {
-        final Funcionario funcLogado = mainPresenter.getFuncionarioLogado();
+        final Funcionario funcLogado = mainPresenter.getUsuario();
         final FuncionarioRepository funcRepo = new FuncionarioRepository();
         final List<Funcionario> funcs;
         if (funcLogado.isChefeDePatrimonio()) {
@@ -122,7 +128,8 @@ public class FuncionariosPresenter extends Presenter<FuncionariosView> {
         } else if (funcLogado.isChefeDeDepartamento()) {
             funcs = funcRepo.getByDepartamento(funcLogado.getDepartamento());
         } else {
-            throw new AccessControlException("Apenas chefes devem gerenciar funcionários.");
+            throw new AccessControlException(
+                    "Apenas chefes devem gerenciar funcionários.");
         }
         view.updateFuncionarios(funcs);
     }

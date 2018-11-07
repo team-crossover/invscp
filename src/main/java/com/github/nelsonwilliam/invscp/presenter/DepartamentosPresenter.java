@@ -3,8 +3,7 @@ package com.github.nelsonwilliam.invscp.presenter;
 import java.awt.event.ActionEvent;
 import java.util.List;
 
-import javax.swing.JFrame;
-
+import com.github.nelsonwilliam.invscp.InvSCP;
 import com.github.nelsonwilliam.invscp.model.Departamento;
 import com.github.nelsonwilliam.invscp.model.Funcionario;
 import com.github.nelsonwilliam.invscp.model.repository.DepartamentoRepository;
@@ -12,13 +11,14 @@ import com.github.nelsonwilliam.invscp.model.repository.FuncionarioRepository;
 import com.github.nelsonwilliam.invscp.model.repository.SalaRepository;
 import com.github.nelsonwilliam.invscp.view.DepartamentoView;
 import com.github.nelsonwilliam.invscp.view.DepartamentosView;
-import com.github.nelsonwilliam.invscp.view.swing.DepartamentoSwingView;
+import com.github.nelsonwilliam.invscp.view.ViewFactory;
 
 public class DepartamentosPresenter extends Presenter<DepartamentosView> {
 
     private final MainPresenter mainPresenter;
 
-    public DepartamentosPresenter(final DepartamentosView view, final MainPresenter mainPresenter) {
+    public DepartamentosPresenter(final DepartamentosView view,
+            final MainPresenter mainPresenter) {
         super(view);
         this.mainPresenter = mainPresenter;
         setupViewListeners();
@@ -40,16 +40,18 @@ public class DepartamentosPresenter extends Presenter<DepartamentosView> {
     @SuppressWarnings("unused")
     private void onAdicionarDepartamento() {
         final Departamento novoDept = new Departamento();
-        final DepartamentoView deptView = new DepartamentoSwingView(
-                (JFrame) mainPresenter.getView(), novoDept, true);
-        final DepartamentoPresenter deptPresenter = new DepartamentoPresenter(deptView,
-                mainPresenter, this);
+        final DepartamentoView deptView = ViewFactory.createDepartamento(
+                InvSCP.VIEW_IMPL, mainPresenter.getView(), novoDept, true);
+        final DepartamentoPresenter deptPresenter = new DepartamentoPresenter(
+                deptView, mainPresenter, this);
         deptView.setVisible(true);
     }
 
     private void onDeletarDepartamentos() {
-        final List<Integer> selectedDeptIds = view.getSelectedDepartamentosIds();
-        view.showConfirmacao("Deletar " + selectedDeptIds.size() + " departamento(s)?.",
+        final List<Integer> selectedDeptIds = view
+                .getSelectedDepartamentosIds();
+        view.showConfirmacao(
+                "Deletar " + selectedDeptIds.size() + " departamento(s)?.",
                 (final Boolean confirmado) -> {
                     if (confirmado) {
                         deletarDepartamentos(selectedDeptIds);
@@ -61,12 +63,13 @@ public class DepartamentosPresenter extends Presenter<DepartamentosView> {
         final DepartamentoRepository deptRepo = new DepartamentoRepository();
         final FuncionarioRepository funcRepo = new FuncionarioRepository();
         final SalaRepository salaRepo = new SalaRepository();
-        final Funcionario funcLogado = mainPresenter.getFuncionarioLogado();
+        final Funcionario funcLogado = mainPresenter.getUsuario();
 
         // CONTROLE DE ACESSO
 
         if (funcLogado.isChefeDePatrimonio()) {
-            view.showError("Apenas chefes de patrimônio podem deletar departamentos.");
+            view.showError(
+                    "Apenas chefes de patrimônio podem deletar departamentos.");
             return;
         }
 
@@ -90,7 +93,8 @@ public class DepartamentosPresenter extends Presenter<DepartamentosView> {
 
             // PRÉ-ATUALIZAÇÕES
 
-            // Muda o departamento de todos os funcionarios do departamento deletado
+            // Muda o departamento de todos os funcionarios do departamento
+            // deletado
             // para nenhumm.
             final List<Funcionario> funcionarios = dept.getFuncionarios();
             for (final Funcionario func : funcionarios) {
@@ -112,18 +116,21 @@ public class DepartamentosPresenter extends Presenter<DepartamentosView> {
 
     @SuppressWarnings("unused")
     private void onAlterarDepartamento() {
-        final List<Integer> selectedDeptIds = view.getSelectedDepartamentosIds();
+        final List<Integer> selectedDeptIds = view
+                .getSelectedDepartamentosIds();
         if (selectedDeptIds.size() != 1) {
             throw new RuntimeException(
                     "Para alterar um elemento é necessário que apenas um esteja selecionado.");
         }
 
         final DepartamentoRepository deptRepo = new DepartamentoRepository();
-        final Departamento selectedDepartamento = deptRepo.getById(selectedDeptIds.get(0));
-        final DepartamentoView deptView = new DepartamentoSwingView(
-                (JFrame) mainPresenter.getView(), selectedDepartamento, false);
-        final DepartamentoPresenter deptPresenter = new DepartamentoPresenter(deptView,
-                mainPresenter, this);
+        final Departamento selectedDepartamento = deptRepo
+                .getById(selectedDeptIds.get(0));
+        final DepartamentoView deptView = ViewFactory.createDepartamento(
+                InvSCP.VIEW_IMPL, mainPresenter.getView(), selectedDepartamento,
+                false);
+        final DepartamentoPresenter deptPresenter = new DepartamentoPresenter(
+                deptView, mainPresenter, this);
         deptView.setVisible(true);
     }
 
