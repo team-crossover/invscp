@@ -1,4 +1,4 @@
-# InvSCP
+﻿# InvSCP
 
 Projeto InvSCP do Grupo 3 da disciplina "Integração 1" de Engenharia de Software, 2018/2
 
@@ -23,42 +23,26 @@ Os artefatos gerados até então para o projeto são:
 
 ## Planejamento
 
-As seguintes atividades estão planejadas para a implementação do projeto:
+As atividades planejadas para o projeto estão dispostas no diagrama Gantt abaixo:
 
-**Sprint 1**
+![Diagrama](docs/gantt.png)
 
-| Data | Responsável(eis) | Descrição | Status |
-|---|---|---|---|
-| 30/10 | João Pedro | ~~Criar o script do banco de dados e os Models para Localização, Prédio, Sala, Departamento e Usuário~~ | Concluído |
-| 30/10 | Larissa e Sofia | ~~Criar as Views para login e para manter e executar casos de uso relacionados aos Models acima~~ | Concluído |
-| 06/11 | Nelson | ~~Criar os Presenters para as Views acima e implementar o controle de acesso e execução do script do banco~~ | Concluído |
-| 06/11 | Natália | Documentar casos de testes (total de pelo menos 5) | Em andamento |
+Legenda:
 
-**Sprint 2**
-
-| Data | Responsável(eis) | Descrição | Status |
-|---|---|---|---|
-| 13/11 | João Pedro | Criar o script do banco de dados e os Models para Bem, Ordem de Serviço e Baixa | Pendente |
-| 13/11 | Larissa e Sofia | Criar as Views para manter e executar casos de uso relacionados aos Models acima | Pendente |
-| 20/11 | Nelson | Criar os Presenters para as Views acima | Pendente |
-| 20/11 | Natália | Documentar mais casos de testes e implementar todos com JUnit (total de pelo menos 8) | Pendente |
-
-**Sprint 3**
-
-| Data | Responsável(eis) | Descrição | Status |
-|---|---|---|---|
-| 27/11 | João Pedro | Criar o script do banco de dados e os Models para Movimentação, Evento de movimentação (aceites, cancelamentos etc.) e Relatórios | Pendente |
-| 27/11 | Larissa e Sofia | Criar as Views para manter e executar casos de uso relacionados aos Models acima | Pendente |
-| 04/12 | Nelson | Criar os Presenters para as Views acima | Pendente |
-| 04/12 | Natália | Documentar mais casos de testes e implementar todos com JUnit (total de pelo menos 10) | Pendente |
+- ![Amarelo](https://via.placeholder.com/10x10/FFFF00/FFFF00)  João Pedro
+- ![Laranja](https://via.placeholder.com/10x10/FF9900/FF9900)  Larissa
+- ![Rosa](https://via.placeholder.com/10x10/FF00FF/FF00FF)  Natália
+- ![Azul](https://via.placeholder.com/10x10/00CCFF/00CCFF)   Nelson
+- ![Verde](https://via.placeholder.com/10x10/00FF00/00FF00)  Sofia
 
 ## Ambientes
 
-O ambiente de desenvolvimento deve possuir o [JDK (Java SE Development Kit)](https://www.oracle.com/technetwork/pt/java/javase/downloads/jdk8-downloads-2133151.html) versão 8 ou superior, enquanto o ambiente de execução deve possuir o [JRE (Java SE Runtime Environment)](https://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html) versão 8 ou superior.
+O ambiente de desenvolvimento deve possuir o [JDK (Java SE Development Kit)](https://www.oracle.com/technetwork/pt/java/javase/downloads/jdk8-downloads-2133151.html) versão 8 ou superior.
+Os ambientes de execução do servidor e do cliente devem possuir o [JRE (Java SE Runtime Environment)](https://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html) versão 8 ou superior.
 
 ### Banco de dados
 
-O ambiente de execução deve estar executando o banco de dados PostgreSQL 10.5 no localhost.
+O ambiente de execução do servidor deve estar executando o banco de dados PostgreSQL 10.5, acessível através do localhost.
 
 Deve existir o usuário com nome "invscpAdmin" e senha "12345" (com autorização para efetuar login).
 Além disso, deve existir um banco de dados nomeado "inventory" e cujo owner é o usuário "invscpAdmin".
@@ -67,13 +51,11 @@ Ao ser executado, o InvSCP detectará se o banco de dados "inventory" foi inicia
 
 ### Build e execução
 
-É possível construir uma build do projeto em um arquivo JAR através do Maven. Para isto, podem ser utilizados um dos seguintes comandos:
+É possível construir uma build do servidor ou do cliente um arquivo JAR através de perfis do Maven. Para isto, podem ser utilizados um dos seguintes comandos:
 
  - ```mvn package -P executavel-unico``` (gera um arquivo JAR único, incluindo todas as dependências)
  - ```mvn package -P executavel-dir``` (gera um arquivo JAR mas mantém as dependências separadas em uma pasta externa)
  
-Para rodar o projeto, basta executar o JAR:
+Para rodar o executável gerado, basta executar o JAR:
 
 ```java -jar nomeDoArquivo.jar```
-
-O parâmetro opcional ```--forceInitialization``` pode ser passado para forçar o banco de dados a ser recriado com os dados iniciais. Esta inicialização é executada automaticamente quando o sistema detecta que o banco de dados nunca foi inicializado.
