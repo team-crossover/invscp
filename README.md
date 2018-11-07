@@ -34,6 +34,7 @@ Legenda:
 - ![Rosa](https://via.placeholder.com/10x10/FF00FF/FF00FF)  Natália
 - ![Azul](https://via.placeholder.com/10x10/00CCFF/00CCFF)   Nelson
 - ![Verde](https://via.placeholder.com/10x10/00FF00/00FF00)  Sofia
+- ![Vermelho](https://via.placeholder.com/10x10/FF0000/FF0000)  Todos
 
 ## Ambientes
 
