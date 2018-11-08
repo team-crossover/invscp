@@ -45,13 +45,13 @@ public class SalasPresenter extends Presenter<SalasView> {
     private void onAdicionarSala() {
         final Sala novoSala = new Sala();
         final SalaDTO novoSalaDTO = new SalaDTO();
-        novoSalaDTO.fromModel(novoSala);
+        novoSalaDTO.setValuesFromModel(novoSala);
 
         final List<Predio> predios = novoSala.getPossiveisPredios();
         final List<PredioDTO> prediosDTOs = new ArrayList<PredioDTO>();
         for (final Predio p : predios) {
             final PredioDTO predioDTO = new PredioDTO();
-            predioDTO.fromModel(p);
+            predioDTO.setValuesFromModel(p);
             prediosDTOs.add(predioDTO);
         }
 
@@ -59,7 +59,7 @@ public class SalasPresenter extends Presenter<SalasView> {
         final List<DepartamentoDTO> deptsDTOs = new ArrayList<DepartamentoDTO>();
         for (final Departamento d : depts) {
             final DepartamentoDTO deptDTO = new DepartamentoDTO();
-            deptDTO.fromModel(d);
+            deptDTO.setValuesFromModel(d);
             deptsDTOs.add(deptDTO);
         }
 
@@ -119,13 +119,13 @@ public class SalasPresenter extends Presenter<SalasView> {
         final SalaRepository salaRepo = new SalaRepository();
         final Sala selectedSala = salaRepo.getById(selectedSalaIds.get(0));
         final SalaDTO selectedSalaDTO = new SalaDTO();
-        selectedSalaDTO.fromModel(selectedSala);
+        selectedSalaDTO.setValuesFromModel(selectedSala);
 
         final List<Predio> predios = selectedSala.getPossiveisPredios();
         final List<PredioDTO> prediosDTOs = new ArrayList<PredioDTO>();
         for (final Predio p : predios) {
             final PredioDTO predioDTO = new PredioDTO();
-            predioDTO.fromModel(p);
+            predioDTO.setValuesFromModel(p);
             prediosDTOs.add(predioDTO);
         }
 
@@ -134,7 +134,7 @@ public class SalasPresenter extends Presenter<SalasView> {
         final List<DepartamentoDTO> deptsDTOs = new ArrayList<DepartamentoDTO>();
         for (final Departamento d : depts) {
             final DepartamentoDTO deptDTO = new DepartamentoDTO();
-            deptDTO.fromModel(d);
+            deptDTO.setValuesFromModel(d);
             deptsDTOs.add(deptDTO);
         }
 
@@ -152,7 +152,7 @@ public class SalasPresenter extends Presenter<SalasView> {
         final List<SalaDTO> salasDTOs = new ArrayList<SalaDTO>();
         for (final Sala s : salas) {
             final SalaDTO salaDTO = new SalaDTO();
-            salaDTO.fromModel(s);
+            salaDTO.setValuesFromModel(s);
             salasDTOs.add(salaDTO);
         }
         view.updateSalas(salasDTOs);

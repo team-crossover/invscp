@@ -1,11 +1,14 @@
 package com.github.nelsonwilliam.invscp.presenter;
 
 import java.awt.event.ActionEvent;
+import java.util.List;
 
+import com.github.nelsonwilliam.invscp.exception.IllegalInsertException;
+import com.github.nelsonwilliam.invscp.exception.IllegalUpdateException;
 import com.github.nelsonwilliam.invscp.model.Departamento;
 import com.github.nelsonwilliam.invscp.model.Funcionario;
+import com.github.nelsonwilliam.invscp.model.dto.DepartamentoDTO;
 import com.github.nelsonwilliam.invscp.model.repository.DepartamentoRepository;
-import com.github.nelsonwilliam.invscp.model.repository.FuncionarioRepository;
 import com.github.nelsonwilliam.invscp.view.DepartamentoView;
 
 public class DepartamentoPresenter extends Presenter<DepartamentoView> {
@@ -13,7 +16,8 @@ public class DepartamentoPresenter extends Presenter<DepartamentoView> {
     private final MainPresenter mainPresenter;
     private final DepartamentosPresenter deptsPresenter;
 
-    public DepartamentoPresenter(final DepartamentoView view, final MainPresenter mainPresenter,
+    public DepartamentoPresenter(final DepartamentoView view,
+            final MainPresenter mainPresenter,
             final DepartamentosPresenter deptsPresenter) {
         super(view);
         this.mainPresenter = mainPresenter;
@@ -28,106 +32,75 @@ public class DepartamentoPresenter extends Presenter<DepartamentoView> {
     }
 
     private void onConfirmar() {
-        final DepartamentoRepository deptRepo = new DepartamentoRepository();
-        final FuncionarioRepository funcRepo = new FuncionarioRepository();
-        final Departamento dept = view.getDepartamento();
-        final Departamento deptAntigo = deptRepo.getById(dept.getId());
-
-        final Funcionario funcLogado = mainPresenter.getUsuario();
-        final Integer funcLogadoDeptId = funcLogado.getIdDepartamento();
-        final boolean funcLogadoEraChefeDept = funcLogado.isChefeDeDepartamento();
-        final boolean funcLogadoEraChefePatrimonio = funcLogado.isChefeDePatrimonio();
-
-        // CONTROLE DE ACESSO
-
-        if (dept.getId() == null && !funcLogadoEraChefePatrimonio) {
-            view.showError("Apenas chefes de patrimônio podem criar novos departamentos.");
-            return;
-        }
-
-        if (dept.getId() != null && !(funcLogadoEraChefePatrimonio
-                || (funcLogadoEraChefeDept && funcLogadoDeptId.equals(dept.getId())))) {
-            view.showError(
-                    "Apenas chefes de patrimônio e chefes do próprio departamento podem alterá-lo.");
-            return;
-        }
-
-        // VALIDADE DOS DADOS
-
-        if (dept.getNome() == null || dept.getNome().isEmpty()) {
-            view.showError("O 'nome' é um campo obrigatório.");
-            return;
-        }
-        if (dept.getDePatrimonio() == null) {
-            view.showError("O 'de patrimônio' é um campo obrigatório.");
-            return;
-        }
-        if (dept.getDePatrimonio() && !dept.getId().equals(deptRepo.getDePatrimonio().getId())) {
-            view.showError("Só pode existir um departamento 'de patrimônio'.");
-            return;
-        }
-        if (dept.getIdChefe() == null) {
-            view.showError("O 'chefe' é um campo obrigatório.");
-            return;
-        }
-        if (dept.getChefe() == null) {
-            view.showError("O 'chefe' selecionado não existe.");
-            return;
-        }
-        if (dept.getChefe().getIdDepartamento() != null
-                && !dept.getChefe().getIdDepartamento().equals(dept.getId())) {
-            System.out.println(dept.getChefe().getIdDepartamento());
-            view.showError("O 'chefe' selecionado não pode pertencer a outro departamento.");
-            return;
-        }
-        if (dept.getIdChefeSubstituto() != null
-                && dept.getIdChefeSubstituto().equals(dept.getIdChefe())) {
-            view.showError("O 'chefe' não pode ser o mesmo que o 'chefe substituto'.");
-            return;
-        }
-
-        // APLICA A ALTERAÇÃO
+        final Funcionario usuario = mainPresenter.getUsuario();
+        final DepartamentoDTO deptDTO = view.getDepartamento();
+        final Departamento dept = deptDTO == null ? null : deptDTO.toModel();
 
         if (dept.getId() == null) {
-            onConfirmarAdicao(dept);
+            onConfirmarAdicao(usuario, dept);
         } else {
-            onConfirmarAtualizacao(deptAntigo, dept);
-        }
-
-        // PÓS-ATUALIZAÇÕES
-
-        // Se o novo chefe não possuia departamento, ele deve ser movido para o departamento
-        // alterado.
-        if (dept.getChefe().getIdDepartamento() == null) {
-            final Funcionario chefe = dept.getChefe();
-            chefe.setIdDepartamento(dept.getId());
-            funcRepo.update(chefe);
-            view.showInfo("O funcionário " + chefe.getNome() + " foi movido ao departamento "
-                    + dept.getNome() + ".");
-        }
-
-        // Se o departamento do funcionario logado tiver sido alterado, força a reatualização da
-        // exibição da tela para este usuário
-        if (funcLogado.getIdDepartamento().equals(dept.getId())) {
-            mainPresenter.setIdUsuario(funcLogado.getId());
-            return;
+            onConfirmarAtualizacao(usuario, dept.getId(), dept);
         }
     }
 
-    private void onConfirmarAdicao(final Departamento deptNovo) {
+    private void onConfirmarAdicao(final Funcionario usuario,
+            final Departamento deptNovo) {
+
+        try {
+            Departamento.validarInserir(usuario, deptNovo);
+        } catch (final IllegalInsertException e) {
+            view.showError(e.getMessage());
+            return;
+        }
+
         final DepartamentoRepository deptRepo = new DepartamentoRepository();
         deptRepo.add(deptNovo);
         view.showSucesso();
         view.close();
         deptsPresenter.updateDepartamentos();
+
+        // Executa as pós-alterações e exibe as mensagens resultantes.
+        final List<String> messages = Departamento.posAlterar(usuario,
+                deptNovo);
+        for (final String message : messages) {
+            view.showInfo(message);
+        }
+
+        // Se o departamento do funcionario logado tiver sido alterado, força a
+        // reatualização da exibição da tela para este usuário
+        if (usuario.getIdDepartamento().equals(deptNovo.getId())) {
+            mainPresenter.setIdUsuario(usuario.getId());
+        }
     }
 
-    private void onConfirmarAtualizacao(final Departamento deptAnterior,
-            final Departamento deptAtualizado) {
+    private void onConfirmarAtualizacao(final Funcionario usuario,
+            final Integer idDeptAnterior, final Departamento deptAtualizado) {
+
+        try {
+            Departamento.validarAlterar(usuario, idDeptAnterior,
+                    deptAtualizado);
+        } catch (final IllegalUpdateException e) {
+            view.showError(e.getMessage());
+            return;
+        }
+
         final DepartamentoRepository deptRepo = new DepartamentoRepository();
         deptRepo.update(deptAtualizado);
         view.showSucesso();
         view.close();
         deptsPresenter.updateDepartamentos();
+
+        // Executa as pós-alterações e exibe as mensagens resultantes.
+        final List<String> messages = Departamento.posAlterar(usuario,
+                deptAtualizado);
+        for (final String message : messages) {
+            view.showInfo(message);
+        }
+
+        // Se o departamento do funcionario logado tiver sido alterado, força a
+        // reatualização da exibição da tela para este usuário
+        if (usuario.getIdDepartamento().equals(deptAtualizado.getId())) {
+            mainPresenter.setIdUsuario(usuario.getId());
+        }
     }
 }

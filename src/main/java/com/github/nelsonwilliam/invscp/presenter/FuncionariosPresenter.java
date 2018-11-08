@@ -2,12 +2,15 @@ package com.github.nelsonwilliam.invscp.presenter;
 
 import java.awt.event.ActionEvent;
 import java.security.AccessControlException;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.github.nelsonwilliam.invscp.InvSCP;
+import com.github.nelsonwilliam.invscp.exception.IllegalDeleteException;
 import com.github.nelsonwilliam.invscp.model.Departamento;
 import com.github.nelsonwilliam.invscp.model.Funcionario;
-import com.github.nelsonwilliam.invscp.model.repository.DepartamentoRepository;
+import com.github.nelsonwilliam.invscp.model.dto.DepartamentoDTO;
+import com.github.nelsonwilliam.invscp.model.dto.FuncionarioDTO;
 import com.github.nelsonwilliam.invscp.model.repository.FuncionarioRepository;
 import com.github.nelsonwilliam.invscp.view.FuncionarioView;
 import com.github.nelsonwilliam.invscp.view.FuncionariosView;
@@ -39,10 +42,21 @@ public class FuncionariosPresenter extends Presenter<FuncionariosView> {
 
     @SuppressWarnings("unused")
     private void onAdicionarFuncionario() {
-        final Funcionario funcLogado = mainPresenter.getUsuario();
         final Funcionario novoFunc = new Funcionario();
+        final FuncionarioDTO novoFuncDTO = new FuncionarioDTO();
+        novoFuncDTO.setValuesFromModel(novoFunc);
+
+        final List<Departamento> depts = novoFunc.getOutrosDepartamentos();
+        final List<DepartamentoDTO> deptsDTOs = new ArrayList<DepartamentoDTO>();
+        for (final Departamento d : depts) {
+            final DepartamentoDTO deptDTO = new DepartamentoDTO();
+            deptDTO.setValuesFromModel(d);
+            deptsDTOs.add(deptDTO);
+        }
+
         final FuncionarioView funcView = ViewFactory.createFuncionario(
-                InvSCP.VIEW_IMPL, mainPresenter.getView(), novoFunc, true);
+                InvSCP.VIEW_IMPL, mainPresenter.getView(), novoFuncDTO, true,
+                deptsDTOs);
         final FuncionarioPresenter funcPresenter = new FuncionarioPresenter(
                 funcView, mainPresenter, this);
         funcView.setVisible(true);
@@ -60,36 +74,20 @@ public class FuncionariosPresenter extends Presenter<FuncionariosView> {
     }
 
     private void deletarFuncionarios(final List<Integer> funcIds) {
-        final DepartamentoRepository deptRepo = new DepartamentoRepository();
+        final Funcionario usuario = mainPresenter.getUsuario();
         final FuncionarioRepository funcRepo = new FuncionarioRepository();
+
         int deletados = 0;
-        for (final Integer id : funcIds) {
-            final Funcionario func = funcRepo.getById(id);
+        for (final Integer idFunc : funcIds) {
 
-            // VALIDAÇÃO DE DADOS
-
-            if (func.isChefeDeDepartamentoPrincipal()
-                    || func.isChefeDePatrimonioPrincipal()) {
-                view.showError("O funcionário " + func.getNome()
-                        + " não pode ser deletado pois é chefe principal do departamento "
-                        + func.getDepartamento().getNome() + ".");
+            try {
+                Funcionario.validarDeletar(usuario, idFunc);
+            } catch (final IllegalDeleteException e) {
+                view.showError(e.getMessage());
                 continue;
             }
 
-            // PRÉ-ATUALIZAÇÕES
-
-            if (func.isChefeDeDepartamentoSubstituto()
-                    || func.isChefeDePatrimonioSubstituto()) {
-                final Departamento dept = func.getDepartamento();
-                dept.setIdChefeSubstituto(null);
-                deptRepo.update(dept);
-                view.showInfo(
-                        "O departamento " + func.getDepartamento().getNome()
-                                + " não possui mais um chefe substituto.");
-            }
-
-            // REMOVE O ITEM
-
+            final Funcionario func = funcRepo.getById(idFunc);
             funcRepo.remove(func);
             deletados++;
         }
@@ -111,9 +109,21 @@ public class FuncionariosPresenter extends Presenter<FuncionariosView> {
         final FuncionarioRepository funcRepo = new FuncionarioRepository();
         final Funcionario selectedFuncionario = funcRepo
                 .getById(selectedFuncIds.get(0));
+        final FuncionarioDTO selectedFuncionarioDTO = new FuncionarioDTO();
+        selectedFuncionarioDTO.setValuesFromModel(selectedFuncionario);
+
+        final List<Departamento> depts = selectedFuncionario
+                .getOutrosDepartamentos();
+        final List<DepartamentoDTO> deptsDTOs = new ArrayList<DepartamentoDTO>();
+        for (final Departamento d : depts) {
+            final DepartamentoDTO deptDTO = new DepartamentoDTO();
+            deptDTO.setValuesFromModel(d);
+            deptsDTOs.add(deptDTO);
+        }
+
         final FuncionarioView funcView = ViewFactory.createFuncionario(
-                InvSCP.VIEW_IMPL, mainPresenter.getView(), selectedFuncionario,
-                false);
+                InvSCP.VIEW_IMPL, mainPresenter.getView(),
+                selectedFuncionarioDTO, false, deptsDTOs);
         final FuncionarioPresenter funcPresenter = new FuncionarioPresenter(
                 funcView, mainPresenter, this);
         funcView.setVisible(true);
@@ -131,7 +141,14 @@ public class FuncionariosPresenter extends Presenter<FuncionariosView> {
             throw new AccessControlException(
                     "Apenas chefes devem gerenciar funcionários.");
         }
-        view.updateFuncionarios(funcs);
+
+        final List<FuncionarioDTO> funcsDTOs = new ArrayList<FuncionarioDTO>();
+        for (final Funcionario f : funcs) {
+            final FuncionarioDTO funcDTO = new FuncionarioDTO();
+            funcDTO.setValuesFromModel(f);
+            funcsDTOs.add(funcDTO);
+        }
+        view.updateFuncionarios(funcsDTOs);
     }
 
 }

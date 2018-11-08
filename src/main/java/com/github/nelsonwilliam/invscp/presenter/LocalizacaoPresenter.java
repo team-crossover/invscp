@@ -2,7 +2,11 @@ package com.github.nelsonwilliam.invscp.presenter;
 
 import java.awt.event.ActionEvent;
 
+import com.github.nelsonwilliam.invscp.exception.IllegalInsertException;
+import com.github.nelsonwilliam.invscp.exception.IllegalUpdateException;
+import com.github.nelsonwilliam.invscp.model.Funcionario;
 import com.github.nelsonwilliam.invscp.model.Localizacao;
+import com.github.nelsonwilliam.invscp.model.dto.LocalizacaoDTO;
 import com.github.nelsonwilliam.invscp.model.repository.LocalizacaoRepository;
 import com.github.nelsonwilliam.invscp.view.LocalizacaoView;
 
@@ -11,7 +15,8 @@ public class LocalizacaoPresenter extends Presenter<LocalizacaoView> {
     private final MainPresenter mainPresenter;
     private final LocalizacoesPresenter locasPresenter;
 
-    public LocalizacaoPresenter(final LocalizacaoView view, final MainPresenter mainPresenter,
+    public LocalizacaoPresenter(final LocalizacaoView view,
+            final MainPresenter mainPresenter,
             final LocalizacoesPresenter locasPresenter) {
         super(view);
         this.mainPresenter = mainPresenter;
@@ -26,51 +31,27 @@ public class LocalizacaoPresenter extends Presenter<LocalizacaoView> {
     }
 
     private void onConfirmar() {
-        final LocalizacaoRepository locaRepo = new LocalizacaoRepository();
-        final Localizacao loca = view.getLocalizacao();
-        final Localizacao locaAntiga = locaRepo.getById(loca.getId());
-
-        // VALIDAÇÃO DE DADOS
-
-        if (loca.getNome() == null || loca.getNome().isEmpty()) {
-            view.showError("O 'nome' é um campo obrigatório.");
-            return;
-        }
-        if (loca.getEndereco() == null || loca.getEndereco().isEmpty()) {
-            view.showError("O 'endereço' é um campo obrigatório.");
-            return;
-        }
-        if (loca.getCep() == null || loca.getCep().isEmpty()) {
-            view.showError("O 'CEP' é um campo obrigatório.");
-            return;
-        }
-        if (loca.getCep().length() != 8) {
-            view.showError("O 'CEP' deve possuir exatamente 8 números, sem traços ou pontos.");
-            return;
-        }
-        if (loca.getCidade() == null || loca.getCidade().isEmpty()) {
-            view.showError("A 'cidade' é um campo obrigatório.");
-            return;
-        }
-        if (loca.getUfString() == null || loca.getUfString().isEmpty()) {
-            view.showError("A 'UF' é um campo obrigatório.");
-            return;
-        }
-        if (loca.getUfString().length() != 2) {
-            view.showError("O 'UF' deve possuir exatamente 2 caracteres.");
-            return;
-        }
-
-        // APLICA A ALTERAÇÃO
+        final Funcionario usuario = mainPresenter.getUsuario();
+        final LocalizacaoDTO locaDTO = view.getLocalizacao();
+        final Localizacao loca = locaDTO == null ? null : locaDTO.toModel();
 
         if (loca.getId() == null) {
-            onConfirmarAdicao(loca);
+            onConfirmarAdicao(usuario, loca);
         } else {
-            onConfirmarAtualizacao(locaAntiga, loca);
+            onConfirmarAtualizacao(usuario, loca.getId(), loca);
         }
     }
 
-    private void onConfirmarAdicao(final Localizacao locaNova) {
+    private void onConfirmarAdicao(final Funcionario usuario,
+            final Localizacao locaNova) {
+
+        try {
+            Localizacao.validarInserir(usuario, locaNova);
+        } catch (final IllegalInsertException e) {
+            view.showError(e.getMessage());
+            return;
+        }
+
         final LocalizacaoRepository locaRepo = new LocalizacaoRepository();
         locaRepo.add(locaNova);
         view.showSucesso();
@@ -78,8 +59,16 @@ public class LocalizacaoPresenter extends Presenter<LocalizacaoView> {
         locasPresenter.updateLocalizacoes();
     }
 
-    private void onConfirmarAtualizacao(final Localizacao locaAnterior,
-            final Localizacao locaAtualizada) {
+    private void onConfirmarAtualizacao(final Funcionario usuario,
+            final Integer idLocaAnterior, final Localizacao locaAtualizada) {
+
+        try {
+            Localizacao.validarAlterar(usuario, idLocaAnterior, locaAtualizada);
+        } catch (final IllegalUpdateException e) {
+            view.showError(e.getMessage());
+            return;
+        }
+
         final LocalizacaoRepository locaRepo = new LocalizacaoRepository();
         locaRepo.update(locaAtualizada);
         view.showSucesso();

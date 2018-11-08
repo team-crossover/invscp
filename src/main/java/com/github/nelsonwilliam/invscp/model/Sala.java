@@ -2,6 +2,7 @@ package com.github.nelsonwilliam.invscp.model;
 
 import java.util.List;
 
+import com.github.nelsonwilliam.invscp.exception.CRUDException;
 import com.github.nelsonwilliam.invscp.exception.IllegalDeleteException;
 import com.github.nelsonwilliam.invscp.exception.IllegalInsertException;
 import com.github.nelsonwilliam.invscp.exception.IllegalUpdateException;
@@ -18,7 +19,7 @@ public class Sala implements Model {
 
     private String nome = null;
 
-    private TipoSalaEnum tipo = null;;
+    private TipoSalaEnum tipo = null;
 
     private Integer idPredio = null;
 
@@ -45,7 +46,7 @@ public class Sala implements Model {
         // ---------------
 
         if (idSala == null) {
-            throw new IllegalUpdateException(
+            throw new IllegalDeleteException(
                     "Não é possível remover salas sem informar o ID.");
         }
 
@@ -53,29 +54,30 @@ public class Sala implements Model {
         final Sala sala = salaRepo.getById(idSala);
 
         if (sala == null) {
-            throw new IllegalUpdateException(
+            throw new IllegalDeleteException(
                     "Não foi possível encontrar a sala desejada.");
         }
 
         // ------------------
         // CONTROLE DE ACESSO
         // ------------------
-
-        // TODO Verificar controle de acesso (O usuário pode deletar esse tipo
+        // Verificar controle de acesso (O usuário pode alterar esse tipo
         // de elemento, com esses atributos? Etc.).
+
+        // TODO ...
 
         // -----------------
         // VALIDADE DE DADOS
         // -----------------
-
-        // TODO Verificar validade dos dados (Este item pode ser removido? É
-        // um item obrigatório que não pode ser removido? Há itens dependento
-        // dele? Etc.).
+        // Verificar validade dos dados (Os novos atributos do elemento são
+        // válidos? Há itens que não podem ser modificados? Há itens
+        // repetidos/duplicados/já utilizados?Há itens obrigatórios faltando?
+        // Etc).
 
         // TODO Verificar se algum bem depende dessa sala.
 
         if (sala.getTipo() == TipoSalaEnum.DEPOSITO) {
-            throw new IllegalUpdateException(
+            throw new IllegalDeleteException(
                     "Não é possível remover a sala de depósito.");
         }
 
@@ -107,29 +109,30 @@ public class Sala implements Model {
         if (novaSala.getId() != null) {
             final Sala salaExistente = salaRepo.getById(novaSala.getId());
             if (salaExistente != null) {
-                throw new IllegalUpdateException(
-                        "Não é possível inserir a sala pois o ID já existente.");
+                throw new IllegalInsertException(
+                        "Não é possível inserir a sala pois o ID já existe.");
             }
         }
 
         // ------------------
         // CONTROLE DE ACESSO
         // ------------------
-
-        // TODO Verificar controle de acesso (O usuário pode inserir esse tipo
+        // Verificar controle de acesso (O usuário pode alterar esse tipo
         // de elemento, com esses atributos? Etc.).
+
+        // TODO ...
 
         // -----------------
         // VALIDADE DE DADOS
         // -----------------
-
-        // TODO Verificar validade dos dados (Os atributos do elemento são
-        // válidos? Há itens repetidos/duplicados/já utilizados? Há itens
-        // obrigatórios faltando? Etc.).
+        // Verificar validade dos dados (Os novos atributos do elemento são
+        // válidos? Há itens que não podem ser modificados? Há itens
+        // repetidos/duplicados/já utilizados?Há itens obrigatórios faltando?
+        // Etc).
 
         try {
             validarCampos(novaSala);
-        } catch (final IllegalArgumentException e) {
+        } catch (final CRUDException e) {
             throw new IllegalInsertException(e.getMessage());
         }
     }
@@ -183,29 +186,29 @@ public class Sala implements Model {
         // ------------------
         // CONTROLE DE ACESSO
         // ------------------
-
-        // TODO Verificar controle de acesso (O usuário pode alterar esse tipo
+        // Verificar controle de acesso (O usuário pode alterar esse tipo
         // de elemento, com esses atributos? Etc.).
+
+        // TODO ...
 
         // -----------------
         // VALIDADE DE DADOS
         // -----------------
-
-        // TODO Verificar validade dos dados (Os novos atributos do elemento são
+        // Verificar validade dos dados (Os novos atributos do elemento são
         // válidos? Há itens que não podem ser modificados? Há itens
-        // repetidos/duplicados/já utilizados?
-        // Há itens obrigatórios faltando? Etc.).
-
-        try {
-            validarCampos(novaSala);
-        } catch (final IllegalArgumentException e) {
-            throw new IllegalUpdateException(e.getMessage());
-        }
+        // repetidos/duplicados/já utilizados?Há itens obrigatórios faltando?
+        // Etc).
 
         if (antigaSala != null && antigaSala.getTipo() == TipoSalaEnum.DEPOSITO
                 && novaSala.getTipo() != TipoSalaEnum.DEPOSITO) {
             throw new IllegalUpdateException(
                     "Não é possível remover a sala de depósito.");
+        }
+
+        try {
+            validarCampos(novaSala);
+        } catch (final CRUDException e) {
+            throw new IllegalUpdateException(e.getMessage());
         }
 
     }
@@ -214,56 +217,40 @@ public class Sala implements Model {
      * Valida regras de negócio comuns tanto para inserção quanto para
      * alteração.
      */
-    private static void validarCampos(final Sala sala)
-            throws IllegalArgumentException {
+    private static void validarCampos(final Sala sala) throws CRUDException {
 
         final SalaRepository salaRepo = new SalaRepository();
         final DepartamentoRepository deptRepo = new DepartamentoRepository();
 
         if (sala.getNome() == null || sala.getNome().isEmpty()) {
-            throw new IllegalArgumentException(
-                    "O 'nome' é um campo obrigatório.");
+            throw new CRUDException("O 'nome' é um campo obrigatório.");
         }
-
         if (sala.getIdPredio() == null) {
-            throw new IllegalArgumentException(
-                    "O 'prédio' é um campo obrigatório.");
+            throw new CRUDException("O 'prédio' é um campo obrigatório.");
         }
-
         if (sala.getPredio() == null) {
-            throw new IllegalArgumentException(
-                    "O 'prédio' selecionado não existe.");
+            throw new CRUDException("O 'prédio' selecionado não existe.");
         }
-
         if (sala.getIdDepartamento() == null) {
-            throw new IllegalArgumentException(
-                    "O 'departamento' é um campo obrigatório.");
+            throw new CRUDException("O 'departamento' é um campo obrigatório.");
         }
-
         if (sala.getDepartamento() == null) {
-            throw new IllegalArgumentException(
-                    "O 'departamento' selecionado não existe.");
+            throw new CRUDException("O 'departamento' selecionado não existe.");
         }
-
         if (sala.getTipo() == null) {
-            throw new IllegalArgumentException(
-                    "O 'tipo' é um campo obrigatório.");
+            throw new CRUDException("O 'tipo' é um campo obrigatório.");
         }
-
         if (sala.getTipo() == TipoSalaEnum.DEPOSITO && (sala.getId() == null
                 || !sala.getId().equals(salaRepo.getDeDeposito().getId()))) {
-            throw new IllegalArgumentException(
-                    "Já existe outra sala de depósito.");
+            throw new CRUDException("Já existe outra sala de depósito.");
         }
-
         if (sala.getTipo() == TipoSalaEnum.DEPOSITO
                 && (sala.getIdDepartamento() == null
                         || !sala.getIdDepartamento()
                                 .equals(deptRepo.getDePatrimonio().getId()))) {
-            throw new IllegalArgumentException(
+            throw new CRUDException(
                     "A sala de depósito deve pertencer ao departamento de patrimônio.");
         }
-
     }
 
     public Integer getIdPredio() {
@@ -296,20 +283,8 @@ public class Sala implements Model {
         return tipo;
     }
 
-    public String getTipoString() {
-        return tipo.toString();
-    }
-
     public void setTipo(final TipoSalaEnum tipo) {
         this.tipo = tipo;
-    }
-
-    public void setTipo(final String tipo) {
-        try {
-            this.tipo = TipoSalaEnum.valueOfTexto(tipo);
-        } catch (final IllegalArgumentException e) {
-            this.tipo = TipoSalaEnum.valueOf(tipo);
-        }
     }
 
     @Override

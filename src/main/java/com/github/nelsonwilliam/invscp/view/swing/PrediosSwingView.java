@@ -26,7 +26,7 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.table.DefaultTableModel;
 
-import com.github.nelsonwilliam.invscp.model.Predio;
+import com.github.nelsonwilliam.invscp.model.dto.PredioDTO;
 import com.github.nelsonwilliam.invscp.view.PrediosView;
 
 public class PrediosSwingView extends JPanel implements PrediosView {
@@ -67,7 +67,8 @@ public class PrediosSwingView extends JPanel implements PrediosView {
         table.setModel(new DefaultTableModel(new Object[][] {},
                 new String[] { "ID", "Nome", "Localização" }) {
             private static final long serialVersionUID = -5025798773394078963L;
-            Class<?>[] columnTypes = new Class[] { Integer.class, String.class, String.class };
+            Class<?>[] columnTypes = new Class[] { Integer.class, String.class,
+                    String.class };
 
             @Override
             public Class<?> getColumnClass(final int columnIndex) {
@@ -103,11 +104,12 @@ public class PrediosSwingView extends JPanel implements PrediosView {
         popupMenu.addPopupMenuListener(new PopupMenuListener() {
             @Override
             public void popupMenuWillBecomeVisible(final PopupMenuEvent e) {
-                // Garante que ao clicar com o botão direito em um item para exibir o menu, o o
+                // Garante que ao clicar com o botão direito em um item para
+                // exibir o menu, o o
                 // único item selecionado da tabela será o item clicado.
                 SwingUtilities.invokeLater(() -> {
-                    final int rowAtPoint = table.rowAtPoint(
-                            SwingUtilities.convertPoint(popupMenu, new Point(0, 0), table));
+                    final int rowAtPoint = table.rowAtPoint(SwingUtilities
+                            .convertPoint(popupMenu, new Point(0, 0), table));
                     if (rowAtPoint > -1) {
                         table.setRowSelectionInterval(rowAtPoint, rowAtPoint);
                     }
@@ -161,12 +163,14 @@ public class PrediosSwingView extends JPanel implements PrediosView {
     }
 
     @Override
-    public void updatePredios(final List<Predio> predio) {
-        final DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+    public void updatePredios(final List<PredioDTO> predio) {
+        final DefaultTableModel tableModel = (DefaultTableModel) table
+                .getModel();
         tableModel.setNumRows(0);
-        for (final Predio p : predio) {
+        for (final PredioDTO p : predio) {
             tableModel.addRow(new Object[] { p.getId(), p.getNome(),
-                    p.getIdLocalizacao() == null ? "Nenhuma" : p.getLocalizacao().getNome() });
+                    p.getLocalizacao() == null ? "Nenhuma"
+                            : p.getLocalizacao().getNome() });
         }
 
         revalidate();
@@ -178,7 +182,8 @@ public class PrediosSwingView extends JPanel implements PrediosView {
     public void showError(final String message) {
         final String titulo = "Erro";
         final String messageCompleta = "Erro: " + message;
-        JOptionPane.showMessageDialog(this, messageCompleta, titulo, JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, messageCompleta, titulo,
+                JOptionPane.ERROR_MESSAGE);
     }
 
     @Override
@@ -190,17 +195,20 @@ public class PrediosSwingView extends JPanel implements PrediosView {
     }
 
     @Override
-    public void showConfirmacao(final String message, final Consumer<Boolean> responseCallback) {
+    public void showConfirmacao(final String message,
+            final Consumer<Boolean> responseCallback) {
         final String titulo = "Confirmação";
-        final int resposta = JOptionPane.showConfirmDialog(this, message, titulo,
-                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        final int resposta = JOptionPane.showConfirmDialog(this, message,
+                titulo, JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE);
         responseCallback.accept(resposta == JOptionPane.YES_OPTION);
     }
 
     @Override
     public void showInfo(final String message) {
         final String titulo = "Informação";
-        JOptionPane.showMessageDialog(this, message, titulo, JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this, message, titulo,
+                JOptionPane.INFORMATION_MESSAGE);
     }
 
     @Override

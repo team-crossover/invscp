@@ -11,8 +11,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import com.github.nelsonwilliam.invscp.model.Departamento;
-import com.github.nelsonwilliam.invscp.model.Funcionario;
+import com.github.nelsonwilliam.invscp.model.dto.DepartamentoDTO;
+import com.github.nelsonwilliam.invscp.model.dto.FuncionarioDTO;
 import com.github.nelsonwilliam.invscp.view.MenuView;
 
 public class MenuSwingView extends JPanel implements MenuView {
@@ -95,33 +95,31 @@ public class MenuSwingView extends JPanel implements MenuView {
     }
 
     @Override
-    public void updateUsuario(final Funcionario funcionario) {
+    public void updateUsuario(final FuncionarioDTO funcionario) {
         pnlSession.removeAll();
         pnlButtons.removeAll();
         pnlLoginLogout.removeAll();
 
-        final boolean isFuncionario = (funcionario != null);
-        final boolean isChefe = isFuncionario && funcionario.isChefe();
-        final boolean isChefeDePatrimonio = isFuncionario && funcionario.isChefeDePatrimonio();
+        final boolean isLogado = (funcionario != null);
+        final boolean isChefe = isLogado && funcionario.getCargo().isChefe();
+        final boolean isChefeDePatrimonio = isLogado
+                && funcionario.getCargo().isChefeDePatrimonio();
 
         // Exibe os botões adequados dependendo do papel do funcionário logado.
-        if (!isFuncionario) {
-            // Session
+        if (!isLogado) {
+            // SESSAO ANONIMA
             pnlSession.add(lblSessaoAnonima);
-
-            // Buttons
-            // ...
-
-            // Logout
             pnlLoginLogout.add(btnLogin);
 
         } else {
+            // FUNCIONARIO LOGADO
+
             // Session
             lblFuncionario.setText(funcionario.getNome());
             pnlSession.add(lblFuncionario);
-            lblCargo.setText(funcionario.getCargo());
+            lblCargo.setText(funcionario.getCargo().getTexto());
             pnlSession.add(lblCargo);
-            final Departamento dept = funcionario.getDepartamento();
+            final DepartamentoDTO dept = funcionario.getDepartamento();
             if (dept != null) {
                 lblDepartamento.setText(dept.getNome());
                 pnlSession.add(lblDepartamento);
@@ -129,6 +127,7 @@ public class MenuSwingView extends JPanel implements MenuView {
 
             // Buttons
             if (isChefe) {
+                // BOTOES DE CHEFES
                 pnlButtons.add(btnFuncionarios);
                 pnlButtons.add(btnDepartamentos);
                 pnlButtons.add(btnLocalizacoes);
@@ -136,8 +135,12 @@ public class MenuSwingView extends JPanel implements MenuView {
                 pnlButtons.add(btnSalas);
 
                 if (isChefeDePatrimonio) {
-                    // Emitir inventario
+                    // BOTOES DE CHEFE DE PATIRMONIO
+                    // ...
                 }
+
+            } else {
+                // BOTOES DE FUNCIONARIOS COMUNS
             }
 
             // Logout

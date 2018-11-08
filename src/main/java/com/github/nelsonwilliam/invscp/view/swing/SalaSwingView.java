@@ -101,9 +101,29 @@ public class SalaSwingView extends JDialog implements SalaView {
         gbc_lblTipo.gridy = 2;
         getContentPane().add(lblTipo, gbc_lblTipo);
 
+        final ListCellRenderer<? super TipoSalaEnum> tipoSalaListRenderer = new DefaultListCellRenderer() {
+            private static final long serialVersionUID = 387686638148057981L;
+
+            @Override
+            public Component getListCellRendererComponent(final JList<?> list,
+                    final Object value, final int index,
+                    final boolean isSelected, final boolean cellHasFocus) {
+                if (value == null) {
+                    return super.getListCellRendererComponent(list, "Nenhum",
+                            index, isSelected, cellHasFocus);
+                } else {
+                    final String nome = ((TipoSalaEnum) value).getTexto();
+                    return super.getListCellRendererComponent(list, nome, index,
+                            isSelected, cellHasFocus);
+                }
+            }
+        };
+
         tipo = new JComboBox<TipoSalaEnum>();
         tipo.setModel(
                 new DefaultComboBoxModel<TipoSalaEnum>(TipoSalaEnum.values()));
+        tipo.setRenderer(tipoSalaListRenderer);
+
         final GridBagConstraints gbc_tipo = new GridBagConstraints();
         gbc_tipo.insets = new Insets(0, 0, 5, 5);
         gbc_tipo.fill = GridBagConstraints.HORIZONTAL;
@@ -163,7 +183,7 @@ public class SalaSwingView extends JDialog implements SalaView {
         gbc_scrollPanePredios.gridy = 3;
         getContentPane().add(scrollPredios, gbc_scrollPanePredios);
 
-        final JLabel lblDepartamento = new JLabel("DepartamentoDTO:");
+        final JLabel lblDepartamento = new JLabel("Departamento:");
         final GridBagConstraints gbc_lblDepartamento = new GridBagConstraints();
         gbc_lblDepartamento.anchor = GridBagConstraints.EAST;
         gbc_lblDepartamento.insets = new Insets(0, 0, 5, 5);
@@ -303,8 +323,8 @@ public class SalaSwingView extends JDialog implements SalaView {
     @Override
     public void showSucesso() {
         final String titulo = "Sucesso";
-        final String messageCompleta = isAdicionar ? "SalaDTO adicionada!"
-                : "SalaDTO alterada!";
+        final String messageCompleta = isAdicionar ? "Sala adicionada!"
+                : "Sala alterada!";
         JOptionPane.showMessageDialog(this, messageCompleta, titulo,
                 JOptionPane.INFORMATION_MESSAGE);
     }

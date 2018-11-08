@@ -3,6 +3,7 @@ package com.github.nelsonwilliam.invscp.presenter;
 import java.awt.event.ActionEvent;
 
 import com.github.nelsonwilliam.invscp.exception.IllegalInsertException;
+import com.github.nelsonwilliam.invscp.exception.IllegalUpdateException;
 import com.github.nelsonwilliam.invscp.model.Funcionario;
 import com.github.nelsonwilliam.invscp.model.Sala;
 import com.github.nelsonwilliam.invscp.model.dto.SalaDTO;
@@ -62,7 +63,7 @@ public class SalaPresenter extends Presenter<SalaView> {
 
         try {
             Sala.validarAlterar(usuario, idSalaAnterior, salaAtualizada);
-        } catch (final IllegalInsertException e) {
+        } catch (final IllegalUpdateException e) {
             view.showError(e.getMessage());
             return;
         }

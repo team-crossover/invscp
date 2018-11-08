@@ -4,11 +4,9 @@ import java.util.List;
 
 import javax.swing.JFrame;
 
-import com.github.nelsonwilliam.invscp.model.Departamento;
-import com.github.nelsonwilliam.invscp.model.Funcionario;
-import com.github.nelsonwilliam.invscp.model.Localizacao;
-import com.github.nelsonwilliam.invscp.model.Predio;
 import com.github.nelsonwilliam.invscp.model.dto.DepartamentoDTO;
+import com.github.nelsonwilliam.invscp.model.dto.FuncionarioDTO;
+import com.github.nelsonwilliam.invscp.model.dto.LocalizacaoDTO;
 import com.github.nelsonwilliam.invscp.model.dto.PredioDTO;
 import com.github.nelsonwilliam.invscp.model.dto.SalaDTO;
 import com.github.nelsonwilliam.invscp.view.swing.DepartamentoSwingView;
@@ -40,12 +38,14 @@ public class ViewFactory {
 
     public static DepartamentoView createDepartamento(
             final ViewImplementation impl, final MainView main,
-            final Departamento dept, final boolean isAddition) {
+            final DepartamentoDTO dept, final boolean isAddition,
+            final List<FuncionarioDTO> chefes,
+            final List<FuncionarioDTO> chefesSubsts) {
 
         switch (impl) {
             case SWING:
                 return new DepartamentoSwingView((JFrame) main, dept,
-                        isAddition);
+                        isAddition, chefes, chefesSubsts);
             default:
                 throw new IllegalArgumentException();
         }
@@ -64,12 +64,13 @@ public class ViewFactory {
 
     public static FuncionarioView createFuncionario(
             final ViewImplementation impl, final MainView main,
-            final Funcionario func, final boolean isAddition) {
+            final FuncionarioDTO func, final boolean isAddition,
+            final List<DepartamentoDTO> departamentos) {
 
         switch (impl) {
             case SWING:
-                return new FuncionarioSwingView((JFrame) main, func,
-                        isAddition);
+                return new FuncionarioSwingView((JFrame) main, func, isAddition,
+                        departamentos);
             default:
                 throw new IllegalArgumentException();
         }
@@ -77,7 +78,7 @@ public class ViewFactory {
 
     public static LocalizacaoView createLocalizacao(
             final ViewImplementation impl, final MainView main,
-            final Localizacao loca, final boolean isAddition) {
+            final LocalizacaoDTO loca, final boolean isAddition) {
 
         switch (impl) {
             case SWING:
@@ -142,12 +143,13 @@ public class ViewFactory {
     }
 
     public static PredioView createPredio(final ViewImplementation impl,
-            final MainView main, final Predio predio,
-            final boolean isAddition) {
+            final MainView main, final PredioDTO predio,
+            final boolean isAddition, final List<LocalizacaoDTO> locas) {
 
         switch (impl) {
             case SWING:
-                return new PredioSwingView((JFrame) main, predio, isAddition);
+                return new PredioSwingView((JFrame) main, predio, isAddition,
+                        locas);
             default:
                 throw new IllegalArgumentException();
         }

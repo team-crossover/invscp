@@ -2,7 +2,11 @@ package com.github.nelsonwilliam.invscp.presenter;
 
 import java.awt.event.ActionEvent;
 
+import com.github.nelsonwilliam.invscp.exception.IllegalInsertException;
+import com.github.nelsonwilliam.invscp.exception.IllegalUpdateException;
+import com.github.nelsonwilliam.invscp.model.Funcionario;
 import com.github.nelsonwilliam.invscp.model.Predio;
+import com.github.nelsonwilliam.invscp.model.dto.PredioDTO;
 import com.github.nelsonwilliam.invscp.model.repository.PredioRepository;
 import com.github.nelsonwilliam.invscp.view.PredioView;
 
@@ -11,7 +15,8 @@ public class PredioPresenter extends Presenter<PredioView> {
     private final MainPresenter mainPresenter;
     private final PrediosPresenter prediosPresenter;
 
-    public PredioPresenter(final PredioView view, final MainPresenter mainPresenter,
+    public PredioPresenter(final PredioView view,
+            final MainPresenter mainPresenter,
             final PrediosPresenter prediosPresenter) {
         super(view);
         this.mainPresenter = mainPresenter;
@@ -26,35 +31,27 @@ public class PredioPresenter extends Presenter<PredioView> {
     }
 
     private void onConfirmar() {
-        final PredioRepository predioRepo = new PredioRepository();
-        final Predio predio = view.getPredio();
-        final Predio predioAntigo = predioRepo.getById(predio.getId());
-
-        // VALIDAÇÃO DE DADOS
-
-        if (predio.getNome() == null || predio.getNome().isEmpty()) {
-            view.showError("O 'nome' é um campo obrigatório.");
-            return;
-        }
-        if (predio.getIdLocalizacao() == null) {
-            view.showError("A 'localização' é um campo obrigatório.");
-            return;
-        }
-        if (predio.getLocalizacao() == null) {
-            view.showError("A 'localização' selecionada não existe.");
-            return;
-        }
-
-        // APLICA A ALTERAÇÃO
+        final Funcionario usuario = mainPresenter.getUsuario();
+        final PredioDTO predioDTO = view.getPredio();
+        final Predio predio = predioDTO == null ? null : predioDTO.toModel();
 
         if (predio.getId() == null) {
-            onConfirmarAdicao(predio);
+            onConfirmarAdicao(usuario, predio);
         } else {
-            onConfirmarAtualizacao(predioAntigo, predio);
+            onConfirmarAtualizacao(usuario, predio.getId(), predio);
         }
     }
 
-    private void onConfirmarAdicao(final Predio predioNovo) {
+    private void onConfirmarAdicao(final Funcionario usuario,
+            final Predio predioNovo) {
+
+        try {
+            Predio.validarInserir(usuario, predioNovo);
+        } catch (final IllegalInsertException e) {
+            view.showError(e.getMessage());
+            return;
+        }
+
         final PredioRepository predioRepo = new PredioRepository();
         predioRepo.add(predioNovo);
         view.showSucesso();
@@ -63,8 +60,16 @@ public class PredioPresenter extends Presenter<PredioView> {
 
     }
 
-    private void onConfirmarAtualizacao(final Predio predioAnterior,
-            final Predio predioAtualizado) {
+    private void onConfirmarAtualizacao(final Funcionario usuario,
+            final Integer idPredioAnterior, final Predio predioAtualizado) {
+
+        try {
+            Predio.validarAlterar(usuario, idPredioAnterior, predioAtualizado);
+        } catch (final IllegalUpdateException e) {
+            view.showError(e.getMessage());
+            return;
+        }
+
         final PredioRepository predioRepo = new PredioRepository();
         predioRepo.update(predioAtualizado);
         view.showSucesso();

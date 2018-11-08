@@ -1,8 +1,10 @@
 package com.github.nelsonwilliam.invscp.view;
 
 import java.awt.event.ActionListener;
+import java.util.List;
 
-import com.github.nelsonwilliam.invscp.model.Departamento;
+import com.github.nelsonwilliam.invscp.model.dto.DepartamentoDTO;
+import com.github.nelsonwilliam.invscp.model.dto.FuncionarioDTO;
 
 public interface DepartamentoView extends View {
 
@@ -17,13 +19,15 @@ public interface DepartamentoView extends View {
     // -------------------------------------------
 
     /**
-     * Atualiza todos os valores da janela para exibir os dados do departamento passado.
+     * Atualiza todos os valores da janela para exibir os dados do departamento
+     * passado.
      */
-    void updateDepartamento(Departamento departamento);
+    void updateDepartamento(DepartamentoDTO departamento,
+            List<FuncionarioDTO> chefes, List<FuncionarioDTO> chefesSubst);
 
     /**
-     * Exibe uma mensagem de erro com a mensagem especificada. Por exemplo, pode ser chamado para
-     * avisar que algum campo obrigatório foi deixado vazio.
+     * Exibe uma mensagem de erro com a mensagem especificada. Por exemplo, pode
+     * ser chamado para avisar que algum campo obrigatório foi deixado vazio.
      */
     void showError(String message);
 
@@ -44,9 +48,9 @@ public interface DepartamentoView extends View {
     // ---------------------------------------------
 
     /**
-     * Obtém o departamento com os valores atualmente exibidos no formulário que o usuário pode ou
-     * não ter alterado.
+     * Obtém o departamento com os valores atualmente exibidos no formulário que
+     * o usuário pode ou não ter alterado.
      */
-    Departamento getDepartamento();
+    DepartamentoDTO getDepartamento();
 
 }

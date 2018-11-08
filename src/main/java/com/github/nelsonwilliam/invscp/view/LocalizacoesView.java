@@ -4,7 +4,7 @@ import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.function.Consumer;
 
-import com.github.nelsonwilliam.invscp.model.Localizacao;
+import com.github.nelsonwilliam.invscp.model.dto.LocalizacaoDTO;
 
 public interface LocalizacoesView extends View {
     // ----------------------------------------
@@ -16,9 +16,10 @@ public interface LocalizacoesView extends View {
     void addDeletarLocalizacoesListener(ActionListener listener);
 
     /**
-     * Adiciona o Listener para quando o usuário informar que quer alterar uma localização.
-     * Espera-se que quando este evento for invocado, haja exatamente UMA localização selecionada
-     * (obtível através do método getSelectedLocalizacoesIds.
+     * Adiciona o Listener para quando o usuário informar que quer alterar uma
+     * localização. Espera-se que quando este evento for invocado, haja
+     * exatamente UMA localização selecionada (obtível através do método
+     * getSelectedLocalizacoesIds.
      */
     void addAlterarLocalizacaoListener(ActionListener listener);
 
@@ -26,7 +27,7 @@ public interface LocalizacoesView extends View {
     // Métodos para atualizar os valores exibidos.
     // -------------------------------------------
 
-    void updateLocalizacoes(List<Localizacao> localizacoes);
+    void updateLocalizacoes(List<LocalizacaoDTO> localizacoes);
 
     void showError(String message);
 
@@ -41,7 +42,8 @@ public interface LocalizacoesView extends View {
     // ---------------------------------------------
 
     /**
-     * Obtém uma lista com os IDs de todas as localizações atualmente selecionadas na tabela.
+     * Obtém uma lista com os IDs de todas as localizações atualmente
+     * selecionadas na tabela.
      */
     List<Integer> getSelectedLocalizacoesIds();
 

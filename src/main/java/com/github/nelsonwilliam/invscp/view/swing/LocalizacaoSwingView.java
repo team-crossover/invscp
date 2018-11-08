@@ -18,7 +18,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 
-import com.github.nelsonwilliam.invscp.model.Localizacao;
+import com.github.nelsonwilliam.invscp.model.dto.LocalizacaoDTO;
 import com.github.nelsonwilliam.invscp.model.enums.UFEnum;
 import com.github.nelsonwilliam.invscp.view.LocalizacaoView;
 
@@ -39,14 +39,17 @@ public class LocalizacaoSwingView extends JDialog implements LocalizacaoView {
     private JComboBox<UFEnum> comboUf;
 
     /**
-     * @param localizacao Localizações cujos valores serão exibidos inicialmente.
-     *
-     * @param isAdicionar Indica se a janela que será exibida será para adição de uma nova
-     *        localização (true) ou para atualização de uma localização existente (false).
+     * @param localizacao Localizações cujos valores serão exibidos
+     *        inicialmente.
+     * @param isAdicionar Indica se a janela que será exibida será para adição
+     *        de uma nova localização (true) ou para atualização de uma
+     *        localização existente (false).
      */
-    public LocalizacaoSwingView(final JFrame owner, final Localizacao localizacao,
-            final boolean isAdicionar) {
-        super(owner, isAdicionar ? "Adicionar localizacao" : "Alterar localizacao",
+    public LocalizacaoSwingView(final JFrame owner,
+            final LocalizacaoDTO localizacao, final boolean isAdicionar) {
+
+        super(owner,
+                isAdicionar ? "Adicionar localizacao" : "Alterar localizacao",
                 ModalityType.APPLICATION_MODAL);
         this.isAdicionar = isAdicionar;
         initialize();
@@ -61,7 +64,8 @@ public class LocalizacaoSwingView extends JDialog implements LocalizacaoView {
         gridBagLayout.columnWidths = new int[] { 30, 102, 0, 30 };
         gridBagLayout.rowHeights = new int[] { 30, 0, 0, 0, 0, 0, 30, 0, 30 };
         gridBagLayout.columnWeights = new double[] { 0.0, 0.0, 1.0, 0.0 };
-        gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+        gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 1.0, 0.0, 0.0, 0.0,
+                0.0, 0.0, 0.0 };
         getContentPane().setLayout(gridBagLayout);
 
         btnConfirmar = new JButton("Confirmar");
@@ -188,12 +192,13 @@ public class LocalizacaoSwingView extends JDialog implements LocalizacaoView {
     }
 
     @Override
-    public void updateLocalizacao(final Localizacao localizacao) {
+    public void updateLocalizacao(final LocalizacaoDTO localizacao) {
         if (localizacao == null) {
             throw new NullPointerException();
         }
 
-        // O ID do departamento sendo exibido é armazenado para que seja possível
+        // O ID do departamento sendo exibido é armazenado para que seja
+        // possível
         // retorná-lo na hora de salvar o departamento.
         idLocalizacao = localizacao.getId();
 
@@ -208,13 +213,15 @@ public class LocalizacaoSwingView extends JDialog implements LocalizacaoView {
     public void showError(final String message) {
         final String titulo = "Erro";
         final String messageCompleta = "Erro: " + message;
-        JOptionPane.showMessageDialog(this, messageCompleta, titulo, JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, messageCompleta, titulo,
+                JOptionPane.ERROR_MESSAGE);
     }
 
     @Override
     public void showSucesso() {
         final String titulo = "Sucesso";
-        final String messageCompleta = isAdicionar ? "Localizacao adicionada!"
+        final String messageCompleta = isAdicionar
+                ? "Localizacao adicionada!"
                 : "Localizacao alterada!";
         JOptionPane.showMessageDialog(this, messageCompleta, titulo,
                 JOptionPane.INFORMATION_MESSAGE);
@@ -223,7 +230,8 @@ public class LocalizacaoSwingView extends JDialog implements LocalizacaoView {
     @Override
     public void showInfo(final String message) {
         final String titulo = "Informação";
-        JOptionPane.showMessageDialog(this, message, titulo, JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this, message, titulo,
+                JOptionPane.INFORMATION_MESSAGE);
     }
 
     @Override
@@ -233,8 +241,8 @@ public class LocalizacaoSwingView extends JDialog implements LocalizacaoView {
     }
 
     @Override
-    public Localizacao getLocalizacao() {
-        final Localizacao localizacao = new Localizacao();
+    public LocalizacaoDTO getLocalizacao() {
+        final LocalizacaoDTO localizacao = new LocalizacaoDTO();
         localizacao.setId(idLocalizacao);
         localizacao.setNome(fieldNome.getText());
         localizacao.setEndereco(fieldEndereco.getText());

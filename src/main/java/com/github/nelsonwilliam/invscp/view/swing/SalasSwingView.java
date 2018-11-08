@@ -48,8 +48,8 @@ public class SalasSwingView extends JPanel implements SalasView {
         setBounds(0, 0, 500, 500);
         final GridBagLayout gridBagLayout = new GridBagLayout();
         gridBagLayout.columnWidths = new int[] { 0, 199, 249, 0 };
-        gridBagLayout.rowHeights = new int[] { 422, 25, 0 };
         gridBagLayout.columnWeights = new double[] { 0.0, 1.0, 1.0, 0.0 };
+        gridBagLayout.rowHeights = new int[] { 422, 25, 0 };
         gridBagLayout.rowWeights = new double[] { 1.0, 0.0, Double.MIN_VALUE };
         setLayout(gridBagLayout);
 
@@ -64,11 +64,11 @@ public class SalasSwingView extends JPanel implements SalasView {
 
         table = new JTable();
         table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        table.setModel(new DefaultTableModel(new Object[][] {},
-                new String[] { "ID", "Nome", "Prédio", "Departamento" }) {
+        table.setModel(new DefaultTableModel(new Object[][] {}, new String[] {
+                "ID", "Nome", "Prédio", "Departamento", "Tipo" }) {
             private static final long serialVersionUID = -6152171932737868693L;
             Class<?>[] columnTypes = new Class[] { Integer.class, String.class,
-                    String.class, String.class };
+                    String.class, String.class, String.class };
 
             @Override
             public Class<?> getColumnClass(final int columnIndex) {
@@ -85,6 +85,8 @@ public class SalasSwingView extends JPanel implements SalasView {
         table.getColumnModel().getColumn(1).setMinWidth(200);
         table.getColumnModel().getColumn(2).setMinWidth(200);
         table.getColumnModel().getColumn(3).setMinWidth(200);
+        table.getColumnModel().getColumn(4).setMinWidth(100);
+        table.getColumnModel().getColumn(4).setMaxWidth(100);
         table.setAutoCreateRowSorter(true);
         scrollPane.setBorder(BorderFactory.createLineBorder(Color.gray, 1));
         scrollPane.setViewportView(table);
@@ -169,7 +171,8 @@ public class SalasSwingView extends JPanel implements SalasView {
             tableModel.addRow(new Object[] { s.getId(), s.getNome(),
                     s.getPredio() == null ? "Nenhum" : s.getPredio().getNome(),
                     s.getDepartamento() == null ? "Nenhum"
-                            : s.getDepartamento().getNome() });
+                            : s.getDepartamento().getNome(),
+                    s.getTipo() == null ? "Nenhum" : s.getTipo().getTexto() });
         }
 
         revalidate();

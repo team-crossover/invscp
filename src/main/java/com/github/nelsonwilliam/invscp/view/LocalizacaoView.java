@@ -2,7 +2,7 @@ package com.github.nelsonwilliam.invscp.view;
 
 import java.awt.event.ActionListener;
 
-import com.github.nelsonwilliam.invscp.model.Localizacao;
+import com.github.nelsonwilliam.invscp.model.dto.LocalizacaoDTO;
 
 public interface LocalizacaoView extends View {
 
@@ -17,13 +17,14 @@ public interface LocalizacaoView extends View {
     // -------------------------------------------
 
     /**
-     * Atualiza todos os valores da janela para exibir os dados da localização passado.
+     * Atualiza todos os valores da janela para exibir os dados da localização
+     * passado.
      */
-    void updateLocalizacao(Localizacao localizacao);
+    void updateLocalizacao(LocalizacaoDTO localizacao);
 
     /**
-     * Exibe uma mensagem de erro com a mensagem especificada. Por exemplo, pode ser chamado para
-     * avisar que algum campo obrigatório foi deixado vazio.
+     * Exibe uma mensagem de erro com a mensagem especificada. Por exemplo, pode
+     * ser chamado para avisar que algum campo obrigatório foi deixado vazio.
      */
     void showError(String message);
 
@@ -44,8 +45,8 @@ public interface LocalizacaoView extends View {
     // ---------------------------------------------
 
     /**
-     * Obtém a localização com os valores atualmente exibidos no formulário que o usuário pode ou
-     * não ter alterado.
+     * Obtém a localização com os valores atualmente exibidos no formulário que
+     * o usuário pode ou não ter alterado.
      */
-    Localizacao getLocalizacao();
+    LocalizacaoDTO getLocalizacao();
 }

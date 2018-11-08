@@ -22,8 +22,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
 
-import com.github.nelsonwilliam.invscp.model.Localizacao;
-import com.github.nelsonwilliam.invscp.model.Predio;
+import com.github.nelsonwilliam.invscp.model.dto.LocalizacaoDTO;
+import com.github.nelsonwilliam.invscp.model.dto.PredioDTO;
 import com.github.nelsonwilliam.invscp.view.PredioView;
 
 public class PredioSwingView extends JDialog implements PredioView {
@@ -37,7 +37,7 @@ public class PredioSwingView extends JDialog implements PredioView {
     private JButton btnConfirmar;
     private JButton btnCancelar;
     private JTextField fieldNome;
-    private JList<Localizacao> listLocalizacoes;
+    private JList<LocalizacaoDTO> listLocalizacoes;
     private JScrollPane scrollLocalizacoes;
 
     /**
@@ -47,13 +47,15 @@ public class PredioSwingView extends JDialog implements PredioView {
      *        existente (false).
      */
 
-    public PredioSwingView(final JFrame owner, final Predio predio,
-            final boolean isAdicionar) {
+    public PredioSwingView(final JFrame owner, final PredioDTO predio,
+            final boolean isAdicionar,
+            final List<LocalizacaoDTO> localizacoes) {
+
         super(owner, isAdicionar ? "Adicionar prédio" : "Alterar prédio",
                 ModalityType.APPLICATION_MODAL);
         this.isAdicionar = isAdicionar;
         initialize();
-        updatePredio(predio);
+        updatePredio(predio, localizacoes);
     }
 
     private void initialize() {
@@ -102,7 +104,7 @@ public class PredioSwingView extends JDialog implements PredioView {
         gbc_lblChefe.gridy = 2;
         getContentPane().add(lblChefe, gbc_lblChefe);
 
-        final ListCellRenderer<? super Localizacao> localizacaoListRenderer = new DefaultListCellRenderer() {
+        final ListCellRenderer<? super LocalizacaoDTO> localizacaoListRenderer = new DefaultListCellRenderer() {
             private static final long serialVersionUID = 337686638048057981L;
 
             @Override
@@ -113,7 +115,7 @@ public class PredioSwingView extends JDialog implements PredioView {
                     return super.getListCellRendererComponent(list, "Nenhum",
                             index, isSelected, cellHasFocus);
                 } else {
-                    final String nome = ((Localizacao) value).getNome();
+                    final String nome = ((LocalizacaoDTO) value).getNome();
                     return super.getListCellRendererComponent(list, nome, index,
                             isSelected, cellHasFocus);
                 }
@@ -128,8 +130,8 @@ public class PredioSwingView extends JDialog implements PredioView {
         gbc_scrollPane.gridy = 2;
         getContentPane().add(scrollLocalizacoes, gbc_scrollPane);
 
-        listLocalizacoes = new JList<Localizacao>();
-        listLocalizacoes.setModel(new DefaultListModel<Localizacao>());
+        listLocalizacoes = new JList<LocalizacaoDTO>();
+        listLocalizacoes.setModel(new DefaultListModel<LocalizacaoDTO>());
         listLocalizacoes.setCellRenderer(localizacaoListRenderer);
         scrollLocalizacoes
                 .setBorder(BorderFactory.createLineBorder(Color.gray, 1));
@@ -158,7 +160,9 @@ public class PredioSwingView extends JDialog implements PredioView {
     }
 
     @Override
-    public void updatePredio(final Predio predio) {
+    public void updatePredio(final PredioDTO predio,
+            final List<LocalizacaoDTO> localizacoes) {
+
         if (predio == null) {
             throw new NullPointerException();
         }
@@ -173,10 +177,8 @@ public class PredioSwingView extends JDialog implements PredioView {
         // Exibe as localizacoes na lista de localizacoes e seleciona o atual,
         // se
         // tiver, ou 'Nenhum', se não tiver.
-        final List<Localizacao> localizacoes = predio
-                .getPossiveisLocalizacoes();
-        final Localizacao localizacao = predio.getLocalizacao();
-        final DefaultListModel<Localizacao> listLocalizacoesModel = (DefaultListModel<Localizacao>) listLocalizacoes
+        final LocalizacaoDTO localizacao = predio.getLocalizacao();
+        final DefaultListModel<LocalizacaoDTO> listLocalizacoesModel = (DefaultListModel<LocalizacaoDTO>) listLocalizacoes
                 .getModel();
         listLocalizacoesModel.clear();
         if (localizacao == null) {
@@ -186,9 +188,12 @@ public class PredioSwingView extends JDialog implements PredioView {
             listLocalizacoesModel.add(0, localizacao);
             listLocalizacoes.setSelectedIndex(0);
         }
-        for (final Localizacao l : localizacoes) {
-            if (localizacao == null || !localizacao.getId().equals(l.getId())) {
-                listLocalizacoesModel.addElement(l);
+        if (localizacoes != null) {
+            for (final LocalizacaoDTO l : localizacoes) {
+                if (localizacao == null
+                        || !l.getId().equals(localizacao.getId())) {
+                    listLocalizacoesModel.addElement(l);
+                }
             }
         }
 
@@ -234,14 +239,12 @@ public class PredioSwingView extends JDialog implements PredioView {
     }
 
     @Override
-    public Predio getPredio() {
-        final Predio predio = new Predio();
+    public PredioDTO getPredio() {
+        final PredioDTO predio = new PredioDTO();
         predio.setId(idPredio);
         predio.setNome(fieldNome.getText());
-        predio.setIdLocalizacao(
-                listLocalizacoes.getSelectedValue() == null ? null
-                        : listLocalizacoes.getSelectedValue().getId());
-
+        predio.setLocalizacao(listLocalizacoes.getSelectedValue() == null ? null
+                : listLocalizacoes.getSelectedValue());
         return predio;
     }
 

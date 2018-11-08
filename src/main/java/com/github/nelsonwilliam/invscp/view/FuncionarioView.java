@@ -1,8 +1,10 @@
 package com.github.nelsonwilliam.invscp.view;
 
 import java.awt.event.ActionListener;
+import java.util.List;
 
-import com.github.nelsonwilliam.invscp.model.Funcionario;
+import com.github.nelsonwilliam.invscp.model.dto.DepartamentoDTO;
+import com.github.nelsonwilliam.invscp.model.dto.FuncionarioDTO;
 
 public interface FuncionarioView extends View {
 
@@ -17,13 +19,15 @@ public interface FuncionarioView extends View {
     // -------------------------------------------
 
     /**
-     * Atualiza todos os valores da janela para exibir os dados do funcionário passado.
+     * Atualiza todos os valores da janela para exibir os dados do funcionário
+     * passado.
      */
-    void updateFuncionario(Funcionario funcionario);
+    void updateFuncionario(FuncionarioDTO funcionario,
+            List<DepartamentoDTO> departamentos);
 
     /**
-     * Exibe uma mensagem de erro com a mensagem especificada. Por exemplo, pode ser chamado para
-     * avisar que algum campo obrigatório foi deixado vazio.
+     * Exibe uma mensagem de erro com a mensagem especificada. Por exemplo, pode
+     * ser chamado para avisar que algum campo obrigatório foi deixado vazio.
      */
     void showError(String message);
 
@@ -44,8 +48,8 @@ public interface FuncionarioView extends View {
     // ---------------------------------------------
 
     /**
-     * Obtém o funcionário com os valores atualmente exibidos no formulário que o usuário pode ou
-     * não ter alterado.
+     * Obtém o funcionário com os valores atualmente exibidos no formulário que
+     * o usuário pode ou não ter alterado.
      */
-    Funcionario getFuncionario();
+    FuncionarioDTO getFuncionario();
 }

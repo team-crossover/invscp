@@ -23,8 +23,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
 
-import com.github.nelsonwilliam.invscp.model.Departamento;
-import com.github.nelsonwilliam.invscp.model.Funcionario;
+import com.github.nelsonwilliam.invscp.model.dto.DepartamentoDTO;
+import com.github.nelsonwilliam.invscp.model.dto.FuncionarioDTO;
 import com.github.nelsonwilliam.invscp.view.FuncionarioView;
 
 public class FuncionarioSwingView extends JDialog implements FuncionarioView {
@@ -42,23 +42,26 @@ public class FuncionarioSwingView extends JDialog implements FuncionarioView {
     private JTextField fieldEmail;
     private JTextField fieldLogin;
     private JPasswordField fieldSenha;
-    private JList<Departamento> listDepartamentos;
+    private JList<DepartamentoDTO> listDepartamentos;
     private JScrollPane scrollDepartamentos;
 
     /**
-     * @param funcionario Funcionario cujos valores serão exibidos inicialmente.
+     * @param funcionario FuncionarioDTO cujos valores serão exibidos
+     *        inicialmente.
      * @param isAdicionar Indica se a janela que será exibida será para adição
      *        de um novo funcionario (true) ou para atualização de um
      *        funcionario existente (false).
      */
     public FuncionarioSwingView(final JFrame owner,
-            final Funcionario funcionario, final boolean isAdicionar) {
+            final FuncionarioDTO funcionario, final boolean isAdicionar,
+            final List<DepartamentoDTO> departamentos) {
+
         super(owner,
                 isAdicionar ? "Adicionar funcionário" : "Alterar funcionário",
                 ModalityType.APPLICATION_MODAL);
         this.isAdicionar = isAdicionar;
         initialize();
-        updateFuncionario(funcionario);
+        updateFuncionario(funcionario, departamentos);
     }
 
     private void initialize() {
@@ -176,7 +179,7 @@ public class FuncionarioSwingView extends JDialog implements FuncionarioView {
         gbc_lblChefe.gridy = 6;
         getContentPane().add(lblDept, gbc_lblChefe);
 
-        final ListCellRenderer<? super Departamento> deptListRenderer = new DefaultListCellRenderer() {
+        final ListCellRenderer<? super DepartamentoDTO> deptListRenderer = new DefaultListCellRenderer() {
             private static final long serialVersionUID = 337686638048057981L;
 
             @Override
@@ -187,7 +190,7 @@ public class FuncionarioSwingView extends JDialog implements FuncionarioView {
                     return super.getListCellRendererComponent(list, "Nenhum",
                             index, isSelected, cellHasFocus);
                 } else {
-                    final String nome = ((Departamento) value).getNome();
+                    final String nome = ((DepartamentoDTO) value).getNome();
                     return super.getListCellRendererComponent(list, nome, index,
                             isSelected, cellHasFocus);
                 }
@@ -202,8 +205,8 @@ public class FuncionarioSwingView extends JDialog implements FuncionarioView {
         gbc_scrollPane.gridy = 6;
         getContentPane().add(scrollDepartamentos, gbc_scrollPane);
 
-        listDepartamentos = new JList<Departamento>();
-        listDepartamentos.setModel(new DefaultListModel<Departamento>());
+        listDepartamentos = new JList<DepartamentoDTO>();
+        listDepartamentos.setModel(new DefaultListModel<DepartamentoDTO>());
         listDepartamentos.setCellRenderer(deptListRenderer);
         scrollDepartamentos
                 .setBorder(BorderFactory.createLineBorder(Color.gray, 1));
@@ -243,7 +246,8 @@ public class FuncionarioSwingView extends JDialog implements FuncionarioView {
     }
 
     @Override
-    public void updateFuncionario(final Funcionario funcionario) {
+    public void updateFuncionario(final FuncionarioDTO funcionario,
+            final List<DepartamentoDTO> departamentos) {
         if (funcionario == null) {
             throw new NullPointerException();
         }
@@ -258,14 +262,10 @@ public class FuncionarioSwingView extends JDialog implements FuncionarioView {
         fieldLogin.setText(funcionario.getLogin());
         fieldSenha.setText(funcionario.getSenha());
 
-        final List<Departamento> outrosDepartamentos = funcionario
-                .getOutrosDepartamentos();
-        final Departamento departamento = funcionario.getDepartamento();
-
         // Exibe os departamentos na lista de departamentos e seleciona o atual,
-        // se
-        // tiver, ou 'Nenhum', se não tiver.
-        final DefaultListModel<Departamento> listDepartamentoModel = (DefaultListModel<Departamento>) listDepartamentos
+        // se tiver, ou 'Nenhum', se não tiver.
+        final DepartamentoDTO departamento = funcionario.getDepartamento();
+        final DefaultListModel<DepartamentoDTO> listDepartamentoModel = (DefaultListModel<DepartamentoDTO>) listDepartamentos
                 .getModel();
         listDepartamentoModel.clear();
         listDepartamentoModel.add(0, null);
@@ -275,10 +275,12 @@ public class FuncionarioSwingView extends JDialog implements FuncionarioView {
             listDepartamentoModel.add(1, departamento);
             listDepartamentos.setSelectedIndex(1);
         }
-        for (final Departamento d : outrosDepartamentos) {
-            if (departamento == null
-                    || !d.getId().equals(departamento.getId())) {
-                listDepartamentoModel.addElement(d);
+        if (departamentos != null) {
+            for (final DepartamentoDTO d : departamentos) {
+                if (departamento == null
+                        || !d.getId().equals(departamento.getId())) {
+                    listDepartamentoModel.addElement(d);
+                }
             }
         }
 
@@ -297,7 +299,8 @@ public class FuncionarioSwingView extends JDialog implements FuncionarioView {
     @Override
     public void showSucesso() {
         final String titulo = "Sucesso";
-        final String messageCompleta = isAdicionar ? "Funcionario adicionado!"
+        final String messageCompleta = isAdicionar
+                ? "Funcionario adicionado!"
                 : "Funcionario alterado!";
         JOptionPane.showMessageDialog(this, messageCompleta, titulo,
                 JOptionPane.INFORMATION_MESSAGE);
@@ -311,17 +314,17 @@ public class FuncionarioSwingView extends JDialog implements FuncionarioView {
     }
 
     @Override
-    public Funcionario getFuncionario() {
-        final Funcionario funcionario = new Funcionario();
+    public FuncionarioDTO getFuncionario() {
+        final FuncionarioDTO funcionario = new FuncionarioDTO();
         funcionario.setId(idFuncionario);
         funcionario.setNome(fieldNome.getText());
         funcionario.setCpf(fieldCpf.getText());
         funcionario.setEmail(fieldEmail.getText());
         funcionario.setLogin(fieldLogin.getText());
         funcionario.setSenha(new String(fieldSenha.getPassword()));
-        final Departamento departamento = listDepartamentos.getSelectedValue();
-        funcionario.setIdDepartamento(
-                departamento == null ? null : departamento.getId());
+        funcionario.setDepartamento(
+                listDepartamentos.getSelectedValue() == null ? null
+                        : listDepartamentos.getSelectedValue());
         return funcionario;
     }
 

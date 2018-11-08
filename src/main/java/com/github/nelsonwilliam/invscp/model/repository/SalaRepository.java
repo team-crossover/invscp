@@ -11,6 +11,7 @@ import java.util.List;
 import com.github.nelsonwilliam.invscp.model.Departamento;
 import com.github.nelsonwilliam.invscp.model.Predio;
 import com.github.nelsonwilliam.invscp.model.Sala;
+import com.github.nelsonwilliam.invscp.model.enums.TipoSalaEnum;
 import com.github.nelsonwilliam.invscp.util.DatabaseConnection;
 
 public class SalaRepository implements Repository<Sala> {
@@ -28,12 +29,13 @@ public class SalaRepository implements Repository<Sala> {
                 final String nome = (String) r.getObject("nome");
                 final String tipo = (String) r.getObject("tipo");
                 final Integer idPredio = (Integer) r.getObject("id_predio");
-                final Integer idDepartamento = (Integer) r.getObject("id_departamento");
+                final Integer idDepartamento = (Integer) r
+                        .getObject("id_departamento");
 
                 final Sala sala = new Sala();
                 sala.setId(id);
                 sala.setNome(nome);
-                sala.setTipo(tipo);
+                sala.setTipo(TipoSalaEnum.valueOf(tipo));
                 sala.setIdPredio(idPredio);
                 sala.setIdDepartamento(idDepartamento);
                 salas.add(sala);
@@ -57,12 +59,13 @@ public class SalaRepository implements Repository<Sala> {
                 final String nome = (String) r.getObject("nome");
                 final String tipo = (String) r.getObject("tipo");
                 final Integer idPredio = (Integer) r.getObject("id_predio");
-                final Integer idDepartamento = (Integer) r.getObject("id_departamento");
+                final Integer idDepartamento = (Integer) r
+                        .getObject("id_departamento");
 
                 final Sala sala = new Sala();
                 sala.setId(id);
                 sala.setNome(nome);
-                sala.setTipo(tipo);
+                sala.setTipo(TipoSalaEnum.valueOf(tipo));
                 sala.setIdPredio(idPredio);
                 sala.setIdDepartamento(idDepartamento);
                 salas.add(sala);
@@ -86,12 +89,13 @@ public class SalaRepository implements Repository<Sala> {
                 final String nome = (String) r.getObject("nome");
                 final String tipo = (String) r.getObject("tipo");
                 final Integer idPredio = (Integer) r.getObject("id_predio");
-                final Integer idDepartamento = (Integer) r.getObject("id_departamento");
+                final Integer idDepartamento = (Integer) r
+                        .getObject("id_departamento");
 
                 final Sala sala = new Sala();
                 sala.setId(id);
                 sala.setNome(nome);
-                sala.setTipo(tipo);
+                sala.setTipo(TipoSalaEnum.valueOf(tipo));
                 sala.setIdPredio(idPredio);
                 sala.setIdDepartamento(idDepartamento);
                 salas.add(sala);
@@ -114,12 +118,13 @@ public class SalaRepository implements Repository<Sala> {
                 final String nome = (String) r.getObject("nome");
                 final String tipo = (String) r.getObject("tipo");
                 final Integer idPredio = (Integer) r.getObject("id_predio");
-                final Integer idDepartamento = (Integer) r.getObject("id_departamento");
+                final Integer idDepartamento = (Integer) r
+                        .getObject("id_departamento");
 
                 sala = new Sala();
                 sala.setId(id);
                 sala.setNome(nome);
-                sala.setTipo(tipo);
+                sala.setTipo(TipoSalaEnum.valueOf(tipo));
                 sala.setIdPredio(idPredio);
                 sala.setIdDepartamento(idDepartamento);
             }
@@ -142,12 +147,13 @@ public class SalaRepository implements Repository<Sala> {
                 final String nome = (String) r.getObject("nome");
                 final String tipo = (String) r.getObject("tipo");
                 final Integer idPredio = (Integer) r.getObject("id_predio");
-                final Integer idDepartamento = (Integer) r.getObject("id_departamento");
+                final Integer idDepartamento = (Integer) r
+                        .getObject("id_departamento");
 
                 sala = new Sala();
                 sala.setId(id);
                 sala.setNome(nome);
-                sala.setTipo(tipo);
+                sala.setTipo(TipoSalaEnum.valueOf(tipo));
                 sala.setIdPredio(idPredio);
                 sala.setIdDepartamento(idDepartamento);
             }
@@ -167,7 +173,7 @@ public class SalaRepository implements Repository<Sala> {
                         "INSERT INTO sala(nome,tipo,id_predio,id_departamento) VALUES (?,?,?,?)",
                         Statement.RETURN_GENERATED_KEYS);
                 s.setObject(1, item.getNome(), Types.VARCHAR);
-                s.setObject(2, item.getTipoString(), Types.VARCHAR);
+                s.setObject(2, item.getTipo().toString(), Types.VARCHAR);
                 s.setObject(3, item.getIdPredio(), Types.INTEGER);
                 s.setObject(4, item.getIdDepartamento(), Types.INTEGER);
                 s.executeUpdate();
@@ -183,7 +189,7 @@ public class SalaRepository implements Repository<Sala> {
                         "INSERT INTO sala(id,nome,tipo,id_predio,id_departamento) VALUES (?,?,?,?,?)");
                 s.setObject(1, item.getId(), Types.INTEGER);
                 s.setObject(2, item.getNome(), Types.VARCHAR);
-                s.setObject(3, item.getTipoString(), Types.VARCHAR);
+                s.setObject(3, item.getTipo().toString(), Types.VARCHAR);
                 s.setObject(4, item.getIdPredio(), Types.INTEGER);
                 s.setObject(5, item.getIdDepartamento(), Types.INTEGER);
                 s.executeUpdate();
@@ -214,9 +220,9 @@ public class SalaRepository implements Repository<Sala> {
             }
             PreparedStatement s;
             s = connection.prepareStatement(
-                    "UPDATE sala SET nome=?, tipo=?, id_predio=?, id_departamento WHERE id=?");
+                    "UPDATE sala SET nome=?, tipo=?, id_predio=?, id_departamento=? WHERE id=?");
             s.setObject(1, item.getNome(), Types.VARCHAR);
-            s.setObject(2, item.getTipoString(), Types.VARCHAR);
+            s.setObject(2, item.getTipo().toString(), Types.VARCHAR);
             s.setObject(3, item.getIdPredio(), Types.INTEGER);
             s.setObject(4, item.getIdDepartamento(), Types.INTEGER);
             s.setObject(5, item.getId(), Types.INTEGER);

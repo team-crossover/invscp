@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 
 import com.github.nelsonwilliam.invscp.InvSCP;
 import com.github.nelsonwilliam.invscp.model.Funcionario;
+import com.github.nelsonwilliam.invscp.model.dto.FuncionarioDTO;
 import com.github.nelsonwilliam.invscp.model.repository.FuncionarioRepository;
 import com.github.nelsonwilliam.invscp.view.DepartamentosView;
 import com.github.nelsonwilliam.invscp.view.FuncionariosView;
@@ -33,8 +34,14 @@ public class MainPresenter extends Presenter<MainView> {
     public void setIdUsuario(final Integer id) {
         idUsuario = id;
 
-        final Funcionario func = getUsuario();
-        menuView.updateUsuario(func);
+        if (id != null) {
+            final Funcionario func = getUsuario();
+            final FuncionarioDTO funcDTO = new FuncionarioDTO();
+            funcDTO.setValuesFromModel(func);
+            menuView.updateUsuario(funcDTO);
+        } else {
+            menuView.updateUsuario(null);
+        }
         showNothing();
     }
 
@@ -93,8 +100,7 @@ public class MainPresenter extends Presenter<MainView> {
     @SuppressWarnings("unused")
     private void showDepartamentos() {
         // Apenas chefes podem manter departamentos
-        if (getUsuario() == null
-                || !getUsuario().isChefe()) {
+        if (getUsuario() == null || !getUsuario().isChefe()) {
             showNothing();
             return;
         }
@@ -109,8 +115,7 @@ public class MainPresenter extends Presenter<MainView> {
     @SuppressWarnings("unused")
     private void showFuncionarios() {
         // Apenas chefes podem manter departamentos
-        if (getUsuario() == null
-                || !getUsuario().isChefe()) {
+        if (getUsuario() == null || !getUsuario().isChefe()) {
             showNothing();
             return;
         }
@@ -125,8 +130,7 @@ public class MainPresenter extends Presenter<MainView> {
     @SuppressWarnings("unused")
     private void showLocalizacoes() {
         // Apenas chefes podem manter departamentos
-        if (getUsuario() == null
-                || !getUsuario().isChefe()) {
+        if (getUsuario() == null || !getUsuario().isChefe()) {
             showNothing();
             return;
         }
@@ -141,8 +145,7 @@ public class MainPresenter extends Presenter<MainView> {
     @SuppressWarnings("unused")
     private void showPredios() {
         // Apenas chefes podem manter departamentos
-        if (getUsuario() == null
-                || !getUsuario().isChefe()) {
+        if (getUsuario() == null || !getUsuario().isChefe()) {
             showNothing();
             return;
         }
@@ -157,8 +160,7 @@ public class MainPresenter extends Presenter<MainView> {
     @SuppressWarnings("unused")
     private void showSalas() {
         // Apenas chefes podem manter salas
-        if (getUsuario() == null
-                || !getUsuario().isChefe()) {
+        if (getUsuario() == null || !getUsuario().isChefe()) {
             showNothing();
             return;
         }

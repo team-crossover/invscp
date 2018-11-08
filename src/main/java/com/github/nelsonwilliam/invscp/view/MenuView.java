@@ -2,11 +2,11 @@ package com.github.nelsonwilliam.invscp.view;
 
 import java.awt.event.ActionListener;
 
-import com.github.nelsonwilliam.invscp.model.Funcionario;
+import com.github.nelsonwilliam.invscp.model.dto.FuncionarioDTO;
 
 /**
- * Interface da View do menu que contém as opções para alterar quais entidades estão sendo mantidas
- * e para login/logout.
+ * Interface da View do menu que contém as opções para alterar quais entidades
+ * estão sendo mantidas e para login/logout.
  */
 public interface MenuView extends View {
 
@@ -15,41 +15,44 @@ public interface MenuView extends View {
     // ----------------------------------------
 
     /**
-     * Adiciona um Listener para o quando o usuário informar que deseja efetuar login.
+     * Adiciona um Listener para o quando o usuário informar que deseja efetuar
+     * login.
      */
     void addLoginListener(ActionListener listener);
 
     /**
-     * Adiciona um Listener para o quando o usuário informar que deseja efetuar logout.
+     * Adiciona um Listener para o quando o usuário informar que deseja efetuar
+     * logout.
      */
     void addLogoutListener(ActionListener listener);
 
     /**
-     * Adiciona um Listener para o quando o usuário informar que deseja acessar a listagem de
-     * localizações.
+     * Adiciona um Listener para o quando o usuário informar que deseja acessar
+     * a listagem de localizações.
      */
     void addLocalizacoesListener(ActionListener listener);
 
     /**
-     * Adiciona um Listener para o quando o usuário informar que deseja acessar a listagem de
-     * prédios.
+     * Adiciona um Listener para o quando o usuário informar que deseja acessar
+     * a listagem de prédios.
      */
     void addPrediosListener(ActionListener listener);
 
     /**
-     * Adiciona um Listener para o quando o usuário informar que deseja acessar a listagem de salas.
+     * Adiciona um Listener para o quando o usuário informar que deseja acessar
+     * a listagem de salas.
      */
     void addSalasListener(ActionListener listener);
 
     /**
-     * Adiciona um Listener para o quando o usuário informar que deseja acessar a listagem de
-     * departamentos.
+     * Adiciona um Listener para o quando o usuário informar que deseja acessar
+     * a listagem de departamentos.
      */
     void addDepartamentosListener(ActionListener listener);
 
     /**
-     * Adiciona um Listener para o quando o usuário informar que deseja acessar a listagem de
-     * funcionários.
+     * Adiciona um Listener para o quando o usuário informar que deseja acessar
+     * a listagem de funcionários.
      */
     void addFuncionariosListener(ActionListener listener);
 
@@ -58,8 +61,9 @@ public interface MenuView extends View {
     // -------------------------------------------
 
     /**
-     * Define qual usuário está logado atualmente. Caso nenhum esteja logado, o valor deve ser null.
+     * Define qual usuário está logado atualmente. Caso nenhum esteja logado, o
+     * valor deve ser null.
      */
-    void updateUsuario(Funcionario funcionario);
+    void updateUsuario(FuncionarioDTO funcionario);
 
 }

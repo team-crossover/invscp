@@ -26,17 +26,19 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.table.DefaultTableModel;
 
-import com.github.nelsonwilliam.invscp.model.Departamento;
+import com.github.nelsonwilliam.invscp.model.dto.DepartamentoDTO;
 import com.github.nelsonwilliam.invscp.view.DepartamentosView;
 
-public class DepartamentosSwingView extends JPanel implements DepartamentosView {
+public class DepartamentosSwingView extends JPanel
+        implements DepartamentosView {
 
     private static final long serialVersionUID = 8975992154717828680L;
 
     private JTable table;
     private JButton btnAdicionar;
     private JButton btnDeletar;
-    private JPopupMenu popupMenu; // Popup exibido ao clicar com o botão direito em um item da
+    private JPopupMenu popupMenu; // Popup exibido ao clicar com o botão direito
+                                  // em um item da
                                   // tabela
     private JMenuItem popupItemAlterar;
 
@@ -59,11 +61,12 @@ public class DepartamentosSwingView extends JPanel implements DepartamentosView 
         popupMenu.addPopupMenuListener(new PopupMenuListener() {
             @Override
             public void popupMenuWillBecomeVisible(final PopupMenuEvent e) {
-                // Garante que ao clicar com o botão direito em um item para exibir o menu, o
+                // Garante que ao clicar com o botão direito em um item para
+                // exibir o menu, o
                 // o único item selecionado da tabela será o item clicado.
                 SwingUtilities.invokeLater(() -> {
-                    final int rowAtPoint = table.rowAtPoint(
-                            SwingUtilities.convertPoint(popupMenu, new Point(0, 0), table));
+                    final int rowAtPoint = table.rowAtPoint(SwingUtilities
+                            .convertPoint(popupMenu, new Point(0, 0), table));
                     if (rowAtPoint > -1) {
                         table.setRowSelectionInterval(rowAtPoint, rowAtPoint);
                     }
@@ -91,11 +94,11 @@ public class DepartamentosSwingView extends JPanel implements DepartamentosView 
 
         table = new JTable();
         table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        table.setModel(new DefaultTableModel(new Object[][] {},
-                new String[] { "ID", "De patrimônio?", "Nome", "Chefe", "Chefe substituto" }) {
+        table.setModel(new DefaultTableModel(new Object[][] {}, new String[] {
+                "ID", "De patrimônio?", "Nome", "Chefe", "Chefe substituto" }) {
             private static final long serialVersionUID = -5079273255233169992L;
-            Class<?>[] columnTypes = new Class[] { Integer.class, Boolean.class, String.class,
-                    String.class, String.class };
+            Class<?>[] columnTypes = new Class[] { Integer.class, Boolean.class,
+                    String.class, String.class, String.class };
 
             @Override
             public Class<?> getColumnClass(final int columnIndex) {
@@ -147,7 +150,8 @@ public class DepartamentosSwingView extends JPanel implements DepartamentosView 
     }
 
     @Override
-    public void addAdicionarDepartamentoListener(final ActionListener listener) {
+    public void addAdicionarDepartamentoListener(
+            final ActionListener listener) {
         btnAdicionar.addActionListener(listener);
     }
 
@@ -162,13 +166,17 @@ public class DepartamentosSwingView extends JPanel implements DepartamentosView 
     }
 
     @Override
-    public void updateDepartamentos(final List<Departamento> departamentos) {
-        final DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+    public void updateDepartamentos(final List<DepartamentoDTO> departamentos) {
+        final DefaultTableModel tableModel = (DefaultTableModel) table
+                .getModel();
         tableModel.setNumRows(0);
-        for (final Departamento d : departamentos) {
-            tableModel.addRow(new Object[] { d.getId(), d.getDePatrimonio(), d.getNome(),
-                    d.getChefe() == null ? "Nenhum" : d.getChefe().getNome(),
-                    d.getChefeSubstituto() == null ? "Nenhum" : d.getChefeSubstituto().getNome() });
+        for (final DepartamentoDTO d : departamentos) {
+            tableModel.addRow(
+                    new Object[] { d.getId(), d.getDePatrimonio(), d.getNome(),
+                            d.getChefe() == null ? "Nenhum"
+                                    : d.getChefe().getNome(),
+                            d.getChefeSubstituto() == null ? "Nenhum"
+                                    : d.getChefeSubstituto().getNome() });
         }
 
         revalidate();
@@ -179,7 +187,8 @@ public class DepartamentosSwingView extends JPanel implements DepartamentosView 
     public void showError(final String message) {
         final String titulo = "Erro";
         final String messageCompleta = "Erro: " + message;
-        JOptionPane.showMessageDialog(this, messageCompleta, titulo, JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, messageCompleta, titulo,
+                JOptionPane.ERROR_MESSAGE);
     }
 
     @Override
@@ -191,17 +200,20 @@ public class DepartamentosSwingView extends JPanel implements DepartamentosView 
     }
 
     @Override
-    public void showConfirmacao(final String message, final Consumer<Boolean> responseCallback) {
+    public void showConfirmacao(final String message,
+            final Consumer<Boolean> responseCallback) {
         final String titulo = "Confirmação";
-        final int resposta = JOptionPane.showConfirmDialog(this, message, titulo,
-                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        final int resposta = JOptionPane.showConfirmDialog(this, message,
+                titulo, JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE);
         responseCallback.accept(resposta == JOptionPane.YES_OPTION);
     }
 
     @Override
     public void showInfo(final String message) {
         final String titulo = "Informação";
-        JOptionPane.showMessageDialog(this, message, titulo, JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this, message, titulo,
+                JOptionPane.INFORMATION_MESSAGE);
     }
 
     @Override

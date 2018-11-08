@@ -4,7 +4,7 @@ import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.function.Consumer;
 
-import com.github.nelsonwilliam.invscp.model.Departamento;
+import com.github.nelsonwilliam.invscp.model.dto.DepartamentoDTO;
 
 public interface DepartamentosView extends View {
 
@@ -17,9 +17,10 @@ public interface DepartamentosView extends View {
     void addDeletarDepartamentosListener(ActionListener listener);
 
     /**
-     * Adiciona o Listener para quando o usuário informar que quer alterar um departamento.
-     * Espera-se que quando este evento for invocado, haja exatamente UM departamento selecionado
-     * (obtível através do método getSelectedDepartamentosIds.
+     * Adiciona o Listener para quando o usuário informar que quer alterar um
+     * departamento. Espera-se que quando este evento for invocado, haja
+     * exatamente UM departamento selecionado (obtível através do método
+     * getSelectedDepartamentosIds.
      */
     void addAlterarDepartamentoListener(ActionListener listener);
 
@@ -27,7 +28,7 @@ public interface DepartamentosView extends View {
     // Métodos para atualizar os valores exibidos.
     // -------------------------------------------
 
-    void updateDepartamentos(List<Departamento> departamentos);
+    void updateDepartamentos(List<DepartamentoDTO> departamentos);
 
     void showError(String message);
 
@@ -42,7 +43,8 @@ public interface DepartamentosView extends View {
     // ---------------------------------------------
 
     /**
-     * Obtém uma lista com os IDs de todos os departamentos atualmente selecionados na tabela.
+     * Obtém uma lista com os IDs de todos os departamentos atualmente
+     * selecionados na tabela.
      */
     List<Integer> getSelectedDepartamentosIds();
 

@@ -22,8 +22,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
 
-import com.github.nelsonwilliam.invscp.model.Departamento;
-import com.github.nelsonwilliam.invscp.model.Funcionario;
+import com.github.nelsonwilliam.invscp.model.dto.DepartamentoDTO;
+import com.github.nelsonwilliam.invscp.model.dto.FuncionarioDTO;
 import com.github.nelsonwilliam.invscp.view.DepartamentoView;
 
 public class DepartamentoSwingView extends JDialog implements DepartamentoView {
@@ -40,26 +40,29 @@ public class DepartamentoSwingView extends JDialog implements DepartamentoView {
     private JButton btnCancelar;
     private JLabel lblDePatrimonio;
     private JTextField fieldNome;
-    private JList<Funcionario> listChefe;
-    private JList<Funcionario> listChefeSubstituto;
+    private JList<FuncionarioDTO> listChefe;
+    private JList<FuncionarioDTO> listChefeSubstituto;
     private JScrollPane scrollPane;
     private JScrollPane scrollPane_1;
 
     /**
-     * @param departamento Departamento cujos valores serão exibidos
+     * @param departamento DepartamentoDTO cujos valores serão exibidos
      *        inicialmente.
      * @param isAdicionar Indica se a janela que será exibida será para adição
      *        de um novo departamento (true) ou para atualização de um
      *        departamento existente (false).
      */
     public DepartamentoSwingView(final JFrame owner,
-            final Departamento departamento, final boolean isAdicionar) {
+            final DepartamentoDTO departamento, final boolean isAdicionar,
+            final List<FuncionarioDTO> chefes,
+            final List<FuncionarioDTO> chefesSubsts) {
+
         super(owner,
                 isAdicionar ? "Adicionar departamento" : "Alterar departamento",
                 ModalityType.APPLICATION_MODAL);
         this.isAdicionar = isAdicionar;
         initialize();
-        updateDepartamento(departamento);
+        updateDepartamento(departamento, chefes, chefesSubsts);
     }
 
     private void initialize() {
@@ -111,7 +114,7 @@ public class DepartamentoSwingView extends JDialog implements DepartamentoView {
         gbc_lblChefe.gridy = 3;
         getContentPane().add(lblChefe, gbc_lblChefe);
 
-        final ListCellRenderer<? super Funcionario> funcionarioListRenderer = new DefaultListCellRenderer() {
+        final ListCellRenderer<? super FuncionarioDTO> funcionarioListRenderer = new DefaultListCellRenderer() {
             private static final long serialVersionUID = 337686638048057981L;
 
             @Override
@@ -122,7 +125,7 @@ public class DepartamentoSwingView extends JDialog implements DepartamentoView {
                     return super.getListCellRendererComponent(list, "Nenhum",
                             index, isSelected, cellHasFocus);
                 } else {
-                    final String nome = ((Funcionario) value).getNome();
+                    final String nome = ((FuncionarioDTO) value).getNome();
                     return super.getListCellRendererComponent(list, nome, index,
                             isSelected, cellHasFocus);
                 }
@@ -137,8 +140,8 @@ public class DepartamentoSwingView extends JDialog implements DepartamentoView {
         gbc_scrollPane.gridy = 3;
         getContentPane().add(scrollPane, gbc_scrollPane);
 
-        listChefe = new JList<Funcionario>();
-        listChefe.setModel(new DefaultListModel<Funcionario>());
+        listChefe = new JList<FuncionarioDTO>();
+        listChefe.setModel(new DefaultListModel<FuncionarioDTO>());
         listChefe.setCellRenderer(funcionarioListRenderer);
         scrollPane.setBorder(BorderFactory.createLineBorder(Color.gray, 1));
         scrollPane.setViewportView(listChefe);
@@ -159,8 +162,8 @@ public class DepartamentoSwingView extends JDialog implements DepartamentoView {
         gbc_scrollPane_1.gridy = 4;
         getContentPane().add(scrollPane_1, gbc_scrollPane_1);
 
-        listChefeSubstituto = new JList<Funcionario>();
-        listChefeSubstituto.setModel(new DefaultListModel<Funcionario>());
+        listChefeSubstituto = new JList<FuncionarioDTO>();
+        listChefeSubstituto.setModel(new DefaultListModel<FuncionarioDTO>());
         listChefeSubstituto.setCellRenderer(funcionarioListRenderer);
         scrollPane_1.setBorder(BorderFactory.createLineBorder(Color.gray, 1));
         scrollPane_1.setViewportView(listChefeSubstituto);
@@ -199,7 +202,9 @@ public class DepartamentoSwingView extends JDialog implements DepartamentoView {
     }
 
     @Override
-    public void updateDepartamento(final Departamento departamento) {
+    public void updateDepartamento(final DepartamentoDTO departamento,
+            final List<FuncionarioDTO> chefes,
+            final List<FuncionarioDTO> chefesSubsts) {
         if (departamento == null) {
             throw new NullPointerException();
         }
@@ -211,6 +216,7 @@ public class DepartamentoSwingView extends JDialog implements DepartamentoView {
         deDepartamento = departamento.getId() != null
                 && departamento.getDePatrimonio();
 
+        // Exibe uma label indicando que é de patrimônio.
         getContentPane().remove(lblDePatrimonio);
         if (deDepartamento) {
             gridBagLayout.rowHeights[1] = 25;
@@ -227,14 +233,10 @@ public class DepartamentoSwingView extends JDialog implements DepartamentoView {
 
         fieldNome.setText(departamento.getNome());
 
-        final List<Funcionario> possiveisChefes = departamento
-                .getPossiveisChefes();
-        final Funcionario chefe = departamento.getChefe();
-        final Funcionario chefeSubstituto = departamento.getChefeSubstituto();
-
         // Exibe os funcionários na lista de chefes e seleciona o atual, se
         // tiver, ou 'Nenhum', se não tiver.
-        final DefaultListModel<Funcionario> listChefeModel = (DefaultListModel<Funcionario>) listChefe
+        final FuncionarioDTO chefe = departamento.getChefe();
+        final DefaultListModel<FuncionarioDTO> listChefeModel = (DefaultListModel<FuncionarioDTO>) listChefe
                 .getModel();
         listChefeModel.clear();
         if (chefe == null) {
@@ -244,16 +246,21 @@ public class DepartamentoSwingView extends JDialog implements DepartamentoView {
             listChefeModel.add(0, chefe);
             listChefe.setSelectedIndex(0);
         }
-        for (final Funcionario funcionario : possiveisChefes) {
-            if (chefe == null || !funcionario.getId().equals(chefe.getId())) {
-                listChefeModel.addElement(funcionario);
+        if (chefes != null) {
+            for (final FuncionarioDTO funcionario : chefes) {
+                if (chefe == null
+                        || !funcionario.getId().equals(chefe.getId())) {
+                    listChefeModel.addElement(funcionario);
+                }
             }
         }
 
         // Exibe os funcionários na lista de chefes substitutos e seleciona o
         // atual, se
         // tiver, ou 'Nenhum', se não tiver.
-        final DefaultListModel<Funcionario> listChefeSubstitutoModel = (DefaultListModel<Funcionario>) listChefeSubstituto
+        final FuncionarioDTO chefeSubstituto = departamento
+                .getChefeSubstituto();
+        final DefaultListModel<FuncionarioDTO> listChefeSubstitutoModel = (DefaultListModel<FuncionarioDTO>) listChefeSubstituto
                 .getModel();
         listChefeSubstitutoModel.clear();
         if (chefeSubstituto == null) {
@@ -265,10 +272,12 @@ public class DepartamentoSwingView extends JDialog implements DepartamentoView {
             listChefeSubstituto.setSelectedIndex(1);
         }
 
-        for (final Funcionario funcionario : possiveisChefes) {
-            if (chefeSubstituto == null
-                    || !funcionario.getId().equals(chefeSubstituto.getId())) {
-                listChefeSubstitutoModel.addElement(funcionario);
+        if (chefesSubsts != null) {
+            for (final FuncionarioDTO funcionario : chefesSubsts) {
+                if (chefeSubstituto == null || !funcionario.getId()
+                        .equals(chefeSubstituto.getId())) {
+                    listChefeSubstitutoModel.addElement(funcionario);
+                }
             }
         }
 
@@ -301,17 +310,16 @@ public class DepartamentoSwingView extends JDialog implements DepartamentoView {
     }
 
     @Override
-    public Departamento getDepartamento() {
-        final Departamento departamento = new Departamento();
+    public DepartamentoDTO getDepartamento() {
+        final DepartamentoDTO departamento = new DepartamentoDTO();
         departamento.setId(idDepartamento);
         departamento.setNome(fieldNome.getText());
         departamento.setDePatrimonio(deDepartamento);
-        final Funcionario chefe = listChefe.getSelectedValue();
-        departamento.setIdChefe(chefe == null ? null : chefe.getId());
-        final Funcionario chefeSubstituto = listChefeSubstituto
-                .getSelectedValue();
-        departamento.setIdChefeSubstituto(
-                chefeSubstituto == null ? null : chefeSubstituto.getId());
+        departamento.setChefe(listChefe.getSelectedValue() == null ? null
+                : listChefe.getSelectedValue());
+        departamento.setChefeSubstituto(
+                listChefeSubstituto.getSelectedValue() == null ? null
+                        : listChefeSubstituto.getSelectedValue());
         return departamento;
 
     }

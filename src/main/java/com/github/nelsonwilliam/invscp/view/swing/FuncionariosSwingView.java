@@ -26,7 +26,7 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.table.DefaultTableModel;
 
-import com.github.nelsonwilliam.invscp.model.Funcionario;
+import com.github.nelsonwilliam.invscp.model.dto.FuncionarioDTO;
 import com.github.nelsonwilliam.invscp.view.FuncionariosView;
 
 public class FuncionariosSwingView extends JPanel implements FuncionariosView {
@@ -35,7 +35,8 @@ public class FuncionariosSwingView extends JPanel implements FuncionariosView {
     private JTable table;
     private JButton btnAdicionar;
     private JButton btnDeletar;
-    private JPopupMenu popupMenu; // Popup exibido ao clicar com o botão direito em um item da
+    private JPopupMenu popupMenu; // Popup exibido ao clicar com o botão direito
+                                  // em um item da
                                   // tabela.
     private JMenuItem popupItemAlterar;
 
@@ -64,11 +65,13 @@ public class FuncionariosSwingView extends JPanel implements FuncionariosView {
         table = new JTable();
         table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         table.setModel(new DefaultTableModel(new Object[][] {},
-                new String[] { "ID", "Departamento", "Cargo", "Nome", "CPF", "E-mail", "Login" }) {
+                new String[] { "ID", "Nome", "CPF", "E-mail", "Login", "Cargo",
+                        "Departamento" }) {
 
             private static final long serialVersionUID = -4354695674337186996L;
-            Class<?>[] columnTypes = new Class[] { Integer.class, String.class, String.class,
-                    String.class, String.class, String.class, String.class };
+            Class<?>[] columnTypes = new Class[] { Integer.class, String.class,
+                    String.class, String.class, String.class, String.class,
+                    String.class };
 
             @Override
             public Class<?> getColumnClass(final int columnIndex) {
@@ -82,16 +85,16 @@ public class FuncionariosSwingView extends JPanel implements FuncionariosView {
         });
         table.getColumnModel().getColumn(0).setMinWidth(75);
         table.getColumnModel().getColumn(0).setMaxWidth(75);
-        table.getColumnModel().getColumn(1).setMinWidth(175);
-        table.getColumnModel().getColumn(2).setMinWidth(200);
-        table.getColumnModel().getColumn(2).setMaxWidth(200);
-        table.getColumnModel().getColumn(3).setMinWidth(200);
-        table.getColumnModel().getColumn(4).setMinWidth(125);
-        table.getColumnModel().getColumn(4).setMaxWidth(125);
-        table.getColumnModel().getColumn(5).setMinWidth(250);
-        table.getColumnModel().getColumn(5).setMaxWidth(250);
-        table.getColumnModel().getColumn(6).setMinWidth(150);
-        table.getColumnModel().getColumn(6).setMaxWidth(150);
+        table.getColumnModel().getColumn(1).setMinWidth(200);
+        table.getColumnModel().getColumn(2).setMinWidth(125);
+        table.getColumnModel().getColumn(2).setMaxWidth(125);
+        table.getColumnModel().getColumn(3).setMinWidth(250);
+        table.getColumnModel().getColumn(3).setMaxWidth(250);
+        table.getColumnModel().getColumn(4).setMinWidth(150);
+        table.getColumnModel().getColumn(4).setMaxWidth(150);
+        table.getColumnModel().getColumn(5).setMinWidth(200);
+        table.getColumnModel().getColumn(5).setMaxWidth(200);
+        table.getColumnModel().getColumn(6).setMinWidth(175);
         table.setAutoCreateRowSorter(true);
         scrollPane.setBorder(BorderFactory.createLineBorder(Color.gray, 1));
         scrollPane.setViewportView(table);
@@ -112,11 +115,12 @@ public class FuncionariosSwingView extends JPanel implements FuncionariosView {
         popupMenu.addPopupMenuListener(new PopupMenuListener() {
             @Override
             public void popupMenuWillBecomeVisible(final PopupMenuEvent e) {
-                // Garante que ao clicar com o botão direito em um item para exibir o menu, o
+                // Garante que ao clicar com o botão direito em um item para
+                // exibir o menu, o
                 // o único item selecionado da tabela será o item clicado.
                 SwingUtilities.invokeLater(() -> {
-                    final int rowAtPoint = table.rowAtPoint(
-                            SwingUtilities.convertPoint(popupMenu, new Point(0, 0), table));
+                    final int rowAtPoint = table.rowAtPoint(SwingUtilities
+                            .convertPoint(popupMenu, new Point(0, 0), table));
                     if (rowAtPoint > -1) {
                         table.setRowSelectionInterval(rowAtPoint, rowAtPoint);
                     }
@@ -168,13 +172,15 @@ public class FuncionariosSwingView extends JPanel implements FuncionariosView {
     }
 
     @Override
-    public void updateFuncionarios(final List<Funcionario> funcionarios) {
-        final DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+    public void updateFuncionarios(final List<FuncionarioDTO> funcionarios) {
+        final DefaultTableModel tableModel = (DefaultTableModel) table
+                .getModel();
         tableModel.setNumRows(0);
-        for (final Funcionario f : funcionarios) {
-            tableModel.addRow(new Object[] { f.getId(),
-                    f.getDepartamento() == null ? "Nenhum" : f.getDepartamento().getNome(),
-                    f.getCargo(), f.getNome(), f.getCpf(), f.getEmail(), f.getLogin() });
+        for (final FuncionarioDTO f : funcionarios) {
+            tableModel.addRow(new Object[] { f.getId(), f.getNome(), f.getCpf(),
+                    f.getEmail(), f.getLogin(), f.getCargo().getTexto(),
+                    f.getDepartamento() == null ? "Nenhum"
+                            : f.getDepartamento().getNome() });
         }
 
         revalidate();
@@ -185,7 +191,8 @@ public class FuncionariosSwingView extends JPanel implements FuncionariosView {
     public void showError(final String message) {
         final String titulo = "Erro";
         final String messageCompleta = "Erro: " + message;
-        JOptionPane.showMessageDialog(this, messageCompleta, titulo, JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, messageCompleta, titulo,
+                JOptionPane.ERROR_MESSAGE);
     }
 
     @Override
@@ -197,17 +204,20 @@ public class FuncionariosSwingView extends JPanel implements FuncionariosView {
     }
 
     @Override
-    public void showConfirmacao(final String message, final Consumer<Boolean> responseCallback) {
+    public void showConfirmacao(final String message,
+            final Consumer<Boolean> responseCallback) {
         final String titulo = "Confirmação";
-        final int resposta = JOptionPane.showConfirmDialog(this, message, titulo,
-                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        final int resposta = JOptionPane.showConfirmDialog(this, message,
+                titulo, JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE);
         responseCallback.accept(resposta == JOptionPane.YES_OPTION);
     }
 
     @Override
     public void showInfo(final String message) {
         final String titulo = "Informação";
-        JOptionPane.showMessageDialog(this, message, titulo, JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this, message, titulo,
+                JOptionPane.INFORMATION_MESSAGE);
     }
 
     @Override

@@ -15,13 +15,13 @@ public enum TipoSalaEnum {
         texto = textoOpcao;
     }
 
-    public int getValor() {
-        return valor;
-    }
-
-    @Override
-    public String toString() {
-        return texto;
+    public static String[] textos() {
+        final TipoSalaEnum[] values = TipoSalaEnum.values();
+        final String[] textos = new String[values.length];
+        for (int i = 0; i < values.length; i++) {
+            textos[i] = values[i].getTexto();
+        }
+        return textos;
     }
 
     public static TipoSalaEnum valueOfTexto(final String texto) {
@@ -32,6 +32,14 @@ public enum TipoSalaEnum {
             }
         }
         return null;
+    }
+
+    public int getValor() {
+        return valor;
+    }
+
+    public String getTexto() {
+        return texto;
     }
 
 }

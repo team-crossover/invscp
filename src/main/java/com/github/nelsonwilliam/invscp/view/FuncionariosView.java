@@ -4,7 +4,7 @@ import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.function.Consumer;
 
-import com.github.nelsonwilliam.invscp.model.Funcionario;
+import com.github.nelsonwilliam.invscp.model.dto.FuncionarioDTO;
 
 public interface FuncionariosView extends View {
 
@@ -17,9 +17,10 @@ public interface FuncionariosView extends View {
     void addDeletarFuncionariosListener(ActionListener listener);
 
     /**
-     * Adiciona o Listener para quando o usuário informar que quer alterar um funcionario. Espera-se
-     * que quando este evento for invocado, haja exatamente UM funcionario selecionado (obtível
-     * através do método getSelectedFuncionariosIds.
+     * Adiciona o Listener para quando o usuário informar que quer alterar um
+     * funcionario. Espera-se que quando este evento for invocado, haja
+     * exatamente UM funcionario selecionado (obtível através do método
+     * getSelectedFuncionariosIds.
      */
     void addAlterarFuncionarioListener(ActionListener listener);
 
@@ -27,7 +28,7 @@ public interface FuncionariosView extends View {
     // Métodos para atualizar os valores exibidos.
     // -------------------------------------------
 
-    void updateFuncionarios(List<Funcionario> funcionarios);
+    void updateFuncionarios(List<FuncionarioDTO> funcionarios);
 
     void showError(String message);
 
@@ -42,7 +43,8 @@ public interface FuncionariosView extends View {
     // ---------------------------------------------
 
     /**
-     * Obtém uma lista com os IDs de todos os funcionarios atualmente selecionados na tabela.
+     * Obtém uma lista com os IDs de todos os funcionarios atualmente
+     * selecionados na tabela.
      */
     List<Integer> getSelectedFuncionariosIds();
 
