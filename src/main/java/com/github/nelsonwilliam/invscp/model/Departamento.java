@@ -91,7 +91,7 @@ public class Departamento implements Model {
 
         if (funcRepo.getByDepartamento(dept).size() > 0) {
             throw new IllegalDeleteException("O departamento " + dept.getNome()
-                    + " não pode ser deletado pois funcionários pertecentes a ele.");
+                    + " não pode ser deletado pois existem funcionários pertecentes a ele.");
         }
 
     }
