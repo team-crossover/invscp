@@ -37,7 +37,7 @@ public class InvSCP {
         }
 
         // TODO Remover isto (usado apenas para desenvolvimento)
-        // forceInitializeDatabase = true;
+        forceInitializeDatabase = true;
 
         initializeDatabase();
         showMainView();

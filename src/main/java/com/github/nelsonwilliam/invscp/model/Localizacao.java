@@ -286,20 +286,16 @@ public class Localizacao implements Model {
         return uf;
     }
 
-    public String getUfString() {
-        return uf.toString();
-    }
-
-    public void setUf(final String uf) {
-        this.uf = UFEnum.valueOf(uf);
-    }
-
     public void setUf(final UFEnum uf) {
         this.uf = uf;
     }
 
-    // public List<Predio> getPredios() {
-    // PredioRepository predRepo = new PredioRepository()
-    // return
-    // }
+    public String getUfString() {
+        return uf.toString();
+    }
+
+    public void setUfString(final String uf) {
+        this.uf = UFEnum.valueOf(uf);
+    }
+
 }

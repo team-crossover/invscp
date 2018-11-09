@@ -66,7 +66,7 @@ public class Departamento implements Model {
         // Verificar controle de acesso (O usuário pode alterar esse tipo
         // de elemento, com esses atributos? Etc.).
 
-        if (usuario.isChefeDePatrimonio()) {
+        if (!usuario.isChefeDePatrimonio()) {
             throw new IllegalDeleteException(
                     "Apenas chefes de patrimônio podem deletar departamentos.");
         }
@@ -91,7 +91,7 @@ public class Departamento implements Model {
 
         if (funcRepo.getByDepartamento(dept).size() > 0) {
             throw new IllegalDeleteException("O departamento " + dept.getNome()
-                    + " não pode ser deletado pois funcionários salas pertecentes a ele.");
+                    + " não pode ser deletado pois funcionários pertecentes a ele.");
         }
 
     }

@@ -35,7 +35,7 @@ public class LocalizacaoRepository implements Repository<Localizacao> {
                 loc.setEndereco(endereco);
                 loc.setCep(cep);
                 loc.setCidade(cidade);
-                loc.setUf(uf);
+                loc.setUfString(uf);
                 locals.add(loc);
             }
         } catch (final Exception e) {
@@ -66,7 +66,7 @@ public class LocalizacaoRepository implements Repository<Localizacao> {
                 local.setEndereco(endereco);
                 local.setCep(cep);
                 local.setCidade(cidade);
-                local.setUf(uf);
+                local.setUfString(uf);
             }
         } catch (final Exception e) {
             e.printStackTrace();
@@ -165,7 +165,8 @@ public class LocalizacaoRepository implements Repository<Localizacao> {
                 return false;
             }
             PreparedStatement s;
-            s = connection.prepareStatement("DELETE FROM localizacao WHERE id=?");
+            s = connection
+                    .prepareStatement("DELETE FROM localizacao WHERE id=?");
             s.setObject(1, item.getId(), Types.INTEGER);
             s.executeUpdate();
             return true;
