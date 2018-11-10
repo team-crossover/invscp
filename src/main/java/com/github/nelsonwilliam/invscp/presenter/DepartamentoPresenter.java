@@ -5,10 +5,9 @@ import java.util.List;
 
 import com.github.nelsonwilliam.invscp.exception.IllegalInsertException;
 import com.github.nelsonwilliam.invscp.exception.IllegalUpdateException;
-import com.github.nelsonwilliam.invscp.model.Departamento;
-import com.github.nelsonwilliam.invscp.model.Funcionario;
 import com.github.nelsonwilliam.invscp.model.dto.DepartamentoDTO;
-import com.github.nelsonwilliam.invscp.model.repository.DepartamentoRepository;
+import com.github.nelsonwilliam.invscp.model.dto.FuncionarioDTO;
+import com.github.nelsonwilliam.invscp.util.Client;
 import com.github.nelsonwilliam.invscp.view.DepartamentoView;
 
 public class DepartamentoPresenter extends Presenter<DepartamentoView> {
@@ -32,74 +31,74 @@ public class DepartamentoPresenter extends Presenter<DepartamentoView> {
     }
 
     private void onConfirmar() {
-        final Funcionario usuario = mainPresenter.getUsuario();
+        final FuncionarioDTO usuario = mainPresenter.getUsuario();
         final DepartamentoDTO deptDTO = view.getDepartamento();
-        final Departamento dept = deptDTO == null ? null : deptDTO.toModel();
 
-        if (dept.getId() == null) {
-            onConfirmarAdicao(usuario, dept);
+        if (deptDTO.getId() == null) {
+            onConfirmarAdicao(usuario, deptDTO);
         } else {
-            onConfirmarAtualizacao(usuario, dept.getId(), dept);
+            onConfirmarAtualizacao(usuario, deptDTO.getId(), deptDTO);
         }
     }
 
-    private void onConfirmarAdicao(final Funcionario usuario,
-            final Departamento deptNovo) {
+    private void onConfirmarAdicao(final FuncionarioDTO usuario,
+            final DepartamentoDTO deptNovo) {
 
         try {
-            Departamento.validarInserir(usuario, deptNovo);
+            Client.requestValidarInserirDepartamento(usuario, deptNovo);
         } catch (final IllegalInsertException e) {
             view.showError(e.getMessage());
             return;
         }
 
-        final DepartamentoRepository deptRepo = new DepartamentoRepository();
-        deptRepo.add(deptNovo);
+        Client.requestAddDepartamento(deptNovo);
         view.showSucesso();
         view.close();
         deptsPresenter.updateDepartamentos();
 
         // Executa as pós-alterações e exibe as mensagens resultantes.
-        final List<String> messages = Departamento.posAlterar(usuario,
-                deptNovo);
+        final List<String> messages = Client
+                .requestPosAlterarDepartamento(usuario, deptNovo);
         for (final String message : messages) {
             view.showInfo(message);
         }
 
         // Se o departamento do funcionario logado tiver sido alterado, força a
         // reatualização da exibição da tela para este usuário
-        if (usuario.getIdDepartamento().equals(deptNovo.getId())) {
+        if (usuario.getDepartamento() != null
+                && usuario.getDepartamento().getId().equals(deptNovo.getId())) {
             mainPresenter.setIdUsuario(usuario.getId());
         }
     }
 
-    private void onConfirmarAtualizacao(final Funcionario usuario,
-            final Integer idDeptAnterior, final Departamento deptAtualizado) {
+    private void onConfirmarAtualizacao(final FuncionarioDTO usuario,
+            final Integer idDeptAnterior,
+            final DepartamentoDTO deptAtualizado) {
 
         try {
-            Departamento.validarAlterar(usuario, idDeptAnterior,
+            Client.requestValidarAlterarDepartamento(usuario, idDeptAnterior,
                     deptAtualizado);
         } catch (final IllegalUpdateException e) {
             view.showError(e.getMessage());
             return;
         }
 
-        final DepartamentoRepository deptRepo = new DepartamentoRepository();
-        deptRepo.update(deptAtualizado);
+        Client.requestUpdateDepartamento(deptAtualizado);
         view.showSucesso();
         view.close();
         deptsPresenter.updateDepartamentos();
 
         // Executa as pós-alterações e exibe as mensagens resultantes.
-        final List<String> messages = Departamento.posAlterar(usuario,
-                deptAtualizado);
+        final List<String> messages = Client
+                .requestPosAlterarDepartamento(usuario, deptAtualizado);
         for (final String message : messages) {
             view.showInfo(message);
         }
 
         // Se o departamento do funcionario logado tiver sido alterado, força a
         // reatualização da exibição da tela para este usuário
-        if (usuario.getIdDepartamento().equals(deptAtualizado.getId())) {
+        if (usuario.getDepartamento() != null && usuario.getDepartamento()
+                .getId().equals(deptAtualizado.getId())) {
             mainPresenter.setIdUsuario(usuario.getId());
         }
     }

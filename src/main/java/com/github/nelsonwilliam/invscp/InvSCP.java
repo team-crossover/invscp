@@ -15,15 +15,12 @@ import com.github.nelsonwilliam.invscp.util.DatabaseConnection;
 import com.github.nelsonwilliam.invscp.view.MainView;
 import com.github.nelsonwilliam.invscp.view.MenuView;
 import com.github.nelsonwilliam.invscp.view.ViewFactory;
-import com.github.nelsonwilliam.invscp.view.ViewFactory.ViewImplementation;
 
 /**
  * Classe responsável por iniciar a execução do InvSCP, começando exibindo a
  * tela inicial.
  */
 public class InvSCP {
-
-    public static final ViewImplementation VIEW_IMPL = ViewImplementation.SWING;
 
     private static boolean forceInitializeDatabase;
 
@@ -108,10 +105,8 @@ public class InvSCP {
 
             // Cria e exibe a tela main com o menu
             try {
-                final MenuView menuView = ViewFactory
-                        .createMenu(InvSCP.VIEW_IMPL);
-                final MainView mainView = ViewFactory
-                        .createMain(InvSCP.VIEW_IMPL, menuView);
+                final MenuView menuView = ViewFactory.createMenu();
+                final MainView mainView = ViewFactory.createMain(menuView);
                 final MainPresenter mainPresenter = new MainPresenter(mainView,
                         menuView);
                 menuView.setVisible(true);

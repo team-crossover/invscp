@@ -4,9 +4,8 @@ import java.awt.event.ActionEvent;
 
 import com.github.nelsonwilliam.invscp.exception.IllegalInsertException;
 import com.github.nelsonwilliam.invscp.exception.IllegalUpdateException;
-import com.github.nelsonwilliam.invscp.model.Funcionario;
 import com.github.nelsonwilliam.invscp.model.dto.FuncionarioDTO;
-import com.github.nelsonwilliam.invscp.model.repository.FuncionarioRepository;
+import com.github.nelsonwilliam.invscp.util.Client;
 import com.github.nelsonwilliam.invscp.view.FuncionarioView;
 
 public class FuncionarioPresenter extends Presenter<FuncionarioView> {
@@ -30,29 +29,27 @@ public class FuncionarioPresenter extends Presenter<FuncionarioView> {
     }
 
     private void onConfirmar() {
-        final Funcionario usuario = mainPresenter.getUsuario();
+        final FuncionarioDTO usuario = mainPresenter.getUsuario();
         final FuncionarioDTO funcDTO = view.getFuncionario();
-        final Funcionario func = funcDTO == null ? null : funcDTO.toModel();
 
-        if (func.getId() == null) {
-            onConfirmarAdicao(usuario, func);
+        if (funcDTO == null || funcDTO.getId() == null) {
+            onConfirmarAdicao(usuario, funcDTO);
         } else {
-            onConfirmarAtualizacao(usuario, func.getId(), func);
+            onConfirmarAtualizacao(usuario, funcDTO.getId(), funcDTO);
         }
     }
 
-    private void onConfirmarAdicao(final Funcionario usuario,
-            final Funcionario funcNovo) {
+    private void onConfirmarAdicao(final FuncionarioDTO usuario,
+            final FuncionarioDTO funcNovo) {
 
         try {
-            Funcionario.validarInserir(usuario, funcNovo);
+            Client.requestValidarInserirFuncionario(usuario, funcNovo);
         } catch (final IllegalInsertException e) {
             view.showError(e.getMessage());
             return;
         }
 
-        final FuncionarioRepository funcRepo = new FuncionarioRepository();
-        funcRepo.add(funcNovo);
+        Client.requestAddFuncionario(funcNovo);
         view.showSucesso();
         view.close();
         funcsPresenter.updateFuncionarios();
@@ -65,18 +62,18 @@ public class FuncionarioPresenter extends Presenter<FuncionarioView> {
         }
     }
 
-    private void onConfirmarAtualizacao(final Funcionario usuario,
-            final Integer idFuncAnterior, final Funcionario funcAtualizado) {
+    private void onConfirmarAtualizacao(final FuncionarioDTO usuario,
+            final Integer idFuncAnterior, final FuncionarioDTO funcAtualizado) {
 
         try {
-            Funcionario.validarAlterar(usuario, idFuncAnterior, funcAtualizado);
+            Client.requestValidarAlterarFuncionario(usuario, idFuncAnterior,
+                    funcAtualizado);
         } catch (final IllegalUpdateException e) {
             view.showError(e.getMessage());
             return;
         }
 
-        final FuncionarioRepository funcRepo = new FuncionarioRepository();
-        funcRepo.update(funcAtualizado);
+        Client.requestUpdateFuncionario(funcAtualizado);
         view.showSucesso();
         view.close();
         funcsPresenter.updateFuncionarios();

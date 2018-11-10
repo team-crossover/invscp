@@ -1,16 +1,16 @@
 package com.github.nelsonwilliam.invscp.model;
 
-import java.util.List;
-
 import com.github.nelsonwilliam.invscp.exception.CRUDException;
 import com.github.nelsonwilliam.invscp.exception.IllegalDeleteException;
 import com.github.nelsonwilliam.invscp.exception.IllegalInsertException;
 import com.github.nelsonwilliam.invscp.exception.IllegalUpdateException;
+import com.github.nelsonwilliam.invscp.model.dto.FuncionarioDTO;
+import com.github.nelsonwilliam.invscp.model.dto.PredioDTO;
 import com.github.nelsonwilliam.invscp.model.repository.LocalizacaoRepository;
 import com.github.nelsonwilliam.invscp.model.repository.PredioRepository;
 import com.github.nelsonwilliam.invscp.model.repository.SalaRepository;
 
-public class Predio implements Model {
+public class Predio implements Model<PredioDTO> {
 
     private static final long serialVersionUID = -2918874149512056756L;
 
@@ -19,6 +19,28 @@ public class Predio implements Model {
     private String nome = null;
 
     private Integer idLocalizacao = null;
+
+    @Override
+    public void setValuesFromDTO(final PredioDTO dto) {
+        setId(dto.getId());
+        setNome(dto.getNome());
+        if (dto.getLocalizacao() != null) {
+            setIdLocalizacao(dto.getLocalizacao().getId());
+        }
+    }
+
+    @Override
+    public PredioDTO toDTO() {
+        final PredioDTO dto = new PredioDTO();
+        dto.setId(id);
+        dto.setNome(nome);
+        if (idLocalizacao != null) {
+            final LocalizacaoRepository repo = new LocalizacaoRepository();
+            final Localizacao local = repo.getById(idLocalizacao);
+            dto.setLocalizacao(local == null ? null : local.toDTO());
+        }
+        return dto;
+    }
 
     /**
      * Verifica se o elemento a ser deletado é válido, de acordo com as regras
@@ -33,7 +55,7 @@ public class Predio implements Model {
      * @throws IllegalDeleteException Se não for possível inserir o novo
      *         elemento.
      */
-    public static void validarDeletar(final Funcionario usuario,
+    public static void validarDeletar(final FuncionarioDTO usuario,
             final Integer idPredio) throws IllegalDeleteException {
 
         // ---------------
@@ -91,8 +113,8 @@ public class Predio implements Model {
      * @throws IllegalInsertException Se não for possível inserir o novo
      *         elemento.
      */
-    public static void validarInserir(final Funcionario usuario,
-            final Predio novoPredio) throws IllegalInsertException {
+    public static void validarInserir(final FuncionarioDTO usuario,
+            final PredioDTO novoPredio) throws IllegalInsertException {
 
         // ---------------
         // IDENTIFICADORES
@@ -148,8 +170,8 @@ public class Predio implements Model {
      * @throws IllegalUpdateException Se não for possível inserir o novo
      *         elemento.
      */
-    public static void validarAlterar(final Funcionario usuario,
-            final Integer idAntigoPredio, final Predio novoPredio)
+    public static void validarAlterar(final FuncionarioDTO usuario,
+            final Integer idAntigoPredio, final PredioDTO novoPredio)
             throws IllegalUpdateException {
 
         // ---------------
@@ -206,17 +228,14 @@ public class Predio implements Model {
      * Valida regras de negócio comuns tanto para inserção quanto para
      * alteração.
      */
-    private static void validarCampos(final Predio predio)
+    private static void validarCampos(final PredioDTO predio)
             throws CRUDException {
 
         if (predio.getNome() == null || predio.getNome().isEmpty()) {
             throw new CRUDException("O 'nome' é um campo obrigatório.");
         }
-        if (predio.getIdLocalizacao() == null) {
-            throw new CRUDException("A 'localização' é um campo obrigatório.");
-        }
         if (predio.getLocalizacao() == null) {
-            throw new CRUDException("A 'localização' selecionada não existe.");
+            throw new CRUDException("A 'localização' é um campo obrigatório.");
         }
     }
 
@@ -242,17 +261,8 @@ public class Predio implements Model {
         return idLocalizacao;
     }
 
-    public Localizacao getLocalizacao() {
-        final LocalizacaoRepository locaRepo = new LocalizacaoRepository();
-        return locaRepo.getById(idLocalizacao);
-    }
-
     public void setIdLocalizacao(final Integer idLocalizacao) {
         this.idLocalizacao = idLocalizacao;
     }
 
-    public List<Localizacao> getPossiveisLocalizacoes() {
-        final LocalizacaoRepository locaRepo = new LocalizacaoRepository();
-        return locaRepo.getAll();
-    }
 }

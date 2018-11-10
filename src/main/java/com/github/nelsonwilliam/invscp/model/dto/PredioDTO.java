@@ -1,10 +1,6 @@
 package com.github.nelsonwilliam.invscp.model.dto;
 
-import com.github.nelsonwilliam.invscp.model.Localizacao;
-import com.github.nelsonwilliam.invscp.model.Predio;
-import com.github.nelsonwilliam.invscp.model.repository.LocalizacaoRepository;
-
-public class PredioDTO implements DTO<Predio> {
+public class PredioDTO implements DTO {
 
     private Integer id = null;
 
@@ -12,38 +8,11 @@ public class PredioDTO implements DTO<Predio> {
 
     private LocalizacaoDTO localizacao = null;
 
-    @Override
-    public void setValuesFromModel(Predio model) {
-        this.id = model.getId();
-        this.nome = model.getNome();
-
-        if (model.getIdLocalizacao() != null) {
-            final LocalizacaoRepository repo = new LocalizacaoRepository();
-            final Localizacao local = repo.getById(model.getIdLocalizacao());
-
-            this.localizacao = new LocalizacaoDTO();
-            this.localizacao.setValuesFromModel(local);
-        }
-
-    }
-
-    @Override
-    public Predio toModel() {
-        final Predio predio = new Predio();
-        predio.setId(id);
-        predio.setNome(nome);
-        if (localizacao != null) {
-            predio.setIdLocalizacao(localizacao.getId());
-        }
-
-        return predio;
-    }
-
     public final Integer getId() {
         return id;
     }
 
-    public final void setId(Integer id) {
+    public final void setId(final Integer id) {
         this.id = id;
     }
 
@@ -51,7 +20,7 @@ public class PredioDTO implements DTO<Predio> {
         return nome;
     }
 
-    public final void setNome(String nome) {
+    public final void setNome(final String nome) {
         this.nome = nome;
     }
 
@@ -59,7 +28,7 @@ public class PredioDTO implements DTO<Predio> {
         return localizacao;
     }
 
-    public final void setLocalizacao(LocalizacaoDTO localizacao) {
+    public final void setLocalizacao(final LocalizacaoDTO localizacao) {
         this.localizacao = localizacao;
     }
 

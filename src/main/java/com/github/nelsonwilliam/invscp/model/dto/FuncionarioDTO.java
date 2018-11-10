@@ -1,18 +1,8 @@
 package com.github.nelsonwilliam.invscp.model.dto;
 
-import com.github.nelsonwilliam.invscp.model.Departamento;
-import com.github.nelsonwilliam.invscp.model.Funcionario;
 import com.github.nelsonwilliam.invscp.model.enums.CargoEnum;
-import com.github.nelsonwilliam.invscp.model.repository.DepartamentoRepository;
 
-public class FuncionarioDTO implements DTO<Funcionario> {
-
-    /**
-     * Permite verificar o cargo do funcionário sem necessitar de outras
-     * requisições. É ignorado ao transformar o DTO de volta em Model, já que o
-     * Model de Funcionario não armazena o cargo.
-     */
-    private CargoEnum cargo;
+public class FuncionarioDTO implements DTO {
 
     private Integer id = null;
 
@@ -28,54 +18,18 @@ public class FuncionarioDTO implements DTO<Funcionario> {
 
     private DepartamentoDTO departamento = null;
 
-    @Override
-    public void setValuesFromModel(Funcionario model) {
-        this.cargo = model.getCargo();
-        this.id = model.getId();
-        this.login = model.getLogin();
-        this.senha = model.getSenha();
-        this.nome = model.getNome();
-        this.cpf = model.getCpf();
-        this.email = model.getEmail();
-
-        if (model.getIdDepartamento() != null) {
-            final DepartamentoRepository repo = new DepartamentoRepository();
-            final Departamento dept = repo.getById(model.getIdDepartamento());
-
-            this.departamento = new DepartamentoDTO();
-            this.departamento.setValuesFromModel(dept);
-        }
-
-    }
-
-    @Override
-    public Funcionario toModel() {
-        final Funcionario func = new Funcionario();
-        func.setCpf(cpf);
-        func.setEmail(email);
-        func.setId(id);
-        if (departamento != null) {
-            func.setIdDepartamento(departamento.getId());
-        }
-        func.setLogin(login);
-        func.setSenha(senha);
-        func.setNome(nome);
-        return func;
-    }
-
-    public final CargoEnum getCargo() {
-        return cargo;
-    }
-
-    public final void setCargo(CargoEnum cargo) {
-        this.cargo = cargo;
-    }
+    /**
+     * Permite verificar o cargo do funcionário sem necessitar de outras
+     * requisições. É ignorado ao transformar o DTO de volta em Model, já que o
+     * Model de Funcionario não armazena o cargo.
+     */
+    private CargoEnum cargo = null;
 
     public final Integer getId() {
         return id;
     }
 
-    public final void setId(Integer id) {
+    public final void setId(final Integer id) {
         this.id = id;
     }
 
@@ -83,7 +37,7 @@ public class FuncionarioDTO implements DTO<Funcionario> {
         return login;
     }
 
-    public final void setLogin(String login) {
+    public final void setLogin(final String login) {
         this.login = login;
     }
 
@@ -91,7 +45,7 @@ public class FuncionarioDTO implements DTO<Funcionario> {
         return senha;
     }
 
-    public final void setSenha(String senha) {
+    public final void setSenha(final String senha) {
         this.senha = senha;
     }
 
@@ -99,7 +53,7 @@ public class FuncionarioDTO implements DTO<Funcionario> {
         return nome;
     }
 
-    public final void setNome(String nome) {
+    public final void setNome(final String nome) {
         this.nome = nome;
     }
 
@@ -107,7 +61,7 @@ public class FuncionarioDTO implements DTO<Funcionario> {
         return cpf;
     }
 
-    public final void setCpf(String cpf) {
+    public final void setCpf(final String cpf) {
         this.cpf = cpf;
     }
 
@@ -115,7 +69,7 @@ public class FuncionarioDTO implements DTO<Funcionario> {
         return email;
     }
 
-    public final void setEmail(String email) {
+    public final void setEmail(final String email) {
         this.email = email;
     }
 
@@ -123,8 +77,16 @@ public class FuncionarioDTO implements DTO<Funcionario> {
         return departamento;
     }
 
-    public final void setDepartamento(DepartamentoDTO departamento) {
+    public final void setDepartamento(final DepartamentoDTO departamento) {
         this.departamento = departamento;
+    }
+
+    public final CargoEnum getCargo() {
+        return cargo;
+    }
+
+    public final void setCargo(final CargoEnum cargo) {
+        this.cargo = cargo;
     }
 
 }

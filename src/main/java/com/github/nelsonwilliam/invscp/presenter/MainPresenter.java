@@ -2,10 +2,8 @@ package com.github.nelsonwilliam.invscp.presenter;
 
 import java.awt.event.ActionEvent;
 
-import com.github.nelsonwilliam.invscp.InvSCP;
-import com.github.nelsonwilliam.invscp.model.Funcionario;
 import com.github.nelsonwilliam.invscp.model.dto.FuncionarioDTO;
-import com.github.nelsonwilliam.invscp.model.repository.FuncionarioRepository;
+import com.github.nelsonwilliam.invscp.util.Client;
 import com.github.nelsonwilliam.invscp.view.DepartamentosView;
 import com.github.nelsonwilliam.invscp.view.FuncionariosView;
 import com.github.nelsonwilliam.invscp.view.LocalizacoesView;
@@ -23,7 +21,7 @@ public class MainPresenter extends Presenter<MainView> {
 
     private final MenuView menuView;
 
-    private Integer idUsuario;
+    private FuncionarioDTO usuario = null;
 
     public MainPresenter(final MainView mainView, final MenuView menuView) {
         super(mainView);
@@ -32,26 +30,17 @@ public class MainPresenter extends Presenter<MainView> {
     }
 
     public void setIdUsuario(final Integer id) {
-        idUsuario = id;
-
-        if (id != null) {
-            final Funcionario func = getUsuario();
-            final FuncionarioDTO funcDTO = new FuncionarioDTO();
-            funcDTO.setValuesFromModel(func);
-            menuView.updateUsuario(funcDTO);
-        } else {
-            menuView.updateUsuario(null);
-        }
+        usuario = id == null ? null : Client.requestGetFuncionarioById(id);
+        menuView.updateUsuario(usuario);
         showNothing();
     }
 
     public Integer getIdUsuario() {
-        return idUsuario;
+        return usuario == null ? null : usuario.getId();
     }
 
-    public Funcionario getUsuario() {
-        final FuncionarioRepository funcRepo = new FuncionarioRepository();
-        return funcRepo.getById(idUsuario);
+    public FuncionarioDTO getUsuario() {
+        return usuario;
     }
 
     private void setupViewListeners() {
@@ -84,8 +73,7 @@ public class MainPresenter extends Presenter<MainView> {
 
     @SuppressWarnings("unused")
     private void showLogin() {
-        final LoginView loginView = ViewFactory.createLogin(InvSCP.VIEW_IMPL,
-                view);
+        final LoginView loginView = ViewFactory.createLogin(view);
         final LoginPresenter loginPresenter = new LoginPresenter(loginView,
                 this);
         loginView.setVisible(true);
@@ -100,13 +88,12 @@ public class MainPresenter extends Presenter<MainView> {
     @SuppressWarnings("unused")
     private void showDepartamentos() {
         // Apenas chefes podem manter departamentos
-        if (getUsuario() == null || !getUsuario().isChefe()) {
+        if (getUsuario() == null || !getUsuario().getCargo().isChefe()) {
             showNothing();
             return;
         }
 
-        final DepartamentosView deptView = ViewFactory
-                .createDepartamentos(InvSCP.VIEW_IMPL);
+        final DepartamentosView deptView = ViewFactory.createDepartamentos();
         final DepartamentosPresenter deptPresenter = new DepartamentosPresenter(
                 deptView, this);
         view.updateSelectedView(deptView);
@@ -115,13 +102,12 @@ public class MainPresenter extends Presenter<MainView> {
     @SuppressWarnings("unused")
     private void showFuncionarios() {
         // Apenas chefes podem manter departamentos
-        if (getUsuario() == null || !getUsuario().isChefe()) {
+        if (getUsuario() == null || !getUsuario().getCargo().isChefe()) {
             showNothing();
             return;
         }
 
-        final FuncionariosView funcView = ViewFactory
-                .createFuncionarios(InvSCP.VIEW_IMPL);
+        final FuncionariosView funcView = ViewFactory.createFuncionarios();
         final FuncionariosPresenter funcPresenter = new FuncionariosPresenter(
                 funcView, this);
         view.updateSelectedView(funcView);
@@ -130,13 +116,12 @@ public class MainPresenter extends Presenter<MainView> {
     @SuppressWarnings("unused")
     private void showLocalizacoes() {
         // Apenas chefes podem manter departamentos
-        if (getUsuario() == null || !getUsuario().isChefe()) {
+        if (getUsuario() == null || !getUsuario().getCargo().isChefe()) {
             showNothing();
             return;
         }
 
-        final LocalizacoesView locaView = ViewFactory
-                .createLocalizacoes(InvSCP.VIEW_IMPL);
+        final LocalizacoesView locaView = ViewFactory.createLocalizacoes();
         final LocalizacoesPresenter locaPresenter = new LocalizacoesPresenter(
                 locaView, this);
         view.updateSelectedView(locaView);
@@ -145,13 +130,12 @@ public class MainPresenter extends Presenter<MainView> {
     @SuppressWarnings("unused")
     private void showPredios() {
         // Apenas chefes podem manter departamentos
-        if (getUsuario() == null || !getUsuario().isChefe()) {
+        if (getUsuario() == null || !getUsuario().getCargo().isChefe()) {
             showNothing();
             return;
         }
 
-        final PrediosView predView = ViewFactory
-                .createPredios(InvSCP.VIEW_IMPL);
+        final PrediosView predView = ViewFactory.createPredios();
         final PrediosPresenter predPresenter = new PrediosPresenter(predView,
                 this);
         view.updateSelectedView(predView);
@@ -160,12 +144,12 @@ public class MainPresenter extends Presenter<MainView> {
     @SuppressWarnings("unused")
     private void showSalas() {
         // Apenas chefes podem manter salas
-        if (getUsuario() == null || !getUsuario().isChefe()) {
+        if (getUsuario() == null || !getUsuario().getCargo().isChefe()) {
             showNothing();
             return;
         }
 
-        final SalasView salasView = ViewFactory.createSalas(InvSCP.VIEW_IMPL);
+        final SalasView salasView = ViewFactory.createSalas();
         final SalasPresenter salasPresenter = new SalasPresenter(salasView,
                 this);
         view.updateSelectedView(salasView);

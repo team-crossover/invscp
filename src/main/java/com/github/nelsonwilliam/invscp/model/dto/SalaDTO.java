@@ -1,13 +1,8 @@
 package com.github.nelsonwilliam.invscp.model.dto;
 
-import com.github.nelsonwilliam.invscp.model.Departamento;
-import com.github.nelsonwilliam.invscp.model.Predio;
-import com.github.nelsonwilliam.invscp.model.Sala;
 import com.github.nelsonwilliam.invscp.model.enums.TipoSalaEnum;
-import com.github.nelsonwilliam.invscp.model.repository.DepartamentoRepository;
-import com.github.nelsonwilliam.invscp.model.repository.PredioRepository;
 
-public class SalaDTO implements DTO<Sala> {
+public class SalaDTO implements DTO {
 
     private Integer id = null;
 
@@ -19,51 +14,11 @@ public class SalaDTO implements DTO<Sala> {
 
     private DepartamentoDTO departamento = null;
 
-    @Override
-    public void setValuesFromModel(Sala model) {
-        this.id = model.getId();
-        this.nome = model.getNome();
-        this.tipo = model.getTipo();
-
-        if (model.getIdDepartamento() != null) {
-            final PredioRepository repo = new PredioRepository();
-            final Predio predio = repo.getById(model.getIdDepartamento());
-
-            this.predio = new PredioDTO();
-            this.predio.setValuesFromModel(predio);
-        }
-
-        if (model.getIdDepartamento() != null) {
-            final DepartamentoRepository repo = new DepartamentoRepository();
-            final Departamento dept = repo.getById(model.getIdDepartamento());
-
-            this.departamento = new DepartamentoDTO();
-            this.departamento.setValuesFromModel(dept);
-        }
-
-    }
-
-    @Override
-    public Sala toModel() {
-        Sala sala = new Sala();
-        sala.setId(id);
-        sala.setNome(nome);
-        sala.setTipo(tipo);
-        if (departamento != null) {
-            sala.setIdDepartamento(departamento.getId());
-        }
-        if (predio != null) {
-            sala.setIdPredio(predio.getId());
-        }
-
-        return sala;
-    }
-
     public final Integer getId() {
         return id;
     }
 
-    public final void setId(Integer id) {
+    public final void setId(final Integer id) {
         this.id = id;
     }
 
@@ -71,7 +26,7 @@ public class SalaDTO implements DTO<Sala> {
         return nome;
     }
 
-    public final void setNome(String nome) {
+    public final void setNome(final String nome) {
         this.nome = nome;
     }
 
@@ -79,7 +34,7 @@ public class SalaDTO implements DTO<Sala> {
         return tipo;
     }
 
-    public final void setTipo(TipoSalaEnum tipo) {
+    public final void setTipo(final TipoSalaEnum tipo) {
         this.tipo = tipo;
     }
 
@@ -87,7 +42,7 @@ public class SalaDTO implements DTO<Sala> {
         return predio;
     }
 
-    public final void setPredio(PredioDTO predio) {
+    public final void setPredio(final PredioDTO predio) {
         this.predio = predio;
     }
 
@@ -95,7 +50,7 @@ public class SalaDTO implements DTO<Sala> {
         return departamento;
     }
 
-    public final void setDepartamento(DepartamentoDTO departamento) {
+    public final void setDepartamento(final DepartamentoDTO departamento) {
         this.departamento = departamento;
     }
 

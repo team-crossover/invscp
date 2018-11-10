@@ -1,17 +1,17 @@
 package com.github.nelsonwilliam.invscp.model;
 
-import java.util.List;
-
 import com.github.nelsonwilliam.invscp.exception.CRUDException;
 import com.github.nelsonwilliam.invscp.exception.IllegalDeleteException;
 import com.github.nelsonwilliam.invscp.exception.IllegalInsertException;
 import com.github.nelsonwilliam.invscp.exception.IllegalUpdateException;
+import com.github.nelsonwilliam.invscp.model.dto.FuncionarioDTO;
+import com.github.nelsonwilliam.invscp.model.dto.SalaDTO;
 import com.github.nelsonwilliam.invscp.model.enums.TipoSalaEnum;
 import com.github.nelsonwilliam.invscp.model.repository.DepartamentoRepository;
 import com.github.nelsonwilliam.invscp.model.repository.PredioRepository;
 import com.github.nelsonwilliam.invscp.model.repository.SalaRepository;
 
-public class Sala implements Model {
+public class Sala implements Model<SalaDTO> {
 
     private static final long serialVersionUID = 509047893405447267L;
 
@@ -24,6 +24,38 @@ public class Sala implements Model {
     private Integer idPredio = null;
 
     private Integer idDepartamento = null;
+
+    @Override
+    public void setValuesFromDTO(final SalaDTO dto) {
+        id = dto.getId();
+        nome = dto.getNome();
+        tipo = dto.getTipo();
+        if (dto.getPredio() != null) {
+            idPredio = dto.getPredio().getId();
+        }
+        if (dto.getDepartamento() != null) {
+            idDepartamento = dto.getDepartamento().getId();
+        }
+    }
+
+    @Override
+    public SalaDTO toDTO() {
+        final SalaDTO dto = new SalaDTO();
+        dto.setId(id);
+        dto.setNome(nome);
+        dto.setTipo(tipo);
+        if (idPredio != null) {
+            final PredioRepository repo = new PredioRepository();
+            final Predio predio = repo.getById(idPredio);
+            dto.setPredio(predio == null ? null : predio.toDTO());
+        }
+        if (idDepartamento != null) {
+            final DepartamentoRepository repo = new DepartamentoRepository();
+            final Departamento dept = repo.getById(idDepartamento);
+            dto.setDepartamento(dept == null ? null : dept.toDTO());
+        }
+        return dto;
+    }
 
     /**
      * Verifica se o elemento a ser deletado é válido, de acordo com as regras
@@ -38,7 +70,7 @@ public class Sala implements Model {
      * @throws IllegalDeleteException Se não for possível inserir o novo
      *         elemento.
      */
-    public static void validarDeletar(final Funcionario usuario,
+    public static void validarDeletar(final FuncionarioDTO usuario,
             final Integer idSala) throws IllegalDeleteException {
 
         // ---------------
@@ -97,8 +129,8 @@ public class Sala implements Model {
      * @throws IllegalInsertException Se não for possível inserir o novo
      *         elemento.
      */
-    public static void validarInserir(final Funcionario usuario,
-            final Sala novaSala) throws IllegalInsertException {
+    public static void validarInserir(final FuncionarioDTO usuario,
+            final SalaDTO novaSala) throws IllegalInsertException {
 
         // ---------------
         // IDENTIFICADORES
@@ -153,8 +185,8 @@ public class Sala implements Model {
      * @throws IllegalUpdateException Se não for possível inserir o novo
      *         elemento.
      */
-    public static void validarAlterar(final Funcionario usuario,
-            final Integer idAntigaSala, final Sala novaSala)
+    public static void validarAlterar(final FuncionarioDTO usuario,
+            final Integer idAntigaSala, final SalaDTO novaSala)
             throws IllegalUpdateException {
 
         // ---------------
@@ -217,7 +249,7 @@ public class Sala implements Model {
      * Valida regras de negócio comuns tanto para inserção quanto para
      * alteração.
      */
-    private static void validarCampos(final Sala sala) throws CRUDException {
+    private static void validarCampos(final SalaDTO sala) throws CRUDException {
 
         final SalaRepository salaRepo = new SalaRepository();
         final DepartamentoRepository deptRepo = new DepartamentoRepository();
@@ -225,14 +257,8 @@ public class Sala implements Model {
         if (sala.getNome() == null || sala.getNome().isEmpty()) {
             throw new CRUDException("O 'nome' é um campo obrigatório.");
         }
-        if (sala.getIdPredio() == null) {
-            throw new CRUDException("O 'prédio' é um campo obrigatório.");
-        }
         if (sala.getPredio() == null) {
             throw new CRUDException("O 'prédio' selecionado não existe.");
-        }
-        if (sala.getIdDepartamento() == null) {
-            throw new CRUDException("O 'departamento' é um campo obrigatório.");
         }
         if (sala.getDepartamento() == null) {
             throw new CRUDException("O 'departamento' selecionado não existe.");
@@ -245,9 +271,8 @@ public class Sala implements Model {
             throw new CRUDException("Já existe outra sala de depósito.");
         }
         if (sala.getTipo() == TipoSalaEnum.DEPOSITO
-                && (sala.getIdDepartamento() == null
-                        || !sala.getIdDepartamento()
-                                .equals(deptRepo.getDePatrimonio().getId()))) {
+                && (sala.getDepartamento() == null || !sala.getDepartamento()
+                        .getId().equals(deptRepo.getDePatrimonio().getId()))) {
             throw new CRUDException(
                     "A sala de depósito deve pertencer ao departamento de patrimônio.");
         }
@@ -305,13 +330,4 @@ public class Sala implements Model {
         this.nome = nome;
     }
 
-    public List<Predio> getPossiveisPredios() {
-        final PredioRepository predioRepo = new PredioRepository();
-        return predioRepo.getAll();
-    }
-
-    public List<Departamento> getPossiveisDepartamentos() {
-        final DepartamentoRepository deptRepo = new DepartamentoRepository();
-        return deptRepo.getAll();
-    }
 }

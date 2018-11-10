@@ -1,19 +1,17 @@
 package com.github.nelsonwilliam.invscp.presenter;
 
 import java.awt.event.ActionEvent;
-import java.util.function.Consumer;
 
-import com.github.nelsonwilliam.invscp.model.Funcionario;
-import com.github.nelsonwilliam.invscp.model.repository.FuncionarioRepository;
+import com.github.nelsonwilliam.invscp.model.dto.FuncionarioDTO;
+import com.github.nelsonwilliam.invscp.util.Client;
 import com.github.nelsonwilliam.invscp.view.LoginView;
 
 public class LoginPresenter extends Presenter<LoginView> {
 
-    private Consumer<Funcionario> sucessfullLoginCallback;
-
     private final MainPresenter mainPresenter;
 
-    public LoginPresenter(final LoginView view, final MainPresenter mainPresenter) {
+    public LoginPresenter(final LoginView view,
+            final MainPresenter mainPresenter) {
         super(view);
         this.mainPresenter = mainPresenter;
         setupViewListeners();
@@ -26,10 +24,9 @@ public class LoginPresenter extends Presenter<LoginView> {
     }
 
     private void onConfirmLogin() {
-        final FuncionarioRepository funcRepo = new FuncionarioRepository();
-
         final String login = view.getLogin();
-        final Funcionario funcionario = funcRepo.getByLogin(login);
+        final FuncionarioDTO funcionario = Client
+                .requestGetFuncionarioByLogin(login);
         if (funcionario == null) {
             view.showLoginFailed("Login desconhecido.");
             return;

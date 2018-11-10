@@ -1,10 +1,6 @@
 package com.github.nelsonwilliam.invscp.model.dto;
 
-import com.github.nelsonwilliam.invscp.model.Departamento;
-import com.github.nelsonwilliam.invscp.model.Funcionario;
-import com.github.nelsonwilliam.invscp.model.repository.FuncionarioRepository;
-
-public class DepartamentoDTO implements DTO<Departamento> {
+public class DepartamentoDTO implements DTO {
 
     private Integer id = null;
 
@@ -15,46 +11,6 @@ public class DepartamentoDTO implements DTO<Departamento> {
     private FuncionarioDTO chefe = null;
 
     private FuncionarioDTO chefeSubstituto = null;
-
-    @Override
-    public void setValuesFromModel(final Departamento newModel) {
-        id = newModel.getId();
-        nome = newModel.getNome();
-        dePatrimonio = newModel.getDePatrimonio();
-
-        if (newModel.getIdChefe() != null) {
-            final FuncionarioRepository funcRepo = new FuncionarioRepository();
-            final Funcionario func = funcRepo.getById(newModel.getIdChefe());
-            func.setIdDepartamento(null);
-
-            chefe = new FuncionarioDTO();
-            chefe.setValuesFromModel(func);
-        }
-        if (newModel.getIdChefeSubstituto() != null) {
-            final FuncionarioRepository funcRepo = new FuncionarioRepository();
-            final Funcionario func = funcRepo
-                    .getById(newModel.getIdChefeSubstituto());
-            func.setIdDepartamento(null);
-
-            chefeSubstituto = new FuncionarioDTO();
-            chefeSubstituto.setValuesFromModel(func);
-        }
-    }
-
-    @Override
-    public Departamento toModel() {
-        final Departamento dept = new Departamento();
-        dept.setId(id);
-        dept.setNome(nome);
-        dept.setDePatrimonio(dePatrimonio);
-        if (chefe != null) {
-            dept.setIdChefe(chefe.getId());
-        }
-        if (chefeSubstituto != null) {
-            dept.setIdChefeSubstituto(chefeSubstituto.getId());
-        }
-        return dept;
-    }
 
     /**
      * Obtém o valor atual de id.

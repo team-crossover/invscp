@@ -4,10 +4,9 @@ import java.awt.event.ActionEvent;
 
 import com.github.nelsonwilliam.invscp.exception.IllegalInsertException;
 import com.github.nelsonwilliam.invscp.exception.IllegalUpdateException;
-import com.github.nelsonwilliam.invscp.model.Funcionario;
-import com.github.nelsonwilliam.invscp.model.Sala;
+import com.github.nelsonwilliam.invscp.model.dto.FuncionarioDTO;
 import com.github.nelsonwilliam.invscp.model.dto.SalaDTO;
-import com.github.nelsonwilliam.invscp.model.repository.SalaRepository;
+import com.github.nelsonwilliam.invscp.util.Client;
 import com.github.nelsonwilliam.invscp.view.SalaView;
 
 public class SalaPresenter extends Presenter<SalaView> {
@@ -30,46 +29,44 @@ public class SalaPresenter extends Presenter<SalaView> {
     }
 
     private void onConfirmar() {
-        final Funcionario usuario = mainPresenter.getUsuario();
+        final FuncionarioDTO usuario = mainPresenter.getUsuario();
         final SalaDTO salaDTO = view.getSala();
-        final Sala sala = salaDTO == null ? null : salaDTO.toModel();
 
-        if (sala.getId() == null) {
-            onConfirmarAdicao(usuario, sala);
+        if (salaDTO == null || salaDTO.getId() == null) {
+            onConfirmarAdicao(usuario, salaDTO);
         } else {
-            onConfirmarAtualizacao(usuario, sala.getId(), sala);
+            onConfirmarAtualizacao(usuario, salaDTO.getId(), salaDTO);
         }
     }
 
-    private void onConfirmarAdicao(final Funcionario usuario,
-            final Sala salaNova) {
+    private void onConfirmarAdicao(final FuncionarioDTO usuario,
+            final SalaDTO salaNova) {
 
         try {
-            Sala.validarInserir(usuario, salaNova);
+            Client.requestValidarInserirSala(usuario, salaNova);
         } catch (final IllegalInsertException e) {
             view.showError(e.getMessage());
             return;
         }
 
-        final SalaRepository salaRepo = new SalaRepository();
-        salaRepo.add(salaNova);
+        Client.requestAddSala(salaNova);
         view.showSucesso();
         view.close();
         salasPresenter.updateSalas();
     }
 
-    private void onConfirmarAtualizacao(final Funcionario usuario,
-            final Integer idSalaAnterior, final Sala salaAtualizada) {
+    private void onConfirmarAtualizacao(final FuncionarioDTO usuario,
+            final Integer idSalaAnterior, final SalaDTO salaAtualizada) {
 
         try {
-            Sala.validarAlterar(usuario, idSalaAnterior, salaAtualizada);
+            Client.requestValidarAlterarSala(usuario, idSalaAnterior,
+                    salaAtualizada);
         } catch (final IllegalUpdateException e) {
             view.showError(e.getMessage());
             return;
         }
 
-        final SalaRepository salaRepo = new SalaRepository();
-        salaRepo.update(salaAtualizada);
+        Client.requestUpdateSala(salaAtualizada);
         view.showSucesso();
         view.close();
         salasPresenter.updateSalas();

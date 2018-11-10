@@ -1,19 +1,14 @@
 package com.github.nelsonwilliam.invscp.presenter;
 
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
 import java.util.List;
 
-import com.github.nelsonwilliam.invscp.InvSCP;
 import com.github.nelsonwilliam.invscp.exception.IllegalDeleteException;
-import com.github.nelsonwilliam.invscp.model.Departamento;
-import com.github.nelsonwilliam.invscp.model.Funcionario;
-import com.github.nelsonwilliam.invscp.model.Predio;
-import com.github.nelsonwilliam.invscp.model.Sala;
 import com.github.nelsonwilliam.invscp.model.dto.DepartamentoDTO;
+import com.github.nelsonwilliam.invscp.model.dto.FuncionarioDTO;
 import com.github.nelsonwilliam.invscp.model.dto.PredioDTO;
 import com.github.nelsonwilliam.invscp.model.dto.SalaDTO;
-import com.github.nelsonwilliam.invscp.model.repository.SalaRepository;
+import com.github.nelsonwilliam.invscp.util.Client;
 import com.github.nelsonwilliam.invscp.view.SalaView;
 import com.github.nelsonwilliam.invscp.view.SalasView;
 import com.github.nelsonwilliam.invscp.view.ViewFactory;
@@ -43,29 +38,14 @@ public class SalasPresenter extends Presenter<SalasView> {
 
     @SuppressWarnings("unused")
     private void onAdicionarSala() {
-        final Sala novoSala = new Sala();
-        final SalaDTO novoSalaDTO = new SalaDTO();
-        novoSalaDTO.setValuesFromModel(novoSala);
+        final SalaDTO novoSala = new SalaDTO();
+        final List<PredioDTO> predios = Client
+                .requestGetPossiveisPrediosParaSala(novoSala);
+        final List<DepartamentoDTO> depts = Client
+                .requestGetPossiveisDepartamentosParaSala(novoSala);
 
-        final List<Predio> predios = novoSala.getPossiveisPredios();
-        final List<PredioDTO> prediosDTOs = new ArrayList<PredioDTO>();
-        for (final Predio p : predios) {
-            final PredioDTO predioDTO = new PredioDTO();
-            predioDTO.setValuesFromModel(p);
-            prediosDTOs.add(predioDTO);
-        }
-
-        final List<Departamento> depts = novoSala.getPossiveisDepartamentos();
-        final List<DepartamentoDTO> deptsDTOs = new ArrayList<DepartamentoDTO>();
-        for (final Departamento d : depts) {
-            final DepartamentoDTO deptDTO = new DepartamentoDTO();
-            deptDTO.setValuesFromModel(d);
-            deptsDTOs.add(deptDTO);
-        }
-
-        final SalaView salaView = ViewFactory.createSala(InvSCP.VIEW_IMPL,
-                mainPresenter.getView(), novoSalaDTO, false, prediosDTOs,
-                deptsDTOs);
+        final SalaView salaView = ViewFactory.createSala(
+                mainPresenter.getView(), novoSala, false, predios, depts);
         final SalaPresenter salaPresenter = new SalaPresenter(salaView,
                 mainPresenter, this);
         salaView.setVisible(true);
@@ -83,22 +63,20 @@ public class SalasPresenter extends Presenter<SalasView> {
     }
 
     private void deletarSalas(final List<Integer> salasIds) {
-        final Funcionario usuario = mainPresenter.getUsuario();
-        final SalaRepository salaRepo = new SalaRepository();
+        final FuncionarioDTO usuario = mainPresenter.getUsuario();
 
         int deletados = 0;
         for (int i = 0; i < salasIds.size(); i++) {
             final Integer idSala = salasIds.get(i);
 
             try {
-                Sala.validarDeletar(usuario, idSala);
+                Client.requestValidarDeleteSala(usuario, idSala);
             } catch (final IllegalDeleteException e) {
                 view.showError(e.getMessage());
                 continue;
             }
 
-            final Sala sala = salaRepo.getById(idSala);
-            salaRepo.remove(sala);
+            Client.requestDeleteSala(idSala);
             deletados++;
         }
 
@@ -116,46 +94,23 @@ public class SalasPresenter extends Presenter<SalasView> {
                     "Para alterar um elemento é necessário que apenas um esteja selecionado.");
         }
 
-        final SalaRepository salaRepo = new SalaRepository();
-        final Sala selectedSala = salaRepo.getById(selectedSalaIds.get(0));
-        final SalaDTO selectedSalaDTO = new SalaDTO();
-        selectedSalaDTO.setValuesFromModel(selectedSala);
+        final Integer selectedSalaId = selectedSalaIds.get(0);
+        final SalaDTO selectedSala = Client.requestGetSalaById(selectedSalaId);
+        final List<PredioDTO> predios = Client
+                .requestGetPossiveisPrediosParaSala(selectedSala);
+        final List<DepartamentoDTO> depts = Client
+                .requestGetPossiveisDepartamentosParaSala(selectedSala);
 
-        final List<Predio> predios = selectedSala.getPossiveisPredios();
-        final List<PredioDTO> prediosDTOs = new ArrayList<PredioDTO>();
-        for (final Predio p : predios) {
-            final PredioDTO predioDTO = new PredioDTO();
-            predioDTO.setValuesFromModel(p);
-            prediosDTOs.add(predioDTO);
-        }
-
-        final List<Departamento> depts = selectedSala
-                .getPossiveisDepartamentos();
-        final List<DepartamentoDTO> deptsDTOs = new ArrayList<DepartamentoDTO>();
-        for (final Departamento d : depts) {
-            final DepartamentoDTO deptDTO = new DepartamentoDTO();
-            deptDTO.setValuesFromModel(d);
-            deptsDTOs.add(deptDTO);
-        }
-
-        final SalaView salaView = ViewFactory.createSala(InvSCP.VIEW_IMPL,
-                mainPresenter.getView(), selectedSalaDTO, false, prediosDTOs,
-                deptsDTOs);
+        final SalaView salaView = ViewFactory.createSala(
+                mainPresenter.getView(), selectedSala, false, predios, depts);
         final SalaPresenter salaPresenter = new SalaPresenter(salaView,
                 mainPresenter, this);
         salaView.setVisible(true);
     }
 
     public void updateSalas() {
-        final SalaRepository salaRepo = new SalaRepository();
-        final List<Sala> salas = salaRepo.getAll();
-        final List<SalaDTO> salasDTOs = new ArrayList<SalaDTO>();
-        for (final Sala s : salas) {
-            final SalaDTO salaDTO = new SalaDTO();
-            salaDTO.setValuesFromModel(s);
-            salasDTOs.add(salaDTO);
-        }
-        view.updateSalas(salasDTOs);
+        final List<SalaDTO> salas = Client.requestGetSalas();
+        view.updateSalas(salas);
     }
 
 }

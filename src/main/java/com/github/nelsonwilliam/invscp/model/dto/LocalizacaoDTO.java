@@ -1,9 +1,8 @@
 package com.github.nelsonwilliam.invscp.model.dto;
 
-import com.github.nelsonwilliam.invscp.model.Localizacao;
 import com.github.nelsonwilliam.invscp.model.enums.UFEnum;
 
-public class LocalizacaoDTO implements DTO<Localizacao> {
+public class LocalizacaoDTO implements DTO {
 
     private Integer id = null;
 
@@ -17,35 +16,11 @@ public class LocalizacaoDTO implements DTO<Localizacao> {
 
     private UFEnum uf = null;
 
-    @Override
-    public void setValuesFromModel(Localizacao model) {
-        this.id = model.getId();
-        this.nome = model.getNome();
-        this.endereco = model.getEndereco();
-        this.cep = model.getCep();
-        this.cidade = model.getCidade();
-        this.uf = model.getUf();
-
-    }
-
-    @Override
-    public Localizacao toModel() {
-        final Localizacao local = new Localizacao();
-        local.setCep(cep);
-        local.setCidade(cidade);
-        local.setEndereco(endereco);
-        local.setId(id);
-        local.setNome(nome);
-        local.setUf(uf);
-
-        return local;
-    }
-
     public final Integer getId() {
         return id;
     }
 
-    public final void setId(Integer id) {
+    public final void setId(final Integer id) {
         this.id = id;
     }
 
@@ -53,7 +28,7 @@ public class LocalizacaoDTO implements DTO<Localizacao> {
         return nome;
     }
 
-    public final void setNome(String nome) {
+    public final void setNome(final String nome) {
         this.nome = nome;
     }
 
@@ -61,7 +36,7 @@ public class LocalizacaoDTO implements DTO<Localizacao> {
         return endereco;
     }
 
-    public final void setEndereco(String endereco) {
+    public final void setEndereco(final String endereco) {
         this.endereco = endereco;
     }
 
@@ -69,7 +44,7 @@ public class LocalizacaoDTO implements DTO<Localizacao> {
         return cep;
     }
 
-    public final void setCep(String cep) {
+    public final void setCep(final String cep) {
         this.cep = cep;
     }
 
@@ -77,7 +52,7 @@ public class LocalizacaoDTO implements DTO<Localizacao> {
         return cidade;
     }
 
-    public final void setCidade(String cidade) {
+    public final void setCidade(final String cidade) {
         this.cidade = cidade;
     }
 
@@ -85,7 +60,7 @@ public class LocalizacaoDTO implements DTO<Localizacao> {
         return uf;
     }
 
-    public final void setUf(UFEnum uf) {
+    public final void setUf(final UFEnum uf) {
         this.uf = uf;
     }
 

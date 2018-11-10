@@ -7,11 +7,13 @@ import com.github.nelsonwilliam.invscp.exception.CRUDException;
 import com.github.nelsonwilliam.invscp.exception.IllegalDeleteException;
 import com.github.nelsonwilliam.invscp.exception.IllegalInsertException;
 import com.github.nelsonwilliam.invscp.exception.IllegalUpdateException;
+import com.github.nelsonwilliam.invscp.model.dto.DepartamentoDTO;
+import com.github.nelsonwilliam.invscp.model.dto.FuncionarioDTO;
 import com.github.nelsonwilliam.invscp.model.repository.DepartamentoRepository;
 import com.github.nelsonwilliam.invscp.model.repository.FuncionarioRepository;
 import com.github.nelsonwilliam.invscp.model.repository.SalaRepository;
 
-public class Departamento implements Model {
+public class Departamento implements Model<DepartamentoDTO> {
 
     private static final long serialVersionUID = -4732191299693035638L;
 
@@ -24,6 +26,40 @@ public class Departamento implements Model {
     private Integer idChefe = null;
 
     private Integer idChefeSubstituto = null;
+
+    @Override
+    public void setValuesFromDTO(final DepartamentoDTO dto) {
+        setId(dto.getId());
+        setNome(dto.getNome());
+        setDePatrimonio(dto.getDePatrimonio());
+        if (dto.getChefe() != null) {
+            setIdChefe(dto.getChefe().getId());
+        }
+        if (dto.getChefeSubstituto() != null) {
+            setIdChefeSubstituto(dto.getChefeSubstituto().getId());
+        }
+    }
+
+    @Override
+    public DepartamentoDTO toDTO() {
+        final DepartamentoDTO dto = new DepartamentoDTO();
+        dto.setId(id);
+        dto.setNome(nome);
+        dto.setDePatrimonio(dePatrimonio);
+        if (idChefe != null) {
+            final FuncionarioRepository repo = new FuncionarioRepository();
+            final Funcionario func = repo.getById(idChefe);
+            func.setIdDepartamento(null);
+            dto.setChefe(func == null ? null : func.toDTO());
+        }
+        if (idChefeSubstituto != null) {
+            final FuncionarioRepository repo = new FuncionarioRepository();
+            final Funcionario func = repo.getById(idChefeSubstituto);
+            func.setIdDepartamento(null);
+            dto.setChefeSubstituto(func == null ? null : func.toDTO());
+        }
+        return dto;
+    }
 
     /**
      * Verifica se o elemento a ser deletado é válido, de acordo com as regras
@@ -38,7 +74,7 @@ public class Departamento implements Model {
      * @throws IllegalDeleteException Se não for possível inserir o novo
      *         elemento.
      */
-    public static void validarDeletar(final Funcionario usuario,
+    public static void validarDeletar(final FuncionarioDTO usuario,
             final Integer idDept) throws IllegalDeleteException {
 
         // ---------------
@@ -66,7 +102,7 @@ public class Departamento implements Model {
         // Verificar controle de acesso (O usuário pode alterar esse tipo
         // de elemento, com esses atributos? Etc.).
 
-        if (!usuario.isChefeDePatrimonio()) {
+        if (!usuario.getCargo().isChefeDePatrimonio()) {
             throw new IllegalDeleteException(
                     "Apenas chefes de patrimônio podem deletar departamentos.");
         }
@@ -110,8 +146,8 @@ public class Departamento implements Model {
      * @throws IllegalInsertException Se não for possível inserir o novo
      *         elemento.
      */
-    public static void validarInserir(final Funcionario usuario,
-            final Departamento novoDept) throws IllegalInsertException {
+    public static void validarInserir(final FuncionarioDTO usuario,
+            final DepartamentoDTO novoDept) throws IllegalInsertException {
 
         // ---------------
         // IDENTIFICADORES
@@ -128,9 +164,12 @@ public class Departamento implements Model {
             }
         }
 
-        final Integer funcLogadoDeptId = usuario.getIdDepartamento();
-        final boolean funcLogadoEraChefeDept = usuario.isChefeDeDepartamento();
-        final boolean funcLogadoEraChefePatrimonio = usuario
+        final Integer funcLogadoDeptId = usuario.getDepartamento() == null
+                ? null
+                : usuario.getDepartamento().getId();
+        final boolean funcLogadoEraChefeDept = usuario.getCargo()
+                .isChefeDeDepartamento();
+        final boolean funcLogadoEraChefePatrimonio = usuario.getCargo()
                 .isChefeDePatrimonio();
 
         // ------------------
@@ -182,8 +221,8 @@ public class Departamento implements Model {
      * @throws IllegalUpdateException Se não for possível inserir o novo
      *         elemento.
      */
-    public static void validarAlterar(final Funcionario usuario,
-            final Integer idAntigoDept, final Departamento novoDept)
+    public static void validarAlterar(final FuncionarioDTO usuario,
+            final Integer idAntigoDept, final DepartamentoDTO novoDept)
             throws IllegalUpdateException {
 
         // ---------------
@@ -241,7 +280,7 @@ public class Departamento implements Model {
      * Valida regras de negócio comuns tanto para inserção quanto para
      * alteração.
      */
-    private static void validarCampos(final Departamento dept)
+    private static void validarCampos(final DepartamentoDTO dept)
             throws CRUDException {
 
         final DepartamentoRepository deptRepo = new DepartamentoRepository();
@@ -258,38 +297,36 @@ public class Departamento implements Model {
             throw new CRUDException(
                     "Só pode existir um departamento 'de patrimônio'.");
         }
-        if (dept.getIdChefe() == null) {
-            throw new CRUDException("O 'chefe' é um campo obrigatório.");
-        }
         if (dept.getChefe() == null) {
             throw new CRUDException("O 'chefe' selecionado não existe.");
         }
-        if (dept.getChefe().getIdDepartamento() != null
-                && !dept.getChefe().getIdDepartamento().equals(dept.getId())) {
-            System.out.println(dept.getChefe().getIdDepartamento());
+        if (dept.getChefe().getDepartamento() != null && !dept.getChefe()
+                .getDepartamento().getId().equals(dept.getId())) {
             throw new CRUDException(
                     "O 'chefe' selecionado não pode pertencer a outro departamento.");
         }
-        if (dept.getIdChefeSubstituto() != null
-                && dept.getIdChefeSubstituto().equals(dept.getIdChefe())) {
+        if (dept.getChefeSubstituto() != null && dept.getChefeSubstituto()
+                .getId().equals(dept.getChefe().getId())) {
             throw new CRUDException(
                     "O 'chefe' não pode ser o mesmo que o 'chefe substituto'.");
         }
 
     }
 
-    public static List<String> posAlterar(final Funcionario usuario,
-            final Departamento dept) {
+    public static List<String> posAlterar(final FuncionarioDTO usuario,
+            final DepartamentoDTO dept) {
 
         final List<String> messages = new ArrayList<String>();
         final FuncionarioRepository funcRepo = new FuncionarioRepository();
 
         // Se o novo chefe não possuia departamento, ele deve ser movido para o
         // departamento alterado.
-        final Funcionario chefe = dept.getChefe();
-        if (chefe.getIdDepartamento() == null) {
-            chefe.setIdDepartamento(dept.getId());
-            funcRepo.update(chefe);
+        final FuncionarioDTO chefe = dept.getChefe();
+        if (chefe.getDepartamento() == null) {
+            chefe.setDepartamento(dept);
+            final Funcionario chefeModel = new Funcionario();
+            chefeModel.setValuesFromDTO(chefe);
+            funcRepo.update(chefeModel);
             messages.add("O funcionário " + chefe.getNome()
                     + " foi movido ao departamento " + dept.getNome() + ".");
         }
@@ -337,36 +374,6 @@ public class Departamento implements Model {
 
     public void setDePatrimonio(final Boolean dePatrimonio) {
         this.dePatrimonio = dePatrimonio;
-    }
-
-    public Funcionario getChefe() {
-        if (idChefe == null) {
-            return null;
-        }
-        final FuncionarioRepository funcRepo = new FuncionarioRepository();
-        return funcRepo.getById(idChefe);
-    }
-
-    public Funcionario getChefeSubstituto() {
-        if (idChefeSubstituto == null) {
-            return null;
-        }
-        final FuncionarioRepository funcRepo = new FuncionarioRepository();
-        return funcRepo.getById(idChefeSubstituto);
-    }
-
-    public List<Funcionario> getFuncionarios() {
-        final FuncionarioRepository funcRepo = new FuncionarioRepository();
-        return funcRepo.getByDepartamento(this);
-    }
-
-    public List<Funcionario> getPossiveisChefes() {
-        final FuncionarioRepository funcRepo = new FuncionarioRepository();
-        if (getId() == null) {
-            return funcRepo.getSemDepartamento();
-        } else {
-            return funcRepo.getByDepartamentoExcetoChefes(this);
-        }
     }
 
 }

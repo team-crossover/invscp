@@ -1,15 +1,12 @@
 package com.github.nelsonwilliam.invscp.presenter;
 
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
 import java.util.List;
 
-import com.github.nelsonwilliam.invscp.InvSCP;
 import com.github.nelsonwilliam.invscp.exception.IllegalDeleteException;
-import com.github.nelsonwilliam.invscp.model.Funcionario;
-import com.github.nelsonwilliam.invscp.model.Localizacao;
+import com.github.nelsonwilliam.invscp.model.dto.FuncionarioDTO;
 import com.github.nelsonwilliam.invscp.model.dto.LocalizacaoDTO;
-import com.github.nelsonwilliam.invscp.model.repository.LocalizacaoRepository;
+import com.github.nelsonwilliam.invscp.util.Client;
 import com.github.nelsonwilliam.invscp.view.LocalizacaoView;
 import com.github.nelsonwilliam.invscp.view.LocalizacoesView;
 import com.github.nelsonwilliam.invscp.view.ViewFactory;
@@ -40,12 +37,10 @@ public class LocalizacoesPresenter extends Presenter<LocalizacoesView> {
 
     @SuppressWarnings("unused")
     private void onAdicionarLocalizacao() {
-        final Localizacao novoLoca = new Localizacao();
-        final LocalizacaoDTO novoLocaDTO = new LocalizacaoDTO();
-        novoLocaDTO.setValuesFromModel(novoLoca);
+        final LocalizacaoDTO novoLoca = new LocalizacaoDTO();
 
-        final LocalizacaoView locaView = ViewFactory.createLocalizacao(
-                InvSCP.VIEW_IMPL, mainPresenter.getView(), novoLocaDTO, true);
+        final LocalizacaoView locaView = ViewFactory
+                .createLocalizacao(mainPresenter.getView(), novoLoca, true);
         final LocalizacaoPresenter locaPresenter = new LocalizacaoPresenter(
                 locaView, mainPresenter, this);
         locaView.setVisible(true);
@@ -63,22 +58,20 @@ public class LocalizacoesPresenter extends Presenter<LocalizacoesView> {
     }
 
     private void deletarLocalizacoes(final List<Integer> locaIds) {
-        final Funcionario usuario = mainPresenter.getUsuario();
-        final LocalizacaoRepository locaRepo = new LocalizacaoRepository();
+        final FuncionarioDTO usuario = mainPresenter.getUsuario();
 
         int deletados = 0;
         for (int i = 0; i < locaIds.size(); i++) {
             final Integer idLoca = locaIds.get(i);
 
             try {
-                Localizacao.validarDeletar(usuario, idLoca);
+                Client.requestValidarDeleteLocalizacao(usuario, idLoca);
             } catch (final IllegalDeleteException e) {
                 view.showError(e.getMessage());
                 continue;
             }
 
-            final Localizacao loca = locaRepo.getById(idLoca);
-            locaRepo.remove(loca);
+            Client.requestDeleteLocalizacao(idLoca);
             deletados++;
         }
 
@@ -96,30 +89,19 @@ public class LocalizacoesPresenter extends Presenter<LocalizacoesView> {
                     "Para alterar um elemento é necessário que apenas um esteja selecionado.");
         }
 
-        final LocalizacaoRepository locaRepo = new LocalizacaoRepository();
-        final Localizacao selectedLocalizacao = locaRepo
-                .getById(selectedLocaIds.get(0));
-        final LocalizacaoDTO selectedLocalizacaoDTO = new LocalizacaoDTO();
-        selectedLocalizacaoDTO.setValuesFromModel(selectedLocalizacao);
-
+        final Integer selectedLocaId = selectedLocaIds.get(0);
+        final LocalizacaoDTO selectedLoca = Client
+                .requestGetLocalizacaoById(selectedLocaId);
         final LocalizacaoView locaView = ViewFactory.createLocalizacao(
-                InvSCP.VIEW_IMPL, mainPresenter.getView(),
-                selectedLocalizacaoDTO, false);
+                mainPresenter.getView(), selectedLoca, false);
         final LocalizacaoPresenter locaPresenter = new LocalizacaoPresenter(
                 locaView, mainPresenter, this);
         locaView.setVisible(true);
     }
 
     public void updateLocalizacoes() {
-        final LocalizacaoRepository locaRepo = new LocalizacaoRepository();
-        final List<Localizacao> locas = locaRepo.getAll();
-        final List<LocalizacaoDTO> locasDTOs = new ArrayList<LocalizacaoDTO>();
-        for (final Localizacao l : locas) {
-            final LocalizacaoDTO locaDTO = new LocalizacaoDTO();
-            locaDTO.setValuesFromModel(l);
-            locasDTOs.add(locaDTO);
-        }
-        view.updateLocalizacoes(locasDTOs);
+        final List<LocalizacaoDTO> locas = Client.requestGetLocalizacoes();
+        view.updateLocalizacoes(locas);
     }
 
 }

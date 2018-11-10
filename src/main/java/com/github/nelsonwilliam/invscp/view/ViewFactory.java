@@ -9,6 +9,7 @@ import com.github.nelsonwilliam.invscp.model.dto.FuncionarioDTO;
 import com.github.nelsonwilliam.invscp.model.dto.LocalizacaoDTO;
 import com.github.nelsonwilliam.invscp.model.dto.PredioDTO;
 import com.github.nelsonwilliam.invscp.model.dto.SalaDTO;
+import com.github.nelsonwilliam.invscp.util.ClientSettings;
 import com.github.nelsonwilliam.invscp.view.swing.DepartamentoSwingView;
 import com.github.nelsonwilliam.invscp.view.swing.DepartamentosSwingView;
 import com.github.nelsonwilliam.invscp.view.swing.FuncionarioSwingView;
@@ -25,10 +26,9 @@ import com.github.nelsonwilliam.invscp.view.swing.SalasSwingView;
 
 public class ViewFactory {
 
-    public static DepartamentosView createDepartamentos(
-            final ViewImplementation impl) {
+    public static DepartamentosView createDepartamentos() {
 
-        switch (impl) {
+        switch (ClientSettings.VIEW_IMPL) {
             case SWING:
                 return new DepartamentosSwingView();
             default:
@@ -36,13 +36,12 @@ public class ViewFactory {
         }
     }
 
-    public static DepartamentoView createDepartamento(
-            final ViewImplementation impl, final MainView main,
+    public static DepartamentoView createDepartamento(final MainView main,
             final DepartamentoDTO dept, final boolean isAddition,
             final List<FuncionarioDTO> chefes,
             final List<FuncionarioDTO> chefesSubsts) {
 
-        switch (impl) {
+        switch (ClientSettings.VIEW_IMPL) {
             case SWING:
                 return new DepartamentoSwingView((JFrame) main, dept,
                         isAddition, chefes, chefesSubsts);
@@ -51,10 +50,9 @@ public class ViewFactory {
         }
     }
 
-    public static FuncionariosView createFuncionarios(
-            final ViewImplementation impl) {
+    public static FuncionariosView createFuncionarios() {
 
-        switch (impl) {
+        switch (ClientSettings.VIEW_IMPL) {
             case SWING:
                 return new FuncionariosSwingView();
             default:
@@ -62,12 +60,11 @@ public class ViewFactory {
         }
     }
 
-    public static FuncionarioView createFuncionario(
-            final ViewImplementation impl, final MainView main,
+    public static FuncionarioView createFuncionario(final MainView main,
             final FuncionarioDTO func, final boolean isAddition,
             final List<DepartamentoDTO> departamentos) {
 
-        switch (impl) {
+        switch (ClientSettings.VIEW_IMPL) {
             case SWING:
                 return new FuncionarioSwingView((JFrame) main, func, isAddition,
                         departamentos);
@@ -76,11 +73,10 @@ public class ViewFactory {
         }
     }
 
-    public static LocalizacaoView createLocalizacao(
-            final ViewImplementation impl, final MainView main,
+    public static LocalizacaoView createLocalizacao(final MainView main,
             final LocalizacaoDTO loca, final boolean isAddition) {
 
-        switch (impl) {
+        switch (ClientSettings.VIEW_IMPL) {
             case SWING:
                 return new LocalizacaoSwingView((JFrame) main, loca,
                         isAddition);
@@ -89,10 +85,9 @@ public class ViewFactory {
         }
     }
 
-    public static LocalizacoesView createLocalizacoes(
-            final ViewImplementation impl) {
+    public static LocalizacoesView createLocalizacoes() {
 
-        switch (impl) {
+        switch (ClientSettings.VIEW_IMPL) {
             case SWING:
                 return new LocalizacoesSwingView();
             default:
@@ -100,10 +95,9 @@ public class ViewFactory {
         }
     }
 
-    public static LoginView createLogin(final ViewImplementation impl,
-            final MainView main) {
+    public static LoginView createLogin(final MainView main) {
 
-        switch (impl) {
+        switch (ClientSettings.VIEW_IMPL) {
             case SWING:
                 return new LoginSwingView((JFrame) main);
             default:
@@ -111,10 +105,9 @@ public class ViewFactory {
         }
     }
 
-    public static MainView createMain(final ViewImplementation impl,
-            final MenuView menu) {
+    public static MainView createMain(final MenuView menu) {
 
-        switch (impl) {
+        switch (ClientSettings.VIEW_IMPL) {
             case SWING:
                 return new MainSwingView(menu);
             default:
@@ -122,9 +115,9 @@ public class ViewFactory {
         }
     }
 
-    public static MenuView createMenu(final ViewImplementation impl) {
+    public static MenuView createMenu() {
 
-        switch (impl) {
+        switch (ClientSettings.VIEW_IMPL) {
             case SWING:
                 return new MenuSwingView();
             default:
@@ -132,9 +125,9 @@ public class ViewFactory {
         }
     }
 
-    public static PrediosView createPredios(final ViewImplementation impl) {
+    public static PrediosView createPredios() {
 
-        switch (impl) {
+        switch (ClientSettings.VIEW_IMPL) {
             case SWING:
                 return new PrediosSwingView();
             default:
@@ -142,11 +135,11 @@ public class ViewFactory {
         }
     }
 
-    public static PredioView createPredio(final ViewImplementation impl,
-            final MainView main, final PredioDTO predio,
-            final boolean isAddition, final List<LocalizacaoDTO> locas) {
+    public static PredioView createPredio(final MainView main,
+            final PredioDTO predio, final boolean isAddition,
+            final List<LocalizacaoDTO> locas) {
 
-        switch (impl) {
+        switch (ClientSettings.VIEW_IMPL) {
             case SWING:
                 return new PredioSwingView((JFrame) main, predio, isAddition,
                         locas);
@@ -155,9 +148,9 @@ public class ViewFactory {
         }
     }
 
-    public static SalasView createSalas(final ViewImplementation impl) {
+    public static SalasView createSalas() {
 
-        switch (impl) {
+        switch (ClientSettings.VIEW_IMPL) {
             case SWING:
                 return new SalasSwingView();
             default:
@@ -165,12 +158,11 @@ public class ViewFactory {
         }
     }
 
-    public static SalaView createSala(final ViewImplementation impl,
-            final MainView main, final SalaDTO sala, final boolean isAddition,
-            final List<PredioDTO> predios,
+    public static SalaView createSala(final MainView main, final SalaDTO sala,
+            final boolean isAddition, final List<PredioDTO> predios,
             final List<DepartamentoDTO> departamentos) {
 
-        switch (impl) {
+        switch (ClientSettings.VIEW_IMPL) {
             case SWING:
                 return new SalaSwingView((JFrame) main, sala, isAddition,
                         predios, departamentos);

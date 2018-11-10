@@ -4,10 +4,9 @@ import java.awt.event.ActionEvent;
 
 import com.github.nelsonwilliam.invscp.exception.IllegalInsertException;
 import com.github.nelsonwilliam.invscp.exception.IllegalUpdateException;
-import com.github.nelsonwilliam.invscp.model.Funcionario;
-import com.github.nelsonwilliam.invscp.model.Localizacao;
+import com.github.nelsonwilliam.invscp.model.dto.FuncionarioDTO;
 import com.github.nelsonwilliam.invscp.model.dto.LocalizacaoDTO;
-import com.github.nelsonwilliam.invscp.model.repository.LocalizacaoRepository;
+import com.github.nelsonwilliam.invscp.util.Client;
 import com.github.nelsonwilliam.invscp.view.LocalizacaoView;
 
 public class LocalizacaoPresenter extends Presenter<LocalizacaoView> {
@@ -31,46 +30,44 @@ public class LocalizacaoPresenter extends Presenter<LocalizacaoView> {
     }
 
     private void onConfirmar() {
-        final Funcionario usuario = mainPresenter.getUsuario();
+        final FuncionarioDTO usuario = mainPresenter.getUsuario();
         final LocalizacaoDTO locaDTO = view.getLocalizacao();
-        final Localizacao loca = locaDTO == null ? null : locaDTO.toModel();
 
-        if (loca.getId() == null) {
-            onConfirmarAdicao(usuario, loca);
+        if (locaDTO == null || locaDTO.getId() == null) {
+            onConfirmarAdicao(usuario, locaDTO);
         } else {
-            onConfirmarAtualizacao(usuario, loca.getId(), loca);
+            onConfirmarAtualizacao(usuario, locaDTO.getId(), locaDTO);
         }
     }
 
-    private void onConfirmarAdicao(final Funcionario usuario,
-            final Localizacao locaNova) {
+    private void onConfirmarAdicao(final FuncionarioDTO usuario,
+            final LocalizacaoDTO locaNova) {
 
         try {
-            Localizacao.validarInserir(usuario, locaNova);
+            Client.requestValidarInserirLocalizacao(usuario, locaNova);
         } catch (final IllegalInsertException e) {
             view.showError(e.getMessage());
             return;
         }
 
-        final LocalizacaoRepository locaRepo = new LocalizacaoRepository();
-        locaRepo.add(locaNova);
+        Client.requestAddLocalizacao(locaNova);
         view.showSucesso();
         view.close();
         locasPresenter.updateLocalizacoes();
     }
 
-    private void onConfirmarAtualizacao(final Funcionario usuario,
-            final Integer idLocaAnterior, final Localizacao locaAtualizada) {
+    private void onConfirmarAtualizacao(final FuncionarioDTO usuario,
+            final Integer idLocaAnterior, final LocalizacaoDTO locaAtualizada) {
 
         try {
-            Localizacao.validarAlterar(usuario, idLocaAnterior, locaAtualizada);
+            Client.requestValidarAlterarLocalizacao(usuario, idLocaAnterior,
+                    locaAtualizada);
         } catch (final IllegalUpdateException e) {
             view.showError(e.getMessage());
             return;
         }
 
-        final LocalizacaoRepository locaRepo = new LocalizacaoRepository();
-        locaRepo.update(locaAtualizada);
+        Client.requestUpdateLocalizacao(locaAtualizada);
         view.showSucesso();
         view.close();
         locasPresenter.updateLocalizacoes();

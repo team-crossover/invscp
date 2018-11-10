@@ -1,17 +1,13 @@
 package com.github.nelsonwilliam.invscp.presenter;
 
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
 import java.util.List;
 
-import com.github.nelsonwilliam.invscp.InvSCP;
 import com.github.nelsonwilliam.invscp.exception.IllegalDeleteException;
-import com.github.nelsonwilliam.invscp.model.Funcionario;
-import com.github.nelsonwilliam.invscp.model.Localizacao;
-import com.github.nelsonwilliam.invscp.model.Predio;
+import com.github.nelsonwilliam.invscp.model.dto.FuncionarioDTO;
 import com.github.nelsonwilliam.invscp.model.dto.LocalizacaoDTO;
 import com.github.nelsonwilliam.invscp.model.dto.PredioDTO;
-import com.github.nelsonwilliam.invscp.model.repository.PredioRepository;
+import com.github.nelsonwilliam.invscp.util.Client;
 import com.github.nelsonwilliam.invscp.view.PredioView;
 import com.github.nelsonwilliam.invscp.view.PrediosView;
 import com.github.nelsonwilliam.invscp.view.ViewFactory;
@@ -42,20 +38,12 @@ public class PrediosPresenter extends Presenter<PrediosView> {
 
     @SuppressWarnings("unused")
     private void onAdicionarPredio() {
-        final Predio novoPredio = new Predio();
-        final PredioDTO novoPredioDTO = new PredioDTO();
-        novoPredioDTO.setValuesFromModel(novoPredio);
+        final PredioDTO novoPredio = new PredioDTO();
+        final List<LocalizacaoDTO> locas = Client
+                .requestGetPossiveisLocalizacoesParaPredio(novoPredio);
 
-        final List<Localizacao> locas = novoPredio.getPossiveisLocalizacoes();
-        final List<LocalizacaoDTO> locasDTOs = new ArrayList<LocalizacaoDTO>();
-        for (final Localizacao l : locas) {
-            final LocalizacaoDTO locaDTO = new LocalizacaoDTO();
-            locaDTO.setValuesFromModel(l);
-            locasDTOs.add(locaDTO);
-        }
-
-        final PredioView predioView = ViewFactory.createPredio(InvSCP.VIEW_IMPL,
-                mainPresenter.getView(), novoPredioDTO, true, locasDTOs);
+        final PredioView predioView = ViewFactory
+                .createPredio(mainPresenter.getView(), novoPredio, true, locas);
         final PredioPresenter predioPresenter = new PredioPresenter(predioView,
                 mainPresenter, this);
         predioView.setVisible(true);
@@ -73,24 +61,21 @@ public class PrediosPresenter extends Presenter<PrediosView> {
     }
 
     private void deletarPredios(final List<Integer> prediosIds) {
-        final Funcionario usuario = mainPresenter.getUsuario();
-        final PredioRepository predioRepo = new PredioRepository();
+        final FuncionarioDTO usuario = mainPresenter.getUsuario();
 
         int deletados = 0;
         for (int i = 0; i < prediosIds.size(); i++) {
             final Integer idPredio = prediosIds.get(i);
 
             try {
-                Predio.validarDeletar(usuario, idPredio);
+                Client.requestValidarDeletePredio(usuario, idPredio);
             } catch (final IllegalDeleteException e) {
                 view.showError(e.getMessage());
                 continue;
             }
 
-            final Predio predio = predioRepo.getById(idPredio);
-            if (predioRepo.remove(predio)) {
-                deletados++;
-            }
+            Client.requestDeletePredio(idPredio);
+            deletados++;
         }
 
         if (deletados > 0) {
@@ -107,38 +92,22 @@ public class PrediosPresenter extends Presenter<PrediosView> {
                     "Para alterar um elemento é necessário que apenas um esteja selecionado.");
         }
 
-        final PredioRepository predioRepo = new PredioRepository();
-        final Predio selectedPredio = predioRepo
-                .getById(selectedPredioIds.get(0));
-        final PredioDTO selectedPredioDTO = new PredioDTO();
-        selectedPredioDTO.setValuesFromModel(selectedPredio);
+        final Integer selectedPredioId = selectedPredioIds.get(0);
+        final PredioDTO selectedPredio = Client
+                .requestGetPredioById(selectedPredioId);
+        final List<LocalizacaoDTO> locas = Client
+                .requestGetPossiveisLocalizacoesParaPredio(selectedPredio);
 
-        final List<Localizacao> locas = selectedPredio
-                .getPossiveisLocalizacoes();
-        final List<LocalizacaoDTO> locasDTOs = new ArrayList<LocalizacaoDTO>();
-        for (final Localizacao l : locas) {
-            final LocalizacaoDTO locaDTO = new LocalizacaoDTO();
-            locaDTO.setValuesFromModel(l);
-            locasDTOs.add(locaDTO);
-        }
-
-        final PredioView predioView = ViewFactory.createPredio(InvSCP.VIEW_IMPL,
-                mainPresenter.getView(), selectedPredioDTO, false, locasDTOs);
+        final PredioView predioView = ViewFactory.createPredio(
+                mainPresenter.getView(), selectedPredio, false, locas);
         final PredioPresenter predioPresenter = new PredioPresenter(predioView,
                 mainPresenter, this);
         predioView.setVisible(true);
     }
 
     public void updatePredios() {
-        final PredioRepository predioRepo = new PredioRepository();
-        final List<Predio> predios = predioRepo.getAll();
-        final List<PredioDTO> prediosDTOs = new ArrayList<PredioDTO>();
-        for (final Predio p : predios) {
-            final PredioDTO predioDTO = new PredioDTO();
-            predioDTO.setValuesFromModel(p);
-            prediosDTOs.add(predioDTO);
-        }
-        view.updatePredios(prediosDTOs);
+        final List<PredioDTO> predios = Client.requestGetPredios();
+        view.updatePredios(predios);
     }
 
 }

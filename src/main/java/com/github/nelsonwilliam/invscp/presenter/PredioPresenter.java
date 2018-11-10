@@ -4,10 +4,9 @@ import java.awt.event.ActionEvent;
 
 import com.github.nelsonwilliam.invscp.exception.IllegalInsertException;
 import com.github.nelsonwilliam.invscp.exception.IllegalUpdateException;
-import com.github.nelsonwilliam.invscp.model.Funcionario;
-import com.github.nelsonwilliam.invscp.model.Predio;
+import com.github.nelsonwilliam.invscp.model.dto.FuncionarioDTO;
 import com.github.nelsonwilliam.invscp.model.dto.PredioDTO;
-import com.github.nelsonwilliam.invscp.model.repository.PredioRepository;
+import com.github.nelsonwilliam.invscp.util.Client;
 import com.github.nelsonwilliam.invscp.view.PredioView;
 
 public class PredioPresenter extends Presenter<PredioView> {
@@ -31,47 +30,45 @@ public class PredioPresenter extends Presenter<PredioView> {
     }
 
     private void onConfirmar() {
-        final Funcionario usuario = mainPresenter.getUsuario();
+        final FuncionarioDTO usuario = mainPresenter.getUsuario();
         final PredioDTO predioDTO = view.getPredio();
-        final Predio predio = predioDTO == null ? null : predioDTO.toModel();
 
-        if (predio.getId() == null) {
-            onConfirmarAdicao(usuario, predio);
+        if (predioDTO == null || predioDTO.getId() == null) {
+            onConfirmarAdicao(usuario, predioDTO);
         } else {
-            onConfirmarAtualizacao(usuario, predio.getId(), predio);
+            onConfirmarAtualizacao(usuario, predioDTO.getId(), predioDTO);
         }
     }
 
-    private void onConfirmarAdicao(final Funcionario usuario,
-            final Predio predioNovo) {
+    private void onConfirmarAdicao(final FuncionarioDTO usuario,
+            final PredioDTO predioNovo) {
 
         try {
-            Predio.validarInserir(usuario, predioNovo);
+            Client.requestValidarInserirPredio(usuario, predioNovo);
         } catch (final IllegalInsertException e) {
             view.showError(e.getMessage());
             return;
         }
 
-        final PredioRepository predioRepo = new PredioRepository();
-        predioRepo.add(predioNovo);
+        Client.requestAddPredio(predioNovo);
         view.showSucesso();
         view.close();
         prediosPresenter.updatePredios();
 
     }
 
-    private void onConfirmarAtualizacao(final Funcionario usuario,
-            final Integer idPredioAnterior, final Predio predioAtualizado) {
+    private void onConfirmarAtualizacao(final FuncionarioDTO usuario,
+            final Integer idPredioAnterior, final PredioDTO predioAtualizado) {
 
         try {
-            Predio.validarAlterar(usuario, idPredioAnterior, predioAtualizado);
+            Client.requestValidarAlterarPredio(usuario, idPredioAnterior,
+                    predioAtualizado);
         } catch (final IllegalUpdateException e) {
             view.showError(e.getMessage());
             return;
         }
 
-        final PredioRepository predioRepo = new PredioRepository();
-        predioRepo.update(predioAtualizado);
+        Client.requestUpdatePredio(predioAtualizado);
         view.showSucesso();
         view.close();
         prediosPresenter.updatePredios();

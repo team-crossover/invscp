@@ -4,11 +4,13 @@ import com.github.nelsonwilliam.invscp.exception.CRUDException;
 import com.github.nelsonwilliam.invscp.exception.IllegalDeleteException;
 import com.github.nelsonwilliam.invscp.exception.IllegalInsertException;
 import com.github.nelsonwilliam.invscp.exception.IllegalUpdateException;
+import com.github.nelsonwilliam.invscp.model.dto.FuncionarioDTO;
+import com.github.nelsonwilliam.invscp.model.dto.LocalizacaoDTO;
 import com.github.nelsonwilliam.invscp.model.enums.UFEnum;
 import com.github.nelsonwilliam.invscp.model.repository.LocalizacaoRepository;
 import com.github.nelsonwilliam.invscp.model.repository.PredioRepository;
 
-public class Localizacao implements Model {
+public class Localizacao implements Model<LocalizacaoDTO> {
 
     private static final long serialVersionUID = 6358078005778674613L;
 
@@ -24,6 +26,28 @@ public class Localizacao implements Model {
 
     private UFEnum uf = null;
 
+    @Override
+    public void setValuesFromDTO(final LocalizacaoDTO dto) {
+        setId(dto.getId());
+        setNome(dto.getNome());
+        setEndereco(dto.getEndereco());
+        setCep(dto.getCep());
+        setCidade(dto.getCidade());
+        setUf(dto.getUf());
+    }
+
+    @Override
+    public LocalizacaoDTO toDTO() {
+        final LocalizacaoDTO dto = new LocalizacaoDTO();
+        dto.setId(id);
+        dto.setNome(nome);
+        dto.setEndereco(endereco);
+        dto.setCep(cep);
+        dto.setCidade(cidade);
+        dto.setUf(uf);
+        return dto;
+    }
+
     /**
      * Verifica se o elemento a ser deletado é válido, de acordo com as regras
      * de negócio. Caso seja válido, nada acontece. Caso não seja válido, é
@@ -37,7 +61,7 @@ public class Localizacao implements Model {
      * @throws IllegalDeleteException Se não for possível inserir o novo
      *         elemento.
      */
-    public static void validarDeletar(final Funcionario usuario,
+    public static void validarDeletar(final FuncionarioDTO usuario,
             final Integer idLocalizacao) throws IllegalDeleteException {
 
         // ---------------
@@ -96,8 +120,8 @@ public class Localizacao implements Model {
      * @throws IllegalInsertException Se não for possível inserir o novo
      *         elemento.
      */
-    public static void validarInserir(final Funcionario usuario,
-            final Localizacao newLocaNova) throws IllegalInsertException {
+    public static void validarInserir(final FuncionarioDTO usuario,
+            final LocalizacaoDTO newLocaNova) throws IllegalInsertException {
 
         // ---------------
         // IDENTIFICADORES
@@ -153,8 +177,8 @@ public class Localizacao implements Model {
      * @throws IllegalUpdateException Se não for possível inserir o novo
      *         elemento.
      */
-    public static void validarAlterar(final Funcionario usuario,
-            final Integer idAntigaLoca, final Localizacao novaLoca)
+    public static void validarAlterar(final FuncionarioDTO usuario,
+            final Integer idAntigaLoca, final LocalizacaoDTO novaLoca)
             throws IllegalUpdateException {
 
         // ---------------
@@ -212,7 +236,7 @@ public class Localizacao implements Model {
      * Valida regras de negócio comuns tanto para inserção quanto para
      * alteração.
      */
-    private static void validarCampos(final Localizacao loca)
+    private static void validarCampos(final LocalizacaoDTO loca)
             throws CRUDException {
 
         if (loca.getNome() == null || loca.getNome().isEmpty()) {
