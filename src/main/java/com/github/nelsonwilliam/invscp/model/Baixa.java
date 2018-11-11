@@ -2,7 +2,9 @@ package com.github.nelsonwilliam.invscp.model;
 
 import java.time.LocalDate;
 
-public class Baixa {
+import com.github.nelsonwilliam.invscp.model.dto.BaixaDTO;
+
+public class Baixa implements Model<BaixaDTO> {
 
 	private Integer id = null;
 
@@ -62,6 +64,18 @@ public class Baixa {
 
 	public void setIdBem(Integer idBem) {
 		this.idBem = idBem;
+	}
+
+	@Override
+	public void setValuesFromDTO(BaixaDTO model) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public BaixaDTO toDTO() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
