@@ -2,7 +2,9 @@ package com.github.nelsonwilliam.invscp.model;
 
 import java.time.LocalDate;
 
-public class Bem {
+import com.github.nelsonwilliam.invscp.model.dto.BemDTO;
+
+public class Bem implements Model<BemDTO>{
 
 	private Integer id = null;
 
@@ -132,6 +134,18 @@ public class Bem {
 
 	public void setIdDepartamento(Integer idDepartamento) {
 		this.idDepartamento = idDepartamento;
+	}
+
+	@Override
+	public void setValuesFromDTO(BemDTO model) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public BemDTO toDTO() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
