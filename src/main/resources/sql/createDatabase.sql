@@ -60,7 +60,7 @@ CREATE TABLE bem (
 CREATE TABLE ordem_servico (
     id serial PRIMARY KEY,
     data_cadastro date NOT NULL,
-    data_conslusao date NOT NULL,
+    data_conclusao date NOT NULL,
     valor numeric(3, 2) NOT NULL,
     situacao character varying(255) NOT NULL
 );
@@ -89,11 +89,11 @@ ALTER TABLE departamento
     ADD COLUMN id_chefe_substituto integer references funcionario(id);
 
 ALTER TABLE ordem_servico
-    ADD COLUMN responsavel integer references funcionario(id);
+    ADD COLUMN id_funcionario integer references funcionario(id);
     ADD COLUMN id_bem integer references bem(id);
 
 ALTER TABLE baixa
-    ADD COLUMN responsavel integer references funcionario(id);
+    ADD COLUMN id_funcionario integer references funcionario(id);
     ADD COLUMN id_bem integer references bem(id);
 
 ALTER TABLE bem
