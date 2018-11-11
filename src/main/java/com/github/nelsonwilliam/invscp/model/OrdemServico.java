@@ -2,7 +2,9 @@ package com.github.nelsonwilliam.invscp.model;
 
 import java.time.LocalDate;
 
-public class OrdemServico {
+import com.github.nelsonwilliam.invscp.model.dto.OrdemServicoDTO;
+
+public class OrdemServico implements Model<OrdemServicoDTO> {
 
 	private Integer id = null;
 
@@ -72,5 +74,17 @@ public class OrdemServico {
 
 	public void setIdBem(Integer idBem) {
 		this.idBem = idBem;
+	}
+
+	@Override
+	public void setValuesFromDTO(OrdemServicoDTO model) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public OrdemServicoDTO toDTO() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
