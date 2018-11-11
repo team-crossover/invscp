@@ -43,6 +43,34 @@ CREATE TABLE departamento (
     de_patrimonio boolean NOT NULL
 );
 
+CREATE TABLE bem (
+    id serial PRIMARY KEY,
+    descricao character varying(255) NOT NULL,
+    numero_tombamento integer NOT NULL,
+    data_cadastro date NOT NULL,
+    data_aquisicao date NOT NULL,
+    numero_nota_fiscal character varying(30) NOT NULL,
+    especificacao character varying(255) NOT NULL,
+    garantia character varying(255) NOT NULL,
+    valor_compra numeric(6, 2) NOT NULL,
+    situacao character varying(255) NOT NULL
+);
+
+CREATE TABLE ordem_servico (
+    id serial PRIMARY KEY,
+    data_cadastro date NOT NULL,
+    data_conslusao date NOT NULL,
+    valor numeric(3, 2) NOT NULL,
+    situacao character varying(255) NOT NULL
+);
+
+CREATE TABLE baixa (
+    id serial PRIMARY KEY,
+    data date NOT NULL,
+    motivo character varying(255) NOT NULL,
+    observacoes character varying(255) NOT NULL
+);
+
 /* Adiciona as chaves estrangeiras */
 
 ALTER TABLE predio
