@@ -60,7 +60,7 @@ CREATE TABLE bem (
 CREATE TABLE ordem_servico (
     id serial PRIMARY KEY,
     data_cadastro date NOT NULL,
-    data_conslusao date NOT NULL,
+    data_conclusao date NOT NULL,
     valor numeric(3, 2) NOT NULL,
     situacao character varying(255) NOT NULL
 );
