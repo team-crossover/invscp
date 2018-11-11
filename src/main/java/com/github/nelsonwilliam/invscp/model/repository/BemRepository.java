@@ -10,8 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.nelsonwilliam.invscp.model.Bem;
-import com.github.nelsonwilliam.invscp.model.Departamento;
-import com.github.nelsonwilliam.invscp.model.Model;
 import com.github.nelsonwilliam.invscp.util.DatabaseConnection;
 
 public class BemRepository implements Repository<Bem> {
@@ -42,7 +40,7 @@ public class BemRepository implements Repository<Bem> {
                 final Integer idDepartamento = (Integer) r.getObject("id_departamento");
 
                 final Bem bem = new Bem();
-                bem.setId(idDepartamento);
+                bem.setId(id);
                 bem.setDescricao(descricao);
                 bem.setNumeroTombamento(numTombamento);
                 bem.setDataAquisicao(dataAquisicao);
@@ -181,11 +179,7 @@ public class BemRepository implements Repository<Bem> {
         }
         return added;
 	}
-/**
- * "INSERT INTO bem(id,descricao,numero_tombamento,data_cadastro,data_aquisicao,"
-                        + "numero_nota_fiscal,especificacao,garantia,marca,valor_compra,situacao,"
-                        + "id_sala,id_departamento) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
- */
+
 	@Override
 	public boolean update(Bem item) {
 		final Connection connection = DatabaseConnection.getConnection();
