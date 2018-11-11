@@ -52,6 +52,7 @@ CREATE TABLE bem (
     numero_nota_fiscal character varying(30) NOT NULL,
     especificacao character varying(255) NOT NULL,
     garantia character varying(255) NOT NULL,
+    marca character varying(255) NOT NULL,
     valor_compra numeric(6, 2) NOT NULL,
     situacao character varying(255) NOT NULL
 );
@@ -86,6 +87,18 @@ ALTER TABLE funcionario
 ALTER TABLE departamento
     ADD COLUMN id_chefe integer references funcionario(id),
     ADD COLUMN id_chefe_substituto integer references funcionario(id);
+
+ALTER TABLE ordem_servico
+    ADD COLUMN responsavel integer references funcionario(id);
+    ADD COLUMN id_bem integer references bem(id);
+
+ALTER TABLE baixa
+    ADD COLUMN responsavel integer references funcionario(id);
+    ADD COLUMN id_bem integer references bem(id);
+
+ALTER TABLE bem
+    ADD COLUMN id_sala integer references sala(id);
+    ADD COLUMN id_departamento integer references departamento(id);
 
 /* Adiciona os valores iniciais */
 
