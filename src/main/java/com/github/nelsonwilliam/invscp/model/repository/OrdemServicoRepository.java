@@ -54,7 +54,7 @@ public class OrdemServicoRepository implements Repository<OrdemServico> {
         OrdemServico ordem = null;
         try {
             final PreparedStatement s = connection.prepareStatement(
-                    "SELECT id,data_cadastro,data_conclusao,valor,situacao,id_funcionario,id_bem FROM departamento WHERE id=?");
+                    "SELECT id,data_cadastro,data_conclusao,valor,situacao,id_funcionario,id_bem FROM ordem_servico WHERE id=?");
             s.setObject(1, id, Types.INTEGER);
 
             final ResultSet r = s.executeQuery();
