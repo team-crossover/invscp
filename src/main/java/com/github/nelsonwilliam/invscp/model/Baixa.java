@@ -3,79 +3,107 @@ package com.github.nelsonwilliam.invscp.model;
 import java.time.LocalDate;
 
 import com.github.nelsonwilliam.invscp.model.dto.BaixaDTO;
+import com.github.nelsonwilliam.invscp.model.repository.BemRepository;
+import com.github.nelsonwilliam.invscp.model.repository.FuncionarioRepository;
 
 public class Baixa implements Model<BaixaDTO> {
 
-	private Integer id = null;
+    private static final long serialVersionUID = 3942513871242698053L;
 
-	private LocalDate data = null;
+    private Integer id = null;
 
-	private String motivo = null;
+    private LocalDate data = null;
 
-	private String observacoes = null;
+    private String motivo = null;
 
-	private Integer idFuncionario = null;
+    private String observacoes = null;
 
-	private Integer idBem = null;
+    private Integer idFuncionario = null;
 
-	public Integer getId() {
-		return id;
-	}
+    private Integer idBem = null;
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    @Override
+    public void setValuesFromDTO(BaixaDTO dto) {
+        setData(dto.getData());
+        setId(dto.getId());
+        setMotivo(dto.getMotivo());
+        setObservacoes(dto.getObservacoes());
+        if (dto.getBem() != null) {
+            setIdBem(dto.getBem().getId());
+        }
+        if (dto.getFuncionario() != null) {
+            setIdFuncionario(dto.getFuncionario().getId());
+        }
+    }
 
-	public LocalDate getData() {
-		return data;
-	}
+    @Override
+    public BaixaDTO toDTO() {
+        final BaixaDTO dto = new BaixaDTO();
+        dto.setData(data);
+        dto.setId(id);
+        dto.setMotivo(motivo);
+        dto.setObservacoes(observacoes);
+        if (idFuncionario != null) {
+            final FuncionarioRepository repo = new FuncionarioRepository();
+            final Funcionario func = repo.getById(idFuncionario);
+            func.setIdDepartamento(null);
+            dto.setFuncionario(func == null ? null : func.toDTO());
+        }
+        if (idBem != null) {
+            final BemRepository repo = new BemRepository();
+            final Bem bem = repo.getById(idFuncionario);
+            bem.setIdDepartamento(null);
+            dto.setBem(bem == null ? null : bem.toDTO());
+        }
+        return dto;
+    }
 
-	public void setData(LocalDate data) {
-		this.data = data;
-	}
+    public Integer getId() {
+        return id;
+    }
 
-	public String getMotivo() {
-		return motivo;
-	}
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	public void setMotivo(String motivo) {
-		this.motivo = motivo;
-	}
+    public LocalDate getData() {
+        return data;
+    }
 
-	public String getObservacoes() {
-		return observacoes;
-	}
+    public void setData(LocalDate data) {
+        this.data = data;
+    }
 
-	public void setObservacoes(String observacoes) {
-		this.observacoes = observacoes;
-	}
+    public String getMotivo() {
+        return motivo;
+    }
 
-	public Integer getIdFuncionario() {
-		return idFuncionario;
-	}
+    public void setMotivo(String motivo) {
+        this.motivo = motivo;
+    }
 
-	public void setIdFuncionario(Integer idFuncionario) {
-		this.idFuncionario = idFuncionario;
-	}
+    public String getObservacoes() {
+        return observacoes;
+    }
 
-	public Integer getIdBem() {
-		return idBem;
-	}
+    public void setObservacoes(String observacoes) {
+        this.observacoes = observacoes;
+    }
 
-	public void setIdBem(Integer idBem) {
-		this.idBem = idBem;
-	}
+    public Integer getIdFuncionario() {
+        return idFuncionario;
+    }
 
-	@Override
-	public void setValuesFromDTO(BaixaDTO model) {
-		// TODO Auto-generated method stub
-		
-	}
+    public void setIdFuncionario(Integer idFuncionario) {
+        this.idFuncionario = idFuncionario;
+    }
 
-	@Override
-	public BaixaDTO toDTO() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public Integer getIdBem() {
+        return idBem;
+    }
+
+    public void setIdBem(Integer idBem) {
+        this.idBem = idBem;
+    }
 
 }
