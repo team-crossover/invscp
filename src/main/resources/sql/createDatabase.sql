@@ -72,6 +72,13 @@ CREATE TABLE baixa (
     observacoes character varying(255) NOT NULL
 );
 
+CREATE TABLE grupo_material (
+    id serial PRIMARY KEY,
+    nome character varying(255) NOT NULL,
+    vida_util integer NOT NULL,
+    depreciacao numeric(3, 3) NOT NULL
+);
+
 /* Adiciona as chaves estrangeiras */
 
 ALTER TABLE predio
@@ -99,6 +106,7 @@ ALTER TABLE baixa
 ALTER TABLE bem
     ADD COLUMN id_sala integer references sala(id);
     ADD COLUMN id_departamento integer references departamento(id);
+    ADD COLUMN id_grupo_material integer references grupo_material(id);
 
 /* Adiciona os valores iniciais */
 
