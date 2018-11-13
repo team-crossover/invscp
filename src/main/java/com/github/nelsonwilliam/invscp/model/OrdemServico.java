@@ -103,6 +103,14 @@ public class OrdemServico implements Model<OrdemServicoDTO> {
         this.situacao = situacao;
     }
 
+    public final String getSituacaoString() {
+    	return this.situacao.toString();
+    }
+
+    public final void setSituacaoString(final String sit) {
+    	this.situacao = OSsituacaoEnum.valueOf(sit);
+    }
+
     public Integer getIdFuncionario() {
         return idFuncionario;
     }
