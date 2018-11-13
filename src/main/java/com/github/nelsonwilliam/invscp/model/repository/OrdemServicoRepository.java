@@ -36,7 +36,7 @@ public class OrdemServicoRepository implements Repository<OrdemServico> {
                 ordem.setDataCadastro(dataCadastro);
                 ordem.setDataConclusao(dataConclusao);
                 ordem.setValor(valor);
-                ordem.setSituacao(situacao);
+                ordem.setSituacaoString(situacao);
                 ordem.setIdFuncionario(idFuncionario);
                 ordem.setIdBem(idBem);
                 ordens.add(ordem);
@@ -71,7 +71,7 @@ public class OrdemServicoRepository implements Repository<OrdemServico> {
                 ordem.setDataCadastro(dataCadastro);
                 ordem.setDataConclusao(dataConclusao);
                 ordem.setValor(valor);
-                ordem.setSituacao(situacao);
+                ordem.setSituacaoString(situacao);
                 ordem.setIdFuncionario(idFuncionario);
                 ordem.setIdBem(idBem);
             }
@@ -95,7 +95,7 @@ public class OrdemServicoRepository implements Repository<OrdemServico> {
                 s.setObject(1, item.getDataCadastro(), Types.DATE);
                 s.setObject(2, item.getDataConclusao(), Types.DATE);
                 s.setObject(3, item.getValor(), Types.FLOAT);
-                s.setObject(4, item.getSituacao(), Types.VARCHAR);
+                s.setObject(4, item.getSituacaoString(), Types.VARCHAR);
                 s.setObject(5, item.getIdFuncionario(), Types.INTEGER);
                 s.setObject(6, item.getIdBem(), Types.INTEGER);
                 s.executeUpdate();
@@ -114,7 +114,7 @@ public class OrdemServicoRepository implements Repository<OrdemServico> {
                 s.setObject(2, item.getDataCadastro(), Types.DATE);
                 s.setObject(3, item.getDataConclusao(), Types.DATE);
                 s.setObject(4, item.getValor(), Types.FLOAT);
-                s.setObject(5, item.getSituacao(), Types.VARCHAR);
+                s.setObject(5, item.getSituacaoString(), Types.VARCHAR);
                 s.setObject(6, item.getIdFuncionario(), Types.INTEGER);
                 s.setObject(7, item.getIdBem(), Types.INTEGER);
                 s.executeUpdate();
@@ -151,7 +151,7 @@ public class OrdemServicoRepository implements Repository<OrdemServico> {
             s.setObject(1, item.getDataCadastro(), Types.DATE);
             s.setObject(2, item.getDataConclusao(), Types.DATE);
             s.setObject(3, item.getValor(), Types.FLOAT);
-            s.setObject(4, item.getSituacao(), Types.VARCHAR);
+            s.setObject(4, item.getSituacaoString(), Types.VARCHAR);
             s.setObject(5, item.getIdFuncionario(), Types.INTEGER);
             s.setObject(6, item.getIdBem(), Types.INTEGER);
             s.executeUpdate();
