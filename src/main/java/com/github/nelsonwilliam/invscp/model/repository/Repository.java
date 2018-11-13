@@ -5,13 +5,13 @@ import java.util.List;
 import com.github.nelsonwilliam.invscp.model.Model;
 
 /**
- * Repositories são responsáveis por fazer a comunicação com o Banco de dados, oferecendo todas as
- * consultas necessárias acerca de determinado Model, com base nas necessidades das regras de
- * negócio.
+ * Repositories são responsáveis por fazer a comunicação com o Banco de dados,
+ * oferecendo todas as consultas necessárias acerca de determinado Model, com
+ * base nas necessidades das regras de negócio.
  *
  * @param <M> Classe do Model atendido por este Repository.
  */
-public interface Repository<M extends Model> {
+public interface Repository<M extends Model<?>> {
 
     /**
      * Obtém todos os itens.
@@ -30,7 +30,8 @@ public interface Repository<M extends Model> {
 
     /**
      * Adiciona um novo item ao Repository. <br>
-     * Caso o ID do item não seja especificado, o banco de dados gerará um ID automáticamente.
+     * Caso o ID do item não seja especificado, o banco de dados gerará um ID
+     * automáticamente.
      *
      * @param item Item a ser adicionado.
      * @return True se o item foi adicionado com sucesso.
@@ -39,10 +40,12 @@ public interface Repository<M extends Model> {
 
     /**
      * Adiciona múltiplos novos itens ao Repository. <br>
-     * Caso o ID de algum item não seja especificado, o banco de dados gerará um ID automáticamente.
+     * Caso o ID de algum item não seja especificado, o banco de dados gerará um
+     * ID automáticamente.
      *
      * @param items Itens a serem adicionados.
-     * @return True se pelo menos um dos itens tiver sido adicionado com sucesso.
+     * @return True se pelo menos um dos itens tiver sido adicionado com
+     *         sucesso.
      */
     boolean add(Iterable<M> items);
 
@@ -58,7 +61,8 @@ public interface Repository<M extends Model> {
      * Atualiza múltiplos novos itens do Repository.
      *
      * @param items Itens a serem atualizados.
-     * @return True se pelo menos um dos itens tiver sido atualizado com sucesso.
+     * @return True se pelo menos um dos itens tiver sido atualizado com
+     *         sucesso.
      */
     boolean update(Iterable<M> items);
 

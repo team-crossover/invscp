@@ -1,4 +1,4 @@
-/* Cria as tabelas e valores iniciais do InvSCP */
+﻿/* Cria as tabelas e valores iniciais do InvSCP */
 
 /* Deleta as tabelas anteriores */
 
@@ -162,6 +162,3 @@ ALTER TABLE predio
 ALTER TABLE sala
     ALTER COLUMN id_predio SET NOT NULL,
     ALTER COLUMN id_departamento SET NOT NULL;
-    
-ALTER TABLE departamento
-    ALTER COLUMN id_chefe SET NOT NULL;

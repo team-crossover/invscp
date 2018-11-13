@@ -2,6 +2,8 @@ package com.github.nelsonwilliam.invscp.model.dto;
 
 import java.time.LocalDate;
 
+import com.github.nelsonwilliam.invscp.model.enums.BemSituacaoEnum;
+
 public class BemDTO implements DTO {
 
     private Integer id = null;
@@ -18,13 +20,13 @@ public class BemDTO implements DTO {
 
     private String especificacao = null;
 
-    private String garantia = null;
+    private LocalDate garantia = null;
 
     private String marca = null;
 
     private Float valorCompra = null;
 
-    private String situacao = null;
+    private BemSituacaoEnum situacao = null;
 
     private GrupoMaterialDTO grupoMaterial = null;
 
@@ -88,11 +90,11 @@ public class BemDTO implements DTO {
         this.especificacao = especificacao;
     }
 
-    public final String getGarantia() {
+    public final LocalDate getGarantia() {
         return garantia;
     }
 
-    public final void setGarantia(String garantia) {
+    public final void setGarantia(LocalDate garantia) {
         this.garantia = garantia;
     }
 
@@ -112,11 +114,11 @@ public class BemDTO implements DTO {
         this.valorCompra = valorCompra;
     }
 
-    public final String getSituacao() {
+    public final BemSituacaoEnum getSituacao() {
         return situacao;
     }
 
-    public final void setSituacao(String situacao) {
+    public final void setSituacao(BemSituacaoEnum situacao) {
         this.situacao = situacao;
     }
 

@@ -1,10 +1,21 @@
 package com.github.nelsonwilliam.invscp.model;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 
+import com.github.nelsonwilliam.invscp.exception.CRUDException;
+import com.github.nelsonwilliam.invscp.exception.IllegalDeleteException;
+import com.github.nelsonwilliam.invscp.exception.IllegalInsertException;
+import com.github.nelsonwilliam.invscp.exception.IllegalUpdateException;
 import com.github.nelsonwilliam.invscp.model.dto.BemDTO;
+import com.github.nelsonwilliam.invscp.model.dto.FuncionarioDTO;
+import com.github.nelsonwilliam.invscp.model.enums.BemSituacaoEnum;
+import com.github.nelsonwilliam.invscp.model.repository.BaixaRepository;
+import com.github.nelsonwilliam.invscp.model.repository.BemRepository;
 import com.github.nelsonwilliam.invscp.model.repository.DepartamentoRepository;
 import com.github.nelsonwilliam.invscp.model.repository.GrupoMaterialRepository;
+import com.github.nelsonwilliam.invscp.model.repository.OrdemServicoRepository;
 import com.github.nelsonwilliam.invscp.model.repository.SalaRepository;
 
 public class Bem implements Model<BemDTO> {
@@ -25,13 +36,13 @@ public class Bem implements Model<BemDTO> {
 
     private String especificacao = null;
 
-    private String garantia = null;
+    private LocalDate garantia = null;
 
     private String marca = null;
 
     private Float valorCompra = null;
 
-    private String situacao = null;
+    private BemSituacaoEnum situacao = null;
 
     private Integer idGrupoMaterial = null;
 
@@ -96,6 +107,136 @@ public class Bem implements Model<BemDTO> {
         return dto;
     }
 
+    public static void validarDeletar(final FuncionarioDTO usuario,
+            final Integer idBem) throws IllegalDeleteException {
+        // ---------------
+        // IDENTIFICADORES
+        // ---------------
+
+        if (idBem == null) {
+            throw new IllegalDeleteException(
+                    "Não é possível remover bens sem informar o ID.");
+        }
+
+        final BemRepository bemRepo = new BemRepository();
+        final Bem bem = bemRepo.getById(idBem);
+
+        if (bem == null) {
+            throw new IllegalDeleteException(
+                    "Não foi possível encontrar o bem desejado.");
+        }
+
+        // ------------------
+        // CONTROLE DE ACESSO
+        // ------------------
+        // Verificar controle de acesso (O usuário pode alterar esse tipo
+        // de elemento, com esses atributos? Etc.).
+        // Bens são podem ser editados por chefes de patrimônio ou por chefes do
+        // departamento ao qual pertencem
+        if (usuario == null) {
+            throw new IllegalDeleteException("Você não está logado.");
+        }
+        if (usuario.getDepartamento() == null) {
+            throw new IllegalDeleteException(
+                    "Você não possui um departamento.");
+        }
+        if (!usuario.getCargo().isChefeDePatrimonio()) {
+            if (!usuario.getCargo().isChefeDeDepartamento()) {
+                throw new IllegalDeleteException(
+                        "Você não tem permissão para deletar este item");
+            }
+            if (!usuario.getDepartamento().getId()
+                    .equals(bem.getIdDepartamento())) {
+                throw new IllegalDeleteException(
+                        "Você não tem permissão para deletar este item");
+            }
+        }
+
+        // TODO ...
+
+        // -----------------
+        // VALIDADE DE DADOS
+        // -----------------
+        // Verificar validade dos dados (Os novos atributos do elemento são
+        // válidos? Há itens que não podem ser modificados? Há itens
+        // repetidos/duplicados/já utilizados?Há itens obrigatórios faltando?
+        // Etc).
+
+        // TODO Verificar se alguma ordem de serviço ou beixa depende desse bem.
+        final BaixaRepository baixaRepo = new BaixaRepository();
+        if (baixaRepo.getByBem(bem).size() > 0) {
+            throw new IllegalDeleteException("Não é possível deletar o bem "
+                    + bem.getDescricao() + " pois ele já foi baixado.");
+        }
+
+        final OrdemServicoRepository osRepo = new OrdemServicoRepository();
+        if (osRepo.getByBem(bem).size() > 0) {
+            throw new IllegalDeleteException("Não é possível deletar o bem "
+                    + bem.getDescricao()
+                    + " pois ele possui ordens de serviço pendentes relaciondas a ele.");
+        }
+
+        Date date = new Date();
+        LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault())
+                .toLocalDate();
+        if (bem.getDataCadastro() != null && bem.getDataCadastro()
+                .getMonthValue() >= localDate.getMonthValue()) {
+            throw new IllegalDeleteException(
+                    "O prazo para remoção deste bem já expirou.");
+        }
+    }
+
+    public static void validarInserir() throws IllegalInsertException {
+    }
+
+    public static void validarAlterar() throws IllegalUpdateException {
+    }
+
+    private static void validarCampos(BemDTO bem) throws CRUDException {
+        if (bem.getDataAquisicao() == null) {
+            throw new CRUDException(
+                    "O 'data de aquisição' é um campo obrigatório.");
+        }
+        if (bem.getDataCadastro() == null) {
+            throw new CRUDException(
+                    "O 'data de cadastro' é um campo obrigatório.");
+        }
+        if (bem.getDepartamento() == null) {
+
+        }
+        if (bem.getDescricao() == null || bem.getDescricao().isEmpty()) {
+
+        }
+        if (bem.getEspecificacao() == null
+                || bem.getEspecificacao().isEmpty()) {
+
+        }
+        if (bem.getGarantia() == null) {
+
+        }
+        if (bem.getGrupoMaterial() == null) {
+
+        }
+        if (bem.getMarca() == null || bem.getMarca().isEmpty()) {
+
+        }
+        if (bem.getNumeroNotaFiscal() == null
+                || bem.getNumeroNotaFiscal().isEmpty()) {
+
+        }
+        if (bem.getNumeroTombamento() == null
+                || bem.getNumeroTombamento() < 0) {
+
+        }
+        if (bem.getSala() == null) {
+
+        }
+        if (bem.getSituacao() == null) {
+
+        }
+
+    }
+
     public final Integer getId() {
         return id;
     }
@@ -152,11 +293,11 @@ public class Bem implements Model<BemDTO> {
         this.especificacao = especificacao;
     }
 
-    public final String getGarantia() {
+    public final LocalDate getGarantia() {
         return garantia;
     }
 
-    public final void setGarantia(String garantia) {
+    public final void setGarantia(LocalDate garantia) {
         this.garantia = garantia;
     }
 
@@ -176,11 +317,11 @@ public class Bem implements Model<BemDTO> {
         this.valorCompra = valorCompra;
     }
 
-    public final String getSituacao() {
+    public final BemSituacaoEnum getSituacao() {
         return situacao;
     }
 
-    public final void setSituacao(String situacao) {
+    public final void setSituacao(BemSituacaoEnum situacao) {
         this.situacao = situacao;
     }
 
