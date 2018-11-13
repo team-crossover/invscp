@@ -27,7 +27,7 @@ public class BemRepository implements Repository<Bem> {
             while (r.next()) {
                 final Integer id = (Integer) r.getObject("id");
                 final String descricao = (String) r.getObject("descricao");
-                final Integer numTombamento = (Integer) r.getObject("numero_tombamento");
+                final Long numTombamento = (Long) r.getObject("numero_tombamento");
                 final LocalDate dataCadastro = (LocalDate) r.getObject("data_cadastro");
                 final LocalDate dataAquisicao = (LocalDate) r.getObject("data_aquisicao");
                 final String numNotaFiscal = (String) r.getObject("numero_nota_fiscal");
@@ -76,7 +76,7 @@ public class BemRepository implements Repository<Bem> {
             final ResultSet r = s.executeQuery();
             if (r.next()) {
             	final String descricao = (String) r.getObject("descricao");
-                final Integer numTombamento = (Integer) r.getObject("numero_tombamento");
+                final Long numTombamento = (Long) r.getObject("numero_tombamento");
                 final LocalDate dataCadastro = (LocalDate) r.getObject("data_cadastro");
                 final LocalDate dataAquisicao = (LocalDate) r.getObject("data_aquisicao");
                 final String numNotaFiscal = (String) r.getObject("numero_nota_fiscal");
