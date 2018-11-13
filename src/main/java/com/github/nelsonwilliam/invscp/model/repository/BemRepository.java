@@ -22,7 +22,7 @@ public class BemRepository implements Repository<Bem> {
             final PreparedStatement s = connection.prepareStatement(
                     "SELECT id,descricao,numero_tombamento,data_cadastro,data_aquisicao,"
                     + "numero_nota_fiscal,especificacao,garantia,marca,valor_compra,situacao,"
-                    + "id_sala,id_departamento FROM bem ORDER BY id");
+                    + "id_sala,id_departamento,id_grupo_material FROM bem ORDER BY id");
             final ResultSet r = s.executeQuery();
             while (r.next()) {
                 final Integer id = (Integer) r.getObject("id");
@@ -38,6 +38,7 @@ public class BemRepository implements Repository<Bem> {
                 final String situacao = (String) r.getObject("situacao");
                 final Integer idSala = (Integer) r.getObject("id_sala");
                 final Integer idDepartamento = (Integer) r.getObject("id_departamento");
+                final Integer idGrupoMaterial = (Integer) r.getObject("id_grupo_material");
 
                 final Bem bem = new Bem();
                 bem.setId(id);
@@ -53,6 +54,7 @@ public class BemRepository implements Repository<Bem> {
                 bem.setSituacao(situacao);
                 bem.setIdSala(idSala);
                 bem.setIdDepartamento(idDepartamento);
+                bem.setIdGrupoMaterial(idGrupoMaterial);
                 bens.add(bem);
             }
         } catch (final Exception e) {
@@ -70,7 +72,7 @@ public class BemRepository implements Repository<Bem> {
             final PreparedStatement s = connection.prepareStatement(
                     "SELECT id,descricao,numero_tombamento,data_cadastro,data_aquisicao,"
                     + "numero_nota_fiscal,especificacao,garantia,marca,valor_compra,situacao,"
-                    + "id_sala,id_departamento FROM bem WHERE id=?");
+                    + "id_sala,id_departamento,id_grupo_material FROM bem WHERE id=?");
             s.setObject(1, id, Types.INTEGER);
 
             final ResultSet r = s.executeQuery();
@@ -87,6 +89,7 @@ public class BemRepository implements Repository<Bem> {
                 final String situacao = (String) r.getObject("situacao");
                 final Integer idSala = (Integer) r.getObject("id_sala");
                 final Integer idDepartamento = (Integer) r.getObject("id_departamento");
+                final Integer idGrupoMaterial = (Integer) r.getObject("id_grupo_material");
 
                 bem = new Bem();
                 bem.setId(idDepartamento);
@@ -102,6 +105,7 @@ public class BemRepository implements Repository<Bem> {
                 bem.setSituacao(situacao);
                 bem.setIdSala(idSala);
                 bem.setIdDepartamento(idDepartamento);
+                bem.setIdGrupoMaterial(idGrupoMaterial);
             }
         } catch (final Exception e) {
             e.printStackTrace();
@@ -119,7 +123,7 @@ public class BemRepository implements Repository<Bem> {
                 s = connection.prepareStatement(
                         "INSERT INTO bem(descricao,numero_tombamento,data_cadastro,data_aquisicao,"
                         + "numero_nota_fiscal,especificacao,garantia,marca,valor_compra,situacao,"
-                        + "id_sala,id_departamento) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
+                        + "id_sala,id_departamento,id_grupo_material) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
                         Statement.RETURN_GENERATED_KEYS);
                 s.setObject(1, item.getDescricao(), Types.VARCHAR);
                 s.setObject(2, item.getNumeroTombamento(), Types.INTEGER);
@@ -133,6 +137,7 @@ public class BemRepository implements Repository<Bem> {
                 s.setObject(10, item.getSituacao(), Types.VARCHAR);
                 s.setObject(11, item.getIdSala(), Types.INTEGER);
                 s.setObject(12, item.getIdDepartamento(), Types.INTEGER);
+                s.setObject(13, item.getIdGrupoMaterial(), Types.INTEGER);
                 s.executeUpdate();
                 // Atualiza o item adicionado com seu novo ID
                 final ResultSet rs = s.getGeneratedKeys();
@@ -160,6 +165,7 @@ public class BemRepository implements Repository<Bem> {
                 s.setObject(11, item.getSituacao(), Types.VARCHAR);
                 s.setObject(12, item.getIdSala(), Types.INTEGER);
                 s.setObject(13, item.getIdDepartamento(), Types.INTEGER);
+                s.setObject(14, item.getIdGrupoMaterial(), Types.INTEGER);
                 s.executeUpdate();
             }
 
@@ -191,7 +197,7 @@ public class BemRepository implements Repository<Bem> {
             s = connection.prepareStatement(
                     "UPDATE bem SET descricao=?, numero_tombamento=?, data_cadastro=?, data_aquisicao=?,"
                     + "numero_nota_fiscal=?, especificacao=?, garantia=?, marca=?, valor_compra=?,"
-                    + "situacao=?, id_sala=?, id_departamento=? WHERE id=?");
+                    + "situacao=?, id_sala=?, id_departamento=?, id_grupo_material=? WHERE id=?");
             s.setObject(1, item.getDescricao(), Types.VARCHAR);
             s.setObject(2, item.getNumeroTombamento(), Types.INTEGER);
             s.setObject(3, item.getDataCadastro(), Types.DATE);
@@ -204,6 +210,7 @@ public class BemRepository implements Repository<Bem> {
             s.setObject(10, item.getSituacao(), Types.VARCHAR);
             s.setObject(11, item.getIdSala(), Types.INTEGER);
             s.setObject(12, item.getIdDepartamento(), Types.INTEGER);
+            s.setObject(13, item.getIdGrupoMaterial(), Types.INTEGER);
             s.executeUpdate();
             return true;
         } catch (final Exception e) {
