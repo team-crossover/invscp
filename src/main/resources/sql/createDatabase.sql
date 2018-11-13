@@ -46,7 +46,7 @@ CREATE TABLE departamento (
 CREATE TABLE bem (
     id serial PRIMARY KEY,
     descricao character varying(255) NOT NULL,
-    numero_tombamento integer NOT NULL,
+    numero_tombamento bigint NOT NULL,
     data_cadastro date NOT NULL,
     data_aquisicao date NOT NULL,
     numero_nota_fiscal character varying(30) NOT NULL,
