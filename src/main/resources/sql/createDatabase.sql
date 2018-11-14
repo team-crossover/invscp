@@ -121,8 +121,8 @@ ALTER TABLE bem
 
 ALTER TABLE movimentacao
     ADD COLUMN id_bem integer references bem(id);
-    ADD COLUMN sala_origem integer references sala(id);
-    ADD COLUMN sala_destino integer references sala(id);
+    ADD COLUMN id_sala_origem integer references sala(id);
+    ADD COLUMN id_sala_destino integer references sala(id);
 
 ALTER TABLE evento_movimentacao
     ADD COLUMN id_movimentacao integer references movimentacao(id);
