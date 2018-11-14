@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.nelsonwilliam.invscp.model.Baixa;
+import com.github.nelsonwilliam.invscp.model.Bem;
 import com.github.nelsonwilliam.invscp.util.DatabaseConnection;
 
 public class BaixaRepository implements Repository<Baixa> {
@@ -185,6 +186,37 @@ public class BaixaRepository implements Repository<Baixa> {
             removed |= remove(item);
         }
         return removed;
+	}
+
+	public List<Baixa> getByBem(Bem bem) {
+		final Connection connection = DatabaseConnection.getConnection();
+        final List<Baixa> baixas = new ArrayList<Baixa>();
+        try {
+            final PreparedStatement s = connection.prepareStatement(
+                    "SELECT id,data,motivo,observacoes,id_funcionario,id_bem FROM baixa WHERE id_bem=?");
+            s.setObject(6, bem.getId(), Types.INTEGER);
+            final ResultSet r = s.executeQuery();
+            while (r.next()) {
+                final Integer id = (Integer) r.getObject("id");
+                final LocalDate data = (LocalDate) r.getObject("data");
+                final String motivo = (String) r.getObject("motivo");
+                final String observacoes = (String) r.getObject("observacoes");
+                final Integer idBem = (Integer) r.getObject("id_bem");
+                final Integer idFuncionario = (Integer) r.getObject("id_funcionario");
+
+                final Baixa baixa = new Baixa();
+                baixa.setId(id);
+                baixa.setData(data);
+                baixa.setMotivo(motivo);
+                baixa.setObservacoes(observacoes);
+                baixa.setIdBem(idBem);
+                baixa.setIdFuncionario(idFuncionario);
+                baixas.add(baixa);
+            }
+        } catch (final Exception e) {
+            e.printStackTrace();
+        }
+        return baixas;
 	}
 
 
