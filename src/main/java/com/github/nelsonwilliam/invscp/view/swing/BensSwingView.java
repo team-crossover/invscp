@@ -27,6 +27,10 @@ import javax.swing.event.PopupMenuListener;
 import javax.swing.table.DefaultTableModel;
 
 import com.github.nelsonwilliam.invscp.model.dto.BemDTO;
+import com.github.nelsonwilliam.invscp.model.dto.DepartamentoDTO;
+import com.github.nelsonwilliam.invscp.model.dto.GrupoMaterialDTO;
+import com.github.nelsonwilliam.invscp.model.dto.SalaDTO;
+import com.github.nelsonwilliam.invscp.model.enums.BemSituacaoEnum;
 import com.github.nelsonwilliam.invscp.view.BensView;
 
 public class BensSwingView extends JPanel implements BensView {
@@ -40,6 +44,8 @@ public class BensSwingView extends JPanel implements BensView {
     private JPopupMenu popupMenu; // Popup exibido ao clicar com o botão direito
                                   // em um item da tabela
     private JMenuItem popupItemAlterar;
+    private JMenuItem popupItemBaixar;
+    private JMenuItem popupItemOrdemServico;
 
     public BensSwingView() {
         initialize();
@@ -69,9 +75,10 @@ public class BensSwingView extends JPanel implements BensView {
                 new String[] { "ID", "Número de tombamento", "Descrição",
                         "Situação", "Sala", "Departamento",
                         "Grupo Material" }) {
-            private static final long serialVersionUID = -5025798773394078963L;
-            Class<?>[] columnTypes = new Class[] { Integer.class, String.class,
-                    String.class };
+            private static final long serialVersionUID = -5025798173394078963L;
+            Class<?>[] columnTypes = new Class[] { Integer.class, Long.class,
+                    String.class, BemSituacaoEnum.class, SalaDTO.class,
+                    DepartamentoDTO.class, GrupoMaterialDTO.class };
 
             @Override
             public Class<?> getColumnClass(final int columnIndex) {
@@ -102,6 +109,8 @@ public class BensSwingView extends JPanel implements BensView {
         });
 
         popupItemAlterar = new JMenuItem("Alterar");
+        popupItemBaixar = new JMenuItem("Baixar");
+        popupItemOrdemServico = new JMenuItem("Ordem de serviço");
 
         popupMenu = new JPopupMenu();
         popupMenu.addPopupMenuListener(new PopupMenuListener() {
@@ -128,6 +137,8 @@ public class BensSwingView extends JPanel implements BensView {
             }
         });
         popupMenu.add(popupItemAlterar);
+        popupMenu.add(popupItemBaixar);
+        popupMenu.add(popupItemOrdemServico);
         table.setComponentPopupMenu(popupMenu);
 
         btnAdicionar = new JButton("Adicionar novo");
@@ -162,6 +173,18 @@ public class BensSwingView extends JPanel implements BensView {
     @Override
     public void addAlterarBemListener(final ActionListener listener) {
         popupItemAlterar.addActionListener(listener);
+
+    }
+
+    @Override
+    public void addBaixarBemListener(ActionListener listener) {
+        popupItemBaixar.addActionListener(listener);
+
+    }
+
+    @Override
+    public void addOrdemServicoListener(ActionListener listener) {
+        popupItemOrdemServico.addActionListener(listener);
 
     }
 
@@ -223,18 +246,6 @@ public class BensSwingView extends JPanel implements BensView {
             selectedPredios.add(id);
         }
         return selectedPredios;
-    }
-
-    @Override
-    public void addBaixarBemListener(ActionListener listener) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void addOrdemServicoListener(ActionListener listener) {
-        // TODO Auto-generated method stub
-
     }
 
 }
