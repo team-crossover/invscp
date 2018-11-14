@@ -9,9 +9,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.nelsonwilliam.invscp.model.Departamento;
 import com.github.nelsonwilliam.invscp.model.EventoMovimentacao;
-import com.github.nelsonwilliam.invscp.model.Movimentacao;
 import com.github.nelsonwilliam.invscp.util.DatabaseConnection;
 
 public class EventoMovimentacaoRepository implements Repository<EventoMovimentacao> {
