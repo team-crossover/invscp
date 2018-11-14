@@ -79,6 +79,17 @@ CREATE TABLE grupo_material (
     depreciacao numeric(3, 3) NOT NULL
 );
 
+CREATE TABLE movimentacao(
+   id serial PRIMARY KEY,
+   etapa character varying(255) NOT NULL
+);
+
+CREATE TABLE evento_movimentacao(
+   id serial PRIMARY KEY,
+   tipo character varying(255) NOT NULL,
+   data date NOT NULL,
+   justificativa varying(255) NOT NULL
+);
 /* Adiciona as chaves estrangeiras */
 
 ALTER TABLE predio
@@ -107,6 +118,15 @@ ALTER TABLE bem
     ADD COLUMN id_sala integer references sala(id);
     ADD COLUMN id_departamento integer references departamento(id);
     ADD COLUMN id_grupo_material integer references grupo_material(id);
+
+ALTER TABLE movimentacao
+    ADD COLUMN id_bem integer references bem(id);
+    ADD COLUMN sala_origem integer references sala(id);
+    ADD COLUMN sala_destino integer references sala(id);
+
+ALTER TABLE evento_movimentacao
+    ADD COLUMN id_movimentacao integer references movimentacao(id);
+    ADD COLUMN id_funcionario integer references funcionario(id);
 
 /* Adiciona os valores iniciais */
 
