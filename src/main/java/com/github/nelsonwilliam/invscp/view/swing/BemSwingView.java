@@ -57,6 +57,8 @@ public class BemSwingView extends JDialog implements BemView {
     private JTextField fieldGrupoMaterial;
     private JTextField fieldDepartamento;
     private JLabel labelSala;
+    private JLabel lblSituacao;
+    private JLabel labelSituacao;
 
     /**
      * @param departamento Prédios cujos valores serão exibidos inicialmente.
@@ -85,10 +87,10 @@ public class BemSwingView extends JDialog implements BemView {
         final GridBagLayout gridBagLayout = new GridBagLayout();
         gridBagLayout.columnWidths = new int[] { 30, 113, 390, 30 };
         gridBagLayout.rowHeights = new int[] { 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 30 };
+                0, 0, 0, 0, 0, 30 };
         gridBagLayout.columnWeights = new double[] { 0.0, 0.0, 1.0, 0.0 };
         gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+                0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
         getContentPane().setLayout(gridBagLayout);
 
         btnConfirmar = new JButton("Confirmar");
@@ -150,12 +152,28 @@ public class BemSwingView extends JDialog implements BemView {
         getContentPane().add(fieldDescricao, gbc_txtfldDescricao);
         fieldDescricao.setColumns(10);
 
+        lblSituacao = new JLabel("Situação:");
+        GridBagConstraints gbc_lblSituacao = new GridBagConstraints();
+        gbc_lblSituacao.anchor = GridBagConstraints.WEST;
+        gbc_lblSituacao.insets = new Insets(0, 0, 5, 5);
+        gbc_lblSituacao.gridx = 1;
+        gbc_lblSituacao.gridy = 3;
+        getContentPane().add(lblSituacao, gbc_lblSituacao);
+
+        labelSituacao = new JLabel((String) null);
+        GridBagConstraints gbc_label = new GridBagConstraints();
+        gbc_label.anchor = GridBagConstraints.WEST;
+        gbc_label.insets = new Insets(0, 0, 5, 5);
+        gbc_label.gridx = 2;
+        gbc_label.gridy = 3;
+        getContentPane().add(labelSituacao, gbc_label);
+
         lblDepartamento = new JLabel("Departamento:");
         GridBagConstraints gbc_lblDepartamento = new GridBagConstraints();
         gbc_lblDepartamento.anchor = GridBagConstraints.WEST;
         gbc_lblDepartamento.insets = new Insets(0, 0, 5, 5);
         gbc_lblDepartamento.gridx = 1;
-        gbc_lblDepartamento.gridy = 3;
+        gbc_lblDepartamento.gridy = 4;
         getContentPane().add(lblDepartamento, gbc_lblDepartamento);
 
         fieldDepartamento = new JTextField();
@@ -164,7 +182,7 @@ public class BemSwingView extends JDialog implements BemView {
         gbc_fieldDepartamento.insets = new Insets(0, 0, 5, 5);
         gbc_fieldDepartamento.fill = GridBagConstraints.HORIZONTAL;
         gbc_fieldDepartamento.gridx = 2;
-        gbc_fieldDepartamento.gridy = 3;
+        gbc_fieldDepartamento.gridy = 4;
         getContentPane().add(fieldDepartamento, gbc_fieldDepartamento);
 
         lblSala = new JLabel("Sala:");
@@ -172,7 +190,7 @@ public class BemSwingView extends JDialog implements BemView {
         gbc_lblSala.anchor = GridBagConstraints.WEST;
         gbc_lblSala.insets = new Insets(0, 0, 5, 5);
         gbc_lblSala.gridx = 1;
-        gbc_lblSala.gridy = 4;
+        gbc_lblSala.gridy = 5;
         getContentPane().add(lblSala, gbc_lblSala);
 
         labelSala = new JLabel("");
@@ -180,7 +198,7 @@ public class BemSwingView extends JDialog implements BemView {
         gbc_labelSala.anchor = GridBagConstraints.WEST;
         gbc_labelSala.insets = new Insets(0, 0, 5, 5);
         gbc_labelSala.gridx = 2;
-        gbc_labelSala.gridy = 4;
+        gbc_labelSala.gridy = 5;
         getContentPane().add(labelSala, gbc_labelSala);
 
         lblGrupoMaterial = new JLabel("Grupo material:");
@@ -188,7 +206,7 @@ public class BemSwingView extends JDialog implements BemView {
         gbc_lblGrupoMaterial.anchor = GridBagConstraints.WEST;
         gbc_lblGrupoMaterial.insets = new Insets(0, 0, 5, 5);
         gbc_lblGrupoMaterial.gridx = 1;
-        gbc_lblGrupoMaterial.gridy = 5;
+        gbc_lblGrupoMaterial.gridy = 6;
         getContentPane().add(lblGrupoMaterial, gbc_lblGrupoMaterial);
 
         fieldGrupoMaterial = new JTextField();
@@ -197,7 +215,7 @@ public class BemSwingView extends JDialog implements BemView {
         gbc_fieldGrupoMaterial.insets = new Insets(0, 0, 5, 5);
         gbc_fieldGrupoMaterial.fill = GridBagConstraints.HORIZONTAL;
         gbc_fieldGrupoMaterial.gridx = 2;
-        gbc_fieldGrupoMaterial.gridy = 5;
+        gbc_fieldGrupoMaterial.gridy = 6;
         getContentPane().add(fieldGrupoMaterial, gbc_fieldGrupoMaterial);
 
         lblDataDeAquisio = new JLabel("Data de aquisição:");
@@ -205,7 +223,7 @@ public class BemSwingView extends JDialog implements BemView {
         gbc_lblDataDeAquisio.anchor = GridBagConstraints.WEST;
         gbc_lblDataDeAquisio.insets = new Insets(0, 0, 5, 5);
         gbc_lblDataDeAquisio.gridx = 1;
-        gbc_lblDataDeAquisio.gridy = 6;
+        gbc_lblDataDeAquisio.gridy = 7;
         getContentPane().add(lblDataDeAquisio, gbc_lblDataDeAquisio);
 
         fieldDataAquisicao = new JTextField();
@@ -213,7 +231,7 @@ public class BemSwingView extends JDialog implements BemView {
         gbc_fieldDataAquisicao.insets = new Insets(0, 0, 5, 5);
         gbc_fieldDataAquisicao.fill = GridBagConstraints.HORIZONTAL;
         gbc_fieldDataAquisicao.gridx = 2;
-        gbc_fieldDataAquisicao.gridy = 6;
+        gbc_fieldDataAquisicao.gridy = 7;
         getContentPane().add(fieldDataAquisicao, gbc_fieldDataAquisicao);
         fieldDataAquisicao.setColumns(10);
 
@@ -222,7 +240,7 @@ public class BemSwingView extends JDialog implements BemView {
         gbc_lblNmeroDoCupom.anchor = GridBagConstraints.WEST;
         gbc_lblNmeroDoCupom.insets = new Insets(0, 0, 5, 5);
         gbc_lblNmeroDoCupom.gridx = 1;
-        gbc_lblNmeroDoCupom.gridy = 7;
+        gbc_lblNmeroDoCupom.gridy = 8;
         getContentPane().add(lblNmeroDoCupom, gbc_lblNmeroDoCupom);
 
         fieldNotaFiscal = new JTextField();
@@ -231,7 +249,7 @@ public class BemSwingView extends JDialog implements BemView {
         gbc_fieldNotaFiscal.insets = new Insets(0, 0, 5, 5);
         gbc_fieldNotaFiscal.fill = GridBagConstraints.HORIZONTAL;
         gbc_fieldNotaFiscal.gridx = 2;
-        gbc_fieldNotaFiscal.gridy = 7;
+        gbc_fieldNotaFiscal.gridy = 8;
         getContentPane().add(fieldNotaFiscal, gbc_fieldNotaFiscal);
 
         lblEspecificao = new JLabel("Especificação:");
@@ -239,7 +257,7 @@ public class BemSwingView extends JDialog implements BemView {
         gbc_lblEspecificacao.anchor = GridBagConstraints.BASELINE_LEADING;
         gbc_lblEspecificacao.insets = new Insets(0, 0, 5, 5);
         gbc_lblEspecificacao.gridx = 1;
-        gbc_lblEspecificacao.gridy = 8;
+        gbc_lblEspecificacao.gridy = 9;
         getContentPane().add(lblEspecificao, gbc_lblEspecificacao);
 
         fieldEspecificacao = new JTextField();
@@ -248,7 +266,7 @@ public class BemSwingView extends JDialog implements BemView {
         gbc_fieldEspecificacao.insets = new Insets(0, 0, 5, 5);
         gbc_fieldEspecificacao.fill = GridBagConstraints.HORIZONTAL;
         gbc_fieldEspecificacao.gridx = 2;
-        gbc_fieldEspecificacao.gridy = 8;
+        gbc_fieldEspecificacao.gridy = 9;
         getContentPane().add(fieldEspecificacao, gbc_fieldEspecificacao);
 
         lblGarantia = new JLabel("Garantia:");
@@ -256,7 +274,7 @@ public class BemSwingView extends JDialog implements BemView {
         gbc_lblGarantia.anchor = GridBagConstraints.WEST;
         gbc_lblGarantia.insets = new Insets(0, 0, 5, 5);
         gbc_lblGarantia.gridx = 1;
-        gbc_lblGarantia.gridy = 9;
+        gbc_lblGarantia.gridy = 10;
         getContentPane().add(lblGarantia, gbc_lblGarantia);
 
         fieldGarantia = new JTextField();
@@ -265,7 +283,7 @@ public class BemSwingView extends JDialog implements BemView {
         gbc_fieldGarantia.insets = new Insets(0, 0, 5, 5);
         gbc_fieldGarantia.fill = GridBagConstraints.HORIZONTAL;
         gbc_fieldGarantia.gridx = 2;
-        gbc_fieldGarantia.gridy = 9;
+        gbc_fieldGarantia.gridy = 10;
         getContentPane().add(fieldGarantia, gbc_fieldGarantia);
 
         lblNmeroDeTombamento = new JLabel("Número de tombamento:");
@@ -273,7 +291,7 @@ public class BemSwingView extends JDialog implements BemView {
         gbc_lblNmeroDeTombamento.anchor = GridBagConstraints.EAST;
         gbc_lblNmeroDeTombamento.insets = new Insets(0, 0, 5, 5);
         gbc_lblNmeroDeTombamento.gridx = 1;
-        gbc_lblNmeroDeTombamento.gridy = 10;
+        gbc_lblNmeroDeTombamento.gridy = 11;
         getContentPane().add(lblNmeroDeTombamento, gbc_lblNmeroDeTombamento);
 
         fieldNumeroTombamento = new JTextField();
@@ -282,7 +300,7 @@ public class BemSwingView extends JDialog implements BemView {
         gbc_fieldNumeroTombamento.insets = new Insets(0, 0, 5, 5);
         gbc_fieldNumeroTombamento.fill = GridBagConstraints.HORIZONTAL;
         gbc_fieldNumeroTombamento.gridx = 2;
-        gbc_fieldNumeroTombamento.gridy = 10;
+        gbc_fieldNumeroTombamento.gridy = 11;
         getContentPane().add(fieldNumeroTombamento, gbc_fieldNumeroTombamento);
 
         lblMarca = new JLabel("Marca:");
@@ -290,7 +308,7 @@ public class BemSwingView extends JDialog implements BemView {
         gbc_lblMarca.anchor = GridBagConstraints.WEST;
         gbc_lblMarca.insets = new Insets(0, 0, 5, 5);
         gbc_lblMarca.gridx = 1;
-        gbc_lblMarca.gridy = 11;
+        gbc_lblMarca.gridy = 12;
         getContentPane().add(lblMarca, gbc_lblMarca);
 
         fieldMarca = new JTextField();
@@ -299,7 +317,7 @@ public class BemSwingView extends JDialog implements BemView {
         gbc_fieldMarca.insets = new Insets(0, 0, 5, 5);
         gbc_fieldMarca.fill = GridBagConstraints.HORIZONTAL;
         gbc_fieldMarca.gridx = 2;
-        gbc_fieldMarca.gridy = 11;
+        gbc_fieldMarca.gridy = 12;
         getContentPane().add(fieldMarca, gbc_fieldMarca);
 
         lblValorDeCompra = new JLabel("Valor de compra");
@@ -307,7 +325,7 @@ public class BemSwingView extends JDialog implements BemView {
         gbc_lblValorDeCompra.anchor = GridBagConstraints.WEST;
         gbc_lblValorDeCompra.insets = new Insets(0, 0, 5, 5);
         gbc_lblValorDeCompra.gridx = 1;
-        gbc_lblValorDeCompra.gridy = 12;
+        gbc_lblValorDeCompra.gridy = 13;
         getContentPane().add(lblValorDeCompra, gbc_lblValorDeCompra);
 
         fieldValorCompra = new JTextField();
@@ -316,7 +334,7 @@ public class BemSwingView extends JDialog implements BemView {
         gbc_fieldValorCompra.insets = new Insets(0, 0, 5, 5);
         gbc_fieldValorCompra.fill = GridBagConstraints.HORIZONTAL;
         gbc_fieldValorCompra.gridx = 2;
-        gbc_fieldValorCompra.gridy = 12;
+        gbc_fieldValorCompra.gridy = 13;
         getContentPane().add(fieldValorCompra, gbc_fieldValorCompra);
 
         final GridBagConstraints gbc_btnCancelar = new GridBagConstraints();
@@ -324,7 +342,7 @@ public class BemSwingView extends JDialog implements BemView {
         gbc_btnCancelar.insets = new Insets(0, 0, 5, 5);
         gbc_btnCancelar.fill = GridBagConstraints.VERTICAL;
         gbc_btnCancelar.gridx = 1;
-        gbc_btnCancelar.gridy = 14;
+        gbc_btnCancelar.gridy = 15;
         getContentPane().add(btnCancelar, gbc_btnCancelar);
 
         final GridBagConstraints gbc_btnConfirmar = new GridBagConstraints();
@@ -332,7 +350,7 @@ public class BemSwingView extends JDialog implements BemView {
         gbc_btnConfirmar.anchor = GridBagConstraints.EAST;
         gbc_btnConfirmar.fill = GridBagConstraints.VERTICAL;
         gbc_btnConfirmar.gridx = 2;
-        gbc_btnConfirmar.gridy = 14;
+        gbc_btnConfirmar.gridy = 15;
         getContentPane().add(btnConfirmar, gbc_btnConfirmar);
     }
 
@@ -367,6 +385,7 @@ public class BemSwingView extends JDialog implements BemView {
         fieldNumeroTombamento.setText(bem.getNumeroTombamento().toString());
         fieldValorCompra.setText(bem.getValorCompra().toString());
         labelSala.setText(bem.getSala().getNome());
+        labelSituacao.setText(bem.getSituacao().toString());
         fieldDepartamento.setText(bem.getDepartamento().toString());
         fieldGrupoMaterial.setText(bem.getGrupoMaterial().toString());
         fieldNotaFiscal.setText(bem.getNumeroNotaFiscal());
