@@ -194,8 +194,14 @@ public class BensSwingView extends JPanel implements BensView {
                 .getModel();
         tableModel.setNumRows(0);
         for (final BemDTO b : bem) {
-            tableModel.addRow(new Object[] { b.getId(), b.getDescricao(),
-                    b.getSituacao() == null ? "Nenhuma" : b.getSituacao() });
+            tableModel.addRow(new Object[] { b.getId(), b.getNumeroTombamento(),
+                    b.getDescricao(),
+                    b.getSituacao() == null ? "Nenhuma" : b.getSituacao(),
+                    b.getSala() == null ? "Nenhuma" : b.getSala(),
+                    b.getDepartamento() == null ? "Nenhuma"
+                            : b.getDepartamento(),
+                    b.getGrupoMaterial() == null ? "Nenhuma"
+                            : b.getGrupoMaterial() });
         }
 
         revalidate();
@@ -238,14 +244,14 @@ public class BensSwingView extends JPanel implements BensView {
 
     @Override
     public List<Integer> getSelectedBensIds() {
-        final List<Integer> selectedPredios = new ArrayList<Integer>();
+        final List<Integer> selectedBens = new ArrayList<Integer>();
         final int[] selectedRows = table.getSelectedRows();
         for (int i = 0; i < selectedRows.length; i++) {
             final int row = selectedRows[i];
             final Integer id = (Integer) table.getModel().getValueAt(row, 0);
-            selectedPredios.add(id);
+            selectedBens.add(id);
         }
-        return selectedPredios;
+        return selectedBens;
     }
 
 }
