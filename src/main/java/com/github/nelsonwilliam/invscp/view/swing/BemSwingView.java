@@ -1,29 +1,26 @@
 package com.github.nelsonwilliam.invscp.view.swing;
 
-import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
-import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-import javax.swing.ListCellRenderer;
 
 import com.github.nelsonwilliam.invscp.model.dto.BemDTO;
 import com.github.nelsonwilliam.invscp.model.dto.DepartamentoDTO;
 import com.github.nelsonwilliam.invscp.model.dto.GrupoMaterialDTO;
-import com.github.nelsonwilliam.invscp.model.dto.LocalizacaoDTO;
 import com.github.nelsonwilliam.invscp.model.dto.SalaDTO;
 import com.github.nelsonwilliam.invscp.view.BemView;
 
@@ -57,6 +54,9 @@ public class BemSwingView extends JDialog implements BemView {
     private JTextField fieldNumeroTombamento;
     private JLabel lblEspecificao;
     private JTextField fieldEspecificacao;
+    private JTextField fieldGrupoMaterial;
+    private JTextField fieldDepartamento;
+    private JLabel labelSala;
 
     /**
      * @param departamento Prédios cujos valores serão exibidos inicialmente.
@@ -99,24 +99,19 @@ public class BemSwingView extends JDialog implements BemView {
         btnCancelar.addActionListener((final ActionEvent e) -> {
             close();
         });
-
-        final ListCellRenderer<? super LocalizacaoDTO> localizacaoListRenderer = new DefaultListCellRenderer() {
-            private static final long serialVersionUID = 8590680235694368760L;
-
-            @Override
-            public Component getListCellRendererComponent(final JList<?> list,
-                    final Object value, final int index,
-                    final boolean isSelected, final boolean cellHasFocus) {
-                if (value == null) {
-                    return super.getListCellRendererComponent(list, "Nenhum",
-                            index, isSelected, cellHasFocus);
-                } else {
-                    final String nome = ((LocalizacaoDTO) value).getNome();
-                    return super.getListCellRendererComponent(list, nome, index,
-                            isSelected, cellHasFocus);
-                }
-            }
-        };
+        /*
+         * final ListCellRenderer<? super LocalizacaoDTO>
+         * localizacaoListRenderer = new DefaultListCellRenderer() { private
+         * static final long serialVersionUID = 8590680235694368760L;
+         * 
+         * @Override public Component getListCellRendererComponent(final
+         * JList<?> list, final Object value, final int index, final boolean
+         * isSelected, final boolean cellHasFocus) { if (value == null) { return
+         * super.getListCellRendererComponent(list, "Nenhum", index, isSelected,
+         * cellHasFocus); } else { final String nome = ((LocalizacaoDTO)
+         * value).getNome(); return super.getListCellRendererComponent(list,
+         * nome, index, isSelected, cellHasFocus); } } };
+         */
 
         java.util.Date dataCadastro = new Date();
         String dataStr = java.text.DateFormat.getDateInstance(DateFormat.MEDIUM)
@@ -163,6 +158,15 @@ public class BemSwingView extends JDialog implements BemView {
         gbc_lblDepartamento.gridy = 3;
         getContentPane().add(lblDepartamento, gbc_lblDepartamento);
 
+        fieldDepartamento = new JTextField();
+        fieldDepartamento.setColumns(10);
+        GridBagConstraints gbc_fieldDepartamento = new GridBagConstraints();
+        gbc_fieldDepartamento.insets = new Insets(0, 0, 5, 5);
+        gbc_fieldDepartamento.fill = GridBagConstraints.HORIZONTAL;
+        gbc_fieldDepartamento.gridx = 2;
+        gbc_fieldDepartamento.gridy = 3;
+        getContentPane().add(fieldDepartamento, gbc_fieldDepartamento);
+
         lblSala = new JLabel("Sala:");
         GridBagConstraints gbc_lblSala = new GridBagConstraints();
         gbc_lblSala.anchor = GridBagConstraints.WEST;
@@ -171,6 +175,14 @@ public class BemSwingView extends JDialog implements BemView {
         gbc_lblSala.gridy = 4;
         getContentPane().add(lblSala, gbc_lblSala);
 
+        labelSala = new JLabel("");
+        GridBagConstraints gbc_labelSala = new GridBagConstraints();
+        gbc_labelSala.anchor = GridBagConstraints.WEST;
+        gbc_labelSala.insets = new Insets(0, 0, 5, 5);
+        gbc_labelSala.gridx = 2;
+        gbc_labelSala.gridy = 4;
+        getContentPane().add(labelSala, gbc_labelSala);
+
         lblGrupoMaterial = new JLabel("Grupo material:");
         GridBagConstraints gbc_lblGrupoMaterial = new GridBagConstraints();
         gbc_lblGrupoMaterial.anchor = GridBagConstraints.WEST;
@@ -178,6 +190,15 @@ public class BemSwingView extends JDialog implements BemView {
         gbc_lblGrupoMaterial.gridx = 1;
         gbc_lblGrupoMaterial.gridy = 5;
         getContentPane().add(lblGrupoMaterial, gbc_lblGrupoMaterial);
+
+        fieldGrupoMaterial = new JTextField();
+        fieldGrupoMaterial.setColumns(10);
+        GridBagConstraints gbc_fieldGrupoMaterial = new GridBagConstraints();
+        gbc_fieldGrupoMaterial.insets = new Insets(0, 0, 5, 5);
+        gbc_fieldGrupoMaterial.fill = GridBagConstraints.HORIZONTAL;
+        gbc_fieldGrupoMaterial.gridx = 2;
+        gbc_fieldGrupoMaterial.gridy = 5;
+        getContentPane().add(fieldGrupoMaterial, gbc_fieldGrupoMaterial);
 
         lblDataDeAquisio = new JLabel("Data de aquisição:");
         GridBagConstraints gbc_lblDataDeAquisio = new GridBagConstraints();
@@ -215,7 +236,7 @@ public class BemSwingView extends JDialog implements BemView {
 
         lblEspecificao = new JLabel("Especificação:");
         GridBagConstraints gbc_lblEspecificacao = new GridBagConstraints();
-        gbc_lblEspecificacao.anchor = GridBagConstraints.EAST;
+        gbc_lblEspecificacao.anchor = GridBagConstraints.BASELINE_LEADING;
         gbc_lblEspecificacao.insets = new Insets(0, 0, 5, 5);
         gbc_lblEspecificacao.gridx = 1;
         gbc_lblEspecificacao.gridy = 8;
@@ -336,29 +357,24 @@ public class BemSwingView extends JDialog implements BemView {
         idBem = bem.getId();
 
         fieldDescricao.setText(bem.getDescricao());
+        fieldDataCadastro.setText(
+                bem.getDataCadastro().format(DateTimeFormatter.BASIC_ISO_DATE));
+        fieldDataAquisicao.setText(bem.getDataAquisicao()
+                .format(DateTimeFormatter.BASIC_ISO_DATE));
+        fieldGarantia.setText(
+                bem.getGarantia().format(DateTimeFormatter.BASIC_ISO_DATE));
+        fieldMarca.setText(bem.getMarca());
+        fieldNumeroTombamento.setText(bem.getNumeroTombamento().toString());
+        fieldValorCompra.setText(bem.getValorCompra().toString());
+        labelSala.setText(bem.getSala().getNome());
+        fieldDepartamento.setText(bem.getDepartamento().toString());
+        fieldGrupoMaterial.setText(bem.getGrupoMaterial().toString());
+        fieldNotaFiscal.setText(bem.getNumeroNotaFiscal());
+        fieldEspecificacao.setText(bem.getEspecificacao());
 
         // Exibe as localizacoes na lista de localizacoes e seleciona o atual,
         // se
         // tiver, ou 'Nenhum', se não tiver.
-
-        /*
-         * final DepartamentoDTO departamento = bem.getDepartamento(); final
-         * SalaDTO sala = bem.getSala(); final GrupoMaterialDTO grupoMaterial =
-         * bem.getGrupoMaterial(); final DefaultListModel<DepartamentoDTO>
-         * listDepartamentoModel = (DefaultListModel<DepartamentoDTO>)
-         * listLocalizacoes .getModel(); final DefaultListModel<LocalizacaoDTO>
-         * listLocalizacoesModel = (DefaultListModel<LocalizacaoDTO>)
-         * listLocalizacoes .getModel(); final DefaultListModel<LocalizacaoDTO>
-         * listLocalizacoesModel = (DefaultListModel<LocalizacaoDTO>)
-         * listLocalizacoes .getModel(); listLocalizacoesModel.clear(); if
-         * (localizacao == null) { listLocalizacoesModel.add(0, null);
-         * listLocalizacoes.setSelectedIndex(0); } else {
-         * listLocalizacoesModel.add(0, localizacao);
-         * listLocalizacoes.setSelectedIndex(0); } if (localizacoes != null) {
-         * for (final LocalizacaoDTO l : localizacoes) { if (localizacao == null
-         * || !l.getId().equals(localizacao.getId())) {
-         * listLocalizacoesModel.addElement(l); } } }
-         */
 
         revalidate();
         repaint();
@@ -406,18 +422,24 @@ public class BemSwingView extends JDialog implements BemView {
         final BemDTO bem = new BemDTO();
         bem.setId(idBem);
         bem.setDescricao(fieldDescricao.getText());
-        // bem.setDataCadastro(fieldDataCadastro);
-        // bem.setDataAquisicao(fieldDataAquisicao);
+        bem.setDataCadastro(LocalDate.parse(fieldDataCadastro.getText(),
+                DateTimeFormatter.BASIC_ISO_DATE));
+        bem.setDataAquisicao(LocalDate.parse(fieldDataAquisicao.getText(),
+                DateTimeFormatter.BASIC_ISO_DATE));
         bem.setNumeroNotaFiscal(fieldNotaFiscal.toString());
         bem.setEspecificacao(fieldEspecificacao.getText());
-        // bem.setGarantia(fieldGarantia);
-        // bem.setNumeroTombamento(fieldNumeroTombamento);
+        bem.setGarantia(LocalDate.parse(fieldGarantia.getText(),
+                DateTimeFormatter.BASIC_ISO_DATE));
+        bem.setNumeroTombamento(
+                Long.parseLong(fieldNumeroTombamento.getText())); // TRY CATCH
         bem.setMarca(fieldMarca.getText());
-        // bem.setValorCompra(fieldValorCompra);
-        /*
-         * bem.setLocalizacao(listLocalizacoes.getSelectedValue() == null ? null
-         * : listLocalizacoes.getSelectedValue());
-         */
+        bem.setValorCompra(Float.parseFloat(fieldValorCompra.getText()));
+
+        /**
+         * bem.setDepartamento(); bem.setSala(); bem.setGrupoMaterial(); MACACOS
+         * UFG
+         **/
+
         return bem;
     }
 
