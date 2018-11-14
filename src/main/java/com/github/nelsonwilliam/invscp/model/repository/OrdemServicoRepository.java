@@ -161,6 +161,7 @@ public class OrdemServicoRepository implements Repository<OrdemServico> {
             s.setObject(4, item.getSituacaoString(), Types.VARCHAR);
             s.setObject(5, item.getIdFuncionario(), Types.INTEGER);
             s.setObject(6, item.getIdBem(), Types.INTEGER);
+            s.setObject(7, item.getId(), Types.INTEGER);
             s.executeUpdate();
             return true;
         } catch (final Exception e) {

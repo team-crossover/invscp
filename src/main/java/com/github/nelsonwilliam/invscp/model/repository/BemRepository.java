@@ -211,6 +211,7 @@ public class BemRepository implements Repository<Bem> {
             s.setObject(11, item.getIdSala(), Types.INTEGER);
             s.setObject(12, item.getIdDepartamento(), Types.INTEGER);
             s.setObject(13, item.getIdGrupoMaterial(), Types.INTEGER);
+            s.setObject(14, item.getId(), Types.INTEGER);
             s.executeUpdate();
             return true;
         } catch (final Exception e) {

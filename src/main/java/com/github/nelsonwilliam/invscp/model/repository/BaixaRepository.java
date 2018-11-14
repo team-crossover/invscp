@@ -143,6 +143,7 @@ public class BaixaRepository implements Repository<Baixa> {
             s.setObject(3, item.getObservacoes(), Types.VARCHAR);
             s.setObject(4, item.getIdFuncionario(), Types.INTEGER);
             s.setObject(5, item.getIdBem(), Types.INTEGER);
+            s.setObject(6, item.getId(), Types.INTEGER);
             s.executeUpdate();
             return true;
         } catch (final Exception e) {

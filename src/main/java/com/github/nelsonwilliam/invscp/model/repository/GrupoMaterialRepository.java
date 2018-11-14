@@ -126,6 +126,7 @@ public class GrupoMaterialRepository implements Repository<GrupoMaterial> {
             s.setObject(1, item.getNome(), Types.VARCHAR);
             s.setObject(2, item.getVidaUtil(), Types.INTEGER);
             s.setObject(3, item.getDepreciacao(), Types.FLOAT);
+            s.setObject(4, item.getId(), Types.INTEGER);
             s.executeUpdate();
             return true;
         } catch (final Exception e) {
