@@ -325,6 +325,13 @@ public class Bem implements Model<BemDTO> {
         this.situacao = situacao;
     }
 
+    public final String getSituacaoString() {
+    	return this.situacao.getTexto();
+    }
+    public final void setSituacaoString(String sit) {
+    	this.situacao = BemSituacaoEnum.valueOf(sit);
+    }
+
     public final Integer getIdGrupoMaterial() {
         return idGrupoMaterial;
     }

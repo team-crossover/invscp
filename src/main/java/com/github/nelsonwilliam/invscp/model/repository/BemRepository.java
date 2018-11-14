@@ -32,7 +32,7 @@ public class BemRepository implements Repository<Bem> {
                 final LocalDate dataAquisicao = (LocalDate) r.getObject("data_aquisicao");
                 final String numNotaFiscal = (String) r.getObject("numero_nota_fiscal");
                 final String especificacao = (String) r.getObject("especificacao");
-                final String garantia = (String) r.getObject("garantia");
+                final LocalDate garantia = (LocalDate) r.getObject("garantia");
                 final String marca = (String) r.getObject("marca");
                 final Float valorCompra = (Float) r.getObject("valor_compra");
                 final String situacao = (String) r.getObject("situacao");
@@ -51,7 +51,7 @@ public class BemRepository implements Repository<Bem> {
                 bem.setGarantia(garantia);
                 bem.setMarca(marca);
                 bem.setValorCompra(valorCompra);
-                bem.setSituacao(situacao);
+                bem.setSituacaoString(situacao);
                 bem.setIdSala(idSala);
                 bem.setIdDepartamento(idDepartamento);
                 bem.setIdGrupoMaterial(idGrupoMaterial);
@@ -83,7 +83,7 @@ public class BemRepository implements Repository<Bem> {
                 final LocalDate dataAquisicao = (LocalDate) r.getObject("data_aquisicao");
                 final String numNotaFiscal = (String) r.getObject("numero_nota_fiscal");
                 final String especificacao = (String) r.getObject("especificacao");
-                final String garantia = (String) r.getObject("garantia");
+                final LocalDate garantia = (LocalDate) r.getObject("garantia");
                 final String marca = (String) r.getObject("marca");
                 final Float valorCompra = (Float) r.getObject("valor_compra");
                 final String situacao = (String) r.getObject("situacao");
@@ -102,7 +102,7 @@ public class BemRepository implements Repository<Bem> {
                 bem.setGarantia(garantia);
                 bem.setMarca(marca);
                 bem.setValorCompra(valorCompra);
-                bem.setSituacao(situacao);
+                bem.setSituacaoString(situacao);
                 bem.setIdSala(idSala);
                 bem.setIdDepartamento(idDepartamento);
                 bem.setIdGrupoMaterial(idGrupoMaterial);
