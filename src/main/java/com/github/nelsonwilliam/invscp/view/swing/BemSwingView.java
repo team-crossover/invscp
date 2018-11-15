@@ -455,8 +455,7 @@ public class BemSwingView extends JDialog implements BemView {
         bem.setValorCompra(Float.parseFloat(fieldValorCompra.getText()));
 
         /**
-         * bem.setDepartamento(); bem.setSala(); bem.setGrupoMaterial(); MACACOS
-         * UFG
+         * bem.setDepartamento(); bem.setSala(); bem.setGrupoMaterial();
          **/
 
         return bem;
