@@ -1,8 +1,10 @@
 package com.github.nelsonwilliam.invscp.view;
 
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import com.github.nelsonwilliam.invscp.model.dto.BaixaDTO;
+import com.github.nelsonwilliam.invscp.model.dto.BemDTO;
 
 public interface BaixaView extends View {
 
@@ -20,7 +22,7 @@ public interface BaixaView extends View {
      * Atualiza todos os valores da janela para exibir os dados da baixa
      * passado.
      */
-    void updateBaixa(BaixaDTO baixa);
+    void updateBaixa(BaixaDTO baixa, List<BemDTO> bens);
 
     /**
      * Exibe uma mensagem de erro com a mensagem especificada. Por exemplo, pode

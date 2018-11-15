@@ -81,7 +81,7 @@ public class BemSwingView extends JDialog implements BemView {
     }
 
     private void initialize() {
-        setBounds(0, 0, 478, 381);
+        setBounds(0, 0, 478, 449);
         setLocationRelativeTo(getOwner());
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         final GridBagLayout gridBagLayout = new GridBagLayout();
@@ -121,7 +121,7 @@ public class BemSwingView extends JDialog implements BemView {
 
         lblDataDeCadastro = new JLabel("Data de cadastro:");
         GridBagConstraints gbc_lblDataDeCadastro = new GridBagConstraints();
-        gbc_lblDataDeCadastro.anchor = GridBagConstraints.WEST;
+        gbc_lblDataDeCadastro.anchor = GridBagConstraints.EAST;
         gbc_lblDataDeCadastro.insets = new Insets(0, 0, 5, 5);
         gbc_lblDataDeCadastro.gridx = 1;
         gbc_lblDataDeCadastro.gridy = 1;
@@ -137,7 +137,7 @@ public class BemSwingView extends JDialog implements BemView {
 
         final JLabel lblDescricao = new JLabel("Descricao:");
         final GridBagConstraints gbc_lblDescricao = new GridBagConstraints();
-        gbc_lblDescricao.anchor = GridBagConstraints.WEST;
+        gbc_lblDescricao.anchor = GridBagConstraints.EAST;
         gbc_lblDescricao.insets = new Insets(0, 0, 5, 5);
         gbc_lblDescricao.gridx = 1;
         gbc_lblDescricao.gridy = 2;
@@ -154,7 +154,7 @@ public class BemSwingView extends JDialog implements BemView {
 
         lblSituacao = new JLabel("Situação:");
         GridBagConstraints gbc_lblSituacao = new GridBagConstraints();
-        gbc_lblSituacao.anchor = GridBagConstraints.WEST;
+        gbc_lblSituacao.anchor = GridBagConstraints.EAST;
         gbc_lblSituacao.insets = new Insets(0, 0, 5, 5);
         gbc_lblSituacao.gridx = 1;
         gbc_lblSituacao.gridy = 3;
@@ -170,7 +170,7 @@ public class BemSwingView extends JDialog implements BemView {
 
         lblDepartamento = new JLabel("Departamento:");
         GridBagConstraints gbc_lblDepartamento = new GridBagConstraints();
-        gbc_lblDepartamento.anchor = GridBagConstraints.WEST;
+        gbc_lblDepartamento.anchor = GridBagConstraints.EAST;
         gbc_lblDepartamento.insets = new Insets(0, 0, 5, 5);
         gbc_lblDepartamento.gridx = 1;
         gbc_lblDepartamento.gridy = 4;
@@ -187,7 +187,7 @@ public class BemSwingView extends JDialog implements BemView {
 
         lblSala = new JLabel("Sala:");
         GridBagConstraints gbc_lblSala = new GridBagConstraints();
-        gbc_lblSala.anchor = GridBagConstraints.WEST;
+        gbc_lblSala.anchor = GridBagConstraints.EAST;
         gbc_lblSala.insets = new Insets(0, 0, 5, 5);
         gbc_lblSala.gridx = 1;
         gbc_lblSala.gridy = 5;
@@ -203,7 +203,7 @@ public class BemSwingView extends JDialog implements BemView {
 
         lblGrupoMaterial = new JLabel("Grupo material:");
         GridBagConstraints gbc_lblGrupoMaterial = new GridBagConstraints();
-        gbc_lblGrupoMaterial.anchor = GridBagConstraints.WEST;
+        gbc_lblGrupoMaterial.anchor = GridBagConstraints.EAST;
         gbc_lblGrupoMaterial.insets = new Insets(0, 0, 5, 5);
         gbc_lblGrupoMaterial.gridx = 1;
         gbc_lblGrupoMaterial.gridy = 6;
@@ -220,7 +220,7 @@ public class BemSwingView extends JDialog implements BemView {
 
         lblDataDeAquisio = new JLabel("Data de aquisição:");
         GridBagConstraints gbc_lblDataDeAquisio = new GridBagConstraints();
-        gbc_lblDataDeAquisio.anchor = GridBagConstraints.WEST;
+        gbc_lblDataDeAquisio.anchor = GridBagConstraints.EAST;
         gbc_lblDataDeAquisio.insets = new Insets(0, 0, 5, 5);
         gbc_lblDataDeAquisio.gridx = 1;
         gbc_lblDataDeAquisio.gridy = 7;
@@ -237,7 +237,7 @@ public class BemSwingView extends JDialog implements BemView {
 
         lblNmeroDoCupom = new JLabel("Número do Cupom Fiscal:");
         GridBagConstraints gbc_lblNmeroDoCupom = new GridBagConstraints();
-        gbc_lblNmeroDoCupom.anchor = GridBagConstraints.WEST;
+        gbc_lblNmeroDoCupom.anchor = GridBagConstraints.EAST;
         gbc_lblNmeroDoCupom.insets = new Insets(0, 0, 5, 5);
         gbc_lblNmeroDoCupom.gridx = 1;
         gbc_lblNmeroDoCupom.gridy = 8;
@@ -254,7 +254,7 @@ public class BemSwingView extends JDialog implements BemView {
 
         lblEspecificao = new JLabel("Especificação:");
         GridBagConstraints gbc_lblEspecificacao = new GridBagConstraints();
-        gbc_lblEspecificacao.anchor = GridBagConstraints.BASELINE_LEADING;
+        gbc_lblEspecificacao.anchor = GridBagConstraints.BASELINE_TRAILING;
         gbc_lblEspecificacao.insets = new Insets(0, 0, 5, 5);
         gbc_lblEspecificacao.gridx = 1;
         gbc_lblEspecificacao.gridy = 9;
@@ -271,7 +271,7 @@ public class BemSwingView extends JDialog implements BemView {
 
         lblGarantia = new JLabel("Garantia:");
         GridBagConstraints gbc_lblGarantia = new GridBagConstraints();
-        gbc_lblGarantia.anchor = GridBagConstraints.WEST;
+        gbc_lblGarantia.anchor = GridBagConstraints.EAST;
         gbc_lblGarantia.insets = new Insets(0, 0, 5, 5);
         gbc_lblGarantia.gridx = 1;
         gbc_lblGarantia.gridy = 10;
@@ -305,7 +305,7 @@ public class BemSwingView extends JDialog implements BemView {
 
         lblMarca = new JLabel("Marca:");
         GridBagConstraints gbc_lblMarca = new GridBagConstraints();
-        gbc_lblMarca.anchor = GridBagConstraints.WEST;
+        gbc_lblMarca.anchor = GridBagConstraints.EAST;
         gbc_lblMarca.insets = new Insets(0, 0, 5, 5);
         gbc_lblMarca.gridx = 1;
         gbc_lblMarca.gridy = 12;
@@ -322,7 +322,7 @@ public class BemSwingView extends JDialog implements BemView {
 
         lblValorDeCompra = new JLabel("Valor de compra");
         GridBagConstraints gbc_lblValorDeCompra = new GridBagConstraints();
-        gbc_lblValorDeCompra.anchor = GridBagConstraints.WEST;
+        gbc_lblValorDeCompra.anchor = GridBagConstraints.EAST;
         gbc_lblValorDeCompra.insets = new Insets(0, 0, 5, 5);
         gbc_lblValorDeCompra.gridx = 1;
         gbc_lblValorDeCompra.gridy = 13;
