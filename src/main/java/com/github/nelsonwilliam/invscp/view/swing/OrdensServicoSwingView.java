@@ -8,6 +8,7 @@ import java.awt.Point;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -26,7 +27,10 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.table.DefaultTableModel;
 
+import com.github.nelsonwilliam.invscp.model.dto.BemDTO;
+import com.github.nelsonwilliam.invscp.model.dto.FuncionarioDTO;
 import com.github.nelsonwilliam.invscp.model.dto.OrdemServicoDTO;
+import com.github.nelsonwilliam.invscp.model.enums.OSsituacaoEnum;
 import com.github.nelsonwilliam.invscp.view.OrdensServicoView;
 
 public class OrdensServicoSwingView extends JPanel
@@ -66,10 +70,13 @@ public class OrdensServicoSwingView extends JPanel
         table = new JTable();
         table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         table.setModel(new DefaultTableModel(new Object[][] {},
-                new String[] { "ID", "Nome", "Localização" }) {
-            private static final long serialVersionUID = -5025798773394078963L;
-            Class<?>[] columnTypes = new Class[] { Integer.class, String.class,
-                    String.class };
+                new String[] { "ID", "Data de cadastro", "Data de conclusão",
+                        "Valor", "Situação", "Funcionario", "Bem" }) {
+
+            private static final long serialVersionUID = 780952094315363108L;
+            Class<?>[] columnTypes = new Class[] { Integer.class,
+                    LocalDate.class, LocalDate.class, Float.class,
+                    OSsituacaoEnum.class, FuncionarioDTO.class, BemDTO.class };
 
             @Override
             public Class<?> getColumnClass(final int columnIndex) {
@@ -169,10 +176,13 @@ public class OrdensServicoSwingView extends JPanel
         final DefaultTableModel tableModel = (DefaultTableModel) table
                 .getModel();
         tableModel.setNumRows(0);
-        for (final OrdemServicoDTO p : predio) {
-            tableModel.addRow(new Object[] { p.getId(), p.getNome(),
-                    p.getLocalizacao() == null ? "Nenhuma"
-                            : p.getLocalizacao().getNome() });
+        for (final OrdemServicoDTO o : ordemServico) {
+            tableModel.addRow(new Object[] { o.getId(), o.getDataCadastro(),
+                    o.getDataConclusao(), o.getValor(), o.getSituacao(),
+                    o.getFuncionario() == null ? "Nenhuma"
+                            : o.getFuncionario().getNome(),
+                    o.getBem() == null ? "Nenhuma"
+                            : o.getBem().getDescricao() });
         }
 
         revalidate();
@@ -214,15 +224,15 @@ public class OrdensServicoSwingView extends JPanel
     }
 
     @Override
-    public List<Integer> getSelectedPrediosIds() {
-        final List<Integer> selectedPredios = new ArrayList<Integer>();
+    public List<Integer> getSelectedOrdensServicoIds() {
+        final List<Integer> selectedOrdensServico = new ArrayList<Integer>();
         final int[] selectedRows = table.getSelectedRows();
         for (int i = 0; i < selectedRows.length; i++) {
             final int row = selectedRows[i];
             final Integer id = (Integer) table.getModel().getValueAt(row, 0);
-            selectedPredios.add(id);
+            selectedOrdensServico.add(id);
         }
-        return selectedPredios;
+        return selectedOrdensServico;
     }
 
 }

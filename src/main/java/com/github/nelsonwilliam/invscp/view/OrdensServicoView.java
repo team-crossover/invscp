@@ -46,6 +46,6 @@ public interface OrdensServicoView extends View {
      * Obtém uma lista com os IDs de todos as ordens de serviço atualmente
      * selecionados na tabela.
      */
-    List<Integer> getSelectedOrdemServicoIds();
+    List<Integer> getSelectedOrdensServicoIds();
 
 }
