@@ -104,11 +104,11 @@ public class OrdemServico implements Model<OrdemServicoDTO> {
     }
 
     public final String getSituacaoString() {
-    	return this.situacao.toString();
+        return this.situacao.toString();
     }
 
     public final void setSituacaoString(final String sit) {
-    	this.situacao = OSsituacaoEnum.valueOf(sit);
+        this.situacao = OSsituacaoEnum.valueOf(sit);
     }
 
     public Integer getIdFuncionario() {
@@ -125,6 +125,10 @@ public class OrdemServico implements Model<OrdemServicoDTO> {
 
     public void setIdBem(Integer idBem) {
         this.idBem = idBem;
+    }
+
+    public Boolean isPendente() {
+        return situacao.equals(OSsituacaoEnum.PENDENTE);
     }
 
 }

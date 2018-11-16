@@ -126,13 +126,7 @@ public class Bem implements Model<BemDTO> {
                     "Não foi possível encontrar o bem desejado.");
         }
 
-        // ------------------
         // CONTROLE DE ACESSO
-        // ------------------
-        // Verificar controle de acesso (O usuário pode alterar esse tipo
-        // de elemento, com esses atributos? Etc.).
-        // Bens são podem ser editados por chefes de patrimônio ou por chefes do
-        // departamento ao qual pertencem
         if (usuario == null) {
             throw new IllegalDeleteException("Você não está logado.");
         }
@@ -152,17 +146,7 @@ public class Bem implements Model<BemDTO> {
             }
         }
 
-        // TODO ...
-
-        // -----------------
         // VALIDADE DE DADOS
-        // -----------------
-        // Verificar validade dos dados (Os novos atributos do elemento são
-        // válidos? Há itens que não podem ser modificados? Há itens
-        // repetidos/duplicados/já utilizados?Há itens obrigatórios faltando?
-        // Etc).
-
-        // TODO Verificar se alguma ordem de serviço ou beixa depende desse bem.
         final BaixaRepository baixaRepo = new BaixaRepository();
         if (baixaRepo.getByBem(bem).size() > 0) {
             throw new IllegalDeleteException("Não é possível deletar o bem "
@@ -186,55 +170,187 @@ public class Bem implements Model<BemDTO> {
         }
     }
 
-    public static void validarInserir() throws IllegalInsertException {
+    public static void validarInserir(final FuncionarioDTO usuario,
+            final BemDTO novoBem) throws IllegalInsertException {
+
+        // ---------------
+        // IDENTIFICADORES
+        // ---------------
+
+        final BemRepository bemRepo = new BemRepository();
+
+        if (novoBem.getId() != null) {
+            final Bem bemExistente = bemRepo.getById(novoBem.getId());
+            if (bemExistente != null) {
+                throw new IllegalInsertException(
+                        "Não é possível inserir a sala pois o ID já existe.");
+            }
+        }
+
+        // CONTROLE DE ACESSO
+        if (usuario == null) {
+            throw new IllegalInsertException("Você não está logado.");
+        }
+        if (usuario.getDepartamento() == null) {
+            throw new IllegalInsertException(
+                    "Você não possui um departamento.");
+        }
+        if (!usuario.getCargo().isChefeDePatrimonio()) {
+            if (!usuario.getCargo().isChefeDeDepartamento()) {
+                throw new IllegalInsertException(
+                        "Você não tem permissão para inserir bens");
+            }
+            if (!usuario.getDepartamento().getId().equals(
+                    bemRepo.getById(novoBem.getId()).getIdDepartamento())) {
+                throw new IllegalInsertException(
+                        "Você não tem permissão para inserir bens");
+            }
+        }
+
+        // VALIDADE DE DADOS
+
+        try {
+            validarCampos(novoBem);
+        } catch (final CRUDException e) {
+            throw new IllegalInsertException(e.getMessage());
+        }
     }
 
-    public static void validarAlterar() throws IllegalUpdateException {
+    public static void validarAlterar(final FuncionarioDTO usuario,
+            final Integer idAntigoBem, final BemDTO novoBem)
+            throws IllegalUpdateException {
+
+        // ---------------
+        // IDENTIFICADORES
+        // ---------------
+
+        if (idAntigoBem == null) {
+            throw new IllegalUpdateException(
+                    "Não é possível alterar um bem sem seu ID.");
+        }
+
+        final BemRepository bemRepo = new BemRepository();
+        final Bem antigoBem = bemRepo.getById(idAntigoBem);
+
+        if (antigoBem == null) {
+            throw new IllegalUpdateException(
+                    "Não é possível alterar um bem inexistente.");
+        }
+
+        if (antigoBem.getId() == null) {
+            throw new IllegalUpdateException("Não é remover o ID do Bem.");
+        }
+
+        if (!antigoBem.getId().equals(novoBem.getId())) {
+            throw new IllegalUpdateException(
+                    "Não é possível alterar o ID do bem.");
+        }
+
+        // CONTROLE DE ACESSO
+        if (usuario == null) {
+            throw new IllegalUpdateException("Você não está logado.");
+        }
+        if (usuario.getDepartamento() == null) {
+            throw new IllegalUpdateException(
+                    "Você não possui um departamento.");
+        }
+        if (!usuario.getCargo().isChefeDePatrimonio()) {
+            if (!usuario.getCargo().isChefeDeDepartamento()) {
+                throw new IllegalUpdateException(
+                        "Você não tem permissão para deletar este item");
+            }
+            if (!usuario.getDepartamento().getId()
+                    .equals(antigoBem.getIdDepartamento())) {
+                throw new IllegalUpdateException(
+                        "Você não tem permissão para alterar este item");
+            }
+        }
+
+        // VALIDADE DE DADOS
+        final BaixaRepository baixaRepo = new BaixaRepository();
+        if (baixaRepo.getByBem(antigoBem).size() > 0) {
+            throw new IllegalUpdateException(
+                    "Não é possível alterar este bem pois ele já foi baixado.");
+        }
+
+        final OrdemServicoRepository osRepo = new OrdemServicoRepository();
+        if (osRepo.getByBem(antigoBem).size() > 0) {
+            throw new IllegalUpdateException(
+                    "Não é possível alterar este bem pois ele possui ordens de serviço pendentes relaciondas a ele.");
+        }
+
+        try {
+            validarCampos(novoBem);
+        } catch (final CRUDException e) {
+            throw new IllegalUpdateException(e.getMessage());
+        }
     }
 
     private static void validarCampos(BemDTO bem) throws CRUDException {
         if (bem.getDataAquisicao() == null) {
             throw new CRUDException(
-                    "O 'data de aquisição' é um campo obrigatório.");
+                    "'Data de aquisição' é um campo obrigatório.");
         }
         if (bem.getDataCadastro() == null) {
             throw new CRUDException(
-                    "O 'data de cadastro' é um campo obrigatório.");
+                    "'Data de cadastro' é um campo obrigatório.");
         }
         if (bem.getDepartamento() == null) {
-
+            throw new CRUDException("'Departamento' é um campo obrigatório.");
         }
         if (bem.getDescricao() == null || bem.getDescricao().isEmpty()) {
-
+            throw new CRUDException("'Descrição' é um campo obrigatório.");
         }
         if (bem.getEspecificacao() == null
                 || bem.getEspecificacao().isEmpty()) {
-
+            throw new CRUDException("'Especificação' é um campo obrigatório.");
         }
         if (bem.getGarantia() == null) {
-
+            throw new CRUDException("'Garantia' é um campo obrigatório.");
         }
         if (bem.getGrupoMaterial() == null) {
-
+            throw new CRUDException("'Grupo material' é um campo obrigatório.");
         }
         if (bem.getMarca() == null || bem.getMarca().isEmpty()) {
-
+            throw new CRUDException("'Marca' é um campo obrigatório.");
         }
         if (bem.getNumeroNotaFiscal() == null
                 || bem.getNumeroNotaFiscal().isEmpty()) {
-
+            throw new CRUDException("'Nota fiscal' é um campo obrigatório.");
         }
         if (bem.getNumeroTombamento() == null
                 || bem.getNumeroTombamento() < 0) {
-
+            throw new CRUDException(
+                    "'Numero de tombamento' é um campo obrigatório.");
         }
         if (bem.getSala() == null) {
-
+            throw new CRUDException("'Sala' é um campo obrigatório.");
         }
         if (bem.getSituacao() == null) {
-
+            throw new CRUDException("A 'situação' do bem deve ser definida");
         }
 
+    }
+
+    public final Float exibirDepreciacao(BemDTO bem) {
+        Float novoValor;
+        Float valCompra = bem.getValorCompra();
+        Float dep = bem.getGrupoMaterial().getDepreciacao();
+        Date date = new Date();
+        LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault())
+                .toLocalDate();
+        Integer time = localDate.getYear() - bem.getDataAquisicao().getYear();
+        if (time > 0) {
+            if (valCompra - (valCompra * (dep * time)) == 0) {
+                novoValor = (float) 0.01;
+            } else {
+                novoValor = valCompra - (valCompra * (dep * time));
+            }
+            novoValor = valCompra - (valCompra * (dep * time));
+        } else {
+            novoValor = valCompra;
+        }
+        return novoValor;
     }
 
     public final Integer getId() {
