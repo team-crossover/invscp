@@ -1,5 +1,6 @@
 package com.github.nelsonwilliam.invscp.view.swing;
 
+import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -9,16 +10,22 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.ListCellRenderer;
 import javax.swing.SwingConstants;
 
 import com.github.nelsonwilliam.invscp.model.dto.BaixaDTO;
 import com.github.nelsonwilliam.invscp.model.dto.BemDTO;
+import com.github.nelsonwilliam.invscp.model.enums.MotivoBaixaEnum;
 import com.github.nelsonwilliam.invscp.view.BaixaView;
 
 public class BaixaSwingView extends JDialog implements BaixaView {
@@ -37,7 +44,7 @@ public class BaixaSwingView extends JDialog implements BaixaView {
     private JLabel fieldFuncionario;
     private JLabel lblObservaes;
     private JTextField fieldObservacoes;
-    private JTextField fieldMotivo;
+    private JComboBox<MotivoBaixaEnum> comboMotivo;
     private JLabel lblMotivo;
     private JLabel lblBem;
     private JLabel fieldBem;
@@ -138,14 +145,34 @@ public class BaixaSwingView extends JDialog implements BaixaView {
         gbc_motivo.gridy = 7;
         getContentPane().add(lblMotivo, gbc_motivo);
 
-        fieldMotivo = new JTextField();
-        fieldMotivo.setColumns(10);
+        final ListCellRenderer<? super MotivoBaixaEnum> MotivoBaixaListRenderer = new DefaultListCellRenderer() {
+            private static final long serialVersionUID = 7167925593421821685L;
+
+            @Override
+            public Component getListCellRendererComponent(final JList<?> list,
+                    final Object value, final int index,
+                    final boolean isSelected, final boolean cellHasFocus) {
+                if (value == null) {
+                    return super.getListCellRendererComponent(list, "Nenhum",
+                            index, isSelected, cellHasFocus);
+                } else {
+                    final String nome = ((MotivoBaixaEnum) value).getTexto();
+                    return super.getListCellRendererComponent(list, nome, index,
+                            isSelected, cellHasFocus);
+                }
+            }
+        };
+
+        comboMotivo = new JComboBox<MotivoBaixaEnum>();
+        comboMotivo.setModel(new DefaultComboBoxModel<MotivoBaixaEnum>(
+                MotivoBaixaEnum.values()));
+        comboMotivo.setRenderer(MotivoBaixaListRenderer);
         GridBagConstraints gbc_textField = new GridBagConstraints();
         gbc_textField.insets = new Insets(0, 0, 5, 5);
         gbc_textField.fill = GridBagConstraints.HORIZONTAL;
         gbc_textField.gridx = 2;
         gbc_textField.gridy = 7;
-        getContentPane().add(fieldMotivo, gbc_textField);
+        getContentPane().add(comboMotivo, gbc_textField);
 
         lblObservaes = new JLabel("Observações:");
         GridBagConstraints gbc_lblObservaes = new GridBagConstraints();
@@ -200,7 +227,6 @@ public class BaixaSwingView extends JDialog implements BaixaView {
 
         fieldData.setText(baixa.getData().toString());
         fieldFuncionario.setText(baixa.getFuncionario().getNome());
-        fieldMotivo.setText(baixa.getMotivo());
         fieldObservacoes.setText(baixa.getObservacoes());
         fieldBem.setText(baixa.getBem().getDescricao());
 
@@ -253,7 +279,7 @@ public class BaixaSwingView extends JDialog implements BaixaView {
         // baixa.setFuncionario(fieldFuncionario.getText());
         baixa.setData(LocalDate.parse(fieldData.getText(),
                 DateTimeFormatter.BASIC_ISO_DATE));
-        baixa.setMotivo(fieldMotivo.getText());
+        baixa.setMotivo((MotivoBaixaEnum) comboMotivo.getSelectedItem());
         baixa.setObservacoes(fieldObservacoes.getText());
         return baixa;
     }

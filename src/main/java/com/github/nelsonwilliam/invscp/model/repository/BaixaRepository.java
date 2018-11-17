@@ -11,13 +11,14 @@ import java.util.List;
 
 import com.github.nelsonwilliam.invscp.model.Baixa;
 import com.github.nelsonwilliam.invscp.model.Bem;
+import com.github.nelsonwilliam.invscp.model.enums.MotivoBaixaEnum;
 import com.github.nelsonwilliam.invscp.util.DatabaseConnection;
 
 public class BaixaRepository implements Repository<Baixa> {
 
-	@Override
-	public List<Baixa> getAll() {
-		final Connection connection = DatabaseConnection.getConnection();
+    @Override
+    public List<Baixa> getAll() {
+        final Connection connection = DatabaseConnection.getConnection();
         final List<Baixa> baixas = new ArrayList<Baixa>();
         try {
             final PreparedStatement s = connection.prepareStatement(
@@ -29,12 +30,13 @@ public class BaixaRepository implements Repository<Baixa> {
                 final String motivo = (String) r.getObject("motivo");
                 final String observacoes = (String) r.getObject("observacoes");
                 final Integer idBem = (Integer) r.getObject("id_bem");
-                final Integer idFuncionario = (Integer) r.getObject("id_funcionario");
+                final Integer idFuncionario = (Integer) r
+                        .getObject("id_funcionario");
 
                 final Baixa baixa = new Baixa();
                 baixa.setId(id);
                 baixa.setData(data);
-                baixa.setMotivo(motivo);
+                baixa.setMotivo(MotivoBaixaEnum.valueOf(motivo));
                 baixa.setObservacoes(observacoes);
                 baixa.setIdBem(idBem);
                 baixa.setIdFuncionario(idFuncionario);
@@ -44,11 +46,11 @@ public class BaixaRepository implements Repository<Baixa> {
             e.printStackTrace();
         }
         return baixas;
-	}
+    }
 
-	@Override
-	public Baixa getById(Integer id) {
-		final Connection connection = DatabaseConnection.getConnection();
+    @Override
+    public Baixa getById(Integer id) {
+        final Connection connection = DatabaseConnection.getConnection();
         Baixa baixa = null;
         try {
             final PreparedStatement s = connection.prepareStatement(
@@ -57,16 +59,17 @@ public class BaixaRepository implements Repository<Baixa> {
 
             final ResultSet r = s.executeQuery();
             if (r.next()) {
-            	final LocalDate data = (LocalDate) r.getObject("data");
+                final LocalDate data = (LocalDate) r.getObject("data");
                 final String motivo = (String) r.getObject("motivo");
                 final String observacoes = (String) r.getObject("observacoes");
                 final Integer idBem = (Integer) r.getObject("id_bem");
-                final Integer idFuncionario = (Integer) r.getObject("id_funcionario");
+                final Integer idFuncionario = (Integer) r
+                        .getObject("id_funcionario");
 
                 baixa = new Baixa();
                 baixa.setId(id);
                 baixa.setData(data);
-                baixa.setMotivo(motivo);
+                baixa.setMotivo(MotivoBaixaEnum.valueOf(motivo));
                 baixa.setObservacoes(observacoes);
                 baixa.setIdBem(idBem);
                 baixa.setIdFuncionario(idFuncionario);
@@ -75,11 +78,11 @@ public class BaixaRepository implements Repository<Baixa> {
             e.printStackTrace();
         }
         return baixa;
-	}
+    }
 
-	@Override
-	public boolean add(Baixa item) {
-		final Connection connection = DatabaseConnection.getConnection();
+    @Override
+    public boolean add(Baixa item) {
+        final Connection connection = DatabaseConnection.getConnection();
         try {
             PreparedStatement s;
             if (item.getId() == null) {
@@ -117,20 +120,20 @@ public class BaixaRepository implements Repository<Baixa> {
         }
         return false;
 
-	}
+    }
 
-	@Override
-	public boolean add(Iterable<Baixa> items) {
-		boolean added = false;
+    @Override
+    public boolean add(Iterable<Baixa> items) {
+        boolean added = false;
         for (final Baixa item : items) {
             added |= add(item);
         }
         return added;
-	}
+    }
 
-	@Override
-	public boolean update(Baixa item) {
-		final Connection connection = DatabaseConnection.getConnection();
+    @Override
+    public boolean update(Baixa item) {
+        final Connection connection = DatabaseConnection.getConnection();
         try {
             if (item.getId() == null) {
                 return false;
@@ -151,20 +154,20 @@ public class BaixaRepository implements Repository<Baixa> {
         }
         return false;
 
-	}
+    }
 
-	@Override
-	public boolean update(Iterable<Baixa> items) {
-		boolean updated = false;
+    @Override
+    public boolean update(Iterable<Baixa> items) {
+        boolean updated = false;
         for (final Baixa item : items) {
             updated |= update(item);
         }
         return updated;
-	}
+    }
 
-	@Override
-	public boolean remove(Baixa item) {
-		final Connection connection = DatabaseConnection.getConnection();
+    @Override
+    public boolean remove(Baixa item) {
+        final Connection connection = DatabaseConnection.getConnection();
         try {
             if (item.getId() == null) {
                 return false;
@@ -178,19 +181,19 @@ public class BaixaRepository implements Repository<Baixa> {
             e.printStackTrace();
         }
         return false;
-	}
+    }
 
-	@Override
-	public boolean remove(Iterable<Baixa> items) {
-		boolean removed = false;
+    @Override
+    public boolean remove(Iterable<Baixa> items) {
+        boolean removed = false;
         for (final Baixa item : items) {
             removed |= remove(item);
         }
         return removed;
-	}
+    }
 
-	public List<Baixa> getByBem(Bem bem) {
-		final Connection connection = DatabaseConnection.getConnection();
+    public List<Baixa> getByBem(Bem bem) {
+        final Connection connection = DatabaseConnection.getConnection();
         final List<Baixa> baixas = new ArrayList<Baixa>();
         try {
             final PreparedStatement s = connection.prepareStatement(
@@ -203,12 +206,13 @@ public class BaixaRepository implements Repository<Baixa> {
                 final String motivo = (String) r.getObject("motivo");
                 final String observacoes = (String) r.getObject("observacoes");
                 final Integer idBem = (Integer) r.getObject("id_bem");
-                final Integer idFuncionario = (Integer) r.getObject("id_funcionario");
+                final Integer idFuncionario = (Integer) r
+                        .getObject("id_funcionario");
 
                 final Baixa baixa = new Baixa();
                 baixa.setId(id);
                 baixa.setData(data);
-                baixa.setMotivo(motivo);
+                baixa.setMotivo(MotivoBaixaEnum.valueOf(motivo));
                 baixa.setObservacoes(observacoes);
                 baixa.setIdBem(idBem);
                 baixa.setIdFuncionario(idFuncionario);
@@ -218,7 +222,6 @@ public class BaixaRepository implements Repository<Baixa> {
             e.printStackTrace();
         }
         return baixas;
-	}
-
+    }
 
 }

@@ -2,13 +2,15 @@ package com.github.nelsonwilliam.invscp.model.dto;
 
 import java.time.LocalDate;
 
+import com.github.nelsonwilliam.invscp.model.enums.MotivoBaixaEnum;
+
 public class BaixaDTO implements DTO {
 
     private Integer id = null;
 
     private LocalDate data = null;
 
-    private String motivo = null;
+    private MotivoBaixaEnum motivo = null;
 
     private String observacoes = null;
 
@@ -32,11 +34,11 @@ public class BaixaDTO implements DTO {
         this.data = data;
     }
 
-    public final String getMotivo() {
+    public final MotivoBaixaEnum getMotivo() {
         return motivo;
     }
 
-    public final void setMotivo(String motivo) {
+    public final void setMotivo(MotivoBaixaEnum motivo) {
         this.motivo = motivo;
     }
 
