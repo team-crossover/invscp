@@ -147,6 +147,7 @@ public class Bem implements Model<BemDTO> {
         }
 
         // VALIDADE DE DADOS
+        // TODO se o bem não está em movimentação
         final BaixaRepository baixaRepo = new BaixaRepository();
         if (baixaRepo.getByBem(bem).size() > 0) {
             throw new IllegalDeleteException("Não é possível deletar o bem "
@@ -208,6 +209,7 @@ public class Bem implements Model<BemDTO> {
         }
 
         // VALIDADE DE DADOS
+        // TODO se o bem não está em movimentação
 
         try {
             validarCampos(novoBem);
@@ -257,7 +259,7 @@ public class Bem implements Model<BemDTO> {
         if (!usuario.getCargo().isChefeDePatrimonio()) {
             if (!usuario.getCargo().isChefeDeDepartamento()) {
                 throw new IllegalUpdateException(
-                        "Você não tem permissão para deletar este item");
+                        "Você não tem permissão para alterar este item");
             }
             if (!usuario.getDepartamento().getId()
                     .equals(antigoBem.getIdDepartamento())) {
@@ -267,6 +269,7 @@ public class Bem implements Model<BemDTO> {
         }
 
         // VALIDADE DE DADOS
+        // TODO se o bem não está em movimentação
         final BaixaRepository baixaRepo = new BaixaRepository();
         if (baixaRepo.getByBem(antigoBem).size() > 0) {
             throw new IllegalUpdateException(
@@ -291,12 +294,13 @@ public class Bem implements Model<BemDTO> {
             throw new CRUDException(
                     "'Data de aquisição' é um campo obrigatório.");
         }
+        // Deve ser definida pelo sistema
         if (bem.getDataCadastro() == null) {
             throw new CRUDException(
                     "'Data de cadastro' é um campo obrigatório.");
         }
         if (bem.getDepartamento() == null) {
-            throw new CRUDException("'Departamento' é um campo obrigatório.");
+            throw new CRUDException("O 'Departamento' selecionado não existe.");
         }
         if (bem.getDescricao() == null || bem.getDescricao().isEmpty()) {
             throw new CRUDException("'Descrição' é um campo obrigatório.");
@@ -309,7 +313,8 @@ public class Bem implements Model<BemDTO> {
             throw new CRUDException("'Garantia' é um campo obrigatório.");
         }
         if (bem.getGrupoMaterial() == null) {
-            throw new CRUDException("'Grupo material' é um campo obrigatório.");
+            throw new CRUDException(
+                    "O 'Grupo material' selecionado não existe.");
         }
         if (bem.getMarca() == null || bem.getMarca().isEmpty()) {
             throw new CRUDException("'Marca' é um campo obrigatório.");
@@ -326,9 +331,10 @@ public class Bem implements Model<BemDTO> {
         if (bem.getSala() == null) {
             throw new CRUDException("'Sala' é um campo obrigatório.");
         }
-        if (bem.getSituacao() == null) {
-            throw new CRUDException("A 'situação' do bem deve ser definida");
-        }
+        // Situação é definida pelo sistema
+        // if (bem.getSituacao() == null) {
+        // throw new CRUDException("A 'situação' do bem deve ser definida");
+        // }
 
     }
 
