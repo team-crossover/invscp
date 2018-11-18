@@ -25,7 +25,7 @@ Os artefatos gerados até então para o projeto são:
 
 As atividades planejadas para o projeto estão dispostas no diagrama Gantt abaixo:
 
-![Diagrama](docs/gantt.png)
+![Diagrama](https://user-images.githubusercontent.com/6721656/48668374-c9888800-ead2-11e8-9a09-b077aa8236f2.png)
 
 Legenda:
 
