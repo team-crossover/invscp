@@ -51,6 +51,11 @@ public class DepartamentosPresenter extends Presenter<DepartamentosView> {
     private void onDeletarDepartamentos() {
         final List<Integer> selectedDeptIds = view
                 .getSelectedDepartamentosIds();
+        if (selectedDeptIds.size() < 1) {
+            view.showError("Nenhum item foi selecionado.");
+            return;
+        }
+
         view.showConfirmacao(
                 "Deletar " + selectedDeptIds.size() + " departamento(s)?.",
                 (final Boolean confirmado) -> {

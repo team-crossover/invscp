@@ -4,21 +4,21 @@ import java.awt.event.ActionEvent;
 
 import com.github.nelsonwilliam.invscp.exception.IllegalInsertException;
 import com.github.nelsonwilliam.invscp.exception.IllegalUpdateException;
+import com.github.nelsonwilliam.invscp.model.dto.BemDTO;
 import com.github.nelsonwilliam.invscp.model.dto.FuncionarioDTO;
-import com.github.nelsonwilliam.invscp.model.dto.SalaDTO;
 import com.github.nelsonwilliam.invscp.util.Client;
-import com.github.nelsonwilliam.invscp.view.SalaView;
+import com.github.nelsonwilliam.invscp.view.BemView;
 
-public class SalaPresenter extends Presenter<SalaView> {
+public class BemPresenter extends Presenter<BemView> {
 
     private final MainPresenter mainPresenter;
-    private final SalasPresenter salasPresenter;
+    private final BensPresenter bensPresenter;
 
-    public SalaPresenter(final SalaView view, final MainPresenter mainPresenter,
-            final SalasPresenter salasPresenter) {
+    public BemPresenter(final BemView view, final MainPresenter mainPresenter,
+            final BensPresenter bensPresenter) {
         super(view);
         this.mainPresenter = mainPresenter;
-        this.salasPresenter = salasPresenter;
+        this.bensPresenter = bensPresenter;
         setupViewListeners();
     }
 
@@ -30,49 +30,49 @@ public class SalaPresenter extends Presenter<SalaView> {
 
     private void onConfirmar() {
         final FuncionarioDTO usuario = mainPresenter.getUsuario();
-        final SalaDTO salaDTO = view.getSala();
-        if (salaDTO == null) {
+        final BemDTO bemDTO = view.getBem();
+        if (bemDTO == null) {
             view.showError("Não foi possível inserir/alterar o item.");
             return;
         }
 
-        if (salaDTO.getId() == null) {
-            onConfirmarAdicao(usuario, salaDTO);
+        if (bemDTO.getId() == null) {
+            onConfirmarAdicao(usuario, bemDTO);
         } else {
-            onConfirmarAtualizacao(usuario, salaDTO.getId(), salaDTO);
+            onConfirmarAtualizacao(usuario, bemDTO.getId(), bemDTO);
         }
     }
 
     private void onConfirmarAdicao(final FuncionarioDTO usuario,
-            final SalaDTO salaNova) {
+            final BemDTO deptNovo) {
 
         try {
-            Client.requestValidarInserirSala(usuario, salaNova);
+            Client.requestValidarInserirBem(usuario, deptNovo);
         } catch (final IllegalInsertException e) {
             view.showError(e.getMessage());
             return;
         }
 
-        Client.requestAddSala(salaNova);
+        Client.requestAddBem(deptNovo);
         view.showSucesso();
         view.close();
-        salasPresenter.updateSalas();
+        bensPresenter.updateBens();
     }
 
     private void onConfirmarAtualizacao(final FuncionarioDTO usuario,
-            final Integer idSalaAnterior, final SalaDTO salaAtualizada) {
+            final Integer idDeptAnterior, final BemDTO deptAtualizado) {
 
         try {
-            Client.requestValidarAlterarSala(usuario, idSalaAnterior,
-                    salaAtualizada);
+            Client.requestValidarAlterarBem(usuario, idDeptAnterior,
+                    deptAtualizado);
         } catch (final IllegalUpdateException e) {
             view.showError(e.getMessage());
             return;
         }
 
-        Client.requestUpdateSala(salaAtualizada);
+        Client.requestUpdateBem(deptAtualizado);
         view.showSucesso();
         view.close();
-        salasPresenter.updateSalas();
+        bensPresenter.updateBens();
     }
 }

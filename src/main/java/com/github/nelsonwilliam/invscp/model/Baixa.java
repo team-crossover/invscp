@@ -1,12 +1,16 @@
 package com.github.nelsonwilliam.invscp.model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.github.nelsonwilliam.invscp.exception.CRUDException;
 import com.github.nelsonwilliam.invscp.exception.IllegalDeleteException;
 import com.github.nelsonwilliam.invscp.exception.IllegalInsertException;
+import com.github.nelsonwilliam.invscp.exception.IllegalUpdateException;
 import com.github.nelsonwilliam.invscp.model.dto.BaixaDTO;
 import com.github.nelsonwilliam.invscp.model.dto.FuncionarioDTO;
+import com.github.nelsonwilliam.invscp.model.enums.BemSituacaoEnum;
 import com.github.nelsonwilliam.invscp.model.enums.MotivoBaixaEnum;
 import com.github.nelsonwilliam.invscp.model.repository.BaixaRepository;
 import com.github.nelsonwilliam.invscp.model.repository.BemRepository;
@@ -30,7 +34,7 @@ public class Baixa implements Model<BaixaDTO> {
     private Integer idBem = null;
 
     @Override
-    public void setValuesFromDTO(BaixaDTO dto) {
+    public void setValuesFromDTO(final BaixaDTO dto) {
         setData(dto.getData());
         setId(dto.getId());
         setMotivo(dto.getMotivo());
@@ -58,69 +62,24 @@ public class Baixa implements Model<BaixaDTO> {
         }
         if (idBem != null) {
             final BemRepository repo = new BemRepository();
-            final Bem bem = repo.getById(idFuncionario);
+            final Bem bem = repo.getById(idBem);
             bem.setIdDepartamento(null);
             dto.setBem(bem == null ? null : bem.toDTO());
         }
         return dto;
     }
 
-    // Isso existe?
     public static void validarDeletar(final FuncionarioDTO usuario,
             final Integer idBaixa) throws IllegalDeleteException {
-        // ---------------
-        // IDENTIFICADORES
-        // ---------------
 
-        if (idBaixa == null) {
-            throw new IllegalDeleteException(
-                    "Não é possível remover bens sem informar o ID.");
-        }
+        throw new IllegalDeleteException("Não é possível deletar baixas.");
+    }
 
-        final BaixaRepository baixaRepo = new BaixaRepository();
-        final Baixa baixa = baixaRepo.getById(idBaixa);
+    public static void validarAlterar(final FuncionarioDTO usuario,
+            final Integer idAntigoBaixa, final BaixaDTO novoBaixa)
+            throws IllegalUpdateException {
 
-        if (baixa == null) {
-            throw new IllegalDeleteException(
-                    "Não foi possível encontrar a baixa desejado.");
-        }
-
-        final BemRepository bemRepo = new BemRepository();
-        final Bem bem = bemRepo.getById(baixa.getIdBem());
-        final FuncionarioRepository funRepo = new FuncionarioRepository();
-        final Funcionario func = funRepo.getById(baixa.getIdFuncionario());
-        // CONTROLE DE ACESSO
-        if (usuario == null) {
-            throw new IllegalDeleteException("Você não está logado.");
-        }
-        if (usuario.getDepartamento() == null) {
-            throw new IllegalDeleteException(
-                    "Você não possui um departamento.");
-        }
-        if (!usuario.getCargo().isChefeDePatrimonio()) {
-            if (!usuario.getCargo().isChefeDeDepartamento()) {
-                throw new IllegalDeleteException(
-                        "Você não tem permissão para deletar este item");
-            }
-            if (!usuario.getDepartamento().getId()
-                    .equals(bem.getIdDepartamento())) {
-                throw new IllegalDeleteException(
-                        "Você não tem permissão para deletar este item");
-            }
-            if (!usuario.getId().equals(func.getId())) {
-                throw new IllegalDeleteException(
-                        "Você não tem permissão para deletar este item em nome de outro funcionário");
-            }
-        }
-
-        // VALIDADE DE DADOS
-        // TODO se o bem não está em movimentação
-        final OrdemServicoRepository osRepo = new OrdemServicoRepository();
-        if (osRepo.getByBem(bem).size() > 0) {
-            throw new IllegalDeleteException("Não é possível baixar o bem "
-                    + bem.getDescricao()
-                    + " pois ele possui ordens de serviço pendentes relaciondas a ele.");
-        }
+        throw new IllegalUpdateException("Não é possível alterar baixas.");
     }
 
     public static void validarInserir(final FuncionarioDTO usuario,
@@ -187,9 +146,9 @@ public class Baixa implements Model<BaixaDTO> {
         }
     }
 
-    private static void validarCampos(BaixaDTO baixa) throws CRUDException {
+    private static void validarCampos(final BaixaDTO baixa) throws CRUDException {
         if (baixa.getBem() == null) {
-            throw new CRUDException("O 'Bem' selecionado não existe.");
+            throw new CRUDException("O 'Bem' não pode ser vazio.");
         }
         // Deve ser definida pelo sistema
         if (baixa.getData() == null) {
@@ -197,7 +156,7 @@ public class Baixa implements Model<BaixaDTO> {
         }
         // Definido pelo sistema - o autor da baixa
         if (baixa.getFuncionario() == null) {
-            throw new CRUDException("O 'Funcionário' selecionado não existe.");
+            throw new CRUDException("O 'Funcionário' não pode ser vazio.");
         }
         if (baixa.getMotivo() == null) {
             throw new CRUDException("'Motivo' é um campo obrigatório.");
@@ -211,11 +170,30 @@ public class Baixa implements Model<BaixaDTO> {
 
     }
 
+    public static List<String> posInserir(final FuncionarioDTO usuario,
+            final BaixaDTO baixa) {
+
+        final List<String> messages = new ArrayList<String>();
+        final BemRepository bemRepo = new BemRepository();
+        final Bem bem = bemRepo.getById(baixa.getBem().getId());
+
+        // A situação do bem deve ser alterada para BAIXADO após criar a baixa
+        // dele.
+        bem.setSituacao(BemSituacaoEnum.BAIXADO);
+        bemRepo.update(bem);
+        messages.add("O bem " + bem.getDescricao()
+                + " está agora 'baixado'.");
+
+        return messages;
+    }
+
+    @Override
     public Integer getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    @Override
+    public void setId(final Integer id) {
         this.id = id;
     }
 
@@ -223,7 +201,7 @@ public class Baixa implements Model<BaixaDTO> {
         return data;
     }
 
-    public void setData(LocalDate data) {
+    public void setData(final LocalDate data) {
         this.data = data;
     }
 
@@ -231,7 +209,7 @@ public class Baixa implements Model<BaixaDTO> {
         return motivo;
     }
 
-    public void setMotivo(MotivoBaixaEnum motivo) {
+    public void setMotivo(final MotivoBaixaEnum motivo) {
         this.motivo = motivo;
     }
 
@@ -239,7 +217,7 @@ public class Baixa implements Model<BaixaDTO> {
         return observacoes;
     }
 
-    public void setObservacoes(String observacoes) {
+    public void setObservacoes(final String observacoes) {
         this.observacoes = observacoes;
     }
 
@@ -247,7 +225,7 @@ public class Baixa implements Model<BaixaDTO> {
         return idFuncionario;
     }
 
-    public void setIdFuncionario(Integer idFuncionario) {
+    public void setIdFuncionario(final Integer idFuncionario) {
         this.idFuncionario = idFuncionario;
     }
 
@@ -255,7 +233,7 @@ public class Baixa implements Model<BaixaDTO> {
         return idBem;
     }
 
-    public void setIdBem(Integer idBem) {
+    public void setIdBem(final Integer idBem) {
         this.idBem = idBem;
     }
 

@@ -33,6 +33,10 @@ public class DepartamentoPresenter extends Presenter<DepartamentoView> {
     private void onConfirmar() {
         final FuncionarioDTO usuario = mainPresenter.getUsuario();
         final DepartamentoDTO deptDTO = view.getDepartamento();
+        if (deptDTO == null) {
+            view.showError("Não foi possível inserir/alterar o item.");
+            return;
+        }
 
         if (deptDTO.getId() == null) {
             onConfirmarAdicao(usuario, deptDTO);
@@ -54,7 +58,6 @@ public class DepartamentoPresenter extends Presenter<DepartamentoView> {
         Client.requestAddDepartamento(deptNovo);
         view.showSucesso();
         view.close();
-        deptsPresenter.updateDepartamentos();
 
         // Executa as pós-alterações e exibe as mensagens resultantes.
         final List<String> messages = Client
@@ -69,6 +72,8 @@ public class DepartamentoPresenter extends Presenter<DepartamentoView> {
                 && usuario.getDepartamento().getId().equals(deptNovo.getId())) {
             mainPresenter.setIdUsuario(usuario.getId());
         }
+
+        deptsPresenter.updateDepartamentos();
     }
 
     private void onConfirmarAtualizacao(final FuncionarioDTO usuario,
@@ -86,7 +91,6 @@ public class DepartamentoPresenter extends Presenter<DepartamentoView> {
         Client.requestUpdateDepartamento(deptAtualizado);
         view.showSucesso();
         view.close();
-        deptsPresenter.updateDepartamentos();
 
         // Executa as pós-alterações e exibe as mensagens resultantes.
         final List<String> messages = Client
@@ -101,5 +105,7 @@ public class DepartamentoPresenter extends Presenter<DepartamentoView> {
                 .getId().equals(deptAtualizado.getId())) {
             mainPresenter.setIdUsuario(usuario.getId());
         }
+
+        deptsPresenter.updateDepartamentos();
     }
 }

@@ -1,31 +1,26 @@
 package com.github.nelsonwilliam.invscp.view.swing;
 
-import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
+import java.time.format.DateTimeParseException;
 
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-import javax.swing.ListCellRenderer;
 
 import com.github.nelsonwilliam.invscp.model.dto.BemDTO;
 import com.github.nelsonwilliam.invscp.model.dto.FuncionarioDTO;
 import com.github.nelsonwilliam.invscp.model.dto.OrdemServicoDTO;
-import com.github.nelsonwilliam.invscp.model.enums.OSsituacaoEnum;
+import com.github.nelsonwilliam.invscp.model.enums.OSSituacaoEnum;
 import com.github.nelsonwilliam.invscp.view.OrdemServicoView;
 
 public class OrdemServicoSwingView extends JDialog implements OrdemServicoView {
@@ -34,7 +29,9 @@ public class OrdemServicoSwingView extends JDialog implements OrdemServicoView {
 
     private final boolean isAdicionar;
 
-    private Integer idPredio;
+    private Integer idOrdemServico;
+    private BemDTO bem;
+    private FuncionarioDTO funcionario;
 
     private JButton btnConfirmar;
     private JButton btnCancelar;
@@ -45,8 +42,8 @@ public class OrdemServicoSwingView extends JDialog implements OrdemServicoView {
     private JLabel lblSituacao;
     private JLabel lblFuncionario;
     private JLabel lblBem;
-    private JTextField fieldDataConclusao;
-    private JComboBox<OSsituacaoEnum> situacao;
+    private JLabel fieldDataConclusao;
+    private JLabel fieldSituacao;
     private JLabel fieldBem;
     private JLabel fieldFuncionario;
     private JLabel fieldDataCadastro;
@@ -60,8 +57,7 @@ public class OrdemServicoSwingView extends JDialog implements OrdemServicoView {
      */
 
     public OrdemServicoSwingView(final JFrame owner,
-            final OrdemServicoDTO ordemServico, final boolean isAdicionar,
-            final List<FuncionarioDTO> funcionario, List<BemDTO> bem) {
+            final OrdemServicoDTO ordemServico, final boolean isAdicionar) {
 
         super(owner,
                 isAdicionar ? "Adicionar ordem de serviço"
@@ -69,19 +65,20 @@ public class OrdemServicoSwingView extends JDialog implements OrdemServicoView {
                 ModalityType.APPLICATION_MODAL);
         this.isAdicionar = isAdicionar;
         initialize();
-        updateOrdemServico(ordemServico, bem, funcionario);
+        updateOrdemServico(ordemServico);
     }
 
     private void initialize() {
-        setBounds(0, 0, 500, 300);
+        setBounds(0, 0, 500, 250);
         setLocationRelativeTo(getOwner());
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         final GridBagLayout gridBagLayout = new GridBagLayout();
-        gridBagLayout.columnWidths = new int[] { 30, 102, 0, 30 };
-        gridBagLayout.rowHeights = new int[] { 30, 0, 0, 0, 0, 0, 15, 0, 30 };
+        gridBagLayout.columnWidths = new int[] { 25, 102, 0, 25 };
+        gridBagLayout.rowHeights =
+                new int[] { 25, 30, 15, 0, 15, 15, 15, 15, 0, 25 };
         gridBagLayout.columnWeights = new double[] { 0.0, 0.0, 1.0, 0.0 };
         gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                0.0, 0.0, 0.0 };
+                0.0, 1.0, 0.0, 0.0 };
         getContentPane().setLayout(gridBagLayout);
 
         btnConfirmar = new JButton("Confirmar");
@@ -94,44 +91,43 @@ public class OrdemServicoSwingView extends JDialog implements OrdemServicoView {
         });
 
         lblDataDeCadastro = new JLabel("Data de cadastro:");
-        GridBagConstraints gbc_lblDataDeCadastro = new GridBagConstraints();
+        final GridBagConstraints gbc_lblDataDeCadastro = new GridBagConstraints();
         gbc_lblDataDeCadastro.anchor = GridBagConstraints.EAST;
         gbc_lblDataDeCadastro.insets = new Insets(0, 0, 5, 5);
         gbc_lblDataDeCadastro.gridx = 1;
-        gbc_lblDataDeCadastro.gridy = 0;
+        gbc_lblDataDeCadastro.gridy = 1;
         getContentPane().add(lblDataDeCadastro, gbc_lblDataDeCadastro);
 
         fieldDataCadastro = new JLabel("");
-        GridBagConstraints gbc_fieldDataCadastro = new GridBagConstraints();
+        final GridBagConstraints gbc_fieldDataCadastro = new GridBagConstraints();
         gbc_fieldDataCadastro.anchor = GridBagConstraints.WEST;
         gbc_fieldDataCadastro.insets = new Insets(0, 0, 5, 5);
         gbc_fieldDataCadastro.gridx = 2;
-        gbc_fieldDataCadastro.gridy = 0;
+        gbc_fieldDataCadastro.gridy = 1;
         getContentPane().add(fieldDataCadastro, gbc_fieldDataCadastro);
 
         lblDataConclusao = new JLabel("Data de conclusão:");
-        GridBagConstraints gbc_lblDataConclusao = new GridBagConstraints();
+        final GridBagConstraints gbc_lblDataConclusao = new GridBagConstraints();
         gbc_lblDataConclusao.anchor = GridBagConstraints.EAST;
         gbc_lblDataConclusao.insets = new Insets(0, 0, 5, 5);
         gbc_lblDataConclusao.gridx = 1;
-        gbc_lblDataConclusao.gridy = 1;
+        gbc_lblDataConclusao.gridy = 2;
         getContentPane().add(lblDataConclusao, gbc_lblDataConclusao);
 
-        fieldDataConclusao = new JTextField();
-        GridBagConstraints gbc_fieldDataConclusao = new GridBagConstraints();
+        fieldDataConclusao = new JLabel();
+        final GridBagConstraints gbc_fieldDataConclusao = new GridBagConstraints();
         gbc_fieldDataConclusao.insets = new Insets(0, 0, 5, 5);
         gbc_fieldDataConclusao.fill = GridBagConstraints.HORIZONTAL;
         gbc_fieldDataConclusao.gridx = 2;
-        gbc_fieldDataConclusao.gridy = 1;
+        gbc_fieldDataConclusao.gridy = 2;
         getContentPane().add(fieldDataConclusao, gbc_fieldDataConclusao);
-        fieldDataConclusao.setColumns(10);
 
         lblValor = new JLabel("Valor:");
-        GridBagConstraints gbc_lblValor = new GridBagConstraints();
+        final GridBagConstraints gbc_lblValor = new GridBagConstraints();
         gbc_lblValor.insets = new Insets(0, 0, 5, 5);
         gbc_lblValor.anchor = GridBagConstraints.EAST;
         gbc_lblValor.gridx = 1;
-        gbc_lblValor.gridy = 2;
+        gbc_lblValor.gridy = 3;
         getContentPane().add(lblValor, gbc_lblValor);
 
         fieldValor = new JTextField();
@@ -139,79 +135,57 @@ public class OrdemServicoSwingView extends JDialog implements OrdemServicoView {
         gbc_fieldValor.insets = new Insets(0, 0, 5, 5);
         gbc_fieldValor.fill = GridBagConstraints.HORIZONTAL;
         gbc_fieldValor.gridx = 2;
-        gbc_fieldValor.gridy = 2;
+        gbc_fieldValor.gridy = 3;
         getContentPane().add(fieldValor, gbc_fieldValor);
         fieldValor.setColumns(10);
 
         lblSituacao = new JLabel("Situação:");
-        GridBagConstraints gbc_lblSituacao = new GridBagConstraints();
+        final GridBagConstraints gbc_lblSituacao = new GridBagConstraints();
         gbc_lblSituacao.anchor = GridBagConstraints.EAST;
         gbc_lblSituacao.insets = new Insets(0, 0, 5, 5);
         gbc_lblSituacao.gridx = 1;
-        gbc_lblSituacao.gridy = 3;
+        gbc_lblSituacao.gridy = 4;
         getContentPane().add(lblSituacao, gbc_lblSituacao);
 
-        final ListCellRenderer<? super OSsituacaoEnum> situacaoListRenderer = new DefaultListCellRenderer() {
-            private static final long serialVersionUID = 9190710738972824406L;
-
-            @Override
-            public Component getListCellRendererComponent(final JList<?> list,
-                    final Object value, final int index,
-                    final boolean isSelected, final boolean cellHasFocus) {
-                if (value == null) {
-                    return super.getListCellRendererComponent(list, "Nenhum",
-                            index, isSelected, cellHasFocus);
-                } else {
-                    final String nome = ((OSsituacaoEnum) value).getTexto();
-                    return super.getListCellRendererComponent(list, nome, index,
-                            isSelected, cellHasFocus);
-                }
-            }
-        };
-
-        situacao = new JComboBox<OSsituacaoEnum>();
-        situacao.setModel(new DefaultComboBoxModel<OSsituacaoEnum>(
-                OSsituacaoEnum.values()));
-        situacao.setRenderer(situacaoListRenderer);
-
+        fieldSituacao = new JLabel("");
         final GridBagConstraints gbc_situacao = new GridBagConstraints();
         gbc_situacao.insets = new Insets(0, 0, 5, 5);
         gbc_situacao.fill = GridBagConstraints.HORIZONTAL;
         gbc_situacao.gridx = 2;
-        gbc_situacao.gridy = 3;
-        getContentPane().add(situacao, gbc_situacao);
+        gbc_situacao.gridy = 4;
+        getContentPane().add(fieldSituacao, gbc_situacao);
 
-        lblFuncionario = new JLabel("Funcionario:");
-        GridBagConstraints gbc_lblFuncionario = new GridBagConstraints();
+        lblFuncionario = new JLabel("Responsável:");
+        final GridBagConstraints gbc_lblFuncionario = new GridBagConstraints();
         gbc_lblFuncionario.anchor = GridBagConstraints.EAST;
         gbc_lblFuncionario.insets = new Insets(0, 0, 5, 5);
         gbc_lblFuncionario.gridx = 1;
-        gbc_lblFuncionario.gridy = 4;
+        gbc_lblFuncionario.gridy = 5;
         getContentPane().add(lblFuncionario, gbc_lblFuncionario);
 
         fieldFuncionario = new JLabel("");
-        GridBagConstraints gbc_fieldFuncionario = new GridBagConstraints();
+        final GridBagConstraints gbc_fieldFuncionario = new GridBagConstraints();
         gbc_fieldFuncionario.anchor = GridBagConstraints.WEST;
         gbc_fieldFuncionario.fill = GridBagConstraints.VERTICAL;
         gbc_fieldFuncionario.insets = new Insets(0, 0, 5, 5);
         gbc_fieldFuncionario.gridx = 2;
-        gbc_fieldFuncionario.gridy = 4;
+        gbc_fieldFuncionario.gridy = 5;
         getContentPane().add(fieldFuncionario, gbc_fieldFuncionario);
 
         lblBem = new JLabel("Bem:");
-        GridBagConstraints gbc_lblBem = new GridBagConstraints();
+        final GridBagConstraints gbc_lblBem = new GridBagConstraints();
         gbc_lblBem.anchor = GridBagConstraints.EAST;
         gbc_lblBem.insets = new Insets(0, 0, 5, 5);
         gbc_lblBem.gridx = 1;
-        gbc_lblBem.gridy = 5;
+        gbc_lblBem.gridy = 6;
         getContentPane().add(lblBem, gbc_lblBem);
 
         fieldBem = new JLabel("");
-        GridBagConstraints gbc_fieldBem = new GridBagConstraints();
+        final GridBagConstraints gbc_fieldBem = new GridBagConstraints();
         gbc_fieldBem.anchor = GridBagConstraints.WEST;
         gbc_fieldBem.insets = new Insets(0, 0, 5, 5);
         gbc_fieldBem.gridx = 2;
-        gbc_fieldBem.gridy = 5;
+        gbc_fieldBem.gridy = 6;
         getContentPane().add(fieldBem, gbc_fieldBem);
 
         final GridBagConstraints gbc_btnCancelar = new GridBagConstraints();
@@ -219,16 +193,8 @@ public class OrdemServicoSwingView extends JDialog implements OrdemServicoView {
         gbc_btnCancelar.insets = new Insets(0, 0, 5, 5);
         gbc_btnCancelar.fill = GridBagConstraints.VERTICAL;
         gbc_btnCancelar.gridx = 1;
-        gbc_btnCancelar.gridy = 7;
+        gbc_btnCancelar.gridy = 8;
         getContentPane().add(btnCancelar, gbc_btnCancelar);
-
-        final GridBagConstraints gbc_btnConfirmar = new GridBagConstraints();
-        gbc_btnConfirmar.insets = new Insets(0, 0, 5, 5);
-        gbc_btnConfirmar.anchor = GridBagConstraints.EAST;
-        gbc_btnConfirmar.fill = GridBagConstraints.VERTICAL;
-        gbc_btnConfirmar.gridx = 2;
-        gbc_btnConfirmar.gridy = 7;
-        getContentPane().add(btnConfirmar, gbc_btnConfirmar);
     }
 
     @Override
@@ -237,24 +203,57 @@ public class OrdemServicoSwingView extends JDialog implements OrdemServicoView {
     }
 
     @Override
-    public void updateOrdemServico(final OrdemServicoDTO ordemServico,
-            final List<BemDTO> bens, final List<FuncionarioDTO> funcionarios) {
+    public void updateOrdemServico(final OrdemServicoDTO ordemServico) {
 
         if (ordemServico == null) {
             throw new NullPointerException();
         }
 
-        // O ID do departamento sendo exibido é armazenado para que seja
-        // possível
-        // retorná-lo na hora de salvar o departamento.
-        idPredio = ordemServico.getId();
+        idOrdemServico = ordemServico.getId();
+        bem = ordemServico.getBem();
+        funcionario = ordemServico.getFuncionario();
 
-        fieldDataConclusao.setText(ordemServico.getDataConclusao().toString());
-        fieldDataCadastro.setText(ordemServico.getDataConclusao().toString());
-        fieldValor.setText(ordemServico.getValor().toString());
-        situacao.setSelectedItem(ordemServico.getSituacao());
-        fieldFuncionario.setText(ordemServico.getFuncionario().getNome());
-        fieldBem.setText(ordemServico.getBem().getDescricao());
+        // Apenas pode alterar a OS se ela nao tiver CONCLUIDA
+        final boolean isConcluida =
+                ordemServico.getSituacao() == OSSituacaoEnum.CONCLUIDA;
+        fieldValor.setEnabled(!isConcluida);
+        btnConfirmar.setEnabled(!isConcluida);
+
+        if (ordemServico.getDataCadastro() != null) {
+            fieldDataCadastro.setText(ordemServico.getDataCadastro()
+                    .format(DateTimeFormatter.ISO_DATE));
+        }
+        if (ordemServico.getDataConclusao() == null) {
+            fieldDataConclusao.setText("Pendente");
+        } else {
+            fieldDataConclusao.setText(ordemServico.getDataConclusao()
+                    .format(DateTimeFormatter.ISO_DATE));
+        }
+        if (ordemServico.getValor() != null) {
+            fieldValor.setText(ordemServico.getValor().toString());
+        }
+        if (ordemServico.getSituacao() != null) {
+            fieldSituacao
+                    .setText(ordemServico.getSituacao().getTexto());
+        }
+        if (ordemServico.getFuncionario() != null) {
+            fieldFuncionario.setText(ordemServico.getFuncionario().getNome());
+        }
+        if (ordemServico.getBem() != null) {
+            fieldBem.setText(ordemServico.getBem().getDescricao());
+        }
+
+        if (ordemServico.getSituacao() != OSSituacaoEnum.CONCLUIDA) {
+            final GridBagConstraints gbc_btnConfirmar = new GridBagConstraints();
+            gbc_btnConfirmar.insets = new Insets(0, 0, 5, 5);
+            gbc_btnConfirmar.anchor = GridBagConstraints.EAST;
+            gbc_btnConfirmar.fill = GridBagConstraints.VERTICAL;
+            gbc_btnConfirmar.gridx = 2;
+            gbc_btnConfirmar.gridy = 8;
+            getContentPane().add(btnConfirmar, gbc_btnConfirmar);
+        } else {
+            getContentPane().remove(btnConfirmar);
+        }
 
         revalidate();
         repaint();
@@ -301,16 +300,40 @@ public class OrdemServicoSwingView extends JDialog implements OrdemServicoView {
     @Override
     public OrdemServicoDTO getOrdemServico() {
         final OrdemServicoDTO ordemServico = new OrdemServicoDTO();
-        ordemServico.setId(idPredio);
-        // ordemServico.setBem(fieldBem.getText());
-        // ordemServico.setFuncionario(fieldFuncionario.getText());
-        ordemServico.setDataCadastro(LocalDate.parse(
-                fieldDataCadastro.getText(), DateTimeFormatter.BASIC_ISO_DATE));
+
+        ordemServico.setId(idOrdemServico);
+        ordemServico.setBem(bem);
+        ordemServico.setFuncionario(funcionario);
         ordemServico
-                .setDataConclusao(LocalDate.parse(fieldDataConclusao.getText(),
-                        DateTimeFormatter.BASIC_ISO_DATE));
-        ordemServico.setValor(Float.valueOf(fieldValor.getText()));
-        ordemServico.setSituacao((OSsituacaoEnum) situacao.getSelectedItem());
+                .setSituacao(
+                        OSSituacaoEnum.valueOfTexto(fieldSituacao.getText()));
+
+        try {
+            ordemServico.setDataCadastro(LocalDate.parse(
+                    fieldDataCadastro.getText(),
+                    DateTimeFormatter.ISO_DATE));
+        } catch (final DateTimeParseException e) {
+            showError("O formato da data de cadastro é inválido.");
+            return null;
+        }
+
+        try {
+            if (!fieldDataConclusao.getText().equals("Pendente")) {
+            ordemServico.setDataConclusao(LocalDate.parse(
+                    fieldDataConclusao.getText(), DateTimeFormatter.ISO_DATE));
+            }
+        } catch (final DateTimeParseException e) {
+            showError("O formato da data de conclusão é inválido.");
+            return null;
+        }
+
+        try {
+            ordemServico.setValor(new BigDecimal(Double
+                    .parseDouble(fieldValor.getText().replace(',', '.'))));
+        } catch (final NumberFormatException e) {
+            showError("O formato do valor é inválido.");
+            return null;
+        }
 
         return ordemServico;
     }

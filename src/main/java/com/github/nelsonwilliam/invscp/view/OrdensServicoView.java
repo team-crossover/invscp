@@ -4,6 +4,7 @@ import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.function.Consumer;
 
+import com.github.nelsonwilliam.invscp.model.dto.BemDTO;
 import com.github.nelsonwilliam.invscp.model.dto.OrdemServicoDTO;
 
 public interface OrdensServicoView extends View {
@@ -14,7 +15,7 @@ public interface OrdensServicoView extends View {
 
     void addAdicionarOrdemServicoListener(ActionListener listener);
 
-    void addDeletarOrdensServicoListener(ActionListener listener);
+    // void addDeletarOrdensServicoListener(ActionListener listener);
 
     /**
      * Adiciona o Listener para quando o usuário informar que quer alterar uma
@@ -24,11 +25,13 @@ public interface OrdensServicoView extends View {
      */
     void addAlterarOrdemServicoListener(ActionListener listener);
 
+    void addConcluirOrdemServicoListener(ActionListener listener);
+
     // -------------------------------------------
     // Métodos para atualizar os valores exibidos.
     // -------------------------------------------
 
-    void updateOrdensServico(List<OrdemServicoDTO> predio);
+    void updateOrdensServico(BemDTO bem, List<OrdemServicoDTO> predio);
 
     void showError(String message);
 

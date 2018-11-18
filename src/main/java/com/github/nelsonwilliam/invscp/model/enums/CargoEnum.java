@@ -19,7 +19,7 @@ public enum CargoEnum {
     public static TipoSalaEnum valueOfTexto(final String texto) {
         final TipoSalaEnum[] values = TipoSalaEnum.values();
         for (final TipoSalaEnum value : values) {
-            if (value.toString().equals(texto)) {
+            if (value.getTexto().equals(texto)) {
                 return value;
             }
         }

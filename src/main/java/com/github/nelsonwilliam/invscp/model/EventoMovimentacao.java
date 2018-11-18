@@ -6,10 +6,7 @@ import com.github.nelsonwilliam.invscp.model.dto.EventoMovimentacaoDTO;
 
 public class EventoMovimentacao implements Model<EventoMovimentacaoDTO> {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 3192048412630028218L;
 
     private Integer id = null;
 

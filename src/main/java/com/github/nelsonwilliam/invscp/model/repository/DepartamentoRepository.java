@@ -19,7 +19,7 @@ public class DepartamentoRepository implements Repository<Departamento> {
         final List<Departamento> depts = new ArrayList<Departamento>();
         try {
             final PreparedStatement s = connection.prepareStatement(
-                    "SELECT id,nome,de_patrimonio,id_chefe,id_chefe_substituto FROM departamento ORDER BY id");
+                    "SELECT id,nome,de_patrimonio,id_chefe,id_chefe_substituto FROM departamento ORDER BY id ASC");
             final ResultSet r = s.executeQuery();
             while (r.next()) {
                 final Integer id = (Integer) r.getObject("id");
@@ -105,7 +105,7 @@ public class DepartamentoRepository implements Repository<Departamento> {
         Departamento dept = null;
         try {
             final PreparedStatement s = connection.prepareStatement(
-                    "SELECT id FROM departamento WHERE id_chefe=? OR id_chefe_substituto=?");
+                    "SELECT id FROM departamento WHERE id_chefe=? OR id_chefe_substituto=? LIMIT 1");
             s.setObject(1, id, Types.INTEGER);
             s.setObject(2, id, Types.INTEGER);
 

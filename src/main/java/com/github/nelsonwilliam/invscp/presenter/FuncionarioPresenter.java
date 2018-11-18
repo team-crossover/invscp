@@ -31,8 +31,12 @@ public class FuncionarioPresenter extends Presenter<FuncionarioView> {
     private void onConfirmar() {
         final FuncionarioDTO usuario = mainPresenter.getUsuario();
         final FuncionarioDTO funcDTO = view.getFuncionario();
+        if (funcDTO == null) {
+            view.showError("Não foi possível inserir/alterar o item.");
+            return;
+        }
 
-        if (funcDTO == null || funcDTO.getId() == null) {
+        if (funcDTO.getId() == null) {
             onConfirmarAdicao(usuario, funcDTO);
         } else {
             onConfirmarAtualizacao(usuario, funcDTO.getId(), funcDTO);
@@ -52,7 +56,6 @@ public class FuncionarioPresenter extends Presenter<FuncionarioView> {
         Client.requestAddFuncionario(funcNovo);
         view.showSucesso();
         view.close();
-        funcsPresenter.updateFuncionarios();
 
         // Se o funcionário atualizado é o que estava logado, atualiza o main
         // para garantir dados atualizados são exibidos no menu.
@@ -60,6 +63,8 @@ public class FuncionarioPresenter extends Presenter<FuncionarioView> {
             mainPresenter.setIdUsuario(usuario.getId());
             return;
         }
+
+        funcsPresenter.updateFuncionarios();
     }
 
     private void onConfirmarAtualizacao(final FuncionarioDTO usuario,
@@ -76,7 +81,6 @@ public class FuncionarioPresenter extends Presenter<FuncionarioView> {
         Client.requestUpdateFuncionario(funcAtualizado);
         view.showSucesso();
         view.close();
-        funcsPresenter.updateFuncionarios();
 
         // Se o funcionário atualizado é o que estava logado, atualiza o main
         // para garantir dados atualizados são exibidos no menu.
@@ -84,5 +88,7 @@ public class FuncionarioPresenter extends Presenter<FuncionarioView> {
             mainPresenter.setIdUsuario(usuario.getId());
             return;
         }
+
+        funcsPresenter.updateFuncionarios();
     }
 }

@@ -48,6 +48,11 @@ public class LocalizacoesPresenter extends Presenter<LocalizacoesView> {
 
     private void onDeletarLocalizacoes() {
         final List<Integer> selectedLocaIds = view.getSelectedLocalizacoesIds();
+        if (selectedLocaIds.size() < 1) {
+            view.showError("Nenhum item foi selecionado.");
+            return;
+        }
+
         view.showConfirmacao(
                 "Deletar " + selectedLocaIds.size() + " localizações(s)?",
                 (final Boolean confirmado) -> {

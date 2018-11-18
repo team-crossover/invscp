@@ -258,10 +258,10 @@ public class Sala implements Model<SalaDTO> {
             throw new CRUDException("O 'nome' é um campo obrigatório.");
         }
         if (sala.getPredio() == null) {
-            throw new CRUDException("O 'prédio' selecionado não existe.");
+            throw new CRUDException("O 'prédio' não pode ser vazio.");
         }
         if (sala.getDepartamento() == null) {
-            throw new CRUDException("O 'departamento' selecionado não existe.");
+            throw new CRUDException("O 'departamento' não pode ser vazio.");
         }
         if (sala.getTipo() == null) {
             throw new CRUDException("O 'tipo' é um campo obrigatório.");

@@ -1,5 +1,7 @@
 package com.github.nelsonwilliam.invscp.model.dto;
 
+import java.math.BigDecimal;
+
 public class GrupoMaterialDTO implements DTO {
 
     private Integer id = null;
@@ -8,13 +10,13 @@ public class GrupoMaterialDTO implements DTO {
 
     private Integer vidaUtil = null;
 
-    private Float depreciacao = null;
+    private BigDecimal depreciacao = null;
 
     public final Integer getId() {
         return id;
     }
 
-    public final void setId(Integer id) {
+    public final void setId(final Integer id) {
         this.id = id;
     }
 
@@ -22,7 +24,7 @@ public class GrupoMaterialDTO implements DTO {
         return nome;
     }
 
-    public final void setNome(String nome) {
+    public final void setNome(final String nome) {
         this.nome = nome;
     }
 
@@ -30,15 +32,15 @@ public class GrupoMaterialDTO implements DTO {
         return vidaUtil;
     }
 
-    public final void setVidaUtil(Integer vidaUtil) {
+    public final void setVidaUtil(final Integer vidaUtil) {
         this.vidaUtil = vidaUtil;
     }
 
-    public final Float getDepreciacao() {
+    public final BigDecimal getDepreciacao() {
         return depreciacao;
     }
 
-    public final void setDepreciacao(Float depreciacao) {
+    public final void setDepreciacao(final BigDecimal depreciacao) {
         this.depreciacao = depreciacao;
     }
 

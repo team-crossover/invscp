@@ -1,8 +1,9 @@
 package com.github.nelsonwilliam.invscp.model.dto;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import com.github.nelsonwilliam.invscp.model.enums.OSsituacaoEnum;
+import com.github.nelsonwilliam.invscp.model.enums.OSSituacaoEnum;
 
 public class OrdemServicoDTO implements DTO {
     private Integer id = null;
@@ -11,9 +12,9 @@ public class OrdemServicoDTO implements DTO {
 
     private LocalDate dataConclusao = null;
 
-    private Float valor = null;
+    private BigDecimal valor = null;
 
-    private OSsituacaoEnum situacao = null;
+    private OSSituacaoEnum situacao = null;
 
     private FuncionarioDTO funcionario = null;
 
@@ -23,7 +24,7 @@ public class OrdemServicoDTO implements DTO {
         return id;
     }
 
-    public final void setId(Integer id) {
+    public final void setId(final Integer id) {
         this.id = id;
     }
 
@@ -31,7 +32,7 @@ public class OrdemServicoDTO implements DTO {
         return dataCadastro;
     }
 
-    public final void setDataCadastro(LocalDate dataCadastro) {
+    public final void setDataCadastro(final LocalDate dataCadastro) {
         this.dataCadastro = dataCadastro;
     }
 
@@ -39,23 +40,23 @@ public class OrdemServicoDTO implements DTO {
         return dataConclusao;
     }
 
-    public final void setDataConclusao(LocalDate dataConclusao) {
+    public final void setDataConclusao(final LocalDate dataConclusao) {
         this.dataConclusao = dataConclusao;
     }
 
-    public final Float getValor() {
+    public final BigDecimal getValor() {
         return valor;
     }
 
-    public final void setValor(Float valor) {
+    public final void setValor(final BigDecimal valor) {
         this.valor = valor;
     }
 
-    public final OSsituacaoEnum getSituacao() {
+    public final OSSituacaoEnum getSituacao() {
         return situacao;
     }
 
-    public final void setSituacao(OSsituacaoEnum situacao) {
+    public final void setSituacao(final OSSituacaoEnum situacao) {
         this.situacao = situacao;
     }
 
@@ -63,7 +64,7 @@ public class OrdemServicoDTO implements DTO {
         return funcionario;
     }
 
-    public final void setFuncionario(FuncionarioDTO funcionario) {
+    public final void setFuncionario(final FuncionarioDTO funcionario) {
         this.funcionario = funcionario;
     }
 
@@ -71,7 +72,7 @@ public class OrdemServicoDTO implements DTO {
         return bem;
     }
 
-    public final void setBem(BemDTO bem) {
+    public final void setBem(final BemDTO bem) {
         this.bem = bem;
     }
 

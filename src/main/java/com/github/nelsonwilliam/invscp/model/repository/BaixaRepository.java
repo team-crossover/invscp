@@ -1,6 +1,7 @@
 package com.github.nelsonwilliam.invscp.model.repository;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -22,11 +23,11 @@ public class BaixaRepository implements Repository<Baixa> {
         final List<Baixa> baixas = new ArrayList<Baixa>();
         try {
             final PreparedStatement s = connection.prepareStatement(
-                    "SELECT id,data,motivo,observacoes,id_funcionario,id_bem FROM baixa ORDER BY id");
+                    "SELECT id,data,motivo,observacoes,id_funcionario,id_bem FROM baixa ORDER BY data ASC");
             final ResultSet r = s.executeQuery();
             while (r.next()) {
                 final Integer id = (Integer) r.getObject("id");
-                final LocalDate data = (LocalDate) r.getObject("data");
+                final LocalDate data = ((Date) r.getObject("data")).toLocalDate();
                 final String motivo = (String) r.getObject("motivo");
                 final String observacoes = (String) r.getObject("observacoes");
                 final Integer idBem = (Integer) r.getObject("id_bem");
@@ -49,7 +50,7 @@ public class BaixaRepository implements Repository<Baixa> {
     }
 
     @Override
-    public Baixa getById(Integer id) {
+    public Baixa getById(final Integer id) {
         final Connection connection = DatabaseConnection.getConnection();
         Baixa baixa = null;
         try {
@@ -59,7 +60,7 @@ public class BaixaRepository implements Repository<Baixa> {
 
             final ResultSet r = s.executeQuery();
             if (r.next()) {
-                final LocalDate data = (LocalDate) r.getObject("data");
+                final LocalDate data = ((Date) r.getObject("data")).toLocalDate();
                 final String motivo = (String) r.getObject("motivo");
                 final String observacoes = (String) r.getObject("observacoes");
                 final Integer idBem = (Integer) r.getObject("id_bem");
@@ -80,8 +81,39 @@ public class BaixaRepository implements Repository<Baixa> {
         return baixa;
     }
 
+    public Baixa getByIdBem(final Integer idBem) {
+        final Connection connection = DatabaseConnection.getConnection();
+        Baixa baixa = null;
+        try {
+            final PreparedStatement s = connection.prepareStatement(
+                    "SELECT id,data,motivo,observacoes,id_funcionario,id_bem FROM baixa WHERE id_bem=? LIMIT 1");
+            s.setObject(1, idBem, Types.INTEGER);
+
+            final ResultSet r = s.executeQuery();
+            while (r.next()) {
+                final Integer id = (Integer) r.getObject("id");
+                final LocalDate data = ((Date) r.getObject("data")).toLocalDate();
+                final String motivo = (String) r.getObject("motivo");
+                final String observacoes = (String) r.getObject("observacoes");
+                final Integer idFuncionario =
+                        (Integer) r.getObject("id_funcionario");
+
+                baixa = new Baixa();
+                baixa.setId(id);
+                baixa.setData(data);
+                baixa.setMotivo(MotivoBaixaEnum.valueOf(motivo));
+                baixa.setObservacoes(observacoes);
+                baixa.setIdBem(idBem);
+                baixa.setIdFuncionario(idFuncionario);
+            }
+        } catch (final Exception e) {
+            e.printStackTrace();
+        }
+        return baixa;
+    }
+
     @Override
-    public boolean add(Baixa item) {
+    public boolean add(final Baixa item) {
         final Connection connection = DatabaseConnection.getConnection();
         try {
             PreparedStatement s;
@@ -123,7 +155,7 @@ public class BaixaRepository implements Repository<Baixa> {
     }
 
     @Override
-    public boolean add(Iterable<Baixa> items) {
+    public boolean add(final Iterable<Baixa> items) {
         boolean added = false;
         for (final Baixa item : items) {
             added |= add(item);
@@ -132,7 +164,7 @@ public class BaixaRepository implements Repository<Baixa> {
     }
 
     @Override
-    public boolean update(Baixa item) {
+    public boolean update(final Baixa item) {
         final Connection connection = DatabaseConnection.getConnection();
         try {
             if (item.getId() == null) {
@@ -157,7 +189,7 @@ public class BaixaRepository implements Repository<Baixa> {
     }
 
     @Override
-    public boolean update(Iterable<Baixa> items) {
+    public boolean update(final Iterable<Baixa> items) {
         boolean updated = false;
         for (final Baixa item : items) {
             updated |= update(item);
@@ -166,7 +198,7 @@ public class BaixaRepository implements Repository<Baixa> {
     }
 
     @Override
-    public boolean remove(Baixa item) {
+    public boolean remove(final Baixa item) {
         final Connection connection = DatabaseConnection.getConnection();
         try {
             if (item.getId() == null) {
@@ -184,7 +216,7 @@ public class BaixaRepository implements Repository<Baixa> {
     }
 
     @Override
-    public boolean remove(Iterable<Baixa> items) {
+    public boolean remove(final Iterable<Baixa> items) {
         boolean removed = false;
         for (final Baixa item : items) {
             removed |= remove(item);
@@ -192,17 +224,17 @@ public class BaixaRepository implements Repository<Baixa> {
         return removed;
     }
 
-    public List<Baixa> getByBem(Bem bem) {
+    public List<Baixa> getByBem(final Bem bem) {
         final Connection connection = DatabaseConnection.getConnection();
         final List<Baixa> baixas = new ArrayList<Baixa>();
         try {
             final PreparedStatement s = connection.prepareStatement(
                     "SELECT id,data,motivo,observacoes,id_funcionario,id_bem FROM baixa WHERE id_bem=?");
-            s.setObject(6, bem.getId(), Types.INTEGER);
+            s.setObject(1, bem.getId(), Types.INTEGER);
             final ResultSet r = s.executeQuery();
             while (r.next()) {
                 final Integer id = (Integer) r.getObject("id");
-                final LocalDate data = (LocalDate) r.getObject("data");
+                final LocalDate data = ((Date) r.getObject("data")).toLocalDate();
                 final String motivo = (String) r.getObject("motivo");
                 final String observacoes = (String) r.getObject("observacoes");
                 final Integer idBem = (Integer) r.getObject("id_bem");

@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 
 import com.github.nelsonwilliam.invscp.model.dto.FuncionarioDTO;
 import com.github.nelsonwilliam.invscp.util.Client;
+import com.github.nelsonwilliam.invscp.view.BensView;
 import com.github.nelsonwilliam.invscp.view.DepartamentosView;
 import com.github.nelsonwilliam.invscp.view.FuncionariosView;
 import com.github.nelsonwilliam.invscp.view.LocalizacoesView;
@@ -64,6 +65,9 @@ public class MainPresenter extends Presenter<MainView> {
         });
         menuView.addSalasListener((final ActionEvent e) -> {
             showSalas();
+        });
+        menuView.addBensListener((final ActionEvent e) -> {
+            showBens();
         });
     }
 
@@ -153,5 +157,12 @@ public class MainPresenter extends Presenter<MainView> {
         final SalasPresenter salasPresenter = new SalasPresenter(salasView,
                 this);
         view.updateSelectedView(salasView);
+    }
+
+    @SuppressWarnings("unused")
+    private void showBens() {
+        final BensView bensView = ViewFactory.createBens();
+        final BensPresenter bensPresenter = new BensPresenter(bensView, this);
+        view.updateSelectedView(bensView);
     }
 }

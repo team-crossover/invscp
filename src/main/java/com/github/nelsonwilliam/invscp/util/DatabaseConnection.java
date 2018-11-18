@@ -16,6 +16,9 @@ import java.util.Scanner;
  */
 public class DatabaseConnection {
 
+    // TODO Mover configurações pra ClientSettings.
+    // TODO Permitir um banco pra testes.
+
     private static String IP = "localhost";
     private static String PORT = "5432";
     private static String DATABASE_NAME = "inventory";

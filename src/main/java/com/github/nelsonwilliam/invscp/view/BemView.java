@@ -6,7 +6,6 @@ import java.util.List;
 import com.github.nelsonwilliam.invscp.model.dto.BemDTO;
 import com.github.nelsonwilliam.invscp.model.dto.DepartamentoDTO;
 import com.github.nelsonwilliam.invscp.model.dto.GrupoMaterialDTO;
-import com.github.nelsonwilliam.invscp.model.dto.SalaDTO;
 
 public interface BemView extends View {
     // ----------------------------------------
@@ -23,7 +22,7 @@ public interface BemView extends View {
      * Atualiza todos os valores da janela para exibir os dados do bem passado.
      */
     void updateBem(BemDTO bem, List<DepartamentoDTO> departamentos,
-            List<SalaDTO> salas, List<GrupoMaterialDTO> gruposMateriais);
+            List<GrupoMaterialDTO> gruposMateriais);
 
     /**
      * Exibe uma mensagem de erro com a mensagem especificada. Por exemplo, pode

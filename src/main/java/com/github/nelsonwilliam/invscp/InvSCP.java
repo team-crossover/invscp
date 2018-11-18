@@ -80,7 +80,7 @@ public class InvSCP {
             try {
                 DatabaseConnection.initializeDatabase();
                 System.out.println(
-                        "O banco de dados foi inicializado (o script de criação foi executado).");
+                        "O banco de dados foi inicializado (quaisquer dados existentes foram apagados).");
             } catch (SQLException | IOException e) {
                 System.out.println(
                         "Não foi possível inicializar o banco de dados.");

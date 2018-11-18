@@ -1,5 +1,6 @@
 package com.github.nelsonwilliam.invscp.model;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -40,7 +41,7 @@ public class Bem implements Model<BemDTO> {
 
     private String marca = null;
 
-    private Float valorCompra = null;
+    private BigDecimal valorCompra = null;
 
     private BemSituacaoEnum situacao = null;
 
@@ -51,7 +52,7 @@ public class Bem implements Model<BemDTO> {
     private Integer idDepartamento = null;
 
     @Override
-    public void setValuesFromDTO(BemDTO dto) {
+    public void setValuesFromDTO(final BemDTO dto) {
         setDataAquisicao(dto.getDataAquisicao());
         setDataCadastro(dto.getDataCadastro());
         setDescricao(dto.getDescricao());
@@ -101,7 +102,7 @@ public class Bem implements Model<BemDTO> {
         }
         if (idGrupoMaterial != null) {
             final GrupoMaterialRepository repo = new GrupoMaterialRepository();
-            final GrupoMaterial gm = repo.getById(idSala);
+            final GrupoMaterial gm = repo.getById(idGrupoMaterial);
             dto.setGrupoMaterial(gm == null ? null : gm.toDTO());
         }
         return dto;
@@ -161,8 +162,8 @@ public class Bem implements Model<BemDTO> {
                     + " pois ele possui ordens de serviço pendentes relaciondas a ele.");
         }
 
-        Date date = new Date();
-        LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault())
+        final Date date = new Date();
+        final LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault())
                 .toLocalDate();
         if (bem.getDataCadastro() != null && bem.getDataCadastro()
                 .getMonthValue() >= localDate.getMonthValue()) {
@@ -289,7 +290,7 @@ public class Bem implements Model<BemDTO> {
         }
     }
 
-    private static void validarCampos(BemDTO bem) throws CRUDException {
+    private static void validarCampos(final BemDTO bem) throws CRUDException {
         if (bem.getDataAquisicao() == null) {
             throw new CRUDException(
                     "'Data de aquisição' é um campo obrigatório.");
@@ -300,7 +301,7 @@ public class Bem implements Model<BemDTO> {
                     "'Data de cadastro' é um campo obrigatório.");
         }
         if (bem.getDepartamento() == null) {
-            throw new CRUDException("O 'Departamento' selecionado não existe.");
+            throw new CRUDException("O 'Departamento' não pode ser vazio.");
         }
         if (bem.getDescricao() == null || bem.getDescricao().isEmpty()) {
             throw new CRUDException("'Descrição' é um campo obrigatório.");
@@ -314,7 +315,7 @@ public class Bem implements Model<BemDTO> {
         }
         if (bem.getGrupoMaterial() == null) {
             throw new CRUDException(
-                    "O 'Grupo material' selecionado não existe.");
+                    "O 'Grupo material' não pode ser vazio.");
         }
         if (bem.getMarca() == null || bem.getMarca().isEmpty()) {
             throw new CRUDException("'Marca' é um campo obrigatório.");
@@ -338,17 +339,19 @@ public class Bem implements Model<BemDTO> {
 
     }
 
-    public final Float exibirDepreciacao(BemDTO bem) {
-        Float novoValor;
-        Float valCompra = bem.getValorCompra();
-        Float dep = bem.getGrupoMaterial().getDepreciacao();
-        Date date = new Date();
-        LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault())
+    public final Double exibirDepreciacao(final BemDTO bem) {
+        Double novoValor;
+        final Double valCompra = bem.getValorCompra().doubleValue();
+        final Double dep =
+                bem.getGrupoMaterial().getDepreciacao().doubleValue();
+        final Date date = new Date();
+        final LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault())
                 .toLocalDate();
-        Integer time = localDate.getYear() - bem.getDataAquisicao().getYear();
+        final Integer time =
+                localDate.getYear() - bem.getDataAquisicao().getYear();
         if (time > 0) {
             if (valCompra - (valCompra * (dep * time)) == 0) {
-                novoValor = (float) 0.01;
+                novoValor = 0.01;
             } else {
                 novoValor = valCompra - (valCompra * (dep * time));
             }
@@ -359,11 +362,13 @@ public class Bem implements Model<BemDTO> {
         return novoValor;
     }
 
+    @Override
     public final Integer getId() {
         return id;
     }
 
-    public final void setId(Integer id) {
+    @Override
+    public final void setId(final Integer id) {
         this.id = id;
     }
 
@@ -371,7 +376,7 @@ public class Bem implements Model<BemDTO> {
         return descricao;
     }
 
-    public final void setDescricao(String descricao) {
+    public final void setDescricao(final String descricao) {
         this.descricao = descricao;
     }
 
@@ -379,7 +384,7 @@ public class Bem implements Model<BemDTO> {
         return numeroTombamento;
     }
 
-    public final void setNumeroTombamento(Long numeroTombamento) {
+    public final void setNumeroTombamento(final Long numeroTombamento) {
         this.numeroTombamento = numeroTombamento;
     }
 
@@ -387,7 +392,7 @@ public class Bem implements Model<BemDTO> {
         return dataCadastro;
     }
 
-    public final void setDataCadastro(LocalDate dataCadastro) {
+    public final void setDataCadastro(final LocalDate dataCadastro) {
         this.dataCadastro = dataCadastro;
     }
 
@@ -395,7 +400,7 @@ public class Bem implements Model<BemDTO> {
         return dataAquisicao;
     }
 
-    public final void setDataAquisicao(LocalDate dataAquisicao) {
+    public final void setDataAquisicao(final LocalDate dataAquisicao) {
         this.dataAquisicao = dataAquisicao;
     }
 
@@ -403,7 +408,7 @@ public class Bem implements Model<BemDTO> {
         return numeroNotaFiscal;
     }
 
-    public final void setNumeroNotaFiscal(String numeroNotaFiscal) {
+    public final void setNumeroNotaFiscal(final String numeroNotaFiscal) {
         this.numeroNotaFiscal = numeroNotaFiscal;
     }
 
@@ -411,7 +416,7 @@ public class Bem implements Model<BemDTO> {
         return especificacao;
     }
 
-    public final void setEspecificacao(String especificacao) {
+    public final void setEspecificacao(final String especificacao) {
         this.especificacao = especificacao;
     }
 
@@ -419,7 +424,7 @@ public class Bem implements Model<BemDTO> {
         return garantia;
     }
 
-    public final void setGarantia(LocalDate garantia) {
+    public final void setGarantia(final LocalDate garantia) {
         this.garantia = garantia;
     }
 
@@ -427,15 +432,15 @@ public class Bem implements Model<BemDTO> {
         return marca;
     }
 
-    public final void setMarca(String marca) {
+    public final void setMarca(final String marca) {
         this.marca = marca;
     }
 
-    public final Float getValorCompra() {
+    public final BigDecimal getValorCompra() {
         return valorCompra;
     }
 
-    public final void setValorCompra(Float valorCompra) {
+    public final void setValorCompra(final BigDecimal valorCompra) {
         this.valorCompra = valorCompra;
     }
 
@@ -443,23 +448,15 @@ public class Bem implements Model<BemDTO> {
         return situacao;
     }
 
-    public final void setSituacao(BemSituacaoEnum situacao) {
+    public final void setSituacao(final BemSituacaoEnum situacao) {
         this.situacao = situacao;
-    }
-
-    public final String getSituacaoString() {
-        return this.situacao.getTexto();
-    }
-
-    public final void setSituacaoString(String sit) {
-        this.situacao = BemSituacaoEnum.valueOf(sit);
     }
 
     public final Integer getIdGrupoMaterial() {
         return idGrupoMaterial;
     }
 
-    public final void setIdGrupoMaterial(Integer idGrupoMaterial) {
+    public final void setIdGrupoMaterial(final Integer idGrupoMaterial) {
         this.idGrupoMaterial = idGrupoMaterial;
     }
 
@@ -467,7 +464,7 @@ public class Bem implements Model<BemDTO> {
         return idSala;
     }
 
-    public final void setIdSala(Integer idSala) {
+    public final void setIdSala(final Integer idSala) {
         this.idSala = idSala;
     }
 
@@ -475,7 +472,7 @@ public class Bem implements Model<BemDTO> {
         return idDepartamento;
     }
 
-    public final void setIdDepartamento(Integer idDepartamento) {
+    public final void setIdDepartamento(final Integer idDepartamento) {
         this.idDepartamento = idDepartamento;
     }
 

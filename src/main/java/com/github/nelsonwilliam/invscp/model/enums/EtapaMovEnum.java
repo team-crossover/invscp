@@ -20,7 +20,7 @@ public enum EtapaMovEnum {
 	public static EtapaMovEnum valueOfTexto(final String texto) {
         final EtapaMovEnum[] values = EtapaMovEnum.values();
         for (final EtapaMovEnum value : values) {
-            if (value.toString().equals(texto)) {
+            if (value.getTexto().equals(texto)) {
                 return value;
             }
         }

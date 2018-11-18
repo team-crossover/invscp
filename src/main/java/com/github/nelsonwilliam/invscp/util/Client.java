@@ -7,19 +7,31 @@ import java.util.List;
 import com.github.nelsonwilliam.invscp.exception.IllegalDeleteException;
 import com.github.nelsonwilliam.invscp.exception.IllegalInsertException;
 import com.github.nelsonwilliam.invscp.exception.IllegalUpdateException;
+import com.github.nelsonwilliam.invscp.model.Baixa;
+import com.github.nelsonwilliam.invscp.model.Bem;
 import com.github.nelsonwilliam.invscp.model.Departamento;
 import com.github.nelsonwilliam.invscp.model.Funcionario;
+import com.github.nelsonwilliam.invscp.model.GrupoMaterial;
 import com.github.nelsonwilliam.invscp.model.Localizacao;
+import com.github.nelsonwilliam.invscp.model.OrdemServico;
 import com.github.nelsonwilliam.invscp.model.Predio;
 import com.github.nelsonwilliam.invscp.model.Sala;
+import com.github.nelsonwilliam.invscp.model.dto.BaixaDTO;
+import com.github.nelsonwilliam.invscp.model.dto.BemDTO;
 import com.github.nelsonwilliam.invscp.model.dto.DepartamentoDTO;
 import com.github.nelsonwilliam.invscp.model.dto.FuncionarioDTO;
+import com.github.nelsonwilliam.invscp.model.dto.GrupoMaterialDTO;
 import com.github.nelsonwilliam.invscp.model.dto.LocalizacaoDTO;
+import com.github.nelsonwilliam.invscp.model.dto.OrdemServicoDTO;
 import com.github.nelsonwilliam.invscp.model.dto.PredioDTO;
 import com.github.nelsonwilliam.invscp.model.dto.SalaDTO;
+import com.github.nelsonwilliam.invscp.model.repository.BaixaRepository;
+import com.github.nelsonwilliam.invscp.model.repository.BemRepository;
 import com.github.nelsonwilliam.invscp.model.repository.DepartamentoRepository;
 import com.github.nelsonwilliam.invscp.model.repository.FuncionarioRepository;
+import com.github.nelsonwilliam.invscp.model.repository.GrupoMaterialRepository;
 import com.github.nelsonwilliam.invscp.model.repository.LocalizacaoRepository;
+import com.github.nelsonwilliam.invscp.model.repository.OrdemServicoRepository;
 import com.github.nelsonwilliam.invscp.model.repository.PredioRepository;
 import com.github.nelsonwilliam.invscp.model.repository.SalaRepository;
 
@@ -41,6 +53,260 @@ public class Client {
 
     public static void close() {
         // TODO
+    }
+
+    // ------
+    // BAIXA
+    // ------
+
+    public static void requestValidarInserirBaixa(final FuncionarioDTO usuario,
+            final BaixaDTO novo) throws IllegalInsertException {
+        Baixa.validarInserir(usuario, novo);
+    }
+
+    public static void requestValidarAlterarBaixa(final FuncionarioDTO usuario,
+            final Integer idAntigo, final BaixaDTO novo)
+            throws IllegalUpdateException {
+        Baixa.validarAlterar(usuario, idAntigo, novo);
+    }
+
+    public static void requestValidarDeleteBaixa(final FuncionarioDTO usuario,
+            final Integer id) throws IllegalDeleteException {
+        Baixa.validarDeletar(usuario, id);
+    }
+
+    public static void requestAddBaixa(final BaixaDTO item) {
+        final BaixaRepository repo = new BaixaRepository();
+        final Baixa itemModel = new Baixa();
+        itemModel.setValuesFromDTO(item);
+        repo.add(itemModel);
+    }
+
+    public static void requestUpdateBaixa(final BaixaDTO item) {
+        final BaixaRepository repo = new BaixaRepository();
+        final Baixa itemModel = new Baixa();
+        itemModel.setValuesFromDTO(item);
+        repo.update(itemModel);
+    }
+
+    public static void requestDeleteBaixa(final Integer itemId) {
+        final BaixaRepository repo = new BaixaRepository();
+        final Baixa placeholderItem = new Baixa();
+        placeholderItem.setId(itemId);
+        repo.remove(placeholderItem);
+    }
+
+    public static List<String> requestPosInserirBaixa(
+            final FuncionarioDTO usuario, final BaixaDTO item) {
+        return Baixa.posInserir(usuario, item);
+    }
+
+    public static BaixaDTO requestGetBaixaById(final Integer itemId) {
+        final BaixaRepository repo = new BaixaRepository();
+        final Baixa item = repo.getById(itemId);
+        if (item == null) {
+            return null;
+        }
+        return item.toDTO();
+    }
+
+    public static BaixaDTO requestGetBaixaByIdBem(final Integer bemId) {
+        final BaixaRepository repo = new BaixaRepository();
+        final Baixa baixa = repo.getByIdBem(bemId);
+        if (baixa == null) {
+            return null;
+        }
+        return baixa.toDTO();
+    }
+
+    public static List<BaixaDTO> requestGetBaixas() {
+        final BaixaRepository repo = new BaixaRepository();
+        final List<Baixa> models = repo.getAll();
+        final List<BaixaDTO> dtos = new ArrayList<>();
+        for (final Baixa model : models) {
+            dtos.add(model.toDTO());
+        }
+        return dtos;
+    }
+
+    // ----
+    // BEM
+    // ----
+
+    public static void requestValidarInserirBem(final FuncionarioDTO usuario,
+            final BemDTO novo) throws IllegalInsertException {
+        Bem.validarInserir(usuario, novo);
+    }
+
+    public static void requestValidarAlterarBem(
+            final FuncionarioDTO usuario, final Integer idAntigo,
+            final BemDTO novo) throws IllegalUpdateException {
+        Bem.validarAlterar(usuario, idAntigo, novo);
+    }
+
+    public static void requestValidarDeleteBem(
+            final FuncionarioDTO usuario, final Integer id)
+            throws IllegalDeleteException {
+        Bem.validarDeletar(usuario, id);
+    }
+
+    public static void requestAddBem(final BemDTO item) {
+        final BemRepository repo = new BemRepository();
+        final Bem itemModel = new Bem();
+        itemModel.setValuesFromDTO(item);
+        repo.add(itemModel);
+    }
+
+    public static void requestUpdateBem(final BemDTO item) {
+        final BemRepository repo = new BemRepository();
+        final Bem itemModel = new Bem();
+        itemModel.setValuesFromDTO(item);
+        repo.update(itemModel);
+    }
+
+    public static void requestDeleteBem(final Integer itemId) {
+        final BemRepository repo = new BemRepository();
+        final Bem placeholderItem = new Bem();
+        placeholderItem.setId(itemId);
+        repo.remove(placeholderItem);
+    }
+
+    public static BemDTO requestGetBemById(final Integer itemId) {
+        final BemRepository repo = new BemRepository();
+        final Bem item = repo.getById(itemId);
+        if (item == null) {
+            return null;
+        }
+        return item.toDTO();
+    }
+
+    public static List<BemDTO> requestGetBens() {
+        final BemRepository repo = new BemRepository();
+        final List<Bem> models = repo.getAll();
+        final List<BemDTO> dtos = new ArrayList<>();
+        for (final Bem model : models) {
+            dtos.add(model.toDTO());
+        }
+        return dtos;
+    }
+
+    public static List<GrupoMaterialDTO> requestGetPossiveisGruposMateriaisParaBem(
+            final BemDTO bem) {
+        return requestGetGruposMateriais();
+    }
+
+    public static List<DepartamentoDTO> requestGetPossiveisDepartamentosParaBem(
+            final BemDTO bem) {
+        return requestGetDepartamentos();
+    }
+
+    // --------------
+    // ORDEM SERVIÇO
+    // --------------
+
+    public static void requestValidarInserirOrdemServico(
+            final FuncionarioDTO usuario, final OrdemServicoDTO novo)
+            throws IllegalInsertException {
+        OrdemServico.validarInserir(usuario, novo);
+    }
+
+    public static void requestValidarAlterarOrdemServico(
+            final FuncionarioDTO usuario, final Integer idAntigo,
+            final OrdemServicoDTO novo)
+            throws IllegalUpdateException {
+        OrdemServico.validarAlterar(usuario, idAntigo, novo);
+    }
+
+    public static void requestValidarDeleteOrdemServico(
+            final FuncionarioDTO usuario,
+            final Integer id) throws IllegalDeleteException {
+        OrdemServico.validarDeletar(usuario, id);
+    }
+
+    public static void requestAddOrdemServico(final OrdemServicoDTO item) {
+        final OrdemServicoRepository repo = new OrdemServicoRepository();
+        final OrdemServico itemModel = new OrdemServico();
+        itemModel.setValuesFromDTO(item);
+        repo.add(itemModel);
+    }
+
+    public static void requestUpdateOrdemServico(final OrdemServicoDTO item) {
+        final OrdemServicoRepository repo = new OrdemServicoRepository();
+        final OrdemServico itemModel = new OrdemServico();
+        itemModel.setValuesFromDTO(item);
+        repo.update(itemModel);
+    }
+
+    public static void requestDeleteOrdemServico(final Integer itemId) {
+        final OrdemServicoRepository repo = new OrdemServicoRepository();
+        final OrdemServico placeholderItem = new OrdemServico();
+        placeholderItem.setId(itemId);
+        repo.remove(placeholderItem);
+    }
+
+    public static List<String> requestPosInserirOrdemServico(
+            final FuncionarioDTO usuario, final OrdemServicoDTO item) {
+        return OrdemServico.posInserir(usuario, item);
+    }
+
+    public static List<String> requestPosConcluirOrdemServico(
+            final FuncionarioDTO usuario, final OrdemServicoDTO item) {
+        return OrdemServico.posConcluir(usuario, item);
+    }
+
+    public static OrdemServicoDTO requestGetOrdemServicoById(
+            final Integer itemId) {
+        final OrdemServicoRepository repo = new OrdemServicoRepository();
+        final OrdemServico item = repo.getById(itemId);
+        if (item == null) {
+            return null;
+        }
+        return item.toDTO();
+    }
+
+    public static List<OrdemServicoDTO> requestGetOrdensServico() {
+        final OrdemServicoRepository repo = new OrdemServicoRepository();
+        final List<OrdemServico> models = repo.getAll();
+        final List<OrdemServicoDTO> dtos = new ArrayList<>();
+        for (final OrdemServico model : models) {
+            dtos.add(model.toDTO());
+        }
+        return dtos;
+    }
+
+    public static List<OrdemServicoDTO> requestGetOrdensServicoByBem(
+            final Integer idBem) {
+        final OrdemServicoRepository repo = new OrdemServicoRepository();
+        final List<OrdemServico> models = repo.getByIdBem(idBem);
+        final List<OrdemServicoDTO> dtos = new ArrayList<>();
+        for (final OrdemServico model : models) {
+            dtos.add(model.toDTO());
+        }
+        return dtos;
+    }
+
+    // ---------------
+    // GRUPO MATERIAL
+    // ---------------
+
+    public static GrupoMaterialDTO requestGetGrupoMaterialById(
+            final Integer itemId) {
+        final GrupoMaterialRepository repo = new GrupoMaterialRepository();
+        final GrupoMaterial item = repo.getById(itemId);
+        if (item == null) {
+            return null;
+        }
+        return item.toDTO();
+    }
+
+    public static List<GrupoMaterialDTO> requestGetGruposMateriais() {
+        final GrupoMaterialRepository repo = new GrupoMaterialRepository();
+        final List<GrupoMaterial> models = repo.getAll();
+        final List<GrupoMaterialDTO> dtos = new ArrayList<>();
+        for (final GrupoMaterial model : models) {
+            dtos.add(model.toDTO());
+        }
+        return dtos;
     }
 
     // ------------
@@ -427,6 +693,15 @@ public class Client {
     public static SalaDTO requestGetSalaById(final Integer id) {
         final SalaRepository salaRepo = new SalaRepository();
         final Sala sala = salaRepo.getById(id);
+        if (sala == null) {
+            return null;
+        }
+        return sala.toDTO();
+    }
+
+    public static SalaDTO requestGetSalaDeposito() {
+        final SalaRepository salaRepo = new SalaRepository();
+        final Sala sala = salaRepo.getDeDeposito();
         if (sala == null) {
             return null;
         }

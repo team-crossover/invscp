@@ -56,6 +56,12 @@ public interface MenuView extends View {
      */
     void addFuncionariosListener(ActionListener listener);
 
+    /**
+     * Adiciona um Listener para o quando o usuário informar que deseja acessar
+     * a listagem de bens.
+     */
+    void addBensListener(ActionListener listener);
+
     // -------------------------------------------
     // Métodos para atualizar os valores exibidos.
     // -------------------------------------------

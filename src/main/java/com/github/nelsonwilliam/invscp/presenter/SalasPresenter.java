@@ -52,12 +52,17 @@ public class SalasPresenter extends Presenter<SalasView> {
     }
 
     private void onDeletarSalas() {
-        final List<Integer> selectedPrdiosIds = view.getSelectedSalasIds();
+        final List<Integer> selectedSalasIds = view.getSelectedSalasIds();
+        if (selectedSalasIds.size() < 1) {
+            view.showError("Nenhum item foi selecionado.");
+            return;
+        }
+
         view.showConfirmacao(
-                "Deletar " + selectedPrdiosIds.size() + " salas(s)?",
+                "Deletar " + selectedSalasIds.size() + " salas(s)?",
                 (final Boolean confirmado) -> {
                     if (confirmado) {
-                        deletarSalas(selectedPrdiosIds);
+                        deletarSalas(selectedSalasIds);
                     }
                 });
     }

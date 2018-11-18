@@ -216,7 +216,7 @@ public class PrediosSwingView extends JPanel implements PrediosView {
         final List<Integer> selectedPredios = new ArrayList<Integer>();
         final int[] selectedRows = table.getSelectedRows();
         for (int i = 0; i < selectedRows.length; i++) {
-            final int row = selectedRows[i];
+            final int row = table.convertRowIndexToModel(selectedRows[i]);
             final Integer id = (Integer) table.getModel().getValueAt(row, 0);
             selectedPredios.add(id);
         }

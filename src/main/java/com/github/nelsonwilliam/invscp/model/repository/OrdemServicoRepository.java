@@ -1,6 +1,8 @@
 package com.github.nelsonwilliam.invscp.model.repository;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -11,6 +13,7 @@ import java.util.List;
 
 import com.github.nelsonwilliam.invscp.model.Bem;
 import com.github.nelsonwilliam.invscp.model.OrdemServico;
+import com.github.nelsonwilliam.invscp.model.enums.OSSituacaoEnum;
 import com.github.nelsonwilliam.invscp.util.DatabaseConnection;
 
 public class OrdemServicoRepository implements Repository<OrdemServico> {
@@ -25,14 +28,16 @@ public class OrdemServicoRepository implements Repository<OrdemServico> {
             final ResultSet r = s.executeQuery();
             while (r.next()) {
                 final Integer id = (Integer) r.getObject("id");
-                final LocalDate dataCadastro = (LocalDate) r
-                        .getObject("data_cadastro");
-                final LocalDate dataConclusao = (LocalDate) r
-                        .getObject("data_conclusao");
-                final Float valor = (Float) r.getObject("valor");
+                final LocalDate dataCadastro =
+                        ((Date) r.getObject("data_cadastro")).toLocalDate();
+                final LocalDate dataConclusao =
+                        r.getObject("data_conclusao") == null ? null
+                                : ((Date) r.getObject("data_conclusao"))
+                                        .toLocalDate();
+                final BigDecimal valor = (BigDecimal) r.getObject("valor");
                 final String situacao = (String) r.getObject("situacao");
-                final Integer idFuncionario = (Integer) r
-                        .getObject("id_funcionario");
+                final Integer idFuncionario =
+                        (Integer) r.getObject("id_funcionario");
                 final Integer idBem = (Integer) r.getObject("id_bem");
 
                 final OrdemServico ordem = new OrdemServico();
@@ -40,7 +45,7 @@ public class OrdemServicoRepository implements Repository<OrdemServico> {
                 ordem.setDataCadastro(dataCadastro);
                 ordem.setDataConclusao(dataConclusao);
                 ordem.setValor(valor);
-                ordem.setSituacaoString(situacao);
+                ordem.setSituacao(OSSituacaoEnum.valueOf(situacao));
                 ordem.setIdFuncionario(idFuncionario);
                 ordem.setIdBem(idBem);
                 ordens.add(ordem);
@@ -53,7 +58,7 @@ public class OrdemServicoRepository implements Repository<OrdemServico> {
     }
 
     @Override
-    public OrdemServico getById(Integer id) {
+    public OrdemServico getById(final Integer id) {
         final Connection connection = DatabaseConnection.getConnection();
         OrdemServico ordem = null;
         try {
@@ -63,14 +68,16 @@ public class OrdemServicoRepository implements Repository<OrdemServico> {
 
             final ResultSet r = s.executeQuery();
             if (r.next()) {
-                final LocalDate dataCadastro = (LocalDate) r
-                        .getObject("data_cadastro");
-                final LocalDate dataConclusao = (LocalDate) r
-                        .getObject("data_conclusao");
-                final Float valor = (Float) r.getObject("valor");
+                final LocalDate dataCadastro =
+                        ((Date) r.getObject("data_cadastro")).toLocalDate();
+                final LocalDate dataConclusao =
+                        r.getObject("data_conclusao") == null ? null
+                                : ((Date) r.getObject("data_conclusao"))
+                                        .toLocalDate();
+                final BigDecimal valor = (BigDecimal) r.getObject("valor");
                 final String situacao = (String) r.getObject("situacao");
-                final Integer idFuncionario = (Integer) r
-                        .getObject("id_funcionario");
+                final Integer idFuncionario =
+                        (Integer) r.getObject("id_funcionario");
                 final Integer idBem = (Integer) r.getObject("id_bem");
 
                 ordem = new OrdemServico();
@@ -78,7 +85,7 @@ public class OrdemServicoRepository implements Repository<OrdemServico> {
                 ordem.setDataCadastro(dataCadastro);
                 ordem.setDataConclusao(dataConclusao);
                 ordem.setValor(valor);
-                ordem.setSituacaoString(situacao);
+                ordem.setSituacao(OSSituacaoEnum.valueOf(situacao));
                 ordem.setIdFuncionario(idFuncionario);
                 ordem.setIdBem(idBem);
             }
@@ -89,8 +96,46 @@ public class OrdemServicoRepository implements Repository<OrdemServico> {
 
     }
 
+    public List<OrdemServico> getByIdBem(final Integer idBem) {
+        final Connection connection = DatabaseConnection.getConnection();
+        final List<OrdemServico> ordens = new ArrayList<OrdemServico>();
+        try {
+            final PreparedStatement s = connection.prepareStatement(
+                    "SELECT id,data_cadastro,data_conclusao,valor,situacao,id_funcionario,id_bem FROM ordem_servico WHERE id_bem=? ORDER BY id DESC");
+            s.setObject(1, idBem, Types.INTEGER);
+
+            final ResultSet r = s.executeQuery();
+            while (r.next()) {
+                final Integer id = (Integer) r.getObject("id");
+                final LocalDate dataCadastro =
+                        ((Date) r.getObject("data_cadastro")).toLocalDate();
+                final LocalDate dataConclusao =
+                        r.getObject("data_conclusao") == null ? null
+                                : ((Date) r.getObject("data_conclusao"))
+                                        .toLocalDate();
+                final BigDecimal valor = (BigDecimal) r.getObject("valor");
+                final String situacao = (String) r.getObject("situacao");
+                final Integer idFuncionario =
+                        (Integer) r.getObject("id_funcionario");
+
+                final OrdemServico ordem = new OrdemServico();
+                ordem.setId(id);
+                ordem.setDataCadastro(dataCadastro);
+                ordem.setDataConclusao(dataConclusao);
+                ordem.setValor(valor);
+                ordem.setSituacao(OSSituacaoEnum.valueOf(situacao));
+                ordem.setIdFuncionario(idFuncionario);
+                ordem.setIdBem(idBem);
+                ordens.add(ordem);
+            }
+        } catch (final Exception e) {
+            e.printStackTrace();
+        }
+        return ordens;
+    }
+
     @Override
-    public boolean add(OrdemServico item) {
+    public boolean add(final OrdemServico item) {
         final Connection connection = DatabaseConnection.getConnection();
         try {
             PreparedStatement s;
@@ -101,8 +146,8 @@ public class OrdemServicoRepository implements Repository<OrdemServico> {
                         Statement.RETURN_GENERATED_KEYS);
                 s.setObject(1, item.getDataCadastro(), Types.DATE);
                 s.setObject(2, item.getDataConclusao(), Types.DATE);
-                s.setObject(3, item.getValor(), Types.FLOAT);
-                s.setObject(4, item.getSituacaoString(), Types.VARCHAR);
+                s.setObject(3, item.getValor(), Types.NUMERIC);
+                s.setObject(4, item.getSituacao(), Types.VARCHAR);
                 s.setObject(5, item.getIdFuncionario(), Types.INTEGER);
                 s.setObject(6, item.getIdBem(), Types.INTEGER);
                 s.executeUpdate();
@@ -120,8 +165,8 @@ public class OrdemServicoRepository implements Repository<OrdemServico> {
                 s.setObject(1, item.getId(), Types.INTEGER);
                 s.setObject(2, item.getDataCadastro(), Types.DATE);
                 s.setObject(3, item.getDataConclusao(), Types.DATE);
-                s.setObject(4, item.getValor(), Types.FLOAT);
-                s.setObject(5, item.getSituacaoString(), Types.VARCHAR);
+                s.setObject(4, item.getValor(), Types.NUMERIC);
+                s.setObject(5, item.getSituacao(), Types.VARCHAR);
                 s.setObject(6, item.getIdFuncionario(), Types.INTEGER);
                 s.setObject(7, item.getIdBem(), Types.INTEGER);
                 s.executeUpdate();
@@ -136,7 +181,7 @@ public class OrdemServicoRepository implements Repository<OrdemServico> {
     }
 
     @Override
-    public boolean add(Iterable<OrdemServico> items) {
+    public boolean add(final Iterable<OrdemServico> items) {
         boolean added = false;
         for (final OrdemServico item : items) {
             added |= add(item);
@@ -145,7 +190,7 @@ public class OrdemServicoRepository implements Repository<OrdemServico> {
     }
 
     @Override
-    public boolean update(OrdemServico item) {
+    public boolean update(final OrdemServico item) {
         final Connection connection = DatabaseConnection.getConnection();
         try {
             if (item.getId() == null) {
@@ -157,8 +202,8 @@ public class OrdemServicoRepository implements Repository<OrdemServico> {
                             + " id_funcionario=?, id_bem=? WHERE id=?");
             s.setObject(1, item.getDataCadastro(), Types.DATE);
             s.setObject(2, item.getDataConclusao(), Types.DATE);
-            s.setObject(3, item.getValor(), Types.FLOAT);
-            s.setObject(4, item.getSituacaoString(), Types.VARCHAR);
+            s.setObject(3, item.getValor(), Types.NUMERIC);
+            s.setObject(4, item.getSituacao(), Types.VARCHAR);
             s.setObject(5, item.getIdFuncionario(), Types.INTEGER);
             s.setObject(6, item.getIdBem(), Types.INTEGER);
             s.setObject(7, item.getId(), Types.INTEGER);
@@ -171,7 +216,7 @@ public class OrdemServicoRepository implements Repository<OrdemServico> {
     }
 
     @Override
-    public boolean update(Iterable<OrdemServico> items) {
+    public boolean update(final Iterable<OrdemServico> items) {
         boolean updated = false;
         for (final OrdemServico item : items) {
             updated |= update(item);
@@ -180,7 +225,7 @@ public class OrdemServicoRepository implements Repository<OrdemServico> {
     }
 
     @Override
-    public boolean remove(OrdemServico item) {
+    public boolean remove(final OrdemServico item) {
         final Connection connection = DatabaseConnection.getConnection();
         try {
             if (item.getId() == null) {
@@ -199,7 +244,7 @@ public class OrdemServicoRepository implements Repository<OrdemServico> {
     }
 
     @Override
-    public boolean remove(Iterable<OrdemServico> items) {
+    public boolean remove(final Iterable<OrdemServico> items) {
         boolean removed = false;
         for (final OrdemServico item : items) {
             removed |= remove(item);
@@ -207,25 +252,28 @@ public class OrdemServicoRepository implements Repository<OrdemServico> {
         return removed;
     }
 
-	public List<OrdemServico> getByBem(Bem bem) {
-		final Connection connection = DatabaseConnection.getConnection();
+    public List<OrdemServico> getByBem(final Bem bem) {
+        final Connection connection = DatabaseConnection.getConnection();
         final List<OrdemServico> ordens = new ArrayList<OrdemServico>();
         try {
             final PreparedStatement s = connection.prepareStatement(
                     "SELECT id,data_cadastro,data_conclusao,valor,situacao,"
-                    + "id_funcionario,id_bem FROM ordem_servico WHERE id_bem=?,situacao='Pendente'");
-            s.setObject(7, bem.getId(), Types.INTEGER);
+                            + "id_funcionario,id_bem FROM ordem_servico WHERE id_bem=? AND situacao=?");
+            s.setObject(1, bem.getId(), Types.INTEGER);
+            s.setObject(2, OSSituacaoEnum.PENDENTE.toString(), Types.VARCHAR);
             final ResultSet r = s.executeQuery();
             while (r.next()) {
                 final Integer id = (Integer) r.getObject("id");
-                final LocalDate dataCadastro = (LocalDate) r
-                        .getObject("data_cadastro");
-                final LocalDate dataConclusao = (LocalDate) r
-                        .getObject("data_conclusao");
-                final Float valor = (Float) r.getObject("valor");
+                final LocalDate dataCadastro =
+                        ((Date) r.getObject("data_cadastro")).toLocalDate();
+                final LocalDate dataConclusao =
+                        r.getObject("data_conclusao") == null ? null
+                                : ((Date) r.getObject("data_conclusao"))
+                                        .toLocalDate();
+                final BigDecimal valor = (BigDecimal) r.getObject("valor");
                 final String situacao = (String) r.getObject("situacao");
-                final Integer idFuncionario = (Integer) r
-                        .getObject("id_funcionario");
+                final Integer idFuncionario =
+                        (Integer) r.getObject("id_funcionario");
                 final Integer idBem = (Integer) r.getObject("id_bem");
 
                 final OrdemServico ordem = new OrdemServico();
@@ -233,7 +281,7 @@ public class OrdemServicoRepository implements Repository<OrdemServico> {
                 ordem.setDataCadastro(dataCadastro);
                 ordem.setDataConclusao(dataConclusao);
                 ordem.setValor(valor);
-                ordem.setSituacaoString(situacao);
+                ordem.setSituacao(OSSituacaoEnum.valueOf(situacao));
                 ordem.setIdFuncionario(idFuncionario);
                 ordem.setIdBem(idBem);
                 ordens.add(ordem);
@@ -242,6 +290,6 @@ public class OrdemServicoRepository implements Repository<OrdemServico> {
             e.printStackTrace();
         }
         return ordens;
-	}
+    }
 
 }

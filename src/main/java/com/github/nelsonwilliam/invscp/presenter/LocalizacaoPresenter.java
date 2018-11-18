@@ -32,8 +32,12 @@ public class LocalizacaoPresenter extends Presenter<LocalizacaoView> {
     private void onConfirmar() {
         final FuncionarioDTO usuario = mainPresenter.getUsuario();
         final LocalizacaoDTO locaDTO = view.getLocalizacao();
+        if (locaDTO == null) {
+            view.showError("Não foi possível inserir/alterar o item.");
+            return;
+        }
 
-        if (locaDTO == null || locaDTO.getId() == null) {
+        if (locaDTO.getId() == null) {
             onConfirmarAdicao(usuario, locaDTO);
         } else {
             onConfirmarAtualizacao(usuario, locaDTO.getId(), locaDTO);

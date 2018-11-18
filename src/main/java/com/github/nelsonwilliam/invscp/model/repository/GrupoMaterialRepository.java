@@ -1,5 +1,6 @@
 package com.github.nelsonwilliam.invscp.model.repository;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,13 +20,14 @@ public class GrupoMaterialRepository implements Repository<GrupoMaterial> {
         final List<GrupoMaterial> grupos = new ArrayList<GrupoMaterial>();
         try {
             final PreparedStatement s = connection.prepareStatement(
-                    "SELECT id,nome,vida_util,depreciacao FROM grupo_material ORDER BY id");
+                    "SELECT id,nome,vida_util,depreciacao FROM grupo_material ORDER BY nome ASC");
             final ResultSet r = s.executeQuery();
             while (r.next()) {
                 final Integer id = (Integer) r.getObject("id");
                 final String nome = (String) r.getObject("nome");
                 final Integer vidaUtil = (Integer) r.getObject("vida_util");
-                final Float depreciacao = (Float) r.getObject("depreciacao");
+                final BigDecimal depreciacao =
+                        (BigDecimal) r.getObject("depreciacao");
 
                 final GrupoMaterial grupo = new GrupoMaterial();
                 grupo.setId(id);
@@ -41,7 +43,7 @@ public class GrupoMaterialRepository implements Repository<GrupoMaterial> {
     }
 
     @Override
-    public GrupoMaterial getById(Integer id) {
+    public GrupoMaterial getById(final Integer id) {
     	final Connection connection = DatabaseConnection.getConnection();
     	GrupoMaterial grupo = null;
         try {
@@ -53,7 +55,8 @@ public class GrupoMaterialRepository implements Repository<GrupoMaterial> {
             if (r.next()) {
             	final String nome = (String) r.getObject("nome");
                 final Integer vidaUtil = (Integer) r.getObject("vida_util");
-                final Float depreciacao = (Float) r.getObject("depreciacao");
+                final BigDecimal depreciacao =
+                        (BigDecimal) r.getObject("depreciacao");
 
                 grupo = new GrupoMaterial();
                 grupo.setId(id);
@@ -68,7 +71,7 @@ public class GrupoMaterialRepository implements Repository<GrupoMaterial> {
     }
 
     @Override
-    public boolean add(GrupoMaterial item) {
+    public boolean add(final GrupoMaterial item) {
     	final Connection connection = DatabaseConnection.getConnection();
         try {
             PreparedStatement s;
@@ -78,7 +81,7 @@ public class GrupoMaterialRepository implements Repository<GrupoMaterial> {
                         Statement.RETURN_GENERATED_KEYS);
                 s.setObject(1, item.getNome(), Types.VARCHAR);
                 s.setObject(2, item.getVidaUtil(), Types.INTEGER);
-                s.setObject(3, item.getDepreciacao(), Types.FLOAT);
+                s.setObject(3, item.getDepreciacao(), Types.NUMERIC);
                 s.executeUpdate();
                 // Atualiza o item adicionado com seu novo ID
                 final ResultSet rs = s.getGeneratedKeys();
@@ -93,7 +96,7 @@ public class GrupoMaterialRepository implements Repository<GrupoMaterial> {
                 s.setObject(1, item.getId(), Types.INTEGER);
                 s.setObject(2, item.getNome(), Types.VARCHAR);
                 s.setObject(3, item.getVidaUtil(), Types.INTEGER);
-                s.setObject(4, item.getDepreciacao(), Types.FLOAT);
+                s.setObject(4, item.getDepreciacao(), Types.NUMERIC);
                 s.executeUpdate();
             }
 
@@ -105,7 +108,7 @@ public class GrupoMaterialRepository implements Repository<GrupoMaterial> {
     }
 
     @Override
-    public boolean add(Iterable<GrupoMaterial> items) {
+    public boolean add(final Iterable<GrupoMaterial> items) {
     	boolean added = false;
         for (final GrupoMaterial item : items) {
             added |= add(item);
@@ -114,7 +117,7 @@ public class GrupoMaterialRepository implements Repository<GrupoMaterial> {
     }
 
     @Override
-    public boolean update(GrupoMaterial item) {
+    public boolean update(final GrupoMaterial item) {
     	final Connection connection = DatabaseConnection.getConnection();
         try {
             if (item.getId() == null) {
@@ -125,7 +128,7 @@ public class GrupoMaterialRepository implements Repository<GrupoMaterial> {
                     "UPDATE grupo_material SET nome=?, vida_util=?, depreciacao=? WHERE id=?");
             s.setObject(1, item.getNome(), Types.VARCHAR);
             s.setObject(2, item.getVidaUtil(), Types.INTEGER);
-            s.setObject(3, item.getDepreciacao(), Types.FLOAT);
+            s.setObject(3, item.getDepreciacao(), Types.NUMERIC);
             s.setObject(4, item.getId(), Types.INTEGER);
             s.executeUpdate();
             return true;
@@ -136,7 +139,7 @@ public class GrupoMaterialRepository implements Repository<GrupoMaterial> {
     }
 
     @Override
-    public boolean update(Iterable<GrupoMaterial> items) {
+    public boolean update(final Iterable<GrupoMaterial> items) {
     	boolean updated = false;
         for (final GrupoMaterial item : items) {
             updated |= update(item);
@@ -144,7 +147,7 @@ public class GrupoMaterialRepository implements Repository<GrupoMaterial> {
         return updated;    }
 
     @Override
-    public boolean remove(GrupoMaterial item) {
+    public boolean remove(final GrupoMaterial item) {
     	final Connection connection = DatabaseConnection.getConnection();
         try {
             if (item.getId() == null) {
@@ -162,7 +165,7 @@ public class GrupoMaterialRepository implements Repository<GrupoMaterial> {
     }
 
     @Override
-    public boolean remove(Iterable<GrupoMaterial> items) {
+    public boolean remove(final Iterable<GrupoMaterial> items) {
     	boolean removed = false;
         for (final GrupoMaterial item : items) {
             removed |= remove(item);

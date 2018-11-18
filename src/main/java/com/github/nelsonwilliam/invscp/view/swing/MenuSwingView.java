@@ -27,6 +27,7 @@ public class MenuSwingView extends JPanel implements MenuView {
     private JButton btnLogout;
     private JButton btnDepartamentos;
     private JButton btnSalas;
+    private JButton btnBens;
     private JButton btnPredios;
     private JButton btnLocalizacoes;
     private JButton btnFuncionarios;
@@ -53,6 +54,7 @@ public class MenuSwingView extends JPanel implements MenuView {
         btnLocalizacoes = new JButton("Localizações");
         btnPredios = new JButton("Prédios");
         btnSalas = new JButton("Salas");
+        btnBens = new JButton("Bens");
         btnLogout = new JButton("Logout");
         btnLogin = new JButton("Login");
 
@@ -133,6 +135,7 @@ public class MenuSwingView extends JPanel implements MenuView {
                 pnlButtons.add(btnLocalizacoes);
                 pnlButtons.add(btnPredios);
                 pnlButtons.add(btnSalas);
+                pnlButtons.add(btnBens);
 
                 if (isChefeDePatrimonio) {
                     // BOTOES DE CHEFE DE PATIRMONIO
@@ -195,4 +198,9 @@ public class MenuSwingView extends JPanel implements MenuView {
 
     }
 
+    @Override
+    public void addBensListener(final ActionListener listener) {
+        btnBens.addActionListener(listener);
+
+    }
 }

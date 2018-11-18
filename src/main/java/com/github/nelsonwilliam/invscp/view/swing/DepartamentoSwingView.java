@@ -315,11 +315,8 @@ public class DepartamentoSwingView extends JDialog implements DepartamentoView {
         departamento.setId(idDepartamento);
         departamento.setNome(fieldNome.getText());
         departamento.setDePatrimonio(deDepartamento);
-        departamento.setChefe(listChefe.getSelectedValue() == null ? null
-                : listChefe.getSelectedValue());
-        departamento.setChefeSubstituto(
-                listChefeSubstituto.getSelectedValue() == null ? null
-                        : listChefeSubstituto.getSelectedValue());
+        departamento.setChefe(listChefe.getSelectedValue());
+        departamento.setChefeSubstituto(listChefeSubstituto.getSelectedValue());
         return departamento;
 
     }

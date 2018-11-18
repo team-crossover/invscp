@@ -13,6 +13,16 @@ public enum BemSituacaoEnum {
         texto = textoOpcao;
     }
 
+    public static BemSituacaoEnum valueOfTexto(final String texto) {
+        final BemSituacaoEnum[] values = BemSituacaoEnum.values();
+        for (final BemSituacaoEnum value : values) {
+            if (value.getTexto().equals(texto)) {
+                return value;
+            }
+        }
+        return null;
+    }
+
     public final int getValor() {
         return valor;
     }

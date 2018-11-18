@@ -50,6 +50,11 @@ public class FuncionariosPresenter extends Presenter<FuncionariosView> {
 
     private void onDeletarFuncionarios() {
         final List<Integer> selectedFuncIds = view.getSelectedFuncionariosIds();
+        if (selectedFuncIds.size() < 1) {
+            view.showError("Nenhum item foi selecionado.");
+            return;
+        }
+
         view.showConfirmacao(
                 "Deletar " + selectedFuncIds.size() + " funcionário(s)?",
                 (final Boolean confirmado) -> {

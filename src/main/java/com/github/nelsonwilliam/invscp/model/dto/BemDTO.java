@@ -1,5 +1,6 @@
 package com.github.nelsonwilliam.invscp.model.dto;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import com.github.nelsonwilliam.invscp.model.enums.BemSituacaoEnum;
@@ -24,7 +25,7 @@ public class BemDTO implements DTO {
 
     private String marca = null;
 
-    private Float valorCompra = null;
+    private BigDecimal valorCompra = null;
 
     private BemSituacaoEnum situacao = null;
 
@@ -38,7 +39,7 @@ public class BemDTO implements DTO {
         return id;
     }
 
-    public final void setId(Integer id) {
+    public final void setId(final Integer id) {
         this.id = id;
     }
 
@@ -46,7 +47,7 @@ public class BemDTO implements DTO {
         return descricao;
     }
 
-    public final void setDescricao(String descricao) {
+    public final void setDescricao(final String descricao) {
         this.descricao = descricao;
     }
 
@@ -54,7 +55,7 @@ public class BemDTO implements DTO {
         return numeroTombamento;
     }
 
-    public final void setNumeroTombamento(Long numeroTombamento) {
+    public final void setNumeroTombamento(final Long numeroTombamento) {
         this.numeroTombamento = numeroTombamento;
     }
 
@@ -62,7 +63,7 @@ public class BemDTO implements DTO {
         return dataCadastro;
     }
 
-    public final void setDataCadastro(LocalDate dataCadastro) {
+    public final void setDataCadastro(final LocalDate dataCadastro) {
         this.dataCadastro = dataCadastro;
     }
 
@@ -70,7 +71,7 @@ public class BemDTO implements DTO {
         return dataAquisicao;
     }
 
-    public final void setDataAquisicao(LocalDate dataAquisicao) {
+    public final void setDataAquisicao(final LocalDate dataAquisicao) {
         this.dataAquisicao = dataAquisicao;
     }
 
@@ -78,7 +79,7 @@ public class BemDTO implements DTO {
         return numeroNotaFiscal;
     }
 
-    public final void setNumeroNotaFiscal(String numeroNotaFiscal) {
+    public final void setNumeroNotaFiscal(final String numeroNotaFiscal) {
         this.numeroNotaFiscal = numeroNotaFiscal;
     }
 
@@ -86,7 +87,7 @@ public class BemDTO implements DTO {
         return especificacao;
     }
 
-    public final void setEspecificacao(String especificacao) {
+    public final void setEspecificacao(final String especificacao) {
         this.especificacao = especificacao;
     }
 
@@ -94,7 +95,7 @@ public class BemDTO implements DTO {
         return garantia;
     }
 
-    public final void setGarantia(LocalDate garantia) {
+    public final void setGarantia(final LocalDate garantia) {
         this.garantia = garantia;
     }
 
@@ -102,15 +103,15 @@ public class BemDTO implements DTO {
         return marca;
     }
 
-    public final void setMarca(String marca) {
+    public final void setMarca(final String marca) {
         this.marca = marca;
     }
 
-    public final Float getValorCompra() {
+    public final BigDecimal getValorCompra() {
         return valorCompra;
     }
 
-    public final void setValorCompra(Float valorCompra) {
+    public final void setValorCompra(final BigDecimal valorCompra) {
         this.valorCompra = valorCompra;
     }
 
@@ -118,7 +119,7 @@ public class BemDTO implements DTO {
         return situacao;
     }
 
-    public final void setSituacao(BemSituacaoEnum situacao) {
+    public final void setSituacao(final BemSituacaoEnum situacao) {
         this.situacao = situacao;
     }
 
@@ -126,7 +127,7 @@ public class BemDTO implements DTO {
         return grupoMaterial;
     }
 
-    public final void setGrupoMaterial(GrupoMaterialDTO grupoMaterial) {
+    public final void setGrupoMaterial(final GrupoMaterialDTO grupoMaterial) {
         this.grupoMaterial = grupoMaterial;
     }
 
@@ -134,7 +135,7 @@ public class BemDTO implements DTO {
         return sala;
     }
 
-    public final void setSala(SalaDTO sala) {
+    public final void setSala(final SalaDTO sala) {
         this.sala = sala;
     }
 
@@ -142,7 +143,7 @@ public class BemDTO implements DTO {
         return departamento;
     }
 
-    public final void setDepartamento(DepartamentoDTO departamento) {
+    public final void setDepartamento(final DepartamentoDTO departamento) {
         this.departamento = departamento;
     }
 

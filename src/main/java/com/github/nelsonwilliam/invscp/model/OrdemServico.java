@@ -1,6 +1,9 @@
 package com.github.nelsonwilliam.invscp.model;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.github.nelsonwilliam.invscp.exception.CRUDException;
 import com.github.nelsonwilliam.invscp.exception.IllegalDeleteException;
@@ -8,10 +11,10 @@ import com.github.nelsonwilliam.invscp.exception.IllegalInsertException;
 import com.github.nelsonwilliam.invscp.exception.IllegalUpdateException;
 import com.github.nelsonwilliam.invscp.model.dto.FuncionarioDTO;
 import com.github.nelsonwilliam.invscp.model.dto.OrdemServicoDTO;
-import com.github.nelsonwilliam.invscp.model.enums.OSsituacaoEnum;
+import com.github.nelsonwilliam.invscp.model.enums.BemSituacaoEnum;
+import com.github.nelsonwilliam.invscp.model.enums.OSSituacaoEnum;
 import com.github.nelsonwilliam.invscp.model.repository.BaixaRepository;
 import com.github.nelsonwilliam.invscp.model.repository.BemRepository;
-import com.github.nelsonwilliam.invscp.model.repository.DepartamentoRepository;
 import com.github.nelsonwilliam.invscp.model.repository.FuncionarioRepository;
 import com.github.nelsonwilliam.invscp.model.repository.OrdemServicoRepository;
 
@@ -25,16 +28,16 @@ public class OrdemServico implements Model<OrdemServicoDTO> {
 
     private LocalDate dataConclusao = null;
 
-    private Float valor = null;
+    private BigDecimal valor = null;
 
-    private OSsituacaoEnum situacao = null;
+    private OSSituacaoEnum situacao = null;
 
     private Integer idFuncionario = null;
 
     private Integer idBem = null;
 
     @Override
-    public void setValuesFromDTO(OrdemServicoDTO dto) {
+    public void setValuesFromDTO(final OrdemServicoDTO dto) {
         setDataCadastro(dto.getDataCadastro());
         setDataConclusao(dto.getDataConclusao());
         setId(dto.getId());
@@ -51,11 +54,12 @@ public class OrdemServico implements Model<OrdemServicoDTO> {
 
     @Override
     public OrdemServicoDTO toDTO() {
-        OrdemServicoDTO dto = new OrdemServicoDTO();
+        final OrdemServicoDTO dto = new OrdemServicoDTO();
         dto.setDataCadastro(dataCadastro);
         dto.setDataConclusao(dataConclusao);
         dto.setId(id);
         dto.setValor(valor);
+        dto.setSituacao(situacao);
         if (idFuncionario != null) {
             final FuncionarioRepository repo = new FuncionarioRepository();
             final Funcionario func = repo.getById(idFuncionario);
@@ -64,7 +68,7 @@ public class OrdemServico implements Model<OrdemServicoDTO> {
         }
         if (idBem != null) {
             final BemRepository repo = new BemRepository();
-            final Bem bem = repo.getById(idFuncionario);
+            final Bem bem = repo.getById(idBem);
             bem.setIdDepartamento(null);
             dto.setBem(bem == null ? null : bem.toDTO());
         }
@@ -72,59 +76,10 @@ public class OrdemServico implements Model<OrdemServicoDTO> {
     }
 
     public static void validarDeletar(final FuncionarioDTO usuario,
-            final Integer idOs) throws IllegalDeleteException {
-        // ---------------
-        // IDENTIFICADORES
-        // ---------------
+            final Integer idOS) throws IllegalDeleteException {
 
-        if (idOs == null) {
-            throw new IllegalDeleteException(
-                    "Não é possível remover ordens de serviço sem informar o ID.");
-        }
-
-        final OrdemServicoRepository osRepo = new OrdemServicoRepository();
-        final OrdemServico os = osRepo.getById(idOs);
-
-        if (os == null) {
-            throw new IllegalDeleteException(
-                    "Não foi possível encontrar a ordem de serviço desejada.");
-        }
-
-        // CONTROLE DE ACESSO
-        final BemRepository bemRepo = new BemRepository();
-        final Bem bem = bemRepo.getById(os.getIdBem());
-        final DepartamentoRepository deptRepo = new DepartamentoRepository();
-        final Departamento dept = deptRepo.getById(bem.getIdDepartamento());
-        final FuncionarioRepository funRepo = new FuncionarioRepository();
-        final Funcionario func = funRepo.getById(os.getIdFuncionario());
-        if (usuario == null) {
-            throw new IllegalDeleteException("Você não está logado.");
-        }
-        if (usuario.getDepartamento() == null) {
-            throw new IllegalDeleteException(
-                    "Você não possui um departamento.");
-        }
-        if (!usuario.getCargo().isChefeDePatrimonio()) {
-            if (!usuario.getCargo().isChefeDeDepartamento()) {
-                throw new IllegalDeleteException(
-                        "Você não tem permissão para deletar este item");
-            }
-            if (!usuario.getDepartamento().equals(dept)) {
-                throw new IllegalDeleteException(
-                        "Você não tem permissão para deletar este item");
-            }
-            if (!usuario.getId().equals(func.getId())) {
-                throw new IllegalDeleteException(
-                        "Você não tem permissão para deletar este item em nome de outro funcionário");
-            }
-        }
-
-        // VALIDADE DE DADOS
-        if (os.isPendente()) {
-            throw new IllegalDeleteException(
-                    "Não é possível deletar a ordem de serviço pois ela ainda não foi concluída");
-        }
-
+        throw new IllegalDeleteException(
+                "Não é possível deletar ordens de serviço.");
     }
 
     public static void validarInserir(final FuncionarioDTO usuario,
@@ -135,6 +90,8 @@ public class OrdemServico implements Model<OrdemServicoDTO> {
         // ---------------
 
         final OrdemServicoRepository osRepo = new OrdemServicoRepository();
+        final BemRepository bemRepo = new BemRepository();
+        final Bem bem = bemRepo.getById(novaOs.getBem().getId());
 
         if (novaOs.getId() != null) {
             final OrdemServico osExistente = osRepo.getById(novaOs.getId());
@@ -168,7 +125,23 @@ public class OrdemServico implements Model<OrdemServicoDTO> {
             }
         }
 
-        // VALIDADE DE DADOS?
+        // VALIDADE DE DADOS
+        // TODO se o bem n está em movimentação
+
+        final BaixaRepository baixaRepo = new BaixaRepository();
+        if (baixaRepo.getByBem(bem).size() > 0) {
+            throw new IllegalInsertException(
+                    "Não é possível criar uma ordem de serviço para o bem "
+                            + bem.getDescricao() + " pois ele já foi baixado.");
+        }
+
+        if (osRepo.getByBem(bemRepo.getById(bem.getId()))
+                .size() > 0) {
+            throw new IllegalInsertException(
+                    "Não é possível criar uma ordem de serviço para o bem "
+                            + bem.getDescricao()
+                            + " pois ele possui ordens de serviço pendentes relaciondas a ele.");
+        }
 
         try {
             validarCampos(novaOs);
@@ -177,7 +150,6 @@ public class OrdemServico implements Model<OrdemServicoDTO> {
         }
     }
 
-    // Tem isso aqui?
     public static void validarAlterar(final FuncionarioDTO usuario,
             final Integer idAntigaOs, final OrdemServicoDTO novaOs)
             throws IllegalUpdateException {
@@ -210,8 +182,9 @@ public class OrdemServico implements Model<OrdemServicoDTO> {
         }
 
         // CONTROLE DE ACESSO
-        BemRepository bemRepo = new BemRepository();
-        Bem bem = bemRepo.getById(antigaOs.getIdBem());
+
+        final BemRepository bemRepo = new BemRepository();
+        final Bem bem = bemRepo.getById(antigaOs.getIdBem());
         if (usuario == null) {
             throw new IllegalUpdateException("Você não está logado.");
         }
@@ -236,19 +209,9 @@ public class OrdemServico implements Model<OrdemServicoDTO> {
         }
 
         // VALIDADE DE DADOS
-        // TODO se o bem n está em movimentação
-        final BaixaRepository baixaRepo = new BaixaRepository();
-        if (baixaRepo.getByBem(bem).size() > 0) {
+        if (antigaOs.getSituacao() == OSSituacaoEnum.CONCLUIDA) {
             throw new IllegalUpdateException(
-                    "Não é possível criar uma ordem de serviço para o bem "
-                            + bem.getDescricao() + " pois ele já foi baixado.");
-        }
-
-        if (osRepo.getByBem(bemRepo.getById(antigaOs.getIdBem())).size() > 0) {
-            throw new IllegalUpdateException(
-                    "Não é possível criar uma ordem de serviço para o bem "
-                            + bem.getDescricao()
-                            + " pois ele possui ordens de serviço pendentes relaciondas a ele.");
+                    "Não é permitido fazer alterações em ordens de serviço já concluídas.");
         }
 
         try {
@@ -258,10 +221,10 @@ public class OrdemServico implements Model<OrdemServicoDTO> {
         }
     }
 
-    private static void validarCampos(OrdemServicoDTO os) throws CRUDException {
+    private static void validarCampos(final OrdemServicoDTO os) throws CRUDException {
         // Definido pelo sistema
         if (os.getBem() == null) {
-            throw new CRUDException("O 'Bem' selecionado não existe.");
+            throw new CRUDException("O 'Bem' não pode ser vazio.");
         }
         // Definida pelo sistema - criação da OS
         if (os.getDataCadastro() == null) {
@@ -270,7 +233,7 @@ public class OrdemServico implements Model<OrdemServicoDTO> {
         }
         // Definido pelo sistema - autor da operação
         if (os.getFuncionario() == null) {
-            throw new CRUDException("O 'Funcionário' selecionado não existe.");
+            throw new CRUDException("O 'Funcionário' não pode ser vazio.");
         }
         // Situação é definida pelo sistema
         // if (os.getSituacao() == null) {
@@ -281,11 +244,47 @@ public class OrdemServico implements Model<OrdemServicoDTO> {
         }
     }
 
+    public static List<String> posInserir(final FuncionarioDTO usuario,
+            final OrdemServicoDTO ordem) {
+
+        final List<String> messages = new ArrayList<String>();
+        final BemRepository bemRepo = new BemRepository();
+        final Bem bem = bemRepo.getById(ordem.getBem().getId());
+
+        // A situação do bem deve ser alterada para EM CONSERTO após criar a
+        // baixa dele.
+        bem.setSituacao(BemSituacaoEnum.EM_CONSERTO);
+        bemRepo.update(bem);
+        messages.add("O bem " + bem.getDescricao()
+                + " está agora 'em conserto'.");
+
+        return messages;
+    }
+
+    public static List<String> posConcluir(final FuncionarioDTO usuario,
+            final OrdemServicoDTO ordem) {
+
+        final List<String> messages = new ArrayList<String>();
+        final BemRepository bemRepo = new BemRepository();
+        final Bem bem = bemRepo.getById(ordem.getBem().getId());
+
+        // A situação do bem deve ser alterada de volta pra INCORPORADO após
+        // concluir a ordem de serviço.
+        bem.setSituacao(BemSituacaoEnum.INCORPORADO);
+        bemRepo.update(bem);
+        messages.add("O bem " + bem.getDescricao()
+                + " não está mais 'em conserto'.");
+
+        return messages;
+    }
+
+    @Override
     public Integer getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    @Override
+    public void setId(final Integer id) {
         this.id = id;
     }
 
@@ -293,7 +292,7 @@ public class OrdemServico implements Model<OrdemServicoDTO> {
         return dataCadastro;
     }
 
-    public void setDataCadastro(LocalDate dataCadastro) {
+    public void setDataCadastro(final LocalDate dataCadastro) {
         this.dataCadastro = dataCadastro;
     }
 
@@ -301,39 +300,31 @@ public class OrdemServico implements Model<OrdemServicoDTO> {
         return dataConclusao;
     }
 
-    public void setDataConclusao(LocalDate dataConclusao) {
+    public void setDataConclusao(final LocalDate dataConclusao) {
         this.dataConclusao = dataConclusao;
     }
 
-    public Float getValor() {
+    public BigDecimal getValor() {
         return valor;
     }
 
-    public void setValor(Float valor) {
+    public void setValor(final BigDecimal valor) {
         this.valor = valor;
     }
 
-    public final OSsituacaoEnum getSituacao() {
+    public final OSSituacaoEnum getSituacao() {
         return situacao;
     }
 
-    public final void setSituacao(OSsituacaoEnum situacao) {
+    public final void setSituacao(final OSSituacaoEnum situacao) {
         this.situacao = situacao;
-    }
-
-    public final String getSituacaoString() {
-        return this.situacao.toString();
-    }
-
-    public final void setSituacaoString(final String sit) {
-        this.situacao = OSsituacaoEnum.valueOf(sit);
     }
 
     public Integer getIdFuncionario() {
         return idFuncionario;
     }
 
-    public void setIdFuncionario(Integer idFuncionario) {
+    public void setIdFuncionario(final Integer idFuncionario) {
         this.idFuncionario = idFuncionario;
     }
 
@@ -341,16 +332,16 @@ public class OrdemServico implements Model<OrdemServicoDTO> {
         return idBem;
     }
 
-    public void setIdBem(Integer idBem) {
+    public void setIdBem(final Integer idBem) {
         this.idBem = idBem;
     }
 
     public Boolean isPendente() {
-        return situacao.equals(OSsituacaoEnum.PENDENTE);
+        return situacao.equals(OSSituacaoEnum.PENDENTE);
     }
 
     public void concluir() {
-        this.situacao = OSsituacaoEnum.CONCLUIDA;
+        situacao = OSSituacaoEnum.CONCLUIDA;
     }
 
 }

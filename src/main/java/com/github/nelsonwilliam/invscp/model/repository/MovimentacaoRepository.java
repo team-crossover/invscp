@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.nelsonwilliam.invscp.model.Movimentacao;
+import com.github.nelsonwilliam.invscp.model.enums.EtapaMovEnum;
 import com.github.nelsonwilliam.invscp.util.DatabaseConnection;
 
 public class MovimentacaoRepository implements Repository<Movimentacao> {
@@ -31,7 +32,7 @@ public class MovimentacaoRepository implements Repository<Movimentacao> {
 
                 final Movimentacao mov = new Movimentacao();
                 mov.setId(id);
-                mov.setEtapa(etapa);
+                mov.setEtapa(EtapaMovEnum.valueOf(etapa));
                 mov.setIdBem(idBem);
                 mov.setIdSalaOrigem(idSalaOrigem);
                 mov.setIdSalaDestino(idSalaDestino);
@@ -44,7 +45,7 @@ public class MovimentacaoRepository implements Repository<Movimentacao> {
     }
 
     @Override
-    public Movimentacao getById(Integer id) {
+    public Movimentacao getById(final Integer id) {
         final Connection connection = DatabaseConnection.getConnection();
         Movimentacao mov = null;
         try {
@@ -60,7 +61,7 @@ public class MovimentacaoRepository implements Repository<Movimentacao> {
                 final Integer idSalaDestino = (Integer) r.getObject("id_sala_destino");
 
                 mov = new Movimentacao();
-                mov.setEtapa(etapa);
+                mov.setEtapa(EtapaMovEnum.valueOf(etapa));
                 mov.setIdBem(idBem);
                 mov.setIdSalaOrigem(idSalaOrigem);
                 mov.setIdSalaDestino(idSalaDestino);
@@ -72,7 +73,7 @@ public class MovimentacaoRepository implements Repository<Movimentacao> {
     }
 
     @Override
-    public boolean add(Movimentacao item) {
+    public boolean add(final Movimentacao item) {
         final Connection connection = DatabaseConnection.getConnection();
         try {
             PreparedStatement s;
@@ -113,7 +114,7 @@ public class MovimentacaoRepository implements Repository<Movimentacao> {
     }
 
     @Override
-    public boolean add(Iterable<Movimentacao> items) {
+    public boolean add(final Iterable<Movimentacao> items) {
         boolean added = false;
         for (final Movimentacao item : items) {
             added |= add(item);
@@ -122,7 +123,7 @@ public class MovimentacaoRepository implements Repository<Movimentacao> {
     }
 
     @Override
-    public boolean update(Movimentacao item) {
+    public boolean update(final Movimentacao item) {
         final Connection connection = DatabaseConnection.getConnection();
         try {
             if (item.getId() == null) {
@@ -146,7 +147,7 @@ public class MovimentacaoRepository implements Repository<Movimentacao> {
     }
 
     @Override
-    public boolean update(Iterable<Movimentacao> items) {
+    public boolean update(final Iterable<Movimentacao> items) {
         boolean updated = false;
         for (final Movimentacao item : items) {
             updated |= update(item);
@@ -155,7 +156,7 @@ public class MovimentacaoRepository implements Repository<Movimentacao> {
     }
 
     @Override
-    public boolean remove(Movimentacao item) {
+    public boolean remove(final Movimentacao item) {
         final Connection connection = DatabaseConnection.getConnection();
         try {
             if (item.getId() == null) {
@@ -173,7 +174,7 @@ public class MovimentacaoRepository implements Repository<Movimentacao> {
     }
 
     @Override
-    public boolean remove(Iterable<Movimentacao> items) {
+    public boolean remove(final Iterable<Movimentacao> items) {
         boolean removed = false;
         for (final Movimentacao item : items) {
             removed |= remove(item);

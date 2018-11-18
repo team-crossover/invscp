@@ -298,7 +298,7 @@ public class Departamento implements Model<DepartamentoDTO> {
                     "Só pode existir um departamento 'de patrimônio'.");
         }
         if (dept.getChefe() == null) {
-            throw new CRUDException("O 'chefe' selecionado não existe.");
+            throw new CRUDException("O 'chefe' não pode ser vazio.");
         }
         if (dept.getChefe().getDepartamento() != null && !dept.getChefe()
                 .getDepartamento().getId().equals(dept.getId())) {

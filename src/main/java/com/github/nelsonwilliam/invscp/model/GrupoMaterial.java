@@ -1,5 +1,7 @@
 package com.github.nelsonwilliam.invscp.model;
 
+import java.math.BigDecimal;
+
 import com.github.nelsonwilliam.invscp.model.dto.GrupoMaterialDTO;
 
 public class GrupoMaterial implements Model<GrupoMaterialDTO> {
@@ -12,10 +14,10 @@ public class GrupoMaterial implements Model<GrupoMaterialDTO> {
 
     private Integer vidaUtil = null;
 
-    private Float depreciacao = null;
+    private BigDecimal depreciacao = null;
 
     @Override
-    public void setValuesFromDTO(GrupoMaterialDTO dto) {
+    public void setValuesFromDTO(final GrupoMaterialDTO dto) {
         setDepreciacao(dto.getDepreciacao());
         setId(dto.getVidaUtil());
         setNome(dto.getNome());
@@ -24,19 +26,21 @@ public class GrupoMaterial implements Model<GrupoMaterialDTO> {
 
     @Override
     public GrupoMaterialDTO toDTO() {
-        GrupoMaterialDTO dto = new GrupoMaterialDTO();
+        final GrupoMaterialDTO dto = new GrupoMaterialDTO();
         dto.setDepreciacao(depreciacao);
         dto.setId(id);
         dto.setNome(nome);
         dto.setVidaUtil(vidaUtil);
-        return null;
+        return dto;
     }
 
+    @Override
     public final Integer getId() {
         return id;
     }
 
-    public final void setId(Integer id) {
+    @Override
+    public final void setId(final Integer id) {
         this.id = id;
     }
 
@@ -44,7 +48,7 @@ public class GrupoMaterial implements Model<GrupoMaterialDTO> {
         return nome;
     }
 
-    public final void setNome(String nome) {
+    public final void setNome(final String nome) {
         this.nome = nome;
     }
 
@@ -52,20 +56,16 @@ public class GrupoMaterial implements Model<GrupoMaterialDTO> {
         return vidaUtil;
     }
 
-    public final void setVidaUtil(Integer vidaUtil) {
+    public final void setVidaUtil(final Integer vidaUtil) {
         this.vidaUtil = vidaUtil;
     }
 
-    public final Float getDepreciacao() {
+    public final BigDecimal getDepreciacao() {
         return depreciacao;
     }
 
-    public final void setDepreciacao(Float depreciacao) {
+    public final void setDepreciacao(final BigDecimal depreciacao) {
         this.depreciacao = depreciacao;
-    }
-
-    public static final long getSerialversionuid() {
-        return serialVersionUID;
     }
 
 }

@@ -35,7 +35,6 @@ import com.github.nelsonwilliam.invscp.view.BensView;
 
 public class BensSwingView extends JPanel implements BensView {
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
     private static final long serialVersionUID = 5043497852744311548L;
 
     private JTable table;
@@ -44,7 +43,7 @@ public class BensSwingView extends JPanel implements BensView {
     private JPopupMenu popupMenu; // Popup exibido ao clicar com o botão direito
                                   // em um item da tabela
     private JMenuItem popupItemAlterar;
-    private JMenuItem popupItemBaixar;
+    private JMenuItem popupItemBaixa;
     private JMenuItem popupItemOrdemServico;
 
     public BensSwingView() {
@@ -74,7 +73,7 @@ public class BensSwingView extends JPanel implements BensView {
         table.setModel(new DefaultTableModel(new Object[][] {},
                 new String[] { "ID", "Número de tombamento", "Descrição",
                         "Situação", "Sala", "Departamento",
-                        "Grupo Material" }) {
+                        "Grupo material" }) {
             private static final long serialVersionUID = -5025798173394078963L;
             Class<?>[] columnTypes = new Class[] { Integer.class, Long.class,
                     String.class, BemSituacaoEnum.class, SalaDTO.class,
@@ -92,8 +91,14 @@ public class BensSwingView extends JPanel implements BensView {
         });
         table.getColumnModel().getColumn(0).setMinWidth(75);
         table.getColumnModel().getColumn(0).setMaxWidth(75);
-        table.getColumnModel().getColumn(1).setMinWidth(200);
-        table.getColumnModel().getColumn(2).setMinWidth(200);
+        table.getColumnModel().getColumn(1).setMinWidth(175);
+        table.getColumnModel().getColumn(1).setMaxWidth(175);
+        table.getColumnModel().getColumn(2).setMinWidth(150);
+        table.getColumnModel().getColumn(3).setMinWidth(100);
+        table.getColumnModel().getColumn(3).setMaxWidth(100);
+        table.getColumnModel().getColumn(4).setMinWidth(150);
+        table.getColumnModel().getColumn(5).setMinWidth(150);
+        table.getColumnModel().getColumn(6).setMinWidth(150);
         table.setAutoCreateRowSorter(true);
         scrollPane.setBorder(BorderFactory.createLineBorder(Color.gray, 1));
         scrollPane.setViewportView(table);
@@ -109,8 +114,8 @@ public class BensSwingView extends JPanel implements BensView {
         });
 
         popupItemAlterar = new JMenuItem("Alterar");
-        popupItemBaixar = new JMenuItem("Baixar");
-        popupItemOrdemServico = new JMenuItem("Ordem de serviço");
+        popupItemBaixa = new JMenuItem("Baixa...");
+        popupItemOrdemServico = new JMenuItem("Ordens de serviço...");
 
         popupMenu = new JPopupMenu();
         popupMenu.addPopupMenuListener(new PopupMenuListener() {
@@ -137,7 +142,8 @@ public class BensSwingView extends JPanel implements BensView {
             }
         });
         popupMenu.add(popupItemAlterar);
-        popupMenu.add(popupItemBaixar);
+        popupMenu.addSeparator();
+        popupMenu.add(popupItemBaixa);
         popupMenu.add(popupItemOrdemServico);
         table.setComponentPopupMenu(popupMenu);
 
@@ -177,31 +183,32 @@ public class BensSwingView extends JPanel implements BensView {
     }
 
     @Override
-    public void addBaixarBemListener(ActionListener listener) {
-        popupItemBaixar.addActionListener(listener);
+    public void addBaixarBemListener(final ActionListener listener) {
+        popupItemBaixa.addActionListener(listener);
 
     }
 
     @Override
-    public void addOrdemServicoListener(ActionListener listener) {
+    public void addOrdemServicoListener(final ActionListener listener) {
         popupItemOrdemServico.addActionListener(listener);
 
     }
 
     @Override
-    public void updateBens(final List<BemDTO> bem) {
+    public void updateBens(final List<BemDTO> bens) {
         final DefaultTableModel tableModel = (DefaultTableModel) table
                 .getModel();
         tableModel.setNumRows(0);
-        for (final BemDTO b : bem) {
+        for (final BemDTO b : bens) {
             tableModel.addRow(new Object[] { b.getId(), b.getNumeroTombamento(),
                     b.getDescricao(),
-                    b.getSituacao() == null ? "Nenhuma" : b.getSituacao(),
-                    b.getSala() == null ? "Nenhuma" : b.getSala(),
-                    b.getDepartamento() == null ? "Nenhuma"
-                            : b.getDepartamento(),
-                    b.getGrupoMaterial() == null ? "Nenhuma"
-                            : b.getGrupoMaterial() });
+                    b.getSituacao() == null ? "Nenhuma"
+                            : b.getSituacao().getTexto(),
+                    b.getSala() == null ? "Nenhuma" : b.getSala().getNome(),
+                    b.getDepartamento() == null ? "Nenhum"
+                            : b.getDepartamento().getNome(),
+                    b.getGrupoMaterial() == null ? "Nenhum"
+                            : b.getGrupoMaterial().getNome() });
         }
 
         revalidate();
@@ -247,7 +254,7 @@ public class BensSwingView extends JPanel implements BensView {
         final List<Integer> selectedBens = new ArrayList<Integer>();
         final int[] selectedRows = table.getSelectedRows();
         for (int i = 0; i < selectedRows.length; i++) {
-            final int row = selectedRows[i];
+            final int row = table.convertRowIndexToModel(selectedRows[i]);
             final Integer id = (Integer) table.getModel().getValueAt(row, 0);
             selectedBens.add(id);
         }

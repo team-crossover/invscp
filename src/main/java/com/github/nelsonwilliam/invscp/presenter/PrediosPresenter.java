@@ -51,6 +51,11 @@ public class PrediosPresenter extends Presenter<PrediosView> {
 
     private void onDeletarPredios() {
         final List<Integer> selectedPrdiosIds = view.getSelectedPrediosIds();
+        if (selectedPrdiosIds.size() < 1) {
+            view.showError("Nenhum item foi selecionado.");
+            return;
+        }
+
         view.showConfirmacao(
                 "Deletar " + selectedPrdiosIds.size() + " prédios(s)?",
                 (final Boolean confirmado) -> {

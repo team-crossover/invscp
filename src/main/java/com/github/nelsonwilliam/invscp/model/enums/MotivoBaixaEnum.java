@@ -12,24 +12,15 @@ public enum MotivoBaixaEnum {
     private final int valor;
     private final String texto;
 
-    private MotivoBaixaEnum(int valor, String texto) {
+    private MotivoBaixaEnum(final int valor, final String texto) {
         this.valor = valor;
         this.texto = texto;
-    }
-
-    public static String[] textos() {
-        final MotivoBaixaEnum[] values = MotivoBaixaEnum.values();
-        final String[] textos = new String[values.length];
-        for (int i = 0; i < values.length; i++) {
-            textos[i] = values[i].getTexto();
-        }
-        return textos;
     }
 
     public static MotivoBaixaEnum valueOfTexto(final String texto) {
         final MotivoBaixaEnum[] values = MotivoBaixaEnum.values();
         for (final MotivoBaixaEnum value : values) {
-            if (value.toString().equals(texto)) {
+            if (value.getTexto().equals(texto)) {
                 return value;
             }
         }

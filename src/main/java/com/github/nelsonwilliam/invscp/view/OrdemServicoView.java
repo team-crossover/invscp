@@ -1,10 +1,7 @@
 package com.github.nelsonwilliam.invscp.view;
 
 import java.awt.event.ActionListener;
-import java.util.List;
 
-import com.github.nelsonwilliam.invscp.model.dto.BemDTO;
-import com.github.nelsonwilliam.invscp.model.dto.FuncionarioDTO;
 import com.github.nelsonwilliam.invscp.model.dto.OrdemServicoDTO;
 
 public interface OrdemServicoView extends View {
@@ -22,8 +19,7 @@ public interface OrdemServicoView extends View {
      * Atualiza todos os valores da janela para exibir os dados da ordem de
      * serviço passado.
      */
-    void updateOrdemServico(OrdemServicoDTO ordemServico,
-            final List<BemDTO> bens, final List<FuncionarioDTO> funcionarios);
+    void updateOrdemServico(OrdemServicoDTO ordemServico);
 
     /**
      * Exibe uma mensagem de erro com a mensagem especificada. Por exemplo, pode

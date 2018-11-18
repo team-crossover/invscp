@@ -21,7 +21,7 @@ public enum TipoMovEnum {
     public static TipoMovEnum valueOfTexto(final String texto) {
         final TipoMovEnum[] values = TipoMovEnum.values();
         for (final TipoMovEnum value : values) {
-            if (value.toString().equals(texto)) {
+            if (value.getTexto().equals(texto)) {
                 return value;
             }
         }

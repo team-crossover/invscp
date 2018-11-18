@@ -219,7 +219,7 @@ public class LocalizacoesSwingView extends JPanel implements LocalizacoesView {
         final List<Integer> selectedLocalizacoes = new ArrayList<Integer>();
         final int[] selectedRows = table.getSelectedRows();
         for (int i = 0; i < selectedRows.length; i++) {
-            final int row = selectedRows[i];
+            final int row = table.convertRowIndexToModel(selectedRows[i]);
             final Integer id = (Integer) table.getModel().getValueAt(row, 0);
             selectedLocalizacoes.add(id);
         }

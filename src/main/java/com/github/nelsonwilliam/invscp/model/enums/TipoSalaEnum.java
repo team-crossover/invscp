@@ -15,19 +15,10 @@ public enum TipoSalaEnum {
         texto = textoOpcao;
     }
 
-    public static String[] textos() {
-        final TipoSalaEnum[] values = TipoSalaEnum.values();
-        final String[] textos = new String[values.length];
-        for (int i = 0; i < values.length; i++) {
-            textos[i] = values[i].getTexto();
-        }
-        return textos;
-    }
-
     public static TipoSalaEnum valueOfTexto(final String texto) {
         final TipoSalaEnum[] values = TipoSalaEnum.values();
         for (final TipoSalaEnum value : values) {
-            if (value.toString().equals(texto)) {
+            if (value.getTexto().equals(texto)) {
                 return value;
             }
         }

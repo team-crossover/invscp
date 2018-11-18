@@ -1,25 +1,26 @@
 package com.github.nelsonwilliam.invscp.presenter;
 
 import java.awt.event.ActionEvent;
+import java.util.List;
 
 import com.github.nelsonwilliam.invscp.exception.IllegalInsertException;
 import com.github.nelsonwilliam.invscp.exception.IllegalUpdateException;
+import com.github.nelsonwilliam.invscp.model.dto.BaixaDTO;
 import com.github.nelsonwilliam.invscp.model.dto.FuncionarioDTO;
-import com.github.nelsonwilliam.invscp.model.dto.PredioDTO;
 import com.github.nelsonwilliam.invscp.util.Client;
-import com.github.nelsonwilliam.invscp.view.PredioView;
+import com.github.nelsonwilliam.invscp.view.BaixaView;
 
-public class PredioPresenter extends Presenter<PredioView> {
+public class BaixaPresenter extends Presenter<BaixaView> {
 
     private final MainPresenter mainPresenter;
-    private final PrediosPresenter prediosPresenter;
+    private final BensPresenter bensPresenter;
 
-    public PredioPresenter(final PredioView view,
+    public BaixaPresenter(final BaixaView view,
             final MainPresenter mainPresenter,
-            final PrediosPresenter prediosPresenter) {
+            final BensPresenter bensPresenter) {
         super(view);
         this.mainPresenter = mainPresenter;
-        this.prediosPresenter = prediosPresenter;
+        this.bensPresenter = bensPresenter;
         setupViewListeners();
     }
 
@@ -31,50 +32,60 @@ public class PredioPresenter extends Presenter<PredioView> {
 
     private void onConfirmar() {
         final FuncionarioDTO usuario = mainPresenter.getUsuario();
-        final PredioDTO predioDTO = view.getPredio();
-        if (predioDTO == null) {
+        final BaixaDTO baixaDTO = view.getBaixa();
+        if (baixaDTO == null) {
             view.showError("Não foi possível inserir/alterar o item.");
             return;
         }
 
-        if (predioDTO.getId() == null) {
-            onConfirmarAdicao(usuario, predioDTO);
+        if (baixaDTO.getId() == null) {
+            onConfirmarAdicao(usuario, baixaDTO);
         } else {
-            onConfirmarAtualizacao(usuario, predioDTO.getId(), predioDTO);
+            onConfirmarAtualizacao(usuario, baixaDTO.getId(), baixaDTO);
         }
     }
 
     private void onConfirmarAdicao(final FuncionarioDTO usuario,
-            final PredioDTO predioNovo) {
+            final BaixaDTO baixaNovo) {
 
         try {
-            Client.requestValidarInserirPredio(usuario, predioNovo);
+            Client.requestValidarInserirBaixa(usuario, baixaNovo);
         } catch (final IllegalInsertException e) {
             view.showError(e.getMessage());
             return;
         }
 
-        Client.requestAddPredio(predioNovo);
+        Client.requestAddBaixa(baixaNovo);
         view.showSucesso();
         view.close();
-        prediosPresenter.updatePredios();
 
+        // Executa as pós-inserções e exibe as mensagens resultantes.
+        final List<String> messages =
+                Client.requestPosInserirBaixa(usuario, baixaNovo);
+        for (final String message : messages) {
+            view.showInfo(message);
+        }
+
+        bensPresenter.updateBens();
     }
 
     private void onConfirmarAtualizacao(final FuncionarioDTO usuario,
-            final Integer idPredioAnterior, final PredioDTO predioAtualizado) {
+            final Integer idOrdemServicoAnterior,
+            final BaixaDTO baixaAtualizada) {
 
         try {
-            Client.requestValidarAlterarPredio(usuario, idPredioAnterior,
-                    predioAtualizado);
+            Client.requestValidarAlterarBaixa(usuario, idOrdemServicoAnterior,
+                    baixaAtualizada);
         } catch (final IllegalUpdateException e) {
             view.showError(e.getMessage());
             return;
         }
 
-        Client.requestUpdatePredio(predioAtualizado);
+        Client.requestUpdateBaixa(baixaAtualizada);
         view.showSucesso();
         view.close();
-        prediosPresenter.updatePredios();
+
+        bensPresenter.updateBens();
     }
+
 }

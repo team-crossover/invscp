@@ -6,7 +6,7 @@ import com.github.nelsonwilliam.invscp.model.enums.EtapaMovEnum;
 public class Movimentacao implements Model<MovimentacaoDTO> {
 
 	/**
-	 * 
+	 *
 	 */
     private static final long serialVersionUID = 1L;
 
@@ -20,12 +20,24 @@ public class Movimentacao implements Model<MovimentacaoDTO> {
 
     private Integer idSalaDestino = null;
 
-	public String getEtapa() {
-	    return this.etapa.getTexto();
+    @Override
+    public void setValuesFromDTO(final MovimentacaoDTO model) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public MovimentacaoDTO toDTO() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public EtapaMovEnum getEtapa() {
+        return etapa;
 	}
 
-	public void setEtapa(String etapa) {
-	    this.etapa = EtapaMovEnum.valueOfTexto(etapa);
+    public void setEtapa(final EtapaMovEnum etapa) {
+        this.etapa = etapa;
 	}
 
 	@Override
@@ -34,27 +46,15 @@ public class Movimentacao implements Model<MovimentacaoDTO> {
 	}
 
 	@Override
-	public void setId(Integer idValor) {
-		this.id = idValor;
-	}
-
-	@Override
-	public void setValuesFromDTO(MovimentacaoDTO model) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public MovimentacaoDTO toDTO() {
-		// TODO Auto-generated method stub
-		return null;
+	public void setId(final Integer idValor) {
+		id = idValor;
 	}
 
     public Integer getIdBem() {
         return idBem;
     }
 
-    public void setIdBem(Integer idBem) {
+    public void setIdBem(final Integer idBem) {
         this.idBem = idBem;
     }
 
@@ -62,7 +62,7 @@ public class Movimentacao implements Model<MovimentacaoDTO> {
         return idSalaOrigem;
     }
 
-    public void setIdSalaOrigem(Integer idSalaOrigem) {
+    public void setIdSalaOrigem(final Integer idSalaOrigem) {
         this.idSalaOrigem = idSalaOrigem;
     }
 
@@ -70,7 +70,7 @@ public class Movimentacao implements Model<MovimentacaoDTO> {
         return idSalaDestino;
     }
 
-    public void setIdSalaDestino(Integer idSalaDestino) {
+    public void setIdSalaDestino(final Integer idSalaDestino) {
         this.idSalaDestino = idSalaDestino;
     }
 

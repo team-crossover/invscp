@@ -1,6 +1,7 @@
 package com.github.nelsonwilliam.invscp.model.repository;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -26,7 +27,7 @@ public class EventoMovimentacaoRepository implements Repository<EventoMovimentac
             while (r.next()) {
                 final Integer id = (Integer) r.getObject("id");
                 final String tipo = (String) r.getObject("etapa");
-                final LocalDate data = (LocalDate) r.getObject("data");
+                final LocalDate data = ((Date) r.getObject("data")).toLocalDate();
                 final String justificativa = (String) r.getObject("justificativa");
                 final Integer idMovimentacao = (Integer) r.getObject("id_movimentacao");
                 final Integer idFuncionario = (Integer) r.getObject("id_funcionario");
@@ -47,7 +48,7 @@ public class EventoMovimentacaoRepository implements Repository<EventoMovimentac
     }
 
     @Override
-    public EventoMovimentacao getById(Integer id) {
+    public EventoMovimentacao getById(final Integer id) {
         final Connection connection = DatabaseConnection.getConnection();
         EventoMovimentacao ev = null;
         try {
@@ -57,7 +58,7 @@ public class EventoMovimentacaoRepository implements Repository<EventoMovimentac
             final ResultSet r = s.executeQuery();
             while (r.next()) {
                 final String tipo = (String) r.getObject("etapa");
-                final LocalDate data = (LocalDate) r.getObject("data");
+                final LocalDate data = ((Date) r.getObject("data")).toLocalDate();
                 final String justificativa = (String) r.getObject("justificativa");
                 final Integer idMovimentacao = (Integer) r.getObject("id_movimentacao");
                 final Integer idFuncionario = (Integer) r.getObject("id_funcionario");
@@ -77,7 +78,7 @@ public class EventoMovimentacaoRepository implements Repository<EventoMovimentac
     }
 
     @Override
-    public boolean add(EventoMovimentacao item) {
+    public boolean add(final EventoMovimentacao item) {
         final Connection connection = DatabaseConnection.getConnection();
         try {
             PreparedStatement s;
@@ -121,7 +122,7 @@ public class EventoMovimentacaoRepository implements Repository<EventoMovimentac
     }
 
     @Override
-    public boolean add(Iterable<EventoMovimentacao> items) {
+    public boolean add(final Iterable<EventoMovimentacao> items) {
         boolean added = false;
         for (final EventoMovimentacao item : items) {
             added |= add(item);
@@ -130,7 +131,7 @@ public class EventoMovimentacaoRepository implements Repository<EventoMovimentac
     }
 
     @Override
-    public boolean update(EventoMovimentacao item) {
+    public boolean update(final EventoMovimentacao item) {
         final Connection connection = DatabaseConnection.getConnection();
         try {
             if (item.getId() == null) {
@@ -156,7 +157,7 @@ public class EventoMovimentacaoRepository implements Repository<EventoMovimentac
     }
 
     @Override
-    public boolean update(Iterable<EventoMovimentacao> items) {
+    public boolean update(final Iterable<EventoMovimentacao> items) {
         boolean updated = false;
         for (final EventoMovimentacao item : items) {
             updated |= update(item);
@@ -165,7 +166,7 @@ public class EventoMovimentacaoRepository implements Repository<EventoMovimentac
     }
 
     @Override
-    public boolean remove(EventoMovimentacao item) {
+    public boolean remove(final EventoMovimentacao item) {
         final Connection connection = DatabaseConnection.getConnection();
         try {
             if (item.getId() == null) {
@@ -183,7 +184,7 @@ public class EventoMovimentacaoRepository implements Repository<EventoMovimentac
     }
 
     @Override
-    public boolean remove(Iterable<EventoMovimentacao> items) {
+    public boolean remove(final Iterable<EventoMovimentacao> items) {
         boolean removed = false;
         for (final EventoMovimentacao item : items) {
             removed |= remove(item);
