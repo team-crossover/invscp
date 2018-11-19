@@ -2,6 +2,8 @@ package com.github.nelsonwilliam.invscp.model;
 
 import com.github.nelsonwilliam.invscp.model.dto.MovimentacaoDTO;
 import com.github.nelsonwilliam.invscp.model.enums.EtapaMovEnum;
+import com.github.nelsonwilliam.invscp.model.repository.BemRepository;
+import com.github.nelsonwilliam.invscp.model.repository.SalaRepository;
 
 public class Movimentacao implements Model<MovimentacaoDTO> {
 
@@ -21,15 +23,45 @@ public class Movimentacao implements Model<MovimentacaoDTO> {
     private Integer idSalaDestino = null;
 
     @Override
-    public void setValuesFromDTO(final MovimentacaoDTO model) {
-        // TODO Auto-generated method stub
+    public void setValuesFromDTO(final MovimentacaoDTO dto) {
+        setId(dto.getId());
+        setEtapa(dto.getEtapa());
+        if (dto.getBem() != null) {
+            setIdBem(dto.getBem().getId());
+        }
+        if (dto.getSalaOrigem() != null) {
+            setIdSalaOrigem(dto.getSalaOrigem().getId());
+        }
+        if (dto.getSalaDestino() != null) {
+            setIdSalaDestino(dto.getSalaDestino().getId());
+        }
 
     }
 
     @Override
     public MovimentacaoDTO toDTO() {
-        // TODO Auto-generated method stub
-        return null;
+        final MovimentacaoDTO dto = new MovimentacaoDTO();
+        dto.setId(id);
+        dto.setEtapa(etapa);
+        if (idBem != null) {
+            final BemRepository repo = new BemRepository();
+            final Bem bem = repo.getById(idBem);
+            bem.setIdDepartamento(null);
+            dto.setBem(bem == null ? null : bem.toDTO());
+        }
+        if (idSalaOrigem != null) {
+            final SalaRepository repo = new SalaRepository();
+            final Sala salaO = repo.getById(idSalaOrigem);
+            salaO.setIdDepartamento(null);
+            dto.setSalaOrigem(salaO == null ? null : salaO.toDTO());
+        }
+        if (idSalaDestino != null) {
+            final SalaRepository repo = new SalaRepository();
+            final Sala salaD = repo.getById(idSalaOrigem);
+            salaD.setIdDepartamento(null);
+            dto.setSalaDestino(salaD == null ? null : salaD.toDTO());
+        }
+        return dto;
     }
 
     public EtapaMovEnum getEtapa() {

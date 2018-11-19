@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.nelsonwilliam.invscp.model.EventoMovimentacao;
+import com.github.nelsonwilliam.invscp.model.enums.TipoMovEnum;
 import com.github.nelsonwilliam.invscp.util.DatabaseConnection;
 
 public class EventoMovimentacaoRepository implements Repository<EventoMovimentacao> {
@@ -34,7 +35,7 @@ public class EventoMovimentacaoRepository implements Repository<EventoMovimentac
 
                 final EventoMovimentacao ev = new EventoMovimentacao();
                 ev.setId(id);
-                ev.setTipo(tipo);
+                ev.setTipo(TipoMovEnum.valueOfTexto(tipo));
                 ev.setData(data);
                 ev.setJustificativa(justificativa);
                 ev.setIdMovimentacao(idMovimentacao);
@@ -65,7 +66,7 @@ public class EventoMovimentacaoRepository implements Repository<EventoMovimentac
 
                 ev = new EventoMovimentacao();
                 ev.setId(id);
-                ev.setTipo(tipo);
+                ev.setTipo(TipoMovEnum.valueOfTexto(tipo));
                 ev.setData(data);
                 ev.setJustificativa(justificativa);
                 ev.setIdMovimentacao(idMovimentacao);

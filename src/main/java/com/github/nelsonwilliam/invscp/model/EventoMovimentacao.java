@@ -3,6 +3,9 @@ package com.github.nelsonwilliam.invscp.model;
 import java.time.LocalDate;
 
 import com.github.nelsonwilliam.invscp.model.dto.EventoMovimentacaoDTO;
+import com.github.nelsonwilliam.invscp.model.enums.TipoMovEnum;
+import com.github.nelsonwilliam.invscp.model.repository.FuncionarioRepository;
+import com.github.nelsonwilliam.invscp.model.repository.MovimentacaoRepository;
 
 public class EventoMovimentacao implements Model<EventoMovimentacaoDTO> {
 
@@ -10,7 +13,7 @@ public class EventoMovimentacao implements Model<EventoMovimentacaoDTO> {
 
     private Integer id = null;
 
-    private String tipo = null;
+    private TipoMovEnum tipo = null;
 
     private LocalDate data = null;
 
@@ -26,23 +29,31 @@ public class EventoMovimentacao implements Model<EventoMovimentacaoDTO> {
 	}
 
 	@Override
-	public void setId(Integer idValor) {
+	public void setId(final Integer idValor) {
 	    this.id = idValor;
 	}
 
-	public String getTipo() {
+	public TipoMovEnum getTipo() {
         return tipo;
     }
 
-    public void setTipo(String tipo) {
+	public String getTipoString() {
+	    return tipo.getTexto();
+	}
+
+    public void setTipo(final TipoMovEnum tipo) {
         this.tipo = tipo;
+    }
+
+    public void setTipoString(final String tipoNovo) {
+        this.tipo = TipoMovEnum.valueOfTexto(tipoNovo);
     }
 
     public LocalDate getData() {
         return data;
     }
 
-    public void setData(LocalDate data) {
+    public void setData(final LocalDate data) {
         this.data = data;
     }
 
@@ -50,7 +61,7 @@ public class EventoMovimentacao implements Model<EventoMovimentacaoDTO> {
         return justificativa;
     }
 
-    public void setJustificativa(String justificativa) {
+    public void setJustificativa(final String justificativa) {
         this.justificativa = justificativa;
     }
 
@@ -58,7 +69,7 @@ public class EventoMovimentacao implements Model<EventoMovimentacaoDTO> {
         return idMovimentacao;
     }
 
-    public void setIdMovimentacao(Integer idMovimentacao) {
+    public void setIdMovimentacao(final Integer idMovimentacao) {
         this.idMovimentacao = idMovimentacao;
     }
 
@@ -66,20 +77,44 @@ public class EventoMovimentacao implements Model<EventoMovimentacaoDTO> {
         return idFuncionario;
     }
 
-    public void setIdFuncionario(Integer idFuncionario) {
+    public void setIdFuncionario(final Integer idFuncionario) {
         this.idFuncionario = idFuncionario;
     }
 
     @Override
-	public void setValuesFromDTO(EventoMovimentacaoDTO model) {
-		// TODO Auto-generated method stub
-		
+	public void setValuesFromDTO(final EventoMovimentacaoDTO dto) {
+		setId(dto.getId());
+		setTipo(dto.getTipo());
+		setData(dto.getData());
+		setJustificativa(dto.getJustificativa());
+		if (dto.getMovimentacao() != null) {
+		    setIdMovimentacao(dto.getMovimentacao().getId());
+		}
+		if (dto.getFuncionario() != null) {
+		    setIdFuncionario(dto.getFuncionario().getId());
+		}
+
 	}
 
 	@Override
 	public EventoMovimentacaoDTO toDTO() {
-		// TODO Auto-generated method stub
-		return null;
+		final EventoMovimentacaoDTO dto = new EventoMovimentacaoDTO();
+		dto.setId(id);
+		dto.setTipo(tipo);
+		dto.setData(data);
+		dto.setJustificativa(justificativa);
+		if (idMovimentacao != null) {
+		    final MovimentacaoRepository repo = new MovimentacaoRepository();
+		    final Movimentacao mov = repo.getById(idMovimentacao);
+		    dto.setMovimentacao(mov == null ? null : mov.toDTO());
+		}
+		if (idFuncionario != null) {
+            final FuncionarioRepository repo = new FuncionarioRepository();
+            final Funcionario func = repo.getById(idFuncionario);
+            func.setIdDepartamento(null);
+            dto.setFuncionario(func == null ? null : func.toDTO());
+        }
+		return dto;
 	}
 
 }
