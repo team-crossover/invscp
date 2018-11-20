@@ -1,6 +1,11 @@
 package com.github.nelsonwilliam.invscp.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.github.nelsonwilliam.invscp.model.dto.HistoricoDTO;
+import com.github.nelsonwilliam.invscp.model.dto.MovimentacaoDTO;
+import com.github.nelsonwilliam.invscp.model.dto.OrdemServicoDTO;
 import com.github.nelsonwilliam.invscp.model.repository.BaixaRepository;
 import com.github.nelsonwilliam.invscp.model.repository.BemRepository;
 import com.github.nelsonwilliam.invscp.model.repository.MovimentacaoRepository;
@@ -8,44 +13,37 @@ import com.github.nelsonwilliam.invscp.model.repository.OrdemServicoRepository;
 
 public class Historico {
 
-    private static final long serialVersionUID = -4789606265418026534L;
-
     private Integer idBem = null;
 
-    private final List<Integer> idMovimentacoes = null;
+    private List<Integer> idMovimentacoes = null;
 
-    private final List<Integer> idOrdens = null;
+    private List<Integer> idOrdens = null;
 
     private Integer idBaixa = null;
 
-    @Override
-    public Integer getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(final Integer integer) {
-        id = integer;
-    }
-
-    @Override
     public void setValuesFromDTO(final HistoricoDTO dto) {
-        setId(dto.getId());
         if (dto.getBem() != null) {
             setIdBem(dto.getBem().getId());
         }
-        if (dto.getMovimentacao() != null) {
-            setIdMovimentacao(dto.getMovimentacao().getId());
+        if (dto.getMovimentacoes() != null) {
+            final List<Integer> idMovimentacoes = new ArrayList<Integer>();
+            for (final MovimentacaoDTO mov : dto.getMovimentacoes()) {
+                idMovimentacoes.add(mov.getId());
+            }
+            setIdMovimentacoes(idMovimentacoes);
         }
-        if (dto.getOrdem() != null) {
-            setIdOrdem(dto.getOrdem().getId());
+        if (dto.getOrdens() != null) {
+            final List<Integer> idOrdens = new ArrayList<Integer>();
+            for (final OrdemServicoDTO ord : dto.getOrdens()) {
+                idOrdens.add(ord.getId());
+            }
+            setIdOrdens(idOrdens);
         }
         if (dto.getBaixa() != null) {
             setIdBaixa(dto.getBaixa().getId());
         }
     }
 
-    @Override
     public HistoricoDTO toDTO() {
         final HistoricoDTO dto = new HistoricoDTO();
         if (idBem != null) {
@@ -53,15 +51,31 @@ public class Historico {
             final Bem bem = repo.getById(idBem);
             dto.setBem(bem == null ? null : bem.toDTO());
         }
-        if (idMovimentacao != null) {
-            final MovimentacaoRepository repo = new MovimentacaoRepository();
-            final Movimentacao mov = repo.getById(idMovimentacao);
-            dto.setMovimentacao(mov == null ? null : mov.toDTO());
+        if (idMovimentacoes != null) {
+            final List<MovimentacaoDTO> movimentacoes =
+                    new ArrayList<MovimentacaoDTO>();
+            for (final Integer idMov : idMovimentacoes) {
+                final MovimentacaoRepository repo =
+                        new MovimentacaoRepository();
+                final Movimentacao mov = repo.getById(idMov);
+                if (mov != null) {
+                    movimentacoes.add(mov.toDTO());
+                }
+            }
+            dto.setMovimentacoes(movimentacoes);
         }
-        if (idOrdem != null) {
-            final OrdemServicoRepository repo = new OrdemServicoRepository();
-            final OrdemServico ordem = repo.getById(idOrdem);
-            dto.setOrdem(ordem == null ? null : ordem.toDTO());
+        if (idOrdens != null) {
+            final List<OrdemServicoDTO> ordens =
+                    new ArrayList<OrdemServicoDTO>();
+            for (final Integer idOrdem : idOrdens) {
+                final OrdemServicoRepository repo =
+                        new OrdemServicoRepository();
+                final OrdemServico ord = repo.getById(idOrdem);
+                if (ord != null) {
+                    ordens.add(ord.toDTO());
+                }
+            }
+            dto.setOrdens(ordens);
         }
         if (idBaixa != null) {
             final BaixaRepository repo = new BaixaRepository();
@@ -71,36 +85,77 @@ public class Historico {
         return dto;
     }
 
-    public Integer getIdBem() {
+    /**
+     * Obtém o valor atual de idBem.
+     *
+     * @return O valor atual de idBem.
+     */
+    public final Integer getIdBem() {
         return idBem;
     }
 
-    public void setIdBem(final Integer idBem) {
-        this.idBem = idBem;
+    /**
+     * Atualiza o valor atual de idBem.
+     *
+     * @param newIdBem O novo valor para idBem.
+     */
+    public final void setIdBem(final Integer newIdBem) {
+        idBem = newIdBem;
     }
 
-    public Integer getIdMovimentacao() {
-        return idMovimentacao;
+    /**
+     * Obtém o valor atual de idMovimentacoes.
+     *
+     * @return O valor atual de idMovimentacoes.
+     */
+    public final List<Integer> getIdMovimentacoes() {
+        return idMovimentacoes;
     }
 
-    public void setIdMovimentacao(final Integer idMovimentacao) {
-        this.idMovimentacao = idMovimentacao;
+    /**
+     * Atualiza o valor atual de idMovimentacoes.
+     *
+     * @param newIdMovimentacoes O novo valor para idMovimentacoes.
+     */
+    public final void setIdMovimentacoes(
+            final List<Integer> newIdMovimentacoes) {
+        idMovimentacoes = newIdMovimentacoes;
     }
 
-    public Integer getIdOrdem() {
-        return idOrdem;
+    /**
+     * Obtém o valor atual de idOrdens.
+     *
+     * @return O valor atual de idOrdens.
+     */
+    public final List<Integer> getIdOrdens() {
+        return idOrdens;
     }
 
-    public void setIdOrdem(final Integer idOrdem) {
-        this.idOrdem = idOrdem;
+    /**
+     * Atualiza o valor atual de idOrdens.
+     *
+     * @param newIdOrdens O novo valor para idOrdens.
+     */
+    public final void setIdOrdens(final List<Integer> newIdOrdens) {
+        idOrdens = newIdOrdens;
     }
 
-    public Integer getIdBaixa() {
+    /**
+     * Obtém o valor atual de idBaixa.
+     *
+     * @return O valor atual de idBaixa.
+     */
+    public final Integer getIdBaixa() {
         return idBaixa;
     }
 
-    public void setIdBaixa(final Integer idBaixa) {
-        this.idBaixa = idBaixa;
+    /**
+     * Atualiza o valor atual de idBaixa.
+     *
+     * @param newIdBaixa O novo valor para idBaixa.
+     */
+    public final void setIdBaixa(final Integer newIdBaixa) {
+        idBaixa = newIdBaixa;
     }
 
 }

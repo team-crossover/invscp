@@ -1,25 +1,28 @@
 package com.github.nelsonwilliam.invscp.model.dto;
 
+import java.util.List;
+
 public class InventarioDTO implements DTO {
 
-    private Integer id = null;
+    private List<BemDTO> bens = null;
 
-    private BemDTO bem = null;
-
-    public Integer getId() {
-        return id;
+    /**
+     * Obtém o valor atual de bens.
+     *
+     * @return O valor atual de bens.
+     */
+    public final List<BemDTO> getBens() {
+        return bens;
     }
 
-    public void setId(final Integer id) {
-        this.id = id;
+    /**
+     * Atualiza o valor atual de bens.
+     *
+     * @param newBens O novo valor para bens.
+     */
+    public final void setBens(final List<BemDTO> newBens) {
+        bens = newBens;
     }
 
-    public BemDTO getBem() {
-        return bem;
-    }
-
-    public void setBem(final BemDTO bem) {
-        this.bem = bem;
-    }
 
 }

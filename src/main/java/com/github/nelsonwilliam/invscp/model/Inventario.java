@@ -1,48 +1,55 @@
 package com.github.nelsonwilliam.invscp.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.github.nelsonwilliam.invscp.model.dto.BemDTO;
 import com.github.nelsonwilliam.invscp.model.dto.InventarioDTO;
 import com.github.nelsonwilliam.invscp.model.repository.BemRepository;
 
 public class Inventario {
 
-    private static final long serialVersionUID = 8991213633188631666L;
+    private List<Integer> idBens = null;
 
-    private final List<Integer> idBens = null;
-
-    @Override
-    public Integer getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(final Integer integer) {
-        id = integer;
-    }
-
-    @Override
     public void setValuesFromDTO(final InventarioDTO dto) {
-        if (dto.getBem() != null) {
-            setIdBem(dto.getBem().getId());
+        if (dto.getBens() != null) {
+            final List<Integer> idBens = new ArrayList<Integer>();
+            for (final BemDTO bem : dto.getBens()) {
+                idBens.add(bem.getId());
+            }
+            setIdBens(idBens);
         }
     }
-
-    @Override
     public InventarioDTO toDTO() {
         final InventarioDTO dto = new InventarioDTO();
-        if (idBem != null) {
-            final BemRepository repo = new BemRepository();
-            final Bem bem = repo.getById(idBem);
-            dto.setBem(bem == null ? null : bem.toDTO());
+        if (idBens != null) {
+            final List<BemDTO> bens = new ArrayList<BemDTO>();
+            for (final Integer idBem : idBens) {
+                final BemRepository repo = new BemRepository();
+                final Bem bem = repo.getById(idBem);
+                if (bem != null) {
+                    bens.add(bem.toDTO());
+                }
+            }
+            dto.setBens(bens);
         }
         return dto;
     }
-
-    public Integer getIdBem() {
-        return idBem;
+    /**
+     * Obtém o valor atual de idBens.
+     *
+     * @return O valor atual de idBens.
+     */
+    public final List<Integer> getIdBens() {
+        return idBens;
     }
-
-    public void setIdBem(final Integer idBem) {
-        this.idBem = idBem;
+    /**
+     * Atualiza o valor atual de idBens.
+     *
+     * @param newIdBens O novo valor para idBens.
+     */
+    public final void setIdBens(final List<Integer> newIdBens) {
+        idBens = newIdBens;
     }
 
 }
