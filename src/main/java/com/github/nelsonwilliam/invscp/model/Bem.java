@@ -162,11 +162,9 @@ public class Bem implements Model<BemDTO> {
                     + " pois ele possui ordens de serviço pendentes relaciondas a ele.");
         }
 
-        final Date date = new Date();
-        final LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault())
-                .toLocalDate();
+        final LocalDate hoje = LocalDate.now();
         if (bem.getDataCadastro() != null && bem.getDataCadastro()
-                .getMonthValue() >= localDate.getMonthValue()) {
+                .getMonthValue() > hoje.getMonthValue()) {
             throw new IllegalDeleteException(
                     "O prazo para remoção deste bem já expirou.");
         }
@@ -306,16 +304,11 @@ public class Bem implements Model<BemDTO> {
         if (bem.getDescricao() == null || bem.getDescricao().isEmpty()) {
             throw new CRUDException("'Descrição' é um campo obrigatório.");
         }
-        if (bem.getEspecificacao() == null
-                || bem.getEspecificacao().isEmpty()) {
-            throw new CRUDException("'Especificação' é um campo obrigatório.");
-        }
         if (bem.getGarantia() == null) {
             throw new CRUDException("'Garantia' é um campo obrigatório.");
         }
         if (bem.getGrupoMaterial() == null) {
-            throw new CRUDException(
-                    "O 'Grupo material' não pode ser vazio.");
+            throw new CRUDException("O 'Grupo material' não pode ser vazio.");
         }
         if (bem.getMarca() == null || bem.getMarca().isEmpty()) {
             throw new CRUDException("'Marca' é um campo obrigatório.");
@@ -329,26 +322,31 @@ public class Bem implements Model<BemDTO> {
             throw new CRUDException(
                     "'Numero de tombamento' é um campo obrigatório.");
         }
+        BemRepository bemRepo = new BemRepository();
+        if (bemRepo.existsNumTombamento(bem.getNumeroTombamento())) {
+            throw new CRUDException(
+                    "O 'Numero de tombamento' inserido já foi utilizado");
+        }
         if (bem.getSala() == null) {
             throw new CRUDException("'Sala' é um campo obrigatório.");
         }
         // Situação é definida pelo sistema
-        // if (bem.getSituacao() == null) {
-        // throw new CRUDException("A 'situação' do bem deve ser definida");
-        // }
+        if (bem.getSituacao() == null) {
+            throw new CRUDException("A 'situação' do bem deve ser definida");
+        }
 
     }
 
     public final Double exibirDepreciacao(final BemDTO bem) {
         Double novoValor;
         final Double valCompra = bem.getValorCompra().doubleValue();
-        final Double dep =
-                bem.getGrupoMaterial().getDepreciacao().doubleValue();
+        final Double dep = bem.getGrupoMaterial().getDepreciacao()
+                .doubleValue();
         final Date date = new Date();
-        final LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault())
-                .toLocalDate();
-        final Integer time =
-                localDate.getYear() - bem.getDataAquisicao().getYear();
+        final LocalDate localDate = date.toInstant()
+                .atZone(ZoneId.systemDefault()).toLocalDate();
+        final Integer time = localDate.getYear()
+                - bem.getDataAquisicao().getYear();
         if (time > 0) {
             if (valCompra - (valCompra * (dep * time)) == 0) {
                 novoValor = 0.01;
