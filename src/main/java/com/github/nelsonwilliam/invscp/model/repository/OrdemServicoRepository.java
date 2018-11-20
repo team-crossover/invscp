@@ -28,16 +28,16 @@ public class OrdemServicoRepository implements Repository<OrdemServico> {
             final ResultSet r = s.executeQuery();
             while (r.next()) {
                 final Integer id = (Integer) r.getObject("id");
-                final LocalDate dataCadastro =
-                        ((Date) r.getObject("data_cadastro")).toLocalDate();
-                final LocalDate dataConclusao =
-                        r.getObject("data_conclusao") == null ? null
+                final LocalDate dataCadastro = ((Date) r
+                        .getObject("data_cadastro")).toLocalDate();
+                final LocalDate dataConclusao = r
+                        .getObject("data_conclusao") == null ? null
                                 : ((Date) r.getObject("data_conclusao"))
                                         .toLocalDate();
                 final BigDecimal valor = (BigDecimal) r.getObject("valor");
                 final String situacao = (String) r.getObject("situacao");
-                final Integer idFuncionario =
-                        (Integer) r.getObject("id_funcionario");
+                final Integer idFuncionario = (Integer) r
+                        .getObject("id_funcionario");
                 final Integer idBem = (Integer) r.getObject("id_bem");
 
                 final OrdemServico ordem = new OrdemServico();
@@ -68,16 +68,16 @@ public class OrdemServicoRepository implements Repository<OrdemServico> {
 
             final ResultSet r = s.executeQuery();
             if (r.next()) {
-                final LocalDate dataCadastro =
-                        ((Date) r.getObject("data_cadastro")).toLocalDate();
-                final LocalDate dataConclusao =
-                        r.getObject("data_conclusao") == null ? null
+                final LocalDate dataCadastro = ((Date) r
+                        .getObject("data_cadastro")).toLocalDate();
+                final LocalDate dataConclusao = r
+                        .getObject("data_conclusao") == null ? null
                                 : ((Date) r.getObject("data_conclusao"))
                                         .toLocalDate();
                 final BigDecimal valor = (BigDecimal) r.getObject("valor");
                 final String situacao = (String) r.getObject("situacao");
-                final Integer idFuncionario =
-                        (Integer) r.getObject("id_funcionario");
+                final Integer idFuncionario = (Integer) r
+                        .getObject("id_funcionario");
                 final Integer idBem = (Integer) r.getObject("id_bem");
 
                 ordem = new OrdemServico();
@@ -107,16 +107,16 @@ public class OrdemServicoRepository implements Repository<OrdemServico> {
             final ResultSet r = s.executeQuery();
             while (r.next()) {
                 final Integer id = (Integer) r.getObject("id");
-                final LocalDate dataCadastro =
-                        ((Date) r.getObject("data_cadastro")).toLocalDate();
-                final LocalDate dataConclusao =
-                        r.getObject("data_conclusao") == null ? null
+                final LocalDate dataCadastro = ((Date) r
+                        .getObject("data_cadastro")).toLocalDate();
+                final LocalDate dataConclusao = r
+                        .getObject("data_conclusao") == null ? null
                                 : ((Date) r.getObject("data_conclusao"))
                                         .toLocalDate();
                 final BigDecimal valor = (BigDecimal) r.getObject("valor");
                 final String situacao = (String) r.getObject("situacao");
-                final Integer idFuncionario =
-                        (Integer) r.getObject("id_funcionario");
+                final Integer idFuncionario = (Integer) r
+                        .getObject("id_funcionario");
 
                 final OrdemServico ordem = new OrdemServico();
                 ordem.setId(id);
@@ -252,7 +252,7 @@ public class OrdemServicoRepository implements Repository<OrdemServico> {
         return removed;
     }
 
-    public List<OrdemServico> getByBem(final Bem bem) {
+    public List<OrdemServico> getOsPendentesByBem(final Bem bem) {
         final Connection connection = DatabaseConnection.getConnection();
         final List<OrdemServico> ordens = new ArrayList<OrdemServico>();
         try {
@@ -264,16 +264,16 @@ public class OrdemServicoRepository implements Repository<OrdemServico> {
             final ResultSet r = s.executeQuery();
             while (r.next()) {
                 final Integer id = (Integer) r.getObject("id");
-                final LocalDate dataCadastro =
-                        ((Date) r.getObject("data_cadastro")).toLocalDate();
-                final LocalDate dataConclusao =
-                        r.getObject("data_conclusao") == null ? null
+                final LocalDate dataCadastro = ((Date) r
+                        .getObject("data_cadastro")).toLocalDate();
+                final LocalDate dataConclusao = r
+                        .getObject("data_conclusao") == null ? null
                                 : ((Date) r.getObject("data_conclusao"))
                                         .toLocalDate();
                 final BigDecimal valor = (BigDecimal) r.getObject("valor");
                 final String situacao = (String) r.getObject("situacao");
-                final Integer idFuncionario =
-                        (Integer) r.getObject("id_funcionario");
+                final Integer idFuncionario = (Integer) r
+                        .getObject("id_funcionario");
                 final Integer idBem = (Integer) r.getObject("id_bem");
 
                 final OrdemServico ordem = new OrdemServico();
@@ -290,6 +290,24 @@ public class OrdemServicoRepository implements Repository<OrdemServico> {
             e.printStackTrace();
         }
         return ordens;
+    }
+
+    public boolean existsBemPendente(Integer idBem) {
+        final Connection connection = DatabaseConnection.getConnection();
+        try {
+            final PreparedStatement s = connection.prepareStatement(
+                    "SELECT id FROM ordem_servico WHERE id_bem=? AND situacao=?");
+            s.setObject(1, idBem, Types.INTEGER);
+            s.setObject(2, OSSituacaoEnum.PENDENTE.toString(), Types.VARCHAR);
+            final ResultSet r = s.executeQuery();
+            if (!r.next()) {
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return true;
     }
 
 }

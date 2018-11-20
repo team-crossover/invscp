@@ -1,5 +1,10 @@
 package com.github.nelsonwilliam.invscp.model;
 
+import com.github.nelsonwilliam.invscp.exception.CRUDException;
+import com.github.nelsonwilliam.invscp.exception.IllegalDeleteException;
+import com.github.nelsonwilliam.invscp.exception.IllegalUpdateException;
+import com.github.nelsonwilliam.invscp.model.dto.BaixaDTO;
+import com.github.nelsonwilliam.invscp.model.dto.FuncionarioDTO;
 import com.github.nelsonwilliam.invscp.model.dto.MovimentacaoDTO;
 import com.github.nelsonwilliam.invscp.model.enums.EtapaMovEnum;
 import com.github.nelsonwilliam.invscp.model.repository.BemRepository;
@@ -61,23 +66,82 @@ public class Movimentacao implements Model<MovimentacaoDTO> {
         return dto;
     }
 
+    public static void validarDeletar(final FuncionarioDTO usuario,
+            final Integer idMov) throws IllegalDeleteException {
+
+        throw new IllegalDeleteException(
+                "Não é possível deletar movimentações.");
+    }
+
+    public static void validarAlterar(final FuncionarioDTO usuario,
+            final Integer idAntigaMov, final BaixaDTO novaMov)
+            throws IllegalUpdateException {
+
+        throw new IllegalUpdateException(
+                "Não é possível alterar movimentações.");
+    }
+
+    public static void validarInserir(final MovimentacaoDTO novaMov)
+            throws IllegalUpdateException {
+        try {
+            validarCampos(novaMov);
+        } catch (final CRUDException e) {
+            throw new IllegalUpdateException(e.getMessage());
+        }
+    }
+
+    public static void validarAceiteSaida(final MovimentacaoDTO novaMov)
+            throws IllegalUpdateException {
+        try {
+            validarCampos(novaMov);
+        } catch (final CRUDException e) {
+            throw new IllegalUpdateException(e.getMessage());
+        }
+    }
+
+    public static void validarCancelar(final MovimentacaoDTO novaMov)
+            throws IllegalUpdateException {
+        try {
+            validarCampos(novaMov);
+        } catch (final CRUDException e) {
+            throw new IllegalUpdateException(e.getMessage());
+        }
+    }
+
+    private static void validarCampos(final MovimentacaoDTO mov)
+            throws CRUDException {
+        if (mov.getBem() == null) {
+            throw new CRUDException("O 'Bem' não pode ser vazio.");
+        }
+        // Definida inicialmente pelo sistema
+        if (mov.getEtapa() == null) {
+            throw new CRUDException("A 'Etapa' deve ser definida.");
+        }
+        if (mov.getSalaOrigem() == null) {
+            throw new CRUDException("A 'Sala de Origem' não pode ser vazia.");
+        }
+        if (mov.getSalaDestino() == null) {
+            throw new CRUDException("A 'Sala de Destino' não pode ser vazia.");
+        }
+    }
+
     public EtapaMovEnum getEtapa() {
         return etapa;
-	}
+    }
 
     public void setEtapa(final EtapaMovEnum etapa) {
         this.etapa = etapa;
-	}
+    }
 
-	@Override
-	public Integer getId() {
-		return id;
-	}
+    @Override
+    public Integer getId() {
+        return id;
+    }
 
-	@Override
-	public void setId(final Integer idValor) {
-		id = idValor;
-	}
+    @Override
+    public void setId(final Integer idValor) {
+        id = idValor;
+    }
 
     public Integer getIdBem() {
         return idBem;
@@ -102,6 +166,5 @@ public class Movimentacao implements Model<MovimentacaoDTO> {
     public void setIdSalaDestino(final Integer idSalaDestino) {
         this.idSalaDestino = idSalaDestino;
     }
-
 
 }

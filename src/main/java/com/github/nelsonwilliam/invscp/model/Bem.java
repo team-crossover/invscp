@@ -16,6 +16,7 @@ import com.github.nelsonwilliam.invscp.model.repository.BaixaRepository;
 import com.github.nelsonwilliam.invscp.model.repository.BemRepository;
 import com.github.nelsonwilliam.invscp.model.repository.DepartamentoRepository;
 import com.github.nelsonwilliam.invscp.model.repository.GrupoMaterialRepository;
+import com.github.nelsonwilliam.invscp.model.repository.MovimentacaoRepository;
 import com.github.nelsonwilliam.invscp.model.repository.OrdemServicoRepository;
 import com.github.nelsonwilliam.invscp.model.repository.SalaRepository;
 
@@ -148,18 +149,21 @@ public class Bem implements Model<BemDTO> {
         }
 
         // VALIDADE DE DADOS
-        // TODO se o bem não está em movimentação
         final BaixaRepository baixaRepo = new BaixaRepository();
-        if (baixaRepo.getByBem(bem).size() > 0) {
-            throw new IllegalDeleteException("Não é possível deletar o bem "
-                    + bem.getDescricao() + " pois ele já foi baixado.");
+        if (baixaRepo.existsBemBaixado(idBem)) {
+            throw new IllegalDeleteException(
+                    "Não é possível deletar este bem pois ele já foi baixado.");
         }
 
         final OrdemServicoRepository osRepo = new OrdemServicoRepository();
-        if (osRepo.getByBem(bem).size() > 0) {
-            throw new IllegalDeleteException("Não é possível deletar o bem "
-                    + bem.getDescricao()
-                    + " pois ele possui ordens de serviço pendentes relaciondas a ele.");
+        if (osRepo.existsBemPendente(idBem)) {
+            throw new IllegalDeleteException(
+                    "Não é possível deletar este bem pois ele possui uma ordem de serviço pendente relacionda a ele.");
+        }
+        final MovimentacaoRepository movRepo = new MovimentacaoRepository();
+        if (movRepo.existsBemInMov(idBem)) {
+            throw new IllegalDeleteException(
+                    "Não é possível deletar este bem pois ele possui uma movimentação pendente relacionda a ele.");
         }
 
         final LocalDate hoje = LocalDate.now();
@@ -206,9 +210,6 @@ public class Bem implements Model<BemDTO> {
                         "Você não tem permissão para inserir bens");
             }
         }
-
-        // VALIDADE DE DADOS
-        // TODO se o bem não está em movimentação
 
         try {
             validarCampos(novoBem);
@@ -268,17 +269,21 @@ public class Bem implements Model<BemDTO> {
         }
 
         // VALIDADE DE DADOS
-        // TODO se o bem não está em movimentação
         final BaixaRepository baixaRepo = new BaixaRepository();
-        if (baixaRepo.getByBem(antigoBem).size() > 0) {
+        if (baixaRepo.existsBemBaixado(idAntigoBem)) {
             throw new IllegalUpdateException(
                     "Não é possível alterar este bem pois ele já foi baixado.");
         }
 
         final OrdemServicoRepository osRepo = new OrdemServicoRepository();
-        if (osRepo.getByBem(antigoBem).size() > 0) {
+        if (osRepo.existsBemPendente(idAntigoBem)) {
             throw new IllegalUpdateException(
-                    "Não é possível alterar este bem pois ele possui ordens de serviço pendentes relaciondas a ele.");
+                    "Não é possível alterar este bem pois ele possui uma ordem de serviço pendente relacionda a ele.");
+        }
+        final MovimentacaoRepository movRepo = new MovimentacaoRepository();
+        if (movRepo.existsBemInMov(idAntigoBem)) {
+            throw new IllegalUpdateException(
+                    "Não é possível alterar este bem pois ele possui uma movimentação pendente relacionda a ele.");
         }
 
         try {

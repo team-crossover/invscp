@@ -16,6 +16,7 @@ import com.github.nelsonwilliam.invscp.model.enums.OSSituacaoEnum;
 import com.github.nelsonwilliam.invscp.model.repository.BaixaRepository;
 import com.github.nelsonwilliam.invscp.model.repository.BemRepository;
 import com.github.nelsonwilliam.invscp.model.repository.FuncionarioRepository;
+import com.github.nelsonwilliam.invscp.model.repository.MovimentacaoRepository;
 import com.github.nelsonwilliam.invscp.model.repository.OrdemServicoRepository;
 
 public class OrdemServico implements Model<OrdemServicoDTO> {
@@ -91,7 +92,7 @@ public class OrdemServico implements Model<OrdemServicoDTO> {
 
         final OrdemServicoRepository osRepo = new OrdemServicoRepository();
         final BemRepository bemRepo = new BemRepository();
-        final Bem bem = bemRepo.getById(novaOs.getBem().getId());
+        final Integer idBem = bemRepo.getById(novaOs.getBem().getId()).getId();
 
         if (novaOs.getId() != null) {
             final OrdemServico osExistente = osRepo.getById(novaOs.getId());
@@ -126,21 +127,19 @@ public class OrdemServico implements Model<OrdemServicoDTO> {
         }
 
         // VALIDADE DE DADOS
-        // TODO se o bem n está em movimentação
-
         final BaixaRepository baixaRepo = new BaixaRepository();
-        if (baixaRepo.getByBem(bem).size() > 0) {
+        if (baixaRepo.existsBemBaixado(idBem)) {
             throw new IllegalInsertException(
-                    "Não é possível criar uma ordem de serviço para o bem "
-                            + bem.getDescricao() + " pois ele já foi baixado.");
+                    "Não é possível criar uma ordem de serviço para este bem pois ele já foi baixado.");
         }
-
-        if (osRepo.getByBem(bemRepo.getById(bem.getId()))
-                .size() > 0) {
+        if (osRepo.existsBemPendente(idBem)) {
             throw new IllegalInsertException(
-                    "Não é possível criar uma ordem de serviço para o bem "
-                            + bem.getDescricao()
-                            + " pois ele possui ordens de serviço pendentes relaciondas a ele.");
+                    "Não é possível criar uma ordem de serviço para este bem pois ele possui já uma ordem de serviço pendente relacionda a ele.");
+        }
+        final MovimentacaoRepository movRepo = new MovimentacaoRepository();
+        if (movRepo.existsBemInMov(idBem)) {
+            throw new IllegalInsertException(
+                    "Não é possível criar uma ordem de serviço para este bem pois ele possui uma movimentação pendente relacionda a ele.");
         }
 
         try {
@@ -221,7 +220,8 @@ public class OrdemServico implements Model<OrdemServicoDTO> {
         }
     }
 
-    private static void validarCampos(final OrdemServicoDTO os) throws CRUDException {
+    private static void validarCampos(final OrdemServicoDTO os)
+            throws CRUDException {
         // Definido pelo sistema
         if (os.getBem() == null) {
             throw new CRUDException("O 'Bem' não pode ser vazio.");
@@ -236,9 +236,9 @@ public class OrdemServico implements Model<OrdemServicoDTO> {
             throw new CRUDException("O 'Funcionário' não pode ser vazio.");
         }
         // Situação é definida pelo sistema
-        // if (os.getSituacao() == null) {
-        // throw new CRUDException("A 'Situação' deve ser definida.");
-        // }
+        if (os.getSituacao() == null) {
+            throw new CRUDException("A 'Situação' deve ser definida.");
+        }
         if (os.getValor() == null) {
             throw new CRUDException("'Valor' é um campo obrigatório.");
         }
@@ -255,8 +255,8 @@ public class OrdemServico implements Model<OrdemServicoDTO> {
         // baixa dele.
         bem.setSituacao(BemSituacaoEnum.EM_CONSERTO);
         bemRepo.update(bem);
-        messages.add("O bem " + bem.getDescricao()
-                + " está agora 'em conserto'.");
+        messages.add(
+                "O bem " + bem.getDescricao() + " está agora 'em conserto'.");
 
         return messages;
     }

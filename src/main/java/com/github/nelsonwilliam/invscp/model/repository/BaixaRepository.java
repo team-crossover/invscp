@@ -27,7 +27,8 @@ public class BaixaRepository implements Repository<Baixa> {
             final ResultSet r = s.executeQuery();
             while (r.next()) {
                 final Integer id = (Integer) r.getObject("id");
-                final LocalDate data = ((Date) r.getObject("data")).toLocalDate();
+                final LocalDate data = ((Date) r.getObject("data"))
+                        .toLocalDate();
                 final String motivo = (String) r.getObject("motivo");
                 final String observacoes = (String) r.getObject("observacoes");
                 final Integer idBem = (Integer) r.getObject("id_bem");
@@ -60,7 +61,8 @@ public class BaixaRepository implements Repository<Baixa> {
 
             final ResultSet r = s.executeQuery();
             if (r.next()) {
-                final LocalDate data = ((Date) r.getObject("data")).toLocalDate();
+                final LocalDate data = ((Date) r.getObject("data"))
+                        .toLocalDate();
                 final String motivo = (String) r.getObject("motivo");
                 final String observacoes = (String) r.getObject("observacoes");
                 final Integer idBem = (Integer) r.getObject("id_bem");
@@ -92,11 +94,12 @@ public class BaixaRepository implements Repository<Baixa> {
             final ResultSet r = s.executeQuery();
             while (r.next()) {
                 final Integer id = (Integer) r.getObject("id");
-                final LocalDate data = ((Date) r.getObject("data")).toLocalDate();
+                final LocalDate data = ((Date) r.getObject("data"))
+                        .toLocalDate();
                 final String motivo = (String) r.getObject("motivo");
                 final String observacoes = (String) r.getObject("observacoes");
-                final Integer idFuncionario =
-                        (Integer) r.getObject("id_funcionario");
+                final Integer idFuncionario = (Integer) r
+                        .getObject("id_funcionario");
 
                 baixa = new Baixa();
                 baixa.setId(id);
@@ -224,7 +227,7 @@ public class BaixaRepository implements Repository<Baixa> {
         return removed;
     }
 
-    public List<Baixa> getByBem(final Bem bem) {
+    public List<Baixa> getBaixasByBem(final Bem bem) {
         final Connection connection = DatabaseConnection.getConnection();
         final List<Baixa> baixas = new ArrayList<Baixa>();
         try {
@@ -234,7 +237,8 @@ public class BaixaRepository implements Repository<Baixa> {
             final ResultSet r = s.executeQuery();
             while (r.next()) {
                 final Integer id = (Integer) r.getObject("id");
-                final LocalDate data = ((Date) r.getObject("data")).toLocalDate();
+                final LocalDate data = ((Date) r.getObject("data"))
+                        .toLocalDate();
                 final String motivo = (String) r.getObject("motivo");
                 final String observacoes = (String) r.getObject("observacoes");
                 final Integer idBem = (Integer) r.getObject("id_bem");
@@ -254,6 +258,23 @@ public class BaixaRepository implements Repository<Baixa> {
             e.printStackTrace();
         }
         return baixas;
+    }
+
+    public boolean existsBemBaixado(Integer idBem) {
+        final Connection connection = DatabaseConnection.getConnection();
+        try {
+            final PreparedStatement s = connection
+                    .prepareStatement("SELECT id FROM baixa WHERE id_bem=?");
+            s.setObject(1, idBem, Types.INTEGER);
+            final ResultSet r = s.executeQuery();
+            if (!r.next()) {
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return true;
     }
 
 }

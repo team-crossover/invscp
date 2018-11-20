@@ -19,16 +19,18 @@ public class MovimentacaoRepository implements Repository<Movimentacao> {
         final Connection connection = DatabaseConnection.getConnection();
         final List<Movimentacao> movs = new ArrayList<Movimentacao>();
         try {
-            final PreparedStatement s = connection.prepareStatement(
-                    "SELECT id,etapa,id_bem,id_sala_origem,"
-                    + "id_sala_destino FROM movimentacao ORDER BY id");
+            final PreparedStatement s = connection
+                    .prepareStatement("SELECT id,etapa,id_bem,id_sala_origem,"
+                            + "id_sala_destino FROM movimentacao ORDER BY id");
             final ResultSet r = s.executeQuery();
             while (r.next()) {
                 final Integer id = (Integer) r.getObject("id");
                 final String etapa = (String) r.getObject("etapa");
                 final Integer idBem = (Integer) r.getObject("id_bem");
-                final Integer idSalaOrigem = (Integer) r.getObject("id_sala_origem");
-                final Integer idSalaDestino = (Integer) r.getObject("id_sala_destino");
+                final Integer idSalaOrigem = (Integer) r
+                        .getObject("id_sala_origem");
+                final Integer idSalaDestino = (Integer) r
+                        .getObject("id_sala_destino");
 
                 final Movimentacao mov = new Movimentacao();
                 mov.setId(id);
@@ -49,16 +51,18 @@ public class MovimentacaoRepository implements Repository<Movimentacao> {
         final Connection connection = DatabaseConnection.getConnection();
         Movimentacao mov = null;
         try {
-            final PreparedStatement s = connection.prepareStatement(
-                    "SELECT etapa,id_bem,id_sala_origem,"
-                    + "id_sala_destino FROM movimentacao WHERE id=?");
+            final PreparedStatement s = connection
+                    .prepareStatement("SELECT etapa,id_bem,id_sala_origem,"
+                            + "id_sala_destino FROM movimentacao WHERE id=?");
             s.setObject(1, id, Types.INTEGER);
             final ResultSet r = s.executeQuery();
             while (r.next()) {
                 final String etapa = (String) r.getObject("etapa");
                 final Integer idBem = (Integer) r.getObject("id_bem");
-                final Integer idSalaOrigem = (Integer) r.getObject("id_sala_origem");
-                final Integer idSalaDestino = (Integer) r.getObject("id_sala_destino");
+                final Integer idSalaOrigem = (Integer) r
+                        .getObject("id_sala_origem");
+                final Integer idSalaDestino = (Integer) r
+                        .getObject("id_sala_destino");
 
                 mov = new Movimentacao();
                 mov.setEtapa(EtapaMovEnum.valueOf(etapa));
@@ -80,7 +84,7 @@ public class MovimentacaoRepository implements Repository<Movimentacao> {
             if (item.getId() == null) {
                 s = connection.prepareStatement(
                         "INSERT INTO movimentacao(etapa,id_bem,id_sala_origem,"
-                        + "id_sala_destino) VALUES (?,?,?,?)",
+                                + "id_sala_destino) VALUES (?,?,?,?)",
                         Statement.RETURN_GENERATED_KEYS);
                 s.setObject(1, item.getEtapa(), Types.VARCHAR);
                 s.setObject(2, item.getIdBem(), Types.INTEGER);
@@ -97,7 +101,7 @@ public class MovimentacaoRepository implements Repository<Movimentacao> {
             } else {
                 s = connection.prepareStatement(
                         "INSERT INTO movimentacao(id,etapa,id_bem,"
-                        + "id_sala_origem,id_sala_destino) VALUES (?,?,?,?,?)");
+                                + "id_sala_origem,id_sala_destino) VALUES (?,?,?,?,?)");
                 s.setObject(1, item.getId(), Types.INTEGER);
                 s.setObject(2, item.getEtapa(), Types.VARCHAR);
                 s.setObject(3, item.getIdBem(), Types.INTEGER);
@@ -132,7 +136,7 @@ public class MovimentacaoRepository implements Repository<Movimentacao> {
             PreparedStatement s;
             s = connection.prepareStatement(
                     "UPDATE movimentacao SET etapa=?, id_bem=?,"
-                    + "id_sala_origem=?, id_sala_destino=? WHERE id=?");
+                            + "id_sala_origem=?, id_sala_destino=? WHERE id=?");
             s.setObject(1, item.getEtapa(), Types.VARCHAR);
             s.setObject(2, item.getIdBem(), Types.INTEGER);
             s.setObject(3, item.getIdSalaOrigem(), Types.INTEGER);
@@ -163,7 +167,8 @@ public class MovimentacaoRepository implements Repository<Movimentacao> {
                 return false;
             }
             PreparedStatement s;
-            s = connection.prepareStatement("DELETE FROM movimentacao WHERE id=?");
+            s = connection
+                    .prepareStatement("DELETE FROM movimentacao WHERE id=?");
             s.setObject(1, item.getId(), Types.INTEGER);
             s.executeUpdate();
             return true;
@@ -180,6 +185,26 @@ public class MovimentacaoRepository implements Repository<Movimentacao> {
             removed |= remove(item);
         }
         return removed;
+    }
+
+    public boolean existsBemInMov(Integer idBem) {
+        final Connection connection = DatabaseConnection.getConnection();
+        try {
+            final PreparedStatement s = connection.prepareStatement(
+                    "SELECT id FROM movimentacao WHERE id_bem=? AND etapa=? OR etapa=? OR etapa=?");
+            s.setObject(1, idBem, Types.INTEGER);
+            s.setObject(2, EtapaMovEnum.AGUARDANDO_AC_ENTRADA, Types.VARCHAR);
+            s.setObject(3, EtapaMovEnum.AGUARDANDO_AC_SAIDA, Types.VARCHAR);
+            s.setObject(4, EtapaMovEnum.EM_MOVIMENTACAO, Types.VARCHAR);
+            final ResultSet r = s.executeQuery();
+            if (!r.next()) {
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return true;
     }
 
 }

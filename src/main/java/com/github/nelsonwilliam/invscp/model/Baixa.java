@@ -15,6 +15,7 @@ import com.github.nelsonwilliam.invscp.model.enums.MotivoBaixaEnum;
 import com.github.nelsonwilliam.invscp.model.repository.BaixaRepository;
 import com.github.nelsonwilliam.invscp.model.repository.BemRepository;
 import com.github.nelsonwilliam.invscp.model.repository.FuncionarioRepository;
+import com.github.nelsonwilliam.invscp.model.repository.MovimentacaoRepository;
 import com.github.nelsonwilliam.invscp.model.repository.OrdemServicoRepository;
 
 public class Baixa implements Model<BaixaDTO> {
@@ -124,19 +125,22 @@ public class Baixa implements Model<BaixaDTO> {
         }
 
         // VALIDADE DE DADOS
-        // TODO se o bem não está em movimentação
         final BemRepository bemRepo = new BemRepository();
-        final Bem bem = bemRepo.getById(novaBaixa.getBem().getId());
-        if (baixaRepo.getByBem(bem).size() > 0) {
-            throw new IllegalInsertException("Não é possível baixar o bem "
-                    + bem.getDescricao() + " pois ele já foi baixado.");
+        final Integer idDoBem = bemRepo.getById(novaBaixa.getBem().getId())
+                .getId();
+        if (baixaRepo.existsBemBaixado(idDoBem)) {
+            throw new IllegalInsertException(
+                    "Não é possível baixar o bem pois ele já foi baixado.");
         }
-
         final OrdemServicoRepository osRepo = new OrdemServicoRepository();
-        if (osRepo.getByBem(bem).size() > 0) {
-            throw new IllegalInsertException("Não é possível baixar o bem "
-                    + bem.getDescricao()
-                    + " pois ele possui ordens de serviço pendentes relaciondas a ele.");
+        if (osRepo.existsBemPendente(idDoBem)) {
+            throw new IllegalInsertException(
+                    "Não é possível baixar o bem pois ele possui uma ordem de serviço pendentes relacionda a ele.");
+        }
+        final MovimentacaoRepository movRepo = new MovimentacaoRepository();
+        if (movRepo.existsBemInMov(idDoBem)) {
+            throw new IllegalInsertException(
+                    "Não é possível baixar o bem pois ele possui uma movimentação pendente relacionda a ele.");
         }
 
         try {
@@ -146,7 +150,8 @@ public class Baixa implements Model<BaixaDTO> {
         }
     }
 
-    private static void validarCampos(final BaixaDTO baixa) throws CRUDException {
+    private static void validarCampos(final BaixaDTO baixa)
+            throws CRUDException {
         if (baixa.getBem() == null) {
             throw new CRUDException("O 'Bem' não pode ser vazio.");
         }
@@ -162,11 +167,6 @@ public class Baixa implements Model<BaixaDTO> {
             throw new CRUDException("'Motivo' é um campo obrigatório.");
 
         }
-        // É um campo obrigatório mesmo?
-        if (baixa.getObservacoes() == null
-                || baixa.getObservacoes().isEmpty()) {
-            throw new CRUDException("'Observações' é um campo obrigatório.");
-        }
 
     }
 
@@ -181,8 +181,7 @@ public class Baixa implements Model<BaixaDTO> {
         // dele.
         bem.setSituacao(BemSituacaoEnum.BAIXADO);
         bemRepo.update(bem);
-        messages.add("O bem " + bem.getDescricao()
-                + " está agora 'baixado'.");
+        messages.add("O bem " + bem.getDescricao() + " está agora 'baixado'.");
 
         return messages;
     }
