@@ -1,55 +1,88 @@
 package com.github.nelsonwilliam.invscp.model.dto;
 
-public class HistoricoDTO implements DTO {
+import java.util.List;
 
-    private Integer id = null;
+public class HistoricoDTO implements DTO {
 
     private BemDTO bem = null;
 
-    private MovimentacaoDTO movimentacao = null;
- 
-    private OrdemServicoDTO ordem = null;
+    private List<MovimentacaoDTO> movimentacoes = null;
+
+    private List<OrdemServicoDTO> ordens = null;
 
     private BaixaDTO baixa = null;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(final Integer id) {
-        this.id = id;
-    }
-
-    public BemDTO getBem() {
+    /**
+     * Obtém o valor atual de bem.
+     *
+     * @return O valor atual de bem.
+     */
+    public final BemDTO getBem() {
         return bem;
     }
 
-    public void setBem(final BemDTO bem) {
-        this.bem = bem;
+    /**
+     * Atualiza o valor atual de bem.
+     *
+     * @param newBem O novo valor para bem.
+     */
+    public final void setBem(final BemDTO newBem) {
+        bem = newBem;
     }
 
-    public MovimentacaoDTO getMovimentacao() {
-        return movimentacao;
+    /**
+     * Obtém o valor atual de movimentacoes.
+     *
+     * @return O valor atual de movimentacoes.
+     */
+    public final List<MovimentacaoDTO> getMovimentacoes() {
+        return movimentacoes;
     }
 
-    public void setMovimentacao(final MovimentacaoDTO movimentacao) {
-        this.movimentacao = movimentacao;
+    /**
+     * Atualiza o valor atual de movimentacoes.
+     *
+     * @param newMovimentacoes O novo valor para movimentacoes.
+     */
+    public final void setMovimentacoes(
+            final List<MovimentacaoDTO> newMovimentacoes) {
+        movimentacoes = newMovimentacoes;
     }
 
-    public OrdemServicoDTO getOrdem() {
-        return ordem;
+    /**
+     * Obtém o valor atual de ordens.
+     *
+     * @return O valor atual de ordens.
+     */
+    public final List<OrdemServicoDTO> getOrdens() {
+        return ordens;
     }
 
-    public void setOrdem(final OrdemServicoDTO ordem) {
-        this.ordem = ordem;
+    /**
+     * Atualiza o valor atual de ordens.
+     *
+     * @param newOrdens O novo valor para ordens.
+     */
+    public final void setOrdens(final List<OrdemServicoDTO> newOrdens) {
+        ordens = newOrdens;
     }
 
-    public BaixaDTO getBaixa() {
+    /**
+     * Obtém o valor atual de baixa.
+     *
+     * @return O valor atual de baixa.
+     */
+    public final BaixaDTO getBaixa() {
         return baixa;
     }
 
-    public void setBaixa(final BaixaDTO baixa) {
-        this.baixa = baixa;
+    /**
+     * Atualiza o valor atual de baixa.
+     *
+     * @param newBaixa O novo valor para baixa.
+     */
+    public final void setBaixa(final BaixaDTO newBaixa) {
+        baixa = newBaixa;
     }
 
 }

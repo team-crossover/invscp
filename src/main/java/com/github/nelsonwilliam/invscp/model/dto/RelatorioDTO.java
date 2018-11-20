@@ -1,55 +1,48 @@
 package com.github.nelsonwilliam.invscp.model.dto;
 
+import java.util.List;
+
 public class RelatorioDTO implements DTO {
-
-    private Integer id = null;
-
-    private BemDTO bem = null;
 
     private DepartamentoDTO departamento = null;
 
-    private GrupoMaterialDTO grupoMaterial = null;
+    private List<BemDTO> bens = null;
 
-    private SalaDTO sala = null;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(final Integer id) {
-        this.id = id;
-    }
-
-    public BemDTO getBem() {
-        return bem;
-    }
-
-    public void setBem(final BemDTO bem) {
-        this.bem = bem;
-    }
-
-    public DepartamentoDTO getDepartamento() {
+    /**
+     * Obtém o valor atual de departamento.
+     *
+     * @return O valor atual de departamento.
+     */
+    public final DepartamentoDTO getDepartamento() {
         return departamento;
     }
 
-    public void setDepartamento(final DepartamentoDTO departamento) {
-        this.departamento = departamento;
+    /**
+     * Atualiza o valor atual de departamento.
+     *
+     * @param newDepartamento O novo valor para departamento.
+     */
+    public final void setDepartamento(final DepartamentoDTO newDepartamento) {
+        departamento = newDepartamento;
     }
 
-    public GrupoMaterialDTO getGrupoMaterial() {
-        return grupoMaterial;
+    /**
+     * Obtém o valor atual de bens.
+     *
+     * @return O valor atual de bens.
+     */
+    public final List<BemDTO> getBens() {
+        return bens;
     }
 
-    public void setGrupoMaterial(final GrupoMaterialDTO grupoMaterial) {
-        this.grupoMaterial = grupoMaterial;
+    /**
+     * Atualiza o valor atual de bens.
+     *
+     * @param newBens O novo valor para bens.
+     */
+    public final void setBens(final List<BemDTO> newBens) {
+        bens = newBens;
     }
 
-    public SalaDTO getSala() {
-        return sala;
-    }
-
-    public void setSala(final SalaDTO sala) {
-        this.sala = sala;
-    }
 
 }

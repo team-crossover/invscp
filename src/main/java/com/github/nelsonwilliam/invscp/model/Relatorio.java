@@ -1,109 +1,87 @@
 package com.github.nelsonwilliam.invscp.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.github.nelsonwilliam.invscp.model.dto.BemDTO;
 import com.github.nelsonwilliam.invscp.model.dto.RelatorioDTO;
 import com.github.nelsonwilliam.invscp.model.repository.BemRepository;
 import com.github.nelsonwilliam.invscp.model.repository.DepartamentoRepository;
-import com.github.nelsonwilliam.invscp.model.repository.GrupoMaterialRepository;
-import com.github.nelsonwilliam.invscp.model.repository.SalaRepository;
 
-public class Relatorio implements Model<RelatorioDTO> {
-
-    private static final long serialVersionUID = -2178389683553521306L;
-
-    private Integer id = null;
-
-    private Integer idBem = null;
+public class Relatorio {
 
     private Integer idDepartamento = null;
 
-    private Integer idGrupoMaterial = null;
+    private List<Integer> idBens = null;
 
-    private Integer idSala = null;
-
-    @Override
-    public Integer getId() {
-        return this.id;
-    }
-
-    @Override
-    public void setId(Integer integer) {
-        this.id = integer;
-    }
-
-    @Override
-    public void setValuesFromDTO(RelatorioDTO dto) {
-        setId(dto.getId());
-        if (dto.getBem() != null) {
-            setIdBem(dto.getBem().getId());
-        }
+    public void setValuesFromDTO(final RelatorioDTO dto) {
         if (dto.getDepartamento() != null) {
             setIdDepartamento(dto.getDepartamento().getId());
         }
-        if (dto.getGrupoMaterial() != null) {
-            setIdGrupoMaterial(dto.getGrupoMaterial().getId());
-        }
-        if (dto.getSala() != null) {
-            setIdSala(dto.getSala().getId());
+        if (dto.getBens() != null) {
+            final List<Integer> idBens = new ArrayList<Integer>();
+            for (final BemDTO bem : dto.getBens()) {
+                idBens.add(bem.getId());
+            }
+            setIdBens(idBens);
         }
     }
 
-    @Override
     public RelatorioDTO toDTO() {
         final RelatorioDTO dto = new RelatorioDTO();
-        dto.setId(id);
-        if (idBem != null) {
-            final BemRepository repo = new BemRepository();
-            final Bem bem = repo.getById(idBem);
-            dto.setBem(bem == null ? null : bem.toDTO());
-        }
         if (idDepartamento != null) {
             final DepartamentoRepository repo = new DepartamentoRepository();
             final Departamento dept = repo.getById(idDepartamento);
             dto.setDepartamento(dept == null ? null : dept.toDTO());
         }
-        if (idGrupoMaterial != null) {
-            final GrupoMaterialRepository repo = new GrupoMaterialRepository();
-            final GrupoMaterial gm = repo.getById(idGrupoMaterial);
-            dto.setGrupoMaterial(gm == null ? null : gm.toDTO());
-        }
-        if (idSala != null) {
-            final SalaRepository repo = new SalaRepository();
-            final Sala sala = repo.getById(idSala);
-            dto.setSala(sala == null ? null : sala.toDTO());
+        if (idBens != null) {
+            final List<BemDTO> bens = new ArrayList<BemDTO>();
+            for (final Integer idBem : idBens) {
+                final BemRepository repo = new BemRepository();
+                final Bem bem = repo.getById(idBem);
+                if (bem != null) {
+                    bens.add(bem.toDTO());
+                }
+            }
+            dto.setBens(bens);
         }
         return dto;
     }
 
-    public Integer getIdBem() {
-        return idBem;
-    }
-
-    public void setIdBem(Integer idBem) {
-        this.idBem = idBem;
-    }
-
-    public Integer getIdDepartamento() {
+    /**
+     * Obtém o valor atual de idDepartamento.
+     *
+     * @return O valor atual de idDepartamento.
+     */
+    public final Integer getIdDepartamento() {
         return idDepartamento;
     }
 
-    public void setIdDepartamento(Integer idDepartamento) {
-        this.idDepartamento = idDepartamento;
+    /**
+     * Atualiza o valor atual de idDepartamento.
+     *
+     * @param newIdDepartamento O novo valor para idDepartamento.
+     */
+    public final void setIdDepartamento(final Integer newIdDepartamento) {
+        idDepartamento = newIdDepartamento;
     }
 
-    public Integer getIdGrupoMaterial() {
-        return idGrupoMaterial;
+    /**
+     * Obtém o valor atual de idBens.
+     *
+     * @return O valor atual de idBens.
+     */
+    public final List<Integer> getIdBens() {
+        return idBens;
     }
 
-    public void setIdGrupoMaterial(Integer idGrupoMaterial) {
-        this.idGrupoMaterial = idGrupoMaterial;
-    }
-
-    public Integer getIdSala() {
-        return idSala;
-    }
-
-    public void setIdSala(Integer idSala) {
-        this.idSala = idSala;
+    /**
+     * Atualiza o valor atual de idBens.
+     *
+     * @param newIdBens O novo valor para idBens.
+     */
+    public final void setIdBens(final List<Integer> newIdBens) {
+        idBens = newIdBens;
     }
 
 }
