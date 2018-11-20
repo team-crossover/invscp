@@ -3,13 +3,11 @@ package com.github.nelsonwilliam.invscp.model;
 import com.github.nelsonwilliam.invscp.model.dto.InventarioDTO;
 import com.github.nelsonwilliam.invscp.model.repository.BemRepository;
 
-public class Inventario implements Model<InventarioDTO> {
+public class Inventario {
 
     private static final long serialVersionUID = 8991213633188631666L;
 
-    private Integer id = null;
-
-    private Integer idBem = null;
+    private final List<Integer> idBens = null;
 
     @Override
     public Integer getId() {
@@ -17,12 +15,12 @@ public class Inventario implements Model<InventarioDTO> {
     }
 
     @Override
-    public void setId(Integer integer) {
-        this.id = integer;
+    public void setId(final Integer integer) {
+        id = integer;
     }
 
     @Override
-    public void setValuesFromDTO(InventarioDTO dto) {
+    public void setValuesFromDTO(final InventarioDTO dto) {
         if (dto.getBem() != null) {
             setIdBem(dto.getBem().getId());
         }
@@ -43,7 +41,7 @@ public class Inventario implements Model<InventarioDTO> {
         return idBem;
     }
 
-    public void setIdBem(Integer idBem) {
+    public void setIdBem(final Integer idBem) {
         this.idBem = idBem;
     }
 

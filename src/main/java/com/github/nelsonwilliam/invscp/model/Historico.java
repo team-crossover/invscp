@@ -6,17 +6,15 @@ import com.github.nelsonwilliam.invscp.model.repository.BemRepository;
 import com.github.nelsonwilliam.invscp.model.repository.MovimentacaoRepository;
 import com.github.nelsonwilliam.invscp.model.repository.OrdemServicoRepository;
 
-public class Historico implements Model<HistoricoDTO> {
+public class Historico {
 
     private static final long serialVersionUID = -4789606265418026534L;
 
-    private Integer id = null;
-
     private Integer idBem = null;
 
-    private Integer idMovimentacao = null;
- 
-    private Integer idOrdem = null;
+    private final List<Integer> idMovimentacoes = null;
+
+    private final List<Integer> idOrdens = null;
 
     private Integer idBaixa = null;
 
@@ -26,12 +24,12 @@ public class Historico implements Model<HistoricoDTO> {
     }
 
     @Override
-    public void setId(Integer integer) {
-        this.id = integer;
+    public void setId(final Integer integer) {
+        id = integer;
     }
 
     @Override
-    public void setValuesFromDTO(HistoricoDTO dto) {
+    public void setValuesFromDTO(final HistoricoDTO dto) {
         setId(dto.getId());
         if (dto.getBem() != null) {
             setIdBem(dto.getBem().getId());
@@ -77,7 +75,7 @@ public class Historico implements Model<HistoricoDTO> {
         return idBem;
     }
 
-    public void setIdBem(Integer idBem) {
+    public void setIdBem(final Integer idBem) {
         this.idBem = idBem;
     }
 
@@ -85,7 +83,7 @@ public class Historico implements Model<HistoricoDTO> {
         return idMovimentacao;
     }
 
-    public void setIdMovimentacao(Integer idMovimentacao) {
+    public void setIdMovimentacao(final Integer idMovimentacao) {
         this.idMovimentacao = idMovimentacao;
     }
 
@@ -93,7 +91,7 @@ public class Historico implements Model<HistoricoDTO> {
         return idOrdem;
     }
 
-    public void setIdOrdem(Integer idOrdem) {
+    public void setIdOrdem(final Integer idOrdem) {
         this.idOrdem = idOrdem;
     }
 
@@ -101,7 +99,7 @@ public class Historico implements Model<HistoricoDTO> {
         return idBaixa;
     }
 
-    public void setIdBaixa(Integer idBaixa) {
+    public void setIdBaixa(final Integer idBaixa) {
         this.idBaixa = idBaixa;
     }
 

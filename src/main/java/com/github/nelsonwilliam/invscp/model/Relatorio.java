@@ -6,32 +6,26 @@ import com.github.nelsonwilliam.invscp.model.repository.DepartamentoRepository;
 import com.github.nelsonwilliam.invscp.model.repository.GrupoMaterialRepository;
 import com.github.nelsonwilliam.invscp.model.repository.SalaRepository;
 
-public class Relatorio implements Model<RelatorioDTO> {
+public class Relatorio {
 
     private static final long serialVersionUID = -2178389683553521306L;
 
-    private Integer id = null;
-
-    private Integer idBem = null;
-
     private Integer idDepartamento = null;
 
-    private Integer idGrupoMaterial = null;
-
-    private Integer idSala = null;
+    private final List<Integer> idBens = null;
 
     @Override
     public Integer getId() {
-        return this.id;
+        return id;
     }
 
     @Override
-    public void setId(Integer integer) {
-        this.id = integer;
+    public void setId(final Integer integer) {
+        id = integer;
     }
 
     @Override
-    public void setValuesFromDTO(RelatorioDTO dto) {
+    public void setValuesFromDTO(final RelatorioDTO dto) {
         setId(dto.getId());
         if (dto.getBem() != null) {
             setIdBem(dto.getBem().getId());
@@ -78,7 +72,7 @@ public class Relatorio implements Model<RelatorioDTO> {
         return idBem;
     }
 
-    public void setIdBem(Integer idBem) {
+    public void setIdBem(final Integer idBem) {
         this.idBem = idBem;
     }
 
@@ -86,7 +80,7 @@ public class Relatorio implements Model<RelatorioDTO> {
         return idDepartamento;
     }
 
-    public void setIdDepartamento(Integer idDepartamento) {
+    public void setIdDepartamento(final Integer idDepartamento) {
         this.idDepartamento = idDepartamento;
     }
 
@@ -94,7 +88,7 @@ public class Relatorio implements Model<RelatorioDTO> {
         return idGrupoMaterial;
     }
 
-    public void setIdGrupoMaterial(Integer idGrupoMaterial) {
+    public void setIdGrupoMaterial(final Integer idGrupoMaterial) {
         this.idGrupoMaterial = idGrupoMaterial;
     }
 
@@ -102,7 +96,7 @@ public class Relatorio implements Model<RelatorioDTO> {
         return idSala;
     }
 
-    public void setIdSala(Integer idSala) {
+    public void setIdSala(final Integer idSala) {
         this.idSala = idSala;
     }
 
