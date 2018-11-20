@@ -7,10 +7,7 @@ import com.github.nelsonwilliam.invscp.model.repository.SalaRepository;
 
 public class Movimentacao implements Model<MovimentacaoDTO> {
 
-	/**
-	 *
-	 */
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 336584770255104292L;
 
     private Integer id = null;
 
