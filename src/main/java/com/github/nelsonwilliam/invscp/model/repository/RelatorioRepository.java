@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Types;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,12 +18,12 @@ public class RelatorioRepository {
         final Connection connection = DatabaseConnection.getConnection();
         final Relatorio relatorio = new Relatorio();
         try {
-            PreparedStatement s = connection.prepareStatement(
-                    "SELECT id FROM bem WHERE id_departamento=? GROUP BY id_sala");
+            final PreparedStatement s = connection.prepareStatement(
+                    "SELECT id FROM bem WHERE id_departamento=? ORDER BY id_sala");
             s.setObject(1, dept.getId(), Types.INTEGER);
 
             final ResultSet r = s.executeQuery();
-            List<Integer> idBens = new ArrayList<Integer>();
+            final List<Integer> idBens = new ArrayList<Integer>();
 
             while (r.next()) {
                 final Integer id = (Integer) r.getObject("id");
@@ -31,6 +32,7 @@ public class RelatorioRepository {
             }
             relatorio.setIdBens(idBens);
             relatorio.setIdDepartamento(dept.getId());
+            relatorio.setMomentoGeracao(LocalDateTime.now());
         } catch (final Exception e) {
             e.printStackTrace();
         }

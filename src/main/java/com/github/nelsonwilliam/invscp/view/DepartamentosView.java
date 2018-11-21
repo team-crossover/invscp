@@ -14,6 +14,8 @@ public interface DepartamentosView extends View {
 
     void addAdicionarDepartamentoListener(ActionListener listener);
 
+    void addGerarRelatorioListener(ActionListener listener);
+
     void addDeletarDepartamentosListener(ActionListener listener);
 
     /**

@@ -1,29 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.github.nelsonwilliam</groupId>
 	<artifactId>invscp</artifactId>
-	<version>0.0.1</version>
-
-	<name>InvSCP</name>
-	<description>Inventory – Software para Controle do Patrimônio</description>
-	<url>https://github.com/${project.githubUser}/${project.githubRepository}</url>
-	<inceptionYear>2018</inceptionYear>
+	<packaging>jar</packaging>
+	<version>1.0.0</version>
 
 	<properties>
 		<project.githubUser>nelsonwilliam</project.githubUser>
 		<project.githubRepository>invscp</project.githubRepository>
 		<project.mainClassName>InvSCP</project.mainClassName>
+
 		<project.mainClass>${project.groupId}.${project.artifactId}.${project.mainClassName}</project.mainClass>
 
-		<java.version>1.8</java.version>
+		<java.version>8</java.version>
+		<maven.compiler.source>${java.version}</maven.compiler.source>
+		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
+	<name>${project.groupId}:${project.artifactId}</name>
+
+	<description>
+        Projeto '${project.artifactId}'.
+    	</description>
+
+	<url>https://github.com/${project.githubUser}/${project.githubRepository}</url>
+
+	<organization>
+		<name>Instituto de Informática (UFG) - Fábrica de Software</name>
+		<url>http://www.inf.ufg.br</url>
+	</organization>
+
+	<inceptionYear>2018</inceptionYear>
+
+	<licenses>
+		<license>
+			<name>Creative Commons Attribution 4.0 International (CC BY 4.0)</name>
+			<comments>A atribuição deve conter, explicitamente, a seguinte linha:
+                Copyright (c) 2018. Fábrica de Software - Instituto de Informática (UFG)
+            </comments>
+			<url>https://creativecommons.org/licenses/by/4.0/</url>
+		</license>
+	</licenses>
+
 	<dependencies>
+	
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
@@ -35,7 +60,46 @@
 			<artifactId>radiance-substance</artifactId>
 			<version>1.0.2</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<version>5.3.1</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<version>5.3.1</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>2.11.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>2.11.1</version>
+		</dependency>
+		
 	</dependencies>
+
+	<scm>
+		<connection>
+			scm:git:https://github.com/${project.githubUser}/${project.githubRepository}.git
+		</connection>
+		<developerConnection>
+			scm:git:https://github.com/${project.githubUser}/${project.githubRepository}.git
+		</developerConnection>
+		<url>
+			https://github.com/${project.githubUser}/${project.githubRepository}
+		</url>
+	</scm>
 
 	<distributionManagement>
 		<snapshotRepository>
@@ -48,10 +112,8 @@
 		</repository>
 	</distributionManagement>
 
-	<!-- Note que para gerar .jars executáveis, é necessário definir os profiles 
-		'executavel-unico' ou 'executavel-dir'. -->
-
 	<build>
+
 		<!-- Define o nome do arquivo a ser gerado (.jar é acrescentada) -->
 		<finalName>${project.artifactId}-${project.version}</finalName>
 
@@ -64,14 +126,13 @@
 			<plugin>
 				<groupId>com.github.spotbugs</groupId>
 				<artifactId>spotbugs-maven-plugin</artifactId>
-				<version>3.1.5</version>
+				<version>3.1.8</version>
 			</plugin>
 
-			<!-- Atualizacoes de plugins (Maven Apache Plugins) -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
-				<version>3.0.0</version>
+				<version>3.1.1</version>
 			</plugin>
 
 			<plugin>
@@ -106,22 +167,30 @@
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-project-info-reports-plugin</artifactId>
-				<version>3.0.0</version>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>3.0.1</version>
 			</plugin>
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-resources-plugin</artifactId>
-				<version>3.0.1</version>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.8</version>
 			</plugin>
-			<!-- Fim da atualizacoes de plugins -->
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>3.1.0</version>
+			</plugin>
+
+			<!-- FIM DE ATUALIZACAO DE PLUGINS -->
+
 
 			<!-- surefire -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.21.0</version>
+				<version>2.22.1</version>
 				<dependencies>
 					<dependency>
 						<groupId>org.junit.platform</groupId>
@@ -131,9 +200,13 @@
 					<dependency>
 						<groupId>org.junit.jupiter</groupId>
 						<artifactId>junit-jupiter-engine</artifactId>
-						<version>5.3.0-M1</version>
+						<version>5.3.1</version>
 					</dependency>
 				</dependencies>
+				<!-- Workaround para bug no OpenJDK 1.8 -->
+				<configuration>
+					<useSystemClassLoader>false</useSystemClassLoader>
+				</configuration>
 			</plugin>
 
 			<!-- javadoc:javadoc -->
@@ -147,6 +220,23 @@
 				</configuration>
 			</plugin>
 
+			<!-- JavaNCSS -->
+			<!-- Verifica limite de complexidade ciclomática -->
+			<!-- Verifica número de sentenças (código fonte) -->
+			<!-- Não funciona com novas sintaxes do Java 8 -->
+			<!-- https://github.com/mojohaus/cobertura-maven-plugin/issues/21 -->
+			<!-- <plugin> -->
+			<!-- <groupId>org.codehaus.mojo</groupId> -->
+			<!-- <artifactId>javancss-maven-plugin</artifactId> -->
+			<!-- <version>2.1</version> -->
+			<!-- <configuration> -->
+			<!-- <failOnViolation>true</failOnViolation> -->
+			<!-- <ccnLimit>111</ccnLimit> -->
+			<!-- <ncssLimit>90</ncssLimit> -->
+			<!-- </configuration> -->
+			<!-- </plugin> -->
+
+
 			<!-- sonar -->
 			<plugin>
 				<groupId>org.sonarsource.scanner.maven</groupId>
@@ -154,37 +244,14 @@
 				<version>3.4.1.1168</version>
 			</plugin>
 
-			<!-- mvn org.pitest:pitest-maven:muatationCoverage -->
-			<!-- Relatório em: target/pit-reports/YYYYMMDDHHMM -->
-			<plugin>
-				<groupId>org.pitest</groupId>
-				<artifactId>pitest</artifactId>
-				<version>1.4.0</version>
-				<dependencies>
-					<dependency>
-						<groupId>org.pitest</groupId>
-						<artifactId>pitest-junit5-plugin</artifactId>
-						<version>0.5</version>
-					</dependency>
-				</dependencies>
-				<configuration>
-					<targetClasses>
-						<param>${project.groupId}.${project.artifactId}.*</param>
-					</targetClasses>
-					<targetTests>
-						<param>${project.groupId}.${project.artifactId}.*</param>
-					</targetTests>
-				</configuration>
-			</plugin>
-
 			<!-- maven-compiler-plugin -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.7.0</version>
+				<version>3.8.0</version>
 				<configuration>
-					<source>${java.version}</source>
-					<target>${java.version}</target>
+					<source>1.8</source>
+					<target>1.8</target>
 				</configuration>
 			</plugin>
 
@@ -209,17 +276,20 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-pmd-plugin</artifactId>
-				<version>3.10.0</version>
+				<version>3.11.0</version>
 				<configuration>
-					<linkXref>true</linkXref>
+					<targetJdk>9</targetJdk>
+					<linkXRef>true</linkXRef>
 					<sourceEncoding>utf-8</sourceEncoding>
 					<minimumTokens>10</minimumTokens>
 					<excludes>
 						<exclude>**/*Bean.java</exclude>
 						<exclude>**/generated/*.java</exclude>
+						<exclude>**/protobuff/**/*.java</exclude>
 					</excludes>
 					<excludeRoots>
-						<excludeRoot>target/generated-sources/stubs</excludeRoot>
+						<excludeRoot>target/generated-sources/stubs
+						</excludeRoot>
 					</excludeRoots>
 					<rulesets>
 						<ruleset>/category/java/bestpractices.xml</ruleset>
@@ -237,14 +307,50 @@
 		</plugins>
 	</build>
 
-	<!-- mvn site (gera relatório em Project Report) -->
-	<!-- reporting está relacionado à fase 'site' -->
+	<!-- mvn site (gera relatórios e os agrega em portal -->
+	<!-- Execute "mvn site" após os comandos abaixo -->
+	<!-- mvn package -P cobertura -->
+	<!-- mvn javadoc:javadoc -->
 	<reporting>
 		<plugins>
+
+			<plugin>
+				<groupId>org.owasp</groupId>
+				<artifactId>dependency-check-maven</artifactId>
+				<version>3.3.4</version>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>aggregate</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<version>3.0.0</version>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>3.0.1</version>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>javadoc-no-fork</report>
+							<report>test-javadoc-no-fork</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>versions-maven-plugin</artifactId>
-				<version>2.5</version>
+				<version>2.7</version>
 				<reportSets>
 					<reportSet>
 						<reports>
@@ -256,11 +362,28 @@
 				</reportSets>
 			</plugin>
 
+			<!-- JavaNCSS -->
+			<!-- Verifica limite de complexidade ciclomática -->
+			<!-- Verifica número de sentenças (código fonte) -->
+			<!-- Não funciona com novas sintaxes do Java 8 -->
+			<!-- https://github.com/mojohaus/cobertura-maven-plugin/issues/21 -->
+			<!-- <plugin> -->
+			<!-- <groupId>org.codehaus.mojo</groupId> -->
+			<!-- <artifactId>javancss-maven-plugin</artifactId> -->
+			<!-- <version>2.1</version> -->
+			<!-- <configuration> -->
+			<!-- <failOnViolation>true</failOnViolation> -->
+			<!-- <ccnLimit>111</ccnLimit> -->
+			<!-- <ncssLimit>90</ncssLimit> -->
+			<!-- </configuration> -->
+			<!-- </plugin> -->
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-pmd-plugin</artifactId>
-				<version>3.10.0</version>
+				<version>3.11.0</version>
 				<configuration>
+					<targetJdk>9</targetJdk>
 					<linkXref>true</linkXref>
 					<sourceEncoding>utf-8</sourceEncoding>
 					<minimumTokens>100</minimumTokens>
@@ -269,7 +392,8 @@
 						<exclude>**/generated/*.java</exclude>
 					</excludes>
 					<excludeRoots>
-						<excludeRoot>target/generated-sources/stubs</excludeRoot>
+						<excludeRoot>target/generated-sources/stubs
+						</excludeRoot>
 					</excludeRoots>
 					<rulesets>
 						<ruleset>/category/java/bestpractices.xml</ruleset>
@@ -293,7 +417,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jxr-plugin</artifactId>
-				<version>2.3</version>
+				<version>3.0.0</version>
 			</plugin>
 
 			<!-- mvn checkstyle:checkstyle -->
@@ -311,25 +435,144 @@
 				</reportSets>
 			</plugin>
 
+			<!-- SPOTBUGS -->
 			<plugin>
 				<groupId>com.github.spotbugs</groupId>
 				<artifactId>spotbugs-maven-plugin</artifactId>
 				<version>3.1.5</version>
 			</plugin>
+
+			<!-- Jacoco -->
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.8.2</version>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<!-- select non-aggregate reports -->
+							<report>report</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+
 		</plugins>
 	</reporting>
 
 	<profiles>
+
+		<profile>
+			<id>api</id>
+			<build>
+				<finalName>api</finalName>
+				<plugins>
+					<plugin>
+						<groupId>org.springframework.boot</groupId>
+						<artifactId>spring-boot-maven-plugin</artifactId>
+						<version>2.1.0-RELEASE</version>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<profile>
+			<id>mutantes</id>
+			<build>
+				<plugins>
+					<!-- mvn org.pitest:pitest-maven:muatationCoverage -->
+					<!-- Relatório em: target/pit-reports/YYYYMMDDHHMM -->
+					<plugin>
+						<groupId>org.pitest</groupId>
+						<artifactId>pitest</artifactId>
+						<version>1.4.3</version>
+						<dependencies>
+							<dependency>
+								<groupId>org.pitest</groupId>
+								<artifactId>pitest-junit5-plugin</artifactId>
+								<version>0.8</version>
+							</dependency>
+						</dependencies>
+						<configuration>
+							<targetClasses>
+								<param>
+									${project.groupId}.${project.artifactId}*
+								</param>
+							</targetClasses>
+							<targetTests>
+								<param>${project.groupId}.${project.artifactId}*</param>
+							</targetTests>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<!-- DOCKER -->
+		<profile>
+			<id>docker</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>com.spotify</groupId>
+						<artifactId>dockerfile-maven-plugin</artifactId>
+						<version>1.4.8</version>
+						<executions>
+							<execution>
+								<id>default</id>
+								<goals>
+									<goal>build</goal>
+									<goal>push</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<repository>${project.githubUser}/${project.githubRepository}</repository>
+							<tag>${project.version}</tag>
+							<buildArgs>
+								<JAR_FILE>target/${project.artifactId}-${project.version}-unico.jar</JAR_FILE>
+							</buildArgs>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<!-- OWASP vulnerabilidades -->
+		<!-- mvn verify -P owasp -->
+		<!-- target/dependency-check-report.html -->
+		<profile>
+			<id>owasp</id>
+			<build>
+				<plugins>
+					<!-- mvn verify -->
+					<!-- Gera dependency-check-report.html in 'target' -->
+					<plugin>
+						<groupId>org.owasp</groupId>
+						<artifactId>dependency-check-maven</artifactId>
+						<version>3.3.4</version>
+						<executions>
+							<execution>
+								<goals>
+									<goal>check</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 
 		<!-- spotbugs (security) -->
 		<profile>
 			<id>security</id>
 			<build>
 				<plugins>
+					<!-- SPOTBUGS -->
 					<plugin>
 						<groupId>com.github.spotbugs</groupId>
 						<artifactId>spotbugs-maven-plugin</artifactId>
-						<version>3.1.5</version>
+						<version>3.1.8</version>
 						<configuration>
 							<effort>Max</effort>
 							<threshold>Low</threshold>
@@ -375,6 +618,7 @@
 							<org>${project.githubRepository}</org>
 						</configuration>
 					</plugin>
+
 				</plugins>
 			</build>
 		</profile>
@@ -391,7 +635,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-dependency-plugin</artifactId>
-						<version>3.0.0</version>
+						<version>3.1.1</version>
 						<executions>
 							<execution>
 								<id>copy-dependencies</id>
@@ -414,8 +658,9 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-jar-plugin</artifactId>
-						<version>3.0.2</version>
+						<version>3.1.0</version>
 						<configuration>
+							<finalName>${project.artifactId}-${project.version}-dir</finalName>
 							<archive>
 								<!-- Evita inclusão dir 'maven' em META-INF -->
 								<addMavenDescriptor>false</addMavenDescriptor>
@@ -433,6 +678,7 @@
 		</profile>
 
 		<!-- executavel-unico -->
+		<!-- Jar file gerado é suficiente -->
 		<profile>
 			<id>executavel-unico</id>
 			<build>
@@ -467,7 +713,8 @@
 		</profile>
 
 		<!-- cobertura -->
-		<!-- Gera relatório de cobertura -->
+		<!-- mvn package -P cobertura -->
+		<!-- target/site/jacoco/index.html -->
 		<profile>
 			<id>cobertura</id>
 			<build>
@@ -475,7 +722,7 @@
 					<plugin>
 						<groupId>org.jacoco</groupId>
 						<artifactId>jacoco-maven-plugin</artifactId>
-						<version>0.8.1</version>
+						<version>0.8.2</version>
 						<executions>
 							<execution>
 								<id>default-prepare-agent</id>
@@ -496,7 +743,7 @@
 			</build>
 		</profile>
 
-		<!-- release (incuindo codigo-fonte e javadoc) -->
+		<!-- PROFILE: release -->
 		<profile>
 			<id>release</id>
 			<build>
@@ -507,10 +754,10 @@
 						<artifactId>maven-compiler-plugin</artifactId>
 						<version>3.7.0</version>
 						<configuration>
-							<source>${java.version}</source>
-							<target>${java.version}</target>
+							<source>1.8</source>
+							<target>1.8</target>
 
-							<!-- Omite informações de debugging -->
+							<!-- OMITE INFORMACAO DE DEBUGGING -->
 							<compilerArgs>
 								<arg>-g:none</arg>
 							</compilerArgs>
@@ -626,6 +873,6 @@
 				</plugins>
 			</build>
 		</profile>
-	</profiles>
 
+	</profiles>
 </project>

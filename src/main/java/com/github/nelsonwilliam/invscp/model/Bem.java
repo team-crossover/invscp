@@ -211,10 +211,16 @@ public class Bem implements Model<BemDTO> {
             }
         }
 
+        // VALIDAR DADOS
         try {
             validarCampos(novoBem);
         } catch (final CRUDException e) {
             throw new IllegalInsertException(e.getMessage());
+        }
+
+        if (bemRepo.existsNumTombamento(novoBem.getNumeroTombamento())) {
+            throw new IllegalInsertException(
+                    "O 'Numero de tombamento' inserido já foi utilizado");
         }
     }
 
@@ -326,11 +332,6 @@ public class Bem implements Model<BemDTO> {
                 || bem.getNumeroTombamento() < 0) {
             throw new CRUDException(
                     "'Numero de tombamento' é um campo obrigatório.");
-        }
-        BemRepository bemRepo = new BemRepository();
-        if (bemRepo.existsNumTombamento(bem.getNumeroTombamento())) {
-            throw new CRUDException(
-                    "O 'Numero de tombamento' inserido já foi utilizado");
         }
         if (bem.getSala() == null) {
             throw new CRUDException("'Sala' é um campo obrigatório.");

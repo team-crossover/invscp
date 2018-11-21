@@ -41,6 +41,7 @@ public class DepartamentosSwingView extends JPanel
                                   // em um item da
                                   // tabela
     private JMenuItem popupItemAlterar;
+    private JMenuItem popupItemRelatorio;
 
     public DepartamentosSwingView() {
         initialize();
@@ -56,6 +57,7 @@ public class DepartamentosSwingView extends JPanel
         setLayout(gridBagLayout);
 
         popupItemAlterar = new JMenuItem("Alterar");
+        popupItemRelatorio = new JMenuItem("Gerar relatório...");
 
         popupMenu = new JPopupMenu();
         popupMenu.addPopupMenuListener(new PopupMenuListener() {
@@ -82,6 +84,8 @@ public class DepartamentosSwingView extends JPanel
             }
         });
         popupMenu.add(popupItemAlterar);
+        popupMenu.addSeparator();
+        popupMenu.add(popupItemRelatorio);
 
         final JScrollPane scrollPane = new JScrollPane();
         final GridBagConstraints gbc_scrollPane = new GridBagConstraints();
@@ -158,6 +162,11 @@ public class DepartamentosSwingView extends JPanel
     @Override
     public void addDeletarDepartamentosListener(final ActionListener listener) {
         btnDeletar.addActionListener(listener);
+    }
+
+    @Override
+    public void addGerarRelatorioListener(final ActionListener listener) {
+        popupItemRelatorio.addActionListener(listener);
     }
 
     @Override

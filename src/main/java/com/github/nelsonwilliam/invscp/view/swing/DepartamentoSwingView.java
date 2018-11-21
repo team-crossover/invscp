@@ -79,9 +79,6 @@ public class DepartamentoSwingView extends JDialog implements DepartamentoView {
         getContentPane().setLayout(gridBagLayout);
 
         btnConfirmar = new JButton("Confirmar");
-        btnConfirmar.addActionListener(arg0 -> {
-        });
-
         btnCancelar = new JButton("Cancelar");
         btnCancelar.addActionListener((final ActionEvent e) -> {
             close();

@@ -34,7 +34,7 @@ public class InvSCP {
         }
 
         // TODO Remover isto (usado apenas para desenvolvimento)
-        forceInitializeDatabase = true;
+        // forceInitializeDatabase = true;
 
         initializeDatabase();
         showMainView();
@@ -43,7 +43,7 @@ public class InvSCP {
     /**
      * Inicia a conexão com o banco de dados.
      */
-    private static void connectDatabase() {
+    public static void connectDatabase() {
         try {
             DatabaseConnection.openConnection();
             System.out.println("Conexão com o banco de dados estabelecida.");
@@ -63,7 +63,7 @@ public class InvSCP {
     /**
      * Inicializa o banco de dados caso este não tiver sido inicializado ainda.
      */
-    private static void initializeDatabase() {
+    public static void initializeDatabase() {
         boolean databaseWasInitialized = true;
 
         try {
@@ -94,7 +94,7 @@ public class InvSCP {
      * Exibe a tela principal.
      */
     @SuppressWarnings("unused")
-    private static void showMainView() {
+    public static void showMainView() {
         EventQueue.invokeLater(() -> {
             // Define a aparência do Swing
             try {

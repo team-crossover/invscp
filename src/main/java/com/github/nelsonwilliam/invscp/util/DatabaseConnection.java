@@ -2,14 +2,12 @@ package com.github.nelsonwilliam.invscp.util;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
-import java.util.Scanner;
 
 /**
  * Classe utilitária que permite fazer a conexão com o Banco de dados.
@@ -71,7 +69,7 @@ public class DatabaseConnection {
      * @throws SQLException
      */
     public static boolean databaseWasInitialized() throws FileNotFoundException, SQLException {
-        final String checkScript = readResource("sql/checkDatabase.sql");
+        final String checkScript = Resources.readResource("sql/checkDatabase.sql");
         final PreparedStatement stmt = connection.prepareStatement(checkScript);
         final ResultSet result = stmt.executeQuery();
 
@@ -87,21 +85,9 @@ public class DatabaseConnection {
      * @throws IOException
      */
     public static void initializeDatabase() throws FileNotFoundException, SQLException {
-        final String createScript = readResource("sql/createDatabase.sql");
+        final String createScript =
+                Resources.readResource("sql/createDatabase.sql");
         final PreparedStatement stmt = connection.prepareStatement(createScript);
         stmt.executeUpdate();
-    }
-
-    private static String readResource(final String path) throws FileNotFoundException {
-        final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        final InputStream stream = classLoader.getResourceAsStream(path);
-        if (stream == null) {
-            throw new FileNotFoundException();
-        }
-        final Scanner scanner = new Scanner(stream);
-        scanner.useDelimiter("\\A");
-        final String string = scanner.next();
-        scanner.close();
-        return string;
     }
 }

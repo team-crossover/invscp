@@ -24,6 +24,7 @@ import com.github.nelsonwilliam.invscp.model.dto.GrupoMaterialDTO;
 import com.github.nelsonwilliam.invscp.model.dto.LocalizacaoDTO;
 import com.github.nelsonwilliam.invscp.model.dto.OrdemServicoDTO;
 import com.github.nelsonwilliam.invscp.model.dto.PredioDTO;
+import com.github.nelsonwilliam.invscp.model.dto.RelatorioDTO;
 import com.github.nelsonwilliam.invscp.model.dto.SalaDTO;
 import com.github.nelsonwilliam.invscp.model.repository.BaixaRepository;
 import com.github.nelsonwilliam.invscp.model.repository.BemRepository;
@@ -33,6 +34,7 @@ import com.github.nelsonwilliam.invscp.model.repository.GrupoMaterialRepository;
 import com.github.nelsonwilliam.invscp.model.repository.LocalizacaoRepository;
 import com.github.nelsonwilliam.invscp.model.repository.OrdemServicoRepository;
 import com.github.nelsonwilliam.invscp.model.repository.PredioRepository;
+import com.github.nelsonwilliam.invscp.model.repository.RelatorioRepository;
 import com.github.nelsonwilliam.invscp.model.repository.SalaRepository;
 
 /**
@@ -53,6 +55,18 @@ public class Client {
 
     public static void close() {
         // TODO
+    }
+
+    // -----------
+    // RELATÓRIOS
+    // -----------
+
+    public static RelatorioDTO requestGerarRelatorioDept(
+            final DepartamentoDTO dept) {
+        final RelatorioRepository repo = new RelatorioRepository();
+        final Departamento deptModel = new Departamento();
+        deptModel.setValuesFromDTO(dept);
+        return repo.getByDepartamento(deptModel).toDTO();
     }
 
     // ------

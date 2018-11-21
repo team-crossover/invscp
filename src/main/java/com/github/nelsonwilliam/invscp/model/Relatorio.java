@@ -1,5 +1,6 @@
 package com.github.nelsonwilliam.invscp.model;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +15,10 @@ public class Relatorio {
 
     private List<Integer> idBens = null;
 
+    private LocalDateTime momentoGeracao = null;
+
     public void setValuesFromDTO(final RelatorioDTO dto) {
+        setMomentoGeracao(dto.getMomentoGeracao());
         if (dto.getDepartamento() != null) {
             setIdDepartamento(dto.getDepartamento().getId());
         }
@@ -29,6 +33,7 @@ public class Relatorio {
 
     public RelatorioDTO toDTO() {
         final RelatorioDTO dto = new RelatorioDTO();
+        dto.setMomentoGeracao(momentoGeracao);
         if (idDepartamento != null) {
             final DepartamentoRepository repo = new DepartamentoRepository();
             final Departamento dept = repo.getById(idDepartamento);
@@ -82,6 +87,24 @@ public class Relatorio {
      */
     public final void setIdBens(final List<Integer> newIdBens) {
         idBens = newIdBens;
+    }
+
+    /**
+     * Obtém o valor atual de momentoGeracao.
+     *
+     * @return O valor atual de momentoGeracao.
+     */
+    public final LocalDateTime getMomentoGeracao() {
+        return momentoGeracao;
+    }
+
+    /**
+     * Atualiza o valor atual de momentoGeracao.
+     *
+     * @param newMomentoGeracao O novo valor para momentoGeracao.
+     */
+    public final void setMomentoGeracao(final LocalDateTime newMomentoGeracao) {
+        momentoGeracao = newMomentoGeracao;
     }
 
 }
