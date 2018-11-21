@@ -40,22 +40,25 @@ public class BensSwingView extends JPanel implements BensView {
     private JTable table;
     private JButton btnAdicionar;
     private JButton btnDeletar;
+    private JButton btnGerarInventario;
     private JPopupMenu popupMenu; // Popup exibido ao clicar com o botão direito
                                   // em um item da tabela
     private JMenuItem popupItemAlterar;
     private JMenuItem popupItemBaixa;
     private JMenuItem popupItemOrdemServico;
+    private JMenuItem popupItemHistorico;
+    private JPanel panel;
 
     public BensSwingView() {
         initialize();
     }
 
     private void initialize() {
-        setBounds(0, 0, 500, 500);
+        setBounds(0, 0, 673, 500);
         final GridBagLayout gridBagLayout = new GridBagLayout();
-        gridBagLayout.columnWidths = new int[] { 0, 199, 249, 0 };
+        gridBagLayout.columnWidths = new int[] { 0, 199, 249 };
         gridBagLayout.rowHeights = new int[] { 422, 25, 0 };
-        gridBagLayout.columnWeights = new double[] { 0.0, 1.0, 1.0, 0.0 };
+        gridBagLayout.columnWeights = new double[] { 0.0, 1.0, 1.0 };
         gridBagLayout.rowWeights = new double[] { 1.0, 0.0, Double.MIN_VALUE };
         setLayout(gridBagLayout);
 
@@ -63,7 +66,7 @@ public class BensSwingView extends JPanel implements BensView {
         final GridBagConstraints gbc_scrollPane = new GridBagConstraints();
         gbc_scrollPane.fill = GridBagConstraints.BOTH;
         gbc_scrollPane.insets = new Insets(0, 0, 5, 0);
-        gbc_scrollPane.gridwidth = 4;
+        gbc_scrollPane.gridwidth = 3;
         gbc_scrollPane.gridx = 0;
         gbc_scrollPane.gridy = 0;
         add(scrollPane, gbc_scrollPane);
@@ -116,6 +119,7 @@ public class BensSwingView extends JPanel implements BensView {
         popupItemAlterar = new JMenuItem("Alterar");
         popupItemBaixa = new JMenuItem("Baixa...");
         popupItemOrdemServico = new JMenuItem("Ordens de serviço...");
+        popupItemHistorico = new JMenuItem("Gerar histórico...");
 
         popupMenu = new JPopupMenu();
         popupMenu.addPopupMenuListener(new PopupMenuListener() {
@@ -145,23 +149,53 @@ public class BensSwingView extends JPanel implements BensView {
         popupMenu.addSeparator();
         popupMenu.add(popupItemBaixa);
         popupMenu.add(popupItemOrdemServico);
+        popupMenu.addSeparator();
+        popupMenu.add(popupItemHistorico);
         table.setComponentPopupMenu(popupMenu);
 
+        panel = new JPanel();
+        GridBagConstraints gbc_panel = new GridBagConstraints();
+        gbc_panel.anchor = GridBagConstraints.WEST;
+        gbc_panel.fill = GridBagConstraints.VERTICAL;
+        gbc_panel.insets = new Insets(0, 0, 0, 5);
+        gbc_panel.gridx = 1;
+        gbc_panel.gridy = 1;
+        add(panel, gbc_panel);
+
+        GridBagLayout gbl_panel = new GridBagLayout();
+        gbl_panel.columnWidths = new int[] { 135, 135, 0 };
+        gbl_panel.rowHeights = new int[] { 25, 0 };
+        gbl_panel.columnWeights = new double[] { 0.0, 0.0, Double.MIN_VALUE };
+        gbl_panel.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
+        panel.setLayout(gbl_panel);
+
         btnAdicionar = new JButton("Adicionar novo");
-        final GridBagConstraints gbc_btnAdicionar = new GridBagConstraints();
-        gbc_btnAdicionar.anchor = GridBagConstraints.SOUTHWEST;
+        GridBagConstraints gbc_btnAdicionar = new GridBagConstraints();
+        gbc_btnAdicionar.anchor = GridBagConstraints.WEST;
         gbc_btnAdicionar.insets = new Insets(0, 0, 0, 5);
-        gbc_btnAdicionar.gridx = 1;
-        gbc_btnAdicionar.gridy = 1;
-        add(btnAdicionar, gbc_btnAdicionar);
+        gbc_btnAdicionar.gridx = 0;
+        gbc_btnAdicionar.gridy = 0;
+        panel.add(btnAdicionar, gbc_btnAdicionar);
+
+        btnGerarInventario = new JButton("Gerar inventário");
+        GridBagConstraints gbc_btnInventario = new GridBagConstraints();
+        gbc_btnInventario.anchor = GridBagConstraints.WEST;
+        gbc_btnInventario.gridx = 1;
+        gbc_btnInventario.gridy = 0;
+        panel.add(btnGerarInventario, gbc_btnInventario);
 
         btnDeletar = new JButton("Deletar selecionado(s)");
         final GridBagConstraints gbc_btnDeletar = new GridBagConstraints();
-        gbc_btnDeletar.insets = new Insets(0, 0, 0, 5);
         gbc_btnDeletar.anchor = GridBagConstraints.SOUTHEAST;
         gbc_btnDeletar.gridx = 2;
         gbc_btnDeletar.gridy = 1;
         add(btnDeletar, gbc_btnDeletar);
+    }
+
+    @Override
+    public void addGerarHistoricoListener(final ActionListener listener) {
+        popupItemHistorico.addActionListener(listener);
+
     }
 
     @Override
@@ -195,9 +229,15 @@ public class BensSwingView extends JPanel implements BensView {
     }
 
     @Override
+    public void addGerarInventarioListener(final ActionListener listener) {
+        btnGerarInventario.addActionListener(listener);
+
+    }
+
+    @Override
     public void updateBens(final List<BemDTO> bens) {
-        final DefaultTableModel tableModel = (DefaultTableModel) table
-                .getModel();
+        final DefaultTableModel tableModel =
+                (DefaultTableModel) table.getModel();
         tableModel.setNumRows(0);
         for (final BemDTO b : bens) {
             tableModel.addRow(new Object[] { b.getId(), b.getNumeroTombamento(),

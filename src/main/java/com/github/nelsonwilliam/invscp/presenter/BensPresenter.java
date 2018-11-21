@@ -1,7 +1,9 @@
 package com.github.nelsonwilliam.invscp.presenter;
 
 import java.awt.event.ActionEvent;
+import java.io.IOException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import com.github.nelsonwilliam.invscp.exception.IllegalDeleteException;
@@ -10,8 +12,12 @@ import com.github.nelsonwilliam.invscp.model.dto.BemDTO;
 import com.github.nelsonwilliam.invscp.model.dto.DepartamentoDTO;
 import com.github.nelsonwilliam.invscp.model.dto.FuncionarioDTO;
 import com.github.nelsonwilliam.invscp.model.dto.GrupoMaterialDTO;
+import com.github.nelsonwilliam.invscp.model.dto.HistoricoDTO;
+import com.github.nelsonwilliam.invscp.model.dto.InventarioDTO;
+import com.github.nelsonwilliam.invscp.model.dto.RelatorioDTO;
 import com.github.nelsonwilliam.invscp.model.enums.BemSituacaoEnum;
 import com.github.nelsonwilliam.invscp.util.Client;
+import com.github.nelsonwilliam.invscp.util.Relatorios;
 import com.github.nelsonwilliam.invscp.view.BaixaView;
 import com.github.nelsonwilliam.invscp.view.BemView;
 import com.github.nelsonwilliam.invscp.view.BensView;
@@ -45,6 +51,12 @@ public class BensPresenter extends Presenter<BensView> {
         });
         view.addBaixarBemListener((final ActionEvent e) -> {
             onBaixa();
+        });
+        view.addGerarInventarioListener((final ActionEvent e) -> {
+            onInventario();
+        });
+        view.addGerarHistoricoListener((final ActionEvent e) -> {
+          onHistorico();  
         });
     }
 
@@ -175,6 +187,58 @@ public class BensPresenter extends Presenter<BensView> {
     public void updateBens() {
         final List<BemDTO> bens = Client.requestGetBens();
         view.updateBens(bens);
+    }
+
+    public void onHistorico() {
+        final List<Integer> selectedBemIds = view.getSelectedBensIds();
+        if (selectedBemIds.size() != 1) {
+            throw new RuntimeException(
+                    "Para gerar histórico, é necessário que apenas um bem esteja selecionado.");
+        }
+
+        final Integer selectedBemId = selectedBemIds.get(0);
+        final BemDTO selectedBem = Client.requestGetBemById(selectedBemId);
+        final HistoricoDTO historico =
+                Client.requestGerarHistorico(selectedBem);
+
+        final String fileName = "historico-bem-" + selectedBem.getId() + "_"
+                + historico.getMomentoGeracao().format(
+                        DateTimeFormatter.ofPattern("dd-MM-yyyy_HH-mm-ss"))
+                + ".html";
+        String htmlText = null;
+        try {
+            htmlText = historico.toHtml();
+            Relatorios.salvar(fileName, htmlText);
+        } catch (final IOException e) {
+            view.showError("Não foi possível gerar o histórico.");
+            e.printStackTrace();
+            return;
+        }
+
+        view.showSucesso(
+                "Histórico gerado e salvo no arquivo '" + fileName + "'");        
+    }
+    
+    public void onInventario() {
+        final InventarioDTO inventario =
+                Client.requestGerarInventario();
+
+        final String fileName = "inventario_"
+                + inventario.getMomentoGeracao().format(
+                        DateTimeFormatter.ofPattern("dd-MM-yyyy_HH-mm-ss"))
+                + ".html";
+        String htmlText = null;
+        try {
+            htmlText = inventario.toHtml();
+            Relatorios.salvar(fileName, htmlText);
+        } catch (final IOException e) {
+            view.showError("Não foi possível gerar o inventário.");
+            e.printStackTrace();
+            return;
+        }
+
+        view.showSucesso(
+                "Inventário gerado e salvo no arquivo '" + fileName + "'");        
     }
 
 }

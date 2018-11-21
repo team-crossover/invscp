@@ -1,8 +1,29 @@
 package com.github.nelsonwilliam.invscp.model.dto;
 
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import com.github.nelsonwilliam.invscp.model.Movimentacao;
+import com.github.nelsonwilliam.invscp.util.Relatorios;
+import com.github.nelsonwilliam.invscp.util.Resources;
 
 public class HistoricoDTO implements DTO {
+
+    private static final DateTimeFormatter DATE_FORMATTER =
+            DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+    private static final DateTimeFormatter DATE_TIME_FORMATTER =
+            DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+
+    private static final NumberFormat CURRENCY_FORMATTER =
+            NumberFormat.getCurrencyInstance();
 
     private BemDTO bem = null;
 
@@ -11,6 +32,113 @@ public class HistoricoDTO implements DTO {
     private List<OrdemServicoDTO> ordens = null;
 
     private BaixaDTO baixa = null;
+
+    private LocalDateTime momentoGeracao = null;
+
+    public String toHtml() throws IOException {
+        final String tmpHistorico =
+                Resources.readResource("html/templates/historico.html");
+        final String tmpBaixa =
+                Resources.readResource("html/templates/historico-baixa.html");
+        final String tmpDepreciacao = Resources
+                .readResource("html/templates/historico-depreciacao.html");
+        final String tmpDepreciacaoItem = Resources
+                .readResource("html/templates/historico-depreciacao-item.html");
+        final String tmpInformacoes = Resources
+                .readResource("html/templates/historico-info-bem.html");
+        final String tmpMovimentacao = Resources
+                .readResource("html/templates/historico-movimentacao.html");
+        final String tmpMovimentacaoEvento = Resources.readResource(
+                "html/templates/historico-movimentacao-evento.html");
+        final String tmpOrdens =
+                Resources.readResource("html/templates/historico-os.html");
+        final String tmpOrdensItens =
+                Resources.readResource("html/templates/historico-os-item.html");
+
+        String htmlInfo = String.format(tmpInformacoes,
+                Relatorios.escapeToHtml(bem.getDescricao()),
+                CURRENCY_FORMATTER.format(bem.getValorCompra()),
+                bem.getNumeroTombamento(),
+                Relatorios.escapeToHtml(bem.getNumeroNotaFiscal()),
+                Relatorios.escapeToHtml(bem.getEspecificacao()),
+                bem.getGarantia().format(DATE_FORMATTER),
+                Relatorios.escapeToHtml(bem.getMarca()),
+                Relatorios.escapeToHtml(bem.getGrupoMaterial().getNome()),
+                Relatorios.escapeToHtml(bem.getSala().getNome()),
+                Relatorios.escapeToHtml(bem.getDepartamento().getNome()),
+                bem.getDataCadastro().format(DATE_FORMATTER),
+                bem.getDataAquisicao().format(DATE_FORMATTER),
+                bem.getSituacao().getTexto());
+
+        String htmlBaixa = baixa == null ? "Não foi efetuada baixa deste bem."
+                : String.format(tmpBaixa,
+                        baixa.getData().format(DATE_FORMATTER),
+                        Relatorios.escapeToHtml(baixa.getMotivo()),
+                        Relatorios
+                                .escapeToHtml(baixa.getFuncionario().getNome()),
+                        Relatorios.escapeToHtml(baixa.getObservacoes()));
+
+        StringBuilder htmlDepreciacoesItens = new StringBuilder();
+        // BigDecimal[] valoresPorAno = bem.getDepreciacaoPorAno();
+        BigDecimal[] valoresPorAno = new BigDecimal[3]; // TODO Tirar isso
+                                                        // quando o metodo
+                                                        // acima existir
+        valoresPorAno[0] = new BigDecimal(1000);
+        valoresPorAno[1] = new BigDecimal(800);
+        valoresPorAno[2] = new BigDecimal(600);
+        int anoAtual = momentoGeracao.getYear();
+        for (int i = 0; i < valoresPorAno.length; i++) {
+            Integer ano = anoAtual - valoresPorAno.length + 1 + i;
+            htmlDepreciacoesItens.append(String.format(tmpDepreciacaoItem, ano,
+                    CURRENCY_FORMATTER.format(valoresPorAno[i])));
+        }
+
+        String htmlDepreciacoes =
+                String.format(tmpDepreciacao, htmlDepreciacoesItens.toString());
+
+        StringBuilder htmlOrdensItens = new StringBuilder();
+        for (OrdemServicoDTO ordem : ordens) {
+            htmlOrdensItens.append(String.format(tmpOrdensItens,
+                    ordem.getDataCadastro().format(DATE_FORMATTER),
+                    ordem.getDataConclusao() == null ? "-"
+                            : ordem.getDataConclusao().format(DATE_FORMATTER),
+                    CURRENCY_FORMATTER.format(ordem.getValor()),
+                    Relatorios.escapeToHtml(ordem.getFuncionario().getNome()),
+                    Relatorios.escapeToHtml(bem.getSituacao().getTexto())));
+        }
+        String htmlOrdens = ordens.size() > 0
+                ? String.format(tmpOrdens, htmlOrdensItens.toString())
+                : "Não existem ordens de serviço para este bem.";
+
+        StringBuilder htmlMovimentacoesItens = new StringBuilder();
+        for (MovimentacaoDTO mov : movimentacoes) {
+
+            StringBuilder htmlEventos = new StringBuilder();
+            for (EventoMovimentacaoDTO ev : mov.getEventos()) {
+                htmlEventos.append(String.format(tmpMovimentacaoEvento,
+                        ev.getTipo().getTexto(),
+                        ev.getData().format(DATE_FORMATTER),
+                        Relatorios.escapeToHtml(ev.getFuncionario().getNome()),
+                        Relatorios.escapeToHtml(ev.getJustificativa())));
+            }
+
+            htmlMovimentacoesItens.append(String.format(tmpMovimentacao,
+                    Relatorios.escapeToHtml(mov.getSalaOrigem().getNome() + " ("
+                            + mov.getSalaOrigem().getPredio().getNome() + ")"),
+                    Relatorios.escapeToHtml(mov.getSalaDestino().getNome()
+                            + " (" + mov.getSalaDestino().getPredio().getNome()
+                            + ")"),
+                    mov.getEtapa().getTexto(), htmlEventos.toString()));
+        }
+        String htmlMovimentacoes =
+                movimentacoes.size() > 0 ? htmlMovimentacoesItens.toString()
+                        : "Não foram efetuadas movimentações deste item.";
+
+        return String.format(tmpHistorico,
+                Relatorios.escapeToHtml(bem.getDescricao()),
+                momentoGeracao.format(DATE_TIME_FORMATTER), htmlInfo, htmlBaixa,
+                htmlDepreciacoes, htmlOrdens, htmlMovimentacoes);
+    }
 
     /**
      * Obtém o valor atual de bem.
@@ -83,6 +211,14 @@ public class HistoricoDTO implements DTO {
      */
     public final void setBaixa(final BaixaDTO newBaixa) {
         baixa = newBaixa;
+    }
+
+    public final LocalDateTime getMomentoGeracao() {
+        return momentoGeracao;
+    }
+
+    public final void setMomentoGeracao(LocalDateTime newMomentoGeracao) {
+        momentoGeracao = newMomentoGeracao;
     }
 
 }

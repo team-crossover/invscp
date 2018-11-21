@@ -343,16 +343,35 @@ public class Bem implements Model<BemDTO> {
 
     }
 
+    /**
+     * Retorna uma lista com o valor do bem depreciado para todos os anos desde
+     * a compra do bem. O primeiro valor corresponde ao ano de compra, enquanto
+     * o último valor corresponde ao ano atual.
+     * 
+     * @return
+     */
+    public BigDecimal[] getDepreciacaoPorAno() {
+        // TODO Faça isso!
+        
+        // EXEMPLOS DE RESULTADOS:
+        // Se o bem foi comprado em 2015 por 1000 reais e depreciação é 0.2 e hoje é 2018
+        // O resultado deveria ser (1000, 800, 600, 400)
+        //                          2015 2016 2017 2018
+        // Se o bem foi comprado em 2018 por 1000 hoje é 2018
+        // O resultado deveria ser (1000)
+        return null;
+    }
+
     public final Double exibirDepreciacao(final BemDTO bem) {
         Double novoValor;
         final Double valCompra = bem.getValorCompra().doubleValue();
-        final Double dep = bem.getGrupoMaterial().getDepreciacao()
-                .doubleValue();
+        final Double dep =
+                bem.getGrupoMaterial().getDepreciacao().doubleValue();
         final Date date = new Date();
-        final LocalDate localDate = date.toInstant()
-                .atZone(ZoneId.systemDefault()).toLocalDate();
-        final Integer time = localDate.getYear()
-                - bem.getDataAquisicao().getYear();
+        final LocalDate localDate =
+                date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        final Integer time =
+                localDate.getYear() - bem.getDataAquisicao().getYear();
         if (time > 0) {
             if (valCompra - (valCompra * (dep * time)) == 0) {
                 novoValor = 0.01;

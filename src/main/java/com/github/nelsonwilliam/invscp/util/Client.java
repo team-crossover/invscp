@@ -21,6 +21,8 @@ import com.github.nelsonwilliam.invscp.model.dto.BemDTO;
 import com.github.nelsonwilliam.invscp.model.dto.DepartamentoDTO;
 import com.github.nelsonwilliam.invscp.model.dto.FuncionarioDTO;
 import com.github.nelsonwilliam.invscp.model.dto.GrupoMaterialDTO;
+import com.github.nelsonwilliam.invscp.model.dto.HistoricoDTO;
+import com.github.nelsonwilliam.invscp.model.dto.InventarioDTO;
 import com.github.nelsonwilliam.invscp.model.dto.LocalizacaoDTO;
 import com.github.nelsonwilliam.invscp.model.dto.OrdemServicoDTO;
 import com.github.nelsonwilliam.invscp.model.dto.PredioDTO;
@@ -31,6 +33,8 @@ import com.github.nelsonwilliam.invscp.model.repository.BemRepository;
 import com.github.nelsonwilliam.invscp.model.repository.DepartamentoRepository;
 import com.github.nelsonwilliam.invscp.model.repository.FuncionarioRepository;
 import com.github.nelsonwilliam.invscp.model.repository.GrupoMaterialRepository;
+import com.github.nelsonwilliam.invscp.model.repository.HistoricoRepository;
+import com.github.nelsonwilliam.invscp.model.repository.InventarioRepository;
 import com.github.nelsonwilliam.invscp.model.repository.LocalizacaoRepository;
 import com.github.nelsonwilliam.invscp.model.repository.OrdemServicoRepository;
 import com.github.nelsonwilliam.invscp.model.repository.PredioRepository;
@@ -67,6 +71,19 @@ public class Client {
         final Departamento deptModel = new Departamento();
         deptModel.setValuesFromDTO(dept);
         return repo.getByDepartamento(deptModel).toDTO();
+    }
+
+    public static HistoricoDTO requestGerarHistorico(
+            final BemDTO bem) {
+        final HistoricoRepository repo = new HistoricoRepository();
+        final Bem bemModel = new Bem();
+        bemModel.setValuesFromDTO(bem);
+        return repo.getByBem(bemModel).toDTO();
+    }
+    
+    public static InventarioDTO requestGerarInventario () {
+        final InventarioRepository repo = new InventarioRepository();
+        return repo.get().toDTO();
     }
 
     // ------

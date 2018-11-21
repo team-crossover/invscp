@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Types;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +14,7 @@ import com.github.nelsonwilliam.invscp.util.DatabaseConnection;
 
 public class HistoricoRepository {
 
-    public Historico getHistorico(Bem bem) {
+    public Historico getByBem(Bem bem) {
         final Connection connection = DatabaseConnection.getConnection();
         Historico his = new Historico();
         try {
@@ -47,6 +48,8 @@ public class HistoricoRepository {
                 idBaixa = id;
             }
 
+            his.setMomentoGeracao(LocalDateTime.now());
+            his.setIdBem(bem.getId());
             his.setIdMovimentacoes(idMovimentacoes);
             his.setIdOrdens(idOrdens);
             his.setIdBaixa(idBaixa);

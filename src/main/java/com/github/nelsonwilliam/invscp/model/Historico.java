@@ -1,5 +1,6 @@
 package com.github.nelsonwilliam.invscp.model;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +22,10 @@ public class Historico {
 
     private Integer idBaixa = null;
 
+    private LocalDateTime momentoGeracao = null;
+
     public void setValuesFromDTO(final HistoricoDTO dto) {
+        setMomentoGeracao(dto.getMomentoGeracao());
         if (dto.getBem() != null) {
             setIdBem(dto.getBem().getId());
         }
@@ -46,6 +50,7 @@ public class Historico {
 
     public HistoricoDTO toDTO() {
         final HistoricoDTO dto = new HistoricoDTO();
+        dto.setMomentoGeracao(momentoGeracao);
         if (idBem != null) {
             final BemRepository repo = new BemRepository();
             final Bem bem = repo.getById(idBem);
@@ -83,6 +88,14 @@ public class Historico {
             dto.setBaixa(baixa == null ? null : baixa.toDTO());
         }
         return dto;
+    }
+
+    public final LocalDateTime getMomentoGeracao() {
+        return momentoGeracao;
+    }
+
+    public final void setMomentoGeracao(LocalDateTime newMomentoGeracao) {
+        momentoGeracao = newMomentoGeracao;
     }
 
     /**

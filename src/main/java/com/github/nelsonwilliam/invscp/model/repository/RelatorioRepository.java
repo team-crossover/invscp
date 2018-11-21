@@ -19,7 +19,7 @@ public class RelatorioRepository {
         final Relatorio relatorio = new Relatorio();
         try {
             final PreparedStatement s = connection.prepareStatement(
-                    "SELECT id FROM bem WHERE id_departamento=? ORDER BY id_sala");
+                    "SELECT id FROM bem WHERE id_departamento=?");
             s.setObject(1, dept.getId(), Types.INTEGER);
 
             final ResultSet r = s.executeQuery();

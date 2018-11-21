@@ -1,5 +1,7 @@
 package com.github.nelsonwilliam.invscp.model.dto;
 
+import java.util.List;
+
 import com.github.nelsonwilliam.invscp.model.enums.EtapaMovEnum;
 
 public class MovimentacaoDTO implements DTO {
@@ -13,6 +15,9 @@ public class MovimentacaoDTO implements DTO {
     private SalaDTO salaOrigem = null;
 
     private SalaDTO salaDestino = null;
+
+    // TODO Pegar isso no model (toDTO)
+    private List<EventoMovimentacaoDTO> eventos = null;
 
     public Integer getId() {
         return id;
@@ -61,4 +66,13 @@ public class MovimentacaoDTO implements DTO {
     public void setSalaDestino(final SalaDTO salaDestino) {
         this.salaDestino = salaDestino;
     }
+
+    public final List<EventoMovimentacaoDTO> getEventos() {
+        return eventos;
+    }
+
+    public final void setEventos(List<EventoMovimentacaoDTO> newEventos) {
+        eventos = newEventos;
+    }
+
 }

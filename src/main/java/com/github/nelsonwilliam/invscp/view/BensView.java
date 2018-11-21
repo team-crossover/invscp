@@ -20,6 +20,10 @@ public interface BensView extends View {
 
     void addDeletarBensListener(ActionListener listener);
 
+    void addGerarInventarioListener(ActionListener listener);
+    
+    void addGerarHistoricoListener(ActionListener listener);
+    
     /**
      * Adiciona o Listener para quando o usuário informar que quer alterar um
      * bem. Espera-se que quando este evento for invocado, haja exatamente UM
