@@ -1,5 +1,4 @@
-*.html
-
+/relatorios
 /reports
 /bin
 /target

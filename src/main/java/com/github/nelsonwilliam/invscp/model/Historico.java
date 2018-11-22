@@ -54,7 +54,10 @@ public class Historico {
         if (idBem != null) {
             final BemRepository repo = new BemRepository();
             final Bem bem = repo.getById(idBem);
-            dto.setBem(bem == null ? null : bem.toDTO());
+            if (bem != null) {
+                dto.setBem(bem.toDTO());
+                dto.setDepreciacoes(bem.getDepreciacoesPorAno());
+            }
         }
         if (idMovimentacoes != null) {
             final List<MovimentacaoDTO> movimentacoes =

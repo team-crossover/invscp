@@ -1,20 +1,26 @@
 package com.github.nelsonwilliam.invscp.util;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 
 public class Relatorios {
 
-    public static void salvar(final String path, final String text)
+    public static File salvar(final String path, final String text)
             throws IOException {
 
+        File file = new File(path);
+        file.getParentFile().mkdirs();
+        
         PrintWriter writer = null;
         try {
-            writer = new PrintWriter(path, "UTF-8");
+            writer = new PrintWriter(file, "UTF-8");
             writer.print(text);
         } finally {
             writer.close();
         }
+        
+        return file;
     }
 
     public static String escapeToHtml(final Object s) {
@@ -49,10 +55,8 @@ public class Relatorios {
                 case '\n':
                     builder.append("<br>");
                     break;
-                // We need Tab support here, because we print StackTraces as
-                // HTML
                 case '\t':
-                    builder.append("&nbsp; &nbsp; &nbsp;");
+                    builder.append("&nbsp; &nbsp; &nbsp; &nbsp;");
                     break;
                 default:
                     if (c < 128) {
@@ -62,7 +66,6 @@ public class Relatorios {
                     }
             }
         }
-
         return builder.toString();
     }
 

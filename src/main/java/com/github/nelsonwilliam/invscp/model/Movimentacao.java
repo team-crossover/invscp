@@ -1,13 +1,18 @@
 package com.github.nelsonwilliam.invscp.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.github.nelsonwilliam.invscp.exception.CRUDException;
 import com.github.nelsonwilliam.invscp.exception.IllegalDeleteException;
 import com.github.nelsonwilliam.invscp.exception.IllegalUpdateException;
 import com.github.nelsonwilliam.invscp.model.dto.BaixaDTO;
+import com.github.nelsonwilliam.invscp.model.dto.EventoMovimentacaoDTO;
 import com.github.nelsonwilliam.invscp.model.dto.FuncionarioDTO;
 import com.github.nelsonwilliam.invscp.model.dto.MovimentacaoDTO;
 import com.github.nelsonwilliam.invscp.model.enums.EtapaMovEnum;
 import com.github.nelsonwilliam.invscp.model.repository.BemRepository;
+import com.github.nelsonwilliam.invscp.model.repository.EventoMovimentacaoRepository;
 import com.github.nelsonwilliam.invscp.model.repository.SalaRepository;
 
 public class Movimentacao implements Model<MovimentacaoDTO> {
@@ -62,7 +67,18 @@ public class Movimentacao implements Model<MovimentacaoDTO> {
             final Sala salaD = repo.getById(idSalaOrigem);
             salaD.setIdDepartamento(null);
             dto.setSalaDestino(salaD == null ? null : salaD.toDTO());
+        } 
+
+        final EventoMovimentacaoRepository eventoRepo =
+                new EventoMovimentacaoRepository();
+        final List<EventoMovimentacaoDTO> eventosDto = new ArrayList<>();
+        final List<EventoMovimentacao> eventos =
+                eventoRepo.getByMovimentacao(this);
+        for (EventoMovimentacao ev : eventos) {
+            eventosDto.add(ev.toDTO());
         }
+        dto.setEventos(eventosDto);
+
         return dto;
     }
 

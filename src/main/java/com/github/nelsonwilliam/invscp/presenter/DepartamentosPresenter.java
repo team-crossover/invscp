@@ -1,6 +1,7 @@
 package com.github.nelsonwilliam.invscp.presenter;
 
 import java.awt.event.ActionEvent;
+import java.io.File;
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -138,10 +139,12 @@ public class DepartamentosPresenter extends Presenter<DepartamentosView> {
                 + relatorio.getMomentoGeracao().format(
                         DateTimeFormatter.ofPattern("dd-MM-yyyy_HH-mm-ss"))
                 + ".html";
+        
         String htmlText = null;
+        File file = null;
         try {
             htmlText = relatorio.toHtml();
-            Relatorios.salvar(fileName, htmlText);
+            file = Relatorios.salvar("relatorios/" + fileName, htmlText);
         } catch (final IOException e) {
             view.showError("Não foi possível gerar o relatório.");
             e.printStackTrace();
@@ -149,7 +152,7 @@ public class DepartamentosPresenter extends Presenter<DepartamentosView> {
         }
 
         view.showSucesso(
-                "Relatório gerado e salvo no arquivo '" + fileName + "'");
+                "Relatório gerado e salvo em:\n" + file.toPath().toAbsolutePath());
     }
 
     public void updateDepartamentos() {

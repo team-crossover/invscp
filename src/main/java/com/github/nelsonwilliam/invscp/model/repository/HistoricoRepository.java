@@ -34,18 +34,17 @@ public class HistoricoRepository {
             final ResultSet r1 = s1.executeQuery();
             List<Integer> idOrdens = new ArrayList<Integer>();
             while (r1.next()) {
-                final Integer id = (Integer) r.getObject("id");
+                final Integer id = (Integer) r1.getObject("id");
                 idOrdens.add(id);
             }
 
             final PreparedStatement s2 = connection.prepareStatement(
                     "SELECT id FROM baixa WHERE id_bem=?");
             s2.setObject(1, bem.getId(), Types.INTEGER);
-            final ResultSet r2 = s1.executeQuery();
+            final ResultSet r2 = s2.executeQuery();
             Integer idBaixa = null;
             if (r2.next()) {
-                final Integer id = (Integer) r.getObject("id");
-                idBaixa = id;
+                idBaixa = (Integer) r2.getObject("id");
             }
 
             his.setMomentoGeracao(LocalDateTime.now());

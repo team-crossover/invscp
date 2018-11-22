@@ -11,6 +11,9 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import com.github.nelsonwilliam.invscp.view.LoginView;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
 
 public class LoginSwingView extends JDialog implements LoginView {
 
@@ -26,32 +29,59 @@ public class LoginSwingView extends JDialog implements LoginView {
     }
 
     private void initialize() {
-        setBounds(0, 0, 214, 139);
+        setBounds(0, 0, 250, 165);
         setLocationRelativeTo(getOwner());
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        getContentPane().setLayout(null);
+        GridBagLayout gridBagLayout = new GridBagLayout();
+        gridBagLayout.columnWidths = new int[] { 25, 75, 150, 25 };
+        gridBagLayout.rowHeights = new int[] { 25, 20, 20, 25, 20, 25 };
+        gridBagLayout.columnWeights = new double[] { 0.0, 0.0, 1.0, 0.0 };
+        gridBagLayout.rowWeights =
+                new double[] { 0.0, 0.0, 0.0, 1.0, 0.0, 0.0 };
+        getContentPane().setLayout(gridBagLayout);
 
-        btnConfirm = new JButton("Confirmar");
-        btnConfirm.setBounds(53, 74, 104, 25);
-        getContentPane().add(btnConfirm);
+        final JLabel lblLogin = new JLabel("Login");
+        GridBagConstraints gbc_lblLogin = new GridBagConstraints();
+        gbc_lblLogin.anchor = GridBagConstraints.WEST;
+        gbc_lblLogin.insets = new Insets(0, 0, 5, 0);
+        gbc_lblLogin.gridx = 1;
+        gbc_lblLogin.gridy = 1;
+        getContentPane().add(lblLogin, gbc_lblLogin);
 
         loginField = new JTextField();
-        loginField.setBounds(74, 12, 124, 19);
-        getContentPane().add(loginField);
+        GridBagConstraints gbc_loginField = new GridBagConstraints();
+        gbc_loginField.fill = GridBagConstraints.HORIZONTAL;
+        gbc_loginField.insets = new Insets(0, 0, 5, 0);
+        gbc_loginField.gridx = 2;
+        gbc_loginField.gridy = 1;
+        getContentPane().add(loginField, gbc_loginField);
         loginField.setColumns(10);
+
+        final JLabel lblSenha = new JLabel("Senha");
+        GridBagConstraints gbc_lblSenha = new GridBagConstraints();
+        gbc_lblSenha.anchor = GridBagConstraints.WEST;
+        gbc_lblSenha.insets = new Insets(0, 0, 5, 0);
+        gbc_lblSenha.gridx = 1;
+        gbc_lblSenha.gridy = 2;
+        getContentPane().add(lblSenha, gbc_lblSenha);
 
         passwordField = new JPasswordField();
         passwordField.setColumns(10);
-        passwordField.setBounds(74, 43, 124, 19);
-        getContentPane().add(passwordField);
+        GridBagConstraints gbc_passwordField = new GridBagConstraints();
+        gbc_passwordField.fill = GridBagConstraints.HORIZONTAL;
+        gbc_passwordField.anchor = GridBagConstraints.NORTH;
+        gbc_passwordField.insets = new Insets(0, 0, 5, 0);
+        gbc_passwordField.gridx = 2;
+        gbc_passwordField.gridy = 2;
+        getContentPane().add(passwordField, gbc_passwordField);
 
-        final JLabel lblLogin = new JLabel("Login");
-        lblLogin.setBounds(12, 14, 66, 15);
-        getContentPane().add(lblLogin);
-
-        final JLabel lblSenha = new JLabel("Senha");
-        lblSenha.setBounds(12, 45, 66, 15);
-        getContentPane().add(lblSenha);
+        btnConfirm = new JButton("Confirmar");
+        GridBagConstraints gbc_btnConfirm = new GridBagConstraints();
+        gbc_btnConfirm.anchor = GridBagConstraints.NORTH;
+        gbc_btnConfirm.gridwidth = 2;
+        gbc_btnConfirm.gridx = 1;
+        gbc_btnConfirm.gridy = 4;
+        getContentPane().add(btnConfirm, gbc_btnConfirm);
     }
 
     @Override
@@ -72,9 +102,11 @@ public class LoginSwingView extends JDialog implements LoginView {
 
     @Override
     public void showLoginFailed(final String motivo) {
-        final String motivoCompleto = "Não foi possível efetuar login: " + motivo;
+        final String motivoCompleto =
+                "Não foi possível efetuar login: " + motivo;
         final String titulo = "Falha ao efetuar login";
-        JOptionPane.showMessageDialog(this, motivoCompleto, titulo, JOptionPane.WARNING_MESSAGE);
+        JOptionPane.showMessageDialog(this, motivoCompleto, titulo,
+                JOptionPane.WARNING_MESSAGE);
     }
 
     @Override
@@ -87,7 +119,8 @@ public class LoginSwingView extends JDialog implements LoginView {
         final char[] passwordChars = passwordField.getPassword();
         final String string = new String(passwordChars);
 
-        // Para maior segurança, é recomendado preencher a array de caracteres da senha
+        // Para maior segurança, é recomendado preencher a array de caracteres
+        // da senha
         // com zeros após utilizá-la.
         for (int i = 0; i < passwordChars.length; i++) {
             passwordChars[i] = '0';

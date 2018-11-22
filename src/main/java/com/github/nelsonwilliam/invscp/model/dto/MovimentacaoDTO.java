@@ -16,7 +16,6 @@ public class MovimentacaoDTO implements DTO {
 
     private SalaDTO salaDestino = null;
 
-    // TODO Pegar isso no model (toDTO)
     private List<EventoMovimentacaoDTO> eventos = null;
 
     public Integer getId() {

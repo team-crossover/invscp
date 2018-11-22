@@ -5,12 +5,8 @@ import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import com.github.nelsonwilliam.invscp.model.Movimentacao;
 import com.github.nelsonwilliam.invscp.util.Relatorios;
 import com.github.nelsonwilliam.invscp.util.Resources;
 
@@ -25,7 +21,12 @@ public class HistoricoDTO implements DTO {
     private static final NumberFormat CURRENCY_FORMATTER =
             NumberFormat.getCurrencyInstance();
 
+    private static final NumberFormat PERCENT_FORMATTER =
+            NumberFormat.getPercentInstance();
+
     private BemDTO bem = null;
+
+    private BigDecimal[] depreciacoes = null;
 
     private List<MovimentacaoDTO> movimentacoes = null;
 
@@ -73,28 +74,22 @@ public class HistoricoDTO implements DTO {
         String htmlBaixa = baixa == null ? "Não foi efetuada baixa deste bem."
                 : String.format(tmpBaixa,
                         baixa.getData().format(DATE_FORMATTER),
-                        Relatorios.escapeToHtml(baixa.getMotivo()),
+                        Relatorios.escapeToHtml(baixa.getMotivo().getTexto()),
                         Relatorios
                                 .escapeToHtml(baixa.getFuncionario().getNome()),
                         Relatorios.escapeToHtml(baixa.getObservacoes()));
 
         StringBuilder htmlDepreciacoesItens = new StringBuilder();
-        // BigDecimal[] valoresPorAno = bem.getDepreciacaoPorAno();
-        BigDecimal[] valoresPorAno = new BigDecimal[3]; // TODO Tirar isso
-                                                        // quando o metodo
-                                                        // acima existir
-        valoresPorAno[0] = new BigDecimal(1000);
-        valoresPorAno[1] = new BigDecimal(800);
-        valoresPorAno[2] = new BigDecimal(600);
         int anoAtual = momentoGeracao.getYear();
-        for (int i = 0; i < valoresPorAno.length; i++) {
-            Integer ano = anoAtual - valoresPorAno.length + 1 + i;
+        for (int i = 0; i < depreciacoes.length; i++) {
+            Integer ano = anoAtual - depreciacoes.length + 1 + i;
             htmlDepreciacoesItens.append(String.format(tmpDepreciacaoItem, ano,
-                    CURRENCY_FORMATTER.format(valoresPorAno[i])));
+                    CURRENCY_FORMATTER.format(depreciacoes[i])));
         }
 
-        String htmlDepreciacoes =
-                String.format(tmpDepreciacao, htmlDepreciacoesItens.toString());
+        String htmlDepreciacoes = String.format(tmpDepreciacao,
+                htmlDepreciacoesItens.toString(), PERCENT_FORMATTER
+                        .format(bem.getGrupoMaterial().getDepreciacao()));
 
         StringBuilder htmlOrdensItens = new StringBuilder();
         for (OrdemServicoDTO ordem : ordens) {
@@ -104,7 +99,7 @@ public class HistoricoDTO implements DTO {
                             : ordem.getDataConclusao().format(DATE_FORMATTER),
                     CURRENCY_FORMATTER.format(ordem.getValor()),
                     Relatorios.escapeToHtml(ordem.getFuncionario().getNome()),
-                    Relatorios.escapeToHtml(bem.getSituacao().getTexto())));
+                    Relatorios.escapeToHtml(ordem.getSituacao().getTexto())));
         }
         String htmlOrdens = ordens.size() > 0
                 ? String.format(tmpOrdens, htmlOrdensItens.toString())
@@ -219,6 +214,14 @@ public class HistoricoDTO implements DTO {
 
     public final void setMomentoGeracao(LocalDateTime newMomentoGeracao) {
         momentoGeracao = newMomentoGeracao;
+    }
+
+    public final BigDecimal[] getDepreciacoes() {
+        return depreciacoes;
+    }
+
+    public final void setDepreciacoes(BigDecimal[] newDepreciacoes) {
+        depreciacoes = newDepreciacoes;
     }
 
 }

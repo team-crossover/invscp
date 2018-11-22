@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.nelsonwilliam.invscp.model.EventoMovimentacao;
+import com.github.nelsonwilliam.invscp.model.Movimentacao;
 import com.github.nelsonwilliam.invscp.model.enums.TipoMovEnum;
 import com.github.nelsonwilliam.invscp.util.DatabaseConnection;
 
@@ -48,6 +49,39 @@ public class EventoMovimentacaoRepository implements Repository<EventoMovimentac
         return evs;
     }
 
+    public List<EventoMovimentacao> getByMovimentacao(Movimentacao movimentacao) {
+        final Connection connection = DatabaseConnection.getConnection();
+        final List<EventoMovimentacao> evs = new ArrayList<EventoMovimentacao>();
+        try {
+            final PreparedStatement s = connection.prepareStatement(
+                    "SELECT id,tipo,data,justificativa,id_movimentacao,"
+                    + "id_funcionario FROM evento_movimentacao WHERE id_movimentacao=?");
+            s.setObject(1, movimentacao.getId(), Types.INTEGER);
+            
+            final ResultSet r = s.executeQuery();
+            while (r.next()) {
+                final Integer id = (Integer) r.getObject("id");
+                final String tipo = (String) r.getObject("etapa");
+                final LocalDate data = ((Date) r.getObject("data")).toLocalDate();
+                final String justificativa = (String) r.getObject("justificativa");
+                final Integer idMovimentacao = (Integer) r.getObject("id_movimentacao");
+                final Integer idFuncionario = (Integer) r.getObject("id_funcionario");
+
+                final EventoMovimentacao ev = new EventoMovimentacao();
+                ev.setId(id);
+                ev.setTipo(TipoMovEnum.valueOfTexto(tipo));
+                ev.setData(data);
+                ev.setJustificativa(justificativa);
+                ev.setIdMovimentacao(idMovimentacao);
+                ev.setIdFuncionario(idFuncionario);
+                evs.add(ev);
+            }
+        } catch (final Exception e) {
+            e.printStackTrace();
+        }
+        return evs;
+    }
+    
     @Override
     public EventoMovimentacao getById(final Integer id) {
         final Connection connection = DatabaseConnection.getConnection();

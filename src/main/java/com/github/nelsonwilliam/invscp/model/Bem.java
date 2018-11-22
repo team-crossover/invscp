@@ -2,8 +2,6 @@ package com.github.nelsonwilliam.invscp.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 
 import com.github.nelsonwilliam.invscp.exception.CRUDException;
 import com.github.nelsonwilliam.invscp.exception.IllegalDeleteException;
@@ -350,57 +348,27 @@ public class Bem implements Model<BemDTO> {
      * 
      * @return
      */
-    public BigDecimal[] getDepreciacaoPorAno(final BemDTO bem) {
-        BigDecimal valCompra = bem.getValorCompra();
-        BigDecimal dep = bem.getGrupoMaterial().getDepreciacao();
+    public BigDecimal[] getDepreciacoesPorAno() {
+        BigDecimal valCompra = this.getValorCompra();
         LocalDate hoje = LocalDate.now();
-        Integer qntAnos = hoje.getYear() - bem.getDataAquisicao().getYear();
+        Integer qntAnos = hoje.getYear() - getDataAquisicao().getYear();
 
         if (qntAnos == 0) {
             BigDecimal[] depreciacoes = new BigDecimal[1];
             depreciacoes[0] = valCompra;
             return depreciacoes;
-
         } else {
+            GrupoMaterialRepository gmRepo = new GrupoMaterialRepository();
+            GrupoMaterial gm = gmRepo.getById(getIdGrupoMaterial());
+            BigDecimal depr = gm.getDepreciacao();
+            BigDecimal deprPorAno = valCompra.multiply(depr);
             BigDecimal[] depreciacoes = new BigDecimal[qntAnos];
-            BigDecimal time = new BigDecimal("1.0");
-
-            for (BigDecimal val : depreciacoes) {
-                // Se a depreciação chegar a 0, o valor do produto vira 0.01
-                if (valCompra.subtract(valCompra.multiply(dep.multiply(time)))
-                        .compareTo(new BigDecimal("0.0")) == 0) {
-                    val = new BigDecimal("0.01");
-                } else {
-                    val = valCompra
-                            .subtract(valCompra.multiply(dep.multiply(time)));
-                }
-                time.add(new BigDecimal("1.0"));
+            for (int i = 0; i < qntAnos; i++) {
+                BigDecimal deprEsseAno = deprPorAno.multiply(new BigDecimal(i));
+                depreciacoes[i] = valCompra.subtract(deprEsseAno);
             }
             return depreciacoes;
         }
-    }
-
-    public final Double exibirDepreciacao(final BemDTO bem) {
-        Double novoValor;
-        final Double valCompra = bem.getValorCompra().doubleValue();
-        final Double dep = bem.getGrupoMaterial().getDepreciacao()
-                .doubleValue();
-        final Date date = new Date();
-        final LocalDate localDate = date.toInstant()
-                .atZone(ZoneId.systemDefault()).toLocalDate();
-        final Integer time = localDate.getYear()
-                - bem.getDataAquisicao().getYear();
-        if (time > 0) {
-            if (valCompra - (valCompra * (dep * time)) == 0) {
-                novoValor = 0.01;
-            } else {
-                novoValor = valCompra - (valCompra * (dep * time));
-            }
-            novoValor = valCompra - (valCompra * (dep * time));
-        } else {
-            novoValor = valCompra;
-        }
-        return novoValor;
     }
 
     @Override

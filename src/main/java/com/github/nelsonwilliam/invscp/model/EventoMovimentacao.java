@@ -23,6 +23,41 @@ public class EventoMovimentacao implements Model<EventoMovimentacaoDTO> {
 
     private Integer idFuncionario = null;
 
+    @Override
+	public void setValuesFromDTO(final EventoMovimentacaoDTO dto) {
+		setId(dto.getId());
+		setTipo(dto.getTipo());
+		setData(dto.getData());
+		setJustificativa(dto.getJustificativa());
+		if (dto.getMovimentacao() != null) {
+		    setIdMovimentacao(dto.getMovimentacao().getId());
+		}
+		if (dto.getFuncionario() != null) {
+		    setIdFuncionario(dto.getFuncionario().getId());
+		}
+	}
+
+	@Override
+	public EventoMovimentacaoDTO toDTO() {
+		final EventoMovimentacaoDTO dto = new EventoMovimentacaoDTO();
+		dto.setId(id);
+		dto.setTipo(tipo);
+		dto.setData(data);
+		dto.setJustificativa(justificativa);
+		if (idMovimentacao != null) {
+		    final MovimentacaoRepository repo = new MovimentacaoRepository();
+		    final Movimentacao mov = repo.getById(idMovimentacao);
+		    dto.setMovimentacao(mov == null ? null : mov.toDTO());
+		}
+		if (idFuncionario != null) {
+            final FuncionarioRepository repo = new FuncionarioRepository();
+            final Funcionario func = repo.getById(idFuncionario);
+            func.setIdDepartamento(null);
+            dto.setFuncionario(func == null ? null : func.toDTO());
+        }
+		return dto;
+	}
+
 	@Override
 	public Integer getId() {
 	    return id;
@@ -80,41 +115,5 @@ public class EventoMovimentacao implements Model<EventoMovimentacaoDTO> {
     public void setIdFuncionario(final Integer idFuncionario) {
         this.idFuncionario = idFuncionario;
     }
-
-    @Override
-	public void setValuesFromDTO(final EventoMovimentacaoDTO dto) {
-		setId(dto.getId());
-		setTipo(dto.getTipo());
-		setData(dto.getData());
-		setJustificativa(dto.getJustificativa());
-		if (dto.getMovimentacao() != null) {
-		    setIdMovimentacao(dto.getMovimentacao().getId());
-		}
-		if (dto.getFuncionario() != null) {
-		    setIdFuncionario(dto.getFuncionario().getId());
-		}
-
-	}
-
-	@Override
-	public EventoMovimentacaoDTO toDTO() {
-		final EventoMovimentacaoDTO dto = new EventoMovimentacaoDTO();
-		dto.setId(id);
-		dto.setTipo(tipo);
-		dto.setData(data);
-		dto.setJustificativa(justificativa);
-		if (idMovimentacao != null) {
-		    final MovimentacaoRepository repo = new MovimentacaoRepository();
-		    final Movimentacao mov = repo.getById(idMovimentacao);
-		    dto.setMovimentacao(mov == null ? null : mov.toDTO());
-		}
-		if (idFuncionario != null) {
-            final FuncionarioRepository repo = new FuncionarioRepository();
-            final Funcionario func = repo.getById(idFuncionario);
-            func.setIdDepartamento(null);
-            dto.setFuncionario(func == null ? null : func.toDTO());
-        }
-		return dto;
-	}
-
+    
 }
