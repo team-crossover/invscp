@@ -59,7 +59,7 @@ public class MovimentacaoSwingView extends JDialog implements MovimentacaoView {
             final MovimentacaoDTO movimentacao, final boolean isAdicionar) {
 
         super(owner,
-                isAdicionar ? "Adicionar movimentação" : "Alterar movimentação",
+                isAdicionar ? "Adicionar movimentação" : "Ver movimentação",
                 ModalityType.APPLICATION_MODAL);
         this.isAdicionar = isAdicionar;
         initialize();
@@ -150,48 +150,6 @@ public class MovimentacaoSwingView extends JDialog implements MovimentacaoView {
         gbc_SalaDestino.gridx = 2;
         gbc_SalaDestino.gridy = 3;
         getContentPane().add(SalaDestino, gbc_SalaDestino);
-
-        lblEventos = new JLabel("Eventos:");
-        GridBagConstraints gbc_lblEventos = new GridBagConstraints();
-        gbc_lblEventos.anchor = GridBagConstraints.EAST;
-        gbc_lblEventos.insets = new Insets(0, 0, 5, 5);
-        gbc_lblEventos.gridx = 1;
-        gbc_lblEventos.gridy = 4;
-        getContentPane().add(lblEventos, gbc_lblEventos);
-
-        // final ListCellRenderer<? super EtapaMovEnum>
-        // EtapaMovimentacaoListRenderer = new DefaultListCellRenderer() {
-        //
-        // /**
-        // *
-        // */
-        // private static final long serialVersionUID = 4293020462591404304L;
-        //
-        // @Override
-        // public Component getListCellRendererComponent(final JList<?> list,
-        // final Object value, final int index,
-        // final boolean isSelected, final boolean cellHasFocus) {
-        // if (value == null) {
-        // return super.getListCellRendererComponent(list, "Nenhum",
-        // index, isSelected, cellHasFocus);
-        // } else {
-        // final String nome = ((EtapaMovEnum) value).getTexto();
-        // return super.getListCellRendererComponent(list, nome, index,
-        // isSelected, cellHasFocus);
-        // }
-        // }
-        // };
-        //
-        // comboBoxEventos = new JComboBox<EtapaMovEnum>();
-        // comboBoxEventos.setModel(
-        // new DefaultComboBoxModel<EtapaMovEnum>(EtapaMovEnum.values()));
-        // comboBoxEventos.setRenderer(EtapaMovimentacaoListRenderer);
-        // final GridBagConstraints gbc_comboTipo = new GridBagConstraints();
-        // gbc_comboTipo.insets = new Insets(0, 0, 5, 5);
-        // gbc_comboTipo.fill = GridBagConstraints.HORIZONTAL;
-        // gbc_comboTipo.gridx = 2;
-        // gbc_comboTipo.gridy = 4;
-        // getContentPane().add(comboBoxEventos, gbc_comboTipo);
 
         final GridBagConstraints gbc_btnCancelar = new GridBagConstraints();
         gbc_btnCancelar.anchor = GridBagConstraints.WEST;

@@ -1,6 +1,5 @@
 package com.github.nelsonwilliam.invscp.view.swing;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -11,7 +10,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
@@ -26,7 +24,6 @@ import javax.swing.ListCellRenderer;
 
 import com.github.nelsonwilliam.invscp.model.dto.EventoMovimentacaoDTO;
 import com.github.nelsonwilliam.invscp.model.dto.FuncionarioDTO;
-import com.github.nelsonwilliam.invscp.model.dto.MovimentacaoDTO;
 import com.github.nelsonwilliam.invscp.model.enums.TipoMovEnum;
 import com.github.nelsonwilliam.invscp.view.EventoMovimentacaoView;
 
@@ -47,12 +44,11 @@ public class EventoMovimentacaoSwingView extends JDialog
     private JLabel lblTipo;
     private JLabel lblData;
     private JLabel lblJustificativa;
-    private JTextPane fieldJustificativa;
     private JLabel fieldData;
-    private JLabel lblMovimentao;
     private JLabel lblFuncionrio;
     private JLabel fieldMovimentacao;
     private JLabel fieldFuncionario;
+    private JTextPane fieldJustificativa;
 
     /**
      * @param eventoMovimentacao Eventos de movimentações cujos valores serão
@@ -93,14 +89,6 @@ public class EventoMovimentacaoSwingView extends JDialog
         btnCancelar.addActionListener((final ActionEvent e) -> {
             close();
         });
-
-        lblMovimentao = new JLabel("Movimentação:");
-        GridBagConstraints gbc_lblMovimentao = new GridBagConstraints();
-        gbc_lblMovimentao.anchor = GridBagConstraints.EAST;
-        gbc_lblMovimentao.insets = new Insets(0, 0, 5, 5);
-        gbc_lblMovimentao.gridx = 1;
-        gbc_lblMovimentao.gridy = 1;
-        getContentPane().add(lblMovimentao, gbc_lblMovimentao);
 
         fieldMovimentacao = new JLabel("");
         GridBagConstraints gbc_label = new GridBagConstraints();
@@ -189,14 +177,12 @@ public class EventoMovimentacaoSwingView extends JDialog
         getContentPane().add(lblJustificativa, gbc_lblJustificativa);
 
         fieldJustificativa = new JTextPane();
-        final GridBagConstraints gbc_fieldJustificativa = new GridBagConstraints();
-        gbc_fieldJustificativa.insets = new Insets(0, 0, 5, 5);
-        gbc_fieldJustificativa.fill = GridBagConstraints.BOTH;
-        gbc_fieldJustificativa.gridx = 2;
-        gbc_fieldJustificativa.gridy = 5;
-        fieldJustificativa
-                .setBorder(BorderFactory.createLineBorder(Color.gray, 1));
-        getContentPane().add(fieldJustificativa, gbc_fieldJustificativa);
+        GridBagConstraints gbc_textPane = new GridBagConstraints();
+        gbc_textPane.insets = new Insets(0, 0, 5, 5);
+        gbc_textPane.fill = GridBagConstraints.BOTH;
+        gbc_textPane.gridx = 2;
+        gbc_textPane.gridy = 5;
+        getContentPane().add(fieldJustificativa, gbc_textPane);
 
         final GridBagConstraints gbc_btnCancelar = new GridBagConstraints();
         gbc_btnCancelar.anchor = GridBagConstraints.WEST;
@@ -230,18 +216,14 @@ public class EventoMovimentacaoSwingView extends JDialog
         // Apenas pode alterar baixa se ela estiver sendo adicionada agora
         btnConfirmar.setEnabled(isAdicionar);
         fieldData.setEnabled(isAdicionar);
-        fieldJustificativa.setEnabled(isAdicionar);
         comboTipo.setEnabled(isAdicionar);
 
         idEventoMovimentacao = eventoMovimentacao.getId();
-        idFuncionario = eventoMovimentacao.getFuncionario().getId();
-        idMovimentacao = eventoMovimentacao.getMovimentacao().getId();
 
         fieldData.setText(eventoMovimentacao.getData()
                 .format(DateTimeFormatter.ISO_DATE));
 
         comboTipo.setSelectedItem(eventoMovimentacao.getTipo());
-        fieldJustificativa.setText(eventoMovimentacao.getJustificativa());
 
         revalidate();
         repaint();
@@ -290,10 +272,6 @@ public class EventoMovimentacaoSwingView extends JDialog
         final EventoMovimentacaoDTO eventoMovimentacao = new EventoMovimentacaoDTO();
         eventoMovimentacao.setId(idEventoMovimentacao);
         eventoMovimentacao.setJustificativa(fieldJustificativa.getText());
-
-        final MovimentacaoDTO placeholderBem = new MovimentacaoDTO();
-        placeholderBem.setId(idMovimentacao);
-        eventoMovimentacao.setMovimentacao(placeholderBem);
 
         final FuncionarioDTO placeholderFunc = new FuncionarioDTO();
         placeholderFunc.setId(idFuncionario);
