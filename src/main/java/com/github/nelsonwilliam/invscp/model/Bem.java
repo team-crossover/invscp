@@ -186,7 +186,7 @@ public class Bem implements Model<BemDTO> {
             final Bem bemExistente = bemRepo.getById(novoBem.getId());
             if (bemExistente != null) {
                 throw new IllegalInsertException(
-                        "Não é possível inserir a sala pois o ID já existe.");
+                        "Não é possível inserir o bem pois o ID já existe.");
             }
         }
 
