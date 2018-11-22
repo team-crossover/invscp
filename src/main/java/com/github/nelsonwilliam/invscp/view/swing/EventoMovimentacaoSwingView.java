@@ -25,6 +25,8 @@ import javax.swing.JTextPane;
 import javax.swing.ListCellRenderer;
 
 import com.github.nelsonwilliam.invscp.model.dto.EventoMovimentacaoDTO;
+import com.github.nelsonwilliam.invscp.model.dto.FuncionarioDTO;
+import com.github.nelsonwilliam.invscp.model.dto.MovimentacaoDTO;
 import com.github.nelsonwilliam.invscp.model.enums.TipoMovEnum;
 import com.github.nelsonwilliam.invscp.view.EventoMovimentacaoView;
 
@@ -36,6 +38,8 @@ public class EventoMovimentacaoSwingView extends JDialog
     private final boolean isAdicionar;
 
     private Integer idEventoMovimentacao;
+    private Integer idFuncionario;
+    private Integer idMovimentacao;
 
     private JButton btnConfirmar;
     private JButton btnCancelar;
@@ -45,6 +49,10 @@ public class EventoMovimentacaoSwingView extends JDialog
     private JLabel lblJustificativa;
     private JTextPane fieldJustificativa;
     private JLabel fieldData;
+    private JLabel lblMovimentao;
+    private JLabel lblFuncionrio;
+    private JLabel fieldMovimentacao;
+    private JLabel fieldFuncionario;
 
     public EventoMovimentacaoSwingView(final JFrame owner,
             final EventoMovimentacaoDTO eventoMovimentacao,
@@ -65,10 +73,10 @@ public class EventoMovimentacaoSwingView extends JDialog
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         final GridBagLayout gridBagLayout = new GridBagLayout();
         gridBagLayout.columnWidths = new int[] { 25, 102, 0, 25 };
-        gridBagLayout.rowHeights = new int[] { 25, 0, 0, 99, 25, 0, 25 };
+        gridBagLayout.rowHeights = new int[] { 25, 0, 0, 0, 0, 99, 25, 0, 25 };
         gridBagLayout.columnWeights = new double[] { 0.0, 0.0, 1.0, 0.0 };
-        gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0, 1.0, 0.0, 0.0,
-                0.0 };
+        gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 1.0,
+                0.0, 0.0, 0.0 };
         getContentPane().setLayout(gridBagLayout);
 
         btnConfirmar = new JButton("Confirmar");
@@ -78,12 +86,44 @@ public class EventoMovimentacaoSwingView extends JDialog
             close();
         });
 
+        lblMovimentao = new JLabel("Movimentação:");
+        GridBagConstraints gbc_lblMovimentao = new GridBagConstraints();
+        gbc_lblMovimentao.anchor = GridBagConstraints.EAST;
+        gbc_lblMovimentao.insets = new Insets(0, 0, 5, 5);
+        gbc_lblMovimentao.gridx = 1;
+        gbc_lblMovimentao.gridy = 1;
+        getContentPane().add(lblMovimentao, gbc_lblMovimentao);
+
+        fieldMovimentacao = new JLabel("");
+        GridBagConstraints gbc_label = new GridBagConstraints();
+        gbc_label.anchor = GridBagConstraints.WEST;
+        gbc_label.insets = new Insets(0, 0, 5, 5);
+        gbc_label.gridx = 2;
+        gbc_label.gridy = 1;
+        getContentPane().add(fieldMovimentacao, gbc_label);
+
+        lblFuncionrio = new JLabel("Funcionário:");
+        GridBagConstraints gbc_lblFuncionrio = new GridBagConstraints();
+        gbc_lblFuncionrio.anchor = GridBagConstraints.EAST;
+        gbc_lblFuncionrio.insets = new Insets(0, 0, 5, 5);
+        gbc_lblFuncionrio.gridx = 1;
+        gbc_lblFuncionrio.gridy = 2;
+        getContentPane().add(lblFuncionrio, gbc_lblFuncionrio);
+
+        fieldFuncionario = new JLabel("");
+        GridBagConstraints gbc_label_1 = new GridBagConstraints();
+        gbc_label_1.anchor = GridBagConstraints.WEST;
+        gbc_label_1.insets = new Insets(0, 0, 5, 5);
+        gbc_label_1.gridx = 2;
+        gbc_label_1.gridy = 2;
+        getContentPane().add(fieldFuncionario, gbc_label_1);
+
         lblTipo = new JLabel("Tipo:");
         final GridBagConstraints gbc_lblTipo = new GridBagConstraints();
         gbc_lblTipo.anchor = GridBagConstraints.EAST;
         gbc_lblTipo.insets = new Insets(0, 0, 5, 5);
         gbc_lblTipo.gridx = 1;
-        gbc_lblTipo.gridy = 1;
+        gbc_lblTipo.gridy = 3;
         getContentPane().add(lblTipo, gbc_lblTipo);
 
         final ListCellRenderer<? super TipoMovEnum> TipoMovimentacaoListRenderer = new DefaultListCellRenderer() {
@@ -113,7 +153,7 @@ public class EventoMovimentacaoSwingView extends JDialog
         gbc_comboTipo.insets = new Insets(0, 0, 5, 5);
         gbc_comboTipo.fill = GridBagConstraints.HORIZONTAL;
         gbc_comboTipo.gridx = 2;
-        gbc_comboTipo.gridy = 1;
+        gbc_comboTipo.gridy = 3;
         getContentPane().add(comboTipo, gbc_comboTipo);
 
         lblData = new JLabel("Data:");
@@ -121,7 +161,7 @@ public class EventoMovimentacaoSwingView extends JDialog
         gbc_lblData.anchor = GridBagConstraints.EAST;
         gbc_lblData.insets = new Insets(0, 0, 5, 5);
         gbc_lblData.gridx = 1;
-        gbc_lblData.gridy = 2;
+        gbc_lblData.gridy = 4;
         getContentPane().add(lblData, gbc_lblData);
 
         fieldData = new JLabel("");
@@ -129,7 +169,7 @@ public class EventoMovimentacaoSwingView extends JDialog
         gbc_fieldData.anchor = GridBagConstraints.WEST;
         gbc_fieldData.insets = new Insets(0, 0, 5, 5);
         gbc_fieldData.gridx = 2;
-        gbc_fieldData.gridy = 2;
+        gbc_fieldData.gridy = 4;
         getContentPane().add(fieldData, gbc_fieldData);
 
         lblJustificativa = new JLabel("Justificativa:");
@@ -137,7 +177,7 @@ public class EventoMovimentacaoSwingView extends JDialog
         gbc_lblJustificativa.anchor = GridBagConstraints.EAST;
         gbc_lblJustificativa.insets = new Insets(0, 0, 5, 5);
         gbc_lblJustificativa.gridx = 1;
-        gbc_lblJustificativa.gridy = 3;
+        gbc_lblJustificativa.gridy = 5;
         getContentPane().add(lblJustificativa, gbc_lblJustificativa);
 
         fieldJustificativa = new JTextPane();
@@ -145,7 +185,7 @@ public class EventoMovimentacaoSwingView extends JDialog
         gbc_fieldJustificativa.insets = new Insets(0, 0, 5, 5);
         gbc_fieldJustificativa.fill = GridBagConstraints.BOTH;
         gbc_fieldJustificativa.gridx = 2;
-        gbc_fieldJustificativa.gridy = 3;
+        gbc_fieldJustificativa.gridy = 5;
         fieldJustificativa
                 .setBorder(BorderFactory.createLineBorder(Color.gray, 1));
         getContentPane().add(fieldJustificativa, gbc_fieldJustificativa);
@@ -155,7 +195,7 @@ public class EventoMovimentacaoSwingView extends JDialog
         gbc_btnCancelar.insets = new Insets(0, 0, 5, 5);
         gbc_btnCancelar.fill = GridBagConstraints.VERTICAL;
         gbc_btnCancelar.gridx = 1;
-        gbc_btnCancelar.gridy = 5;
+        gbc_btnCancelar.gridy = 7;
         getContentPane().add(btnCancelar, gbc_btnCancelar);
 
         final GridBagConstraints gbc_btnConfirmar = new GridBagConstraints();
@@ -163,7 +203,7 @@ public class EventoMovimentacaoSwingView extends JDialog
         gbc_btnConfirmar.anchor = GridBagConstraints.EAST;
         gbc_btnConfirmar.fill = GridBagConstraints.VERTICAL;
         gbc_btnConfirmar.gridx = 2;
-        gbc_btnConfirmar.gridy = 5;
+        gbc_btnConfirmar.gridy = 7;
         getContentPane().add(btnConfirmar, gbc_btnConfirmar);
     }
 
@@ -186,6 +226,8 @@ public class EventoMovimentacaoSwingView extends JDialog
         comboTipo.setEnabled(isAdicionar);
 
         idEventoMovimentacao = eventoMovimentacao.getId();
+        idFuncionario = eventoMovimentacao.getFuncionario().getId();
+        idMovimentacao = eventoMovimentacao.getMovimentacao().getId();
 
         fieldData.setText(eventoMovimentacao.getData()
                 .format(DateTimeFormatter.ISO_DATE));
@@ -241,6 +283,14 @@ public class EventoMovimentacaoSwingView extends JDialog
         eventoMovimentacao.setId(idEventoMovimentacao);
         eventoMovimentacao.setJustificativa(fieldJustificativa.getText());
 
+        final MovimentacaoDTO placeholderBem = new MovimentacaoDTO();
+        placeholderBem.setId(idMovimentacao);
+        eventoMovimentacao.setMovimentacao(placeholderBem);
+
+        final FuncionarioDTO placeholderFunc = new FuncionarioDTO();
+        placeholderFunc.setId(idFuncionario);
+        eventoMovimentacao.setFuncionario(placeholderFunc);
+
         try {
             eventoMovimentacao.setData(LocalDate.parse(fieldData.getText(),
                     DateTimeFormatter.ISO_DATE));
@@ -248,9 +298,6 @@ public class EventoMovimentacaoSwingView extends JDialog
             showError("O formato da data da baixa é inválido.");
             return null;
         }
-
-        // eventoMovimentacao.setFuncionario(funcionario);
-        // eventoMovimentacao.setMovimentacao(movimentacao);
 
         return eventoMovimentacao;
     }
