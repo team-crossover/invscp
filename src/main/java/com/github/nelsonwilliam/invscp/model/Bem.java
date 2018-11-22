@@ -350,28 +350,46 @@ public class Bem implements Model<BemDTO> {
      * 
      * @return
      */
-    public BigDecimal[] getDepreciacaoPorAno() {
-        // TODO Faça isso!
-        
-        // EXEMPLOS DE RESULTADOS:
-        // Se o bem foi comprado em 2015 por 1000 reais e depreciação é 0.2 e hoje é 2018
-        // O resultado deveria ser (1000, 800, 600, 400)
-        //                          2015 2016 2017 2018
-        // Se o bem foi comprado em 2018 por 1000 hoje é 2018
-        // O resultado deveria ser (1000)
-        return null;
+    public BigDecimal[] getDepreciacaoPorAno(final BemDTO bem) {
+        BigDecimal valCompra = bem.getValorCompra();
+        BigDecimal dep = bem.getGrupoMaterial().getDepreciacao();
+        LocalDate hoje = LocalDate.now();
+        Integer qntAnos = hoje.getYear() - bem.getDataAquisicao().getYear();
+
+        if (qntAnos == 0) {
+            BigDecimal[] depreciacoes = new BigDecimal[1];
+            depreciacoes[0] = valCompra;
+            return depreciacoes;
+
+        } else {
+            BigDecimal[] depreciacoes = new BigDecimal[qntAnos];
+            BigDecimal time = new BigDecimal("1.0");
+
+            for (BigDecimal val : depreciacoes) {
+                // Se a depreciação chegar a 0, o valor do produto vira 0.01
+                if (valCompra.subtract(valCompra.multiply(dep.multiply(time)))
+                        .compareTo(new BigDecimal("0.0")) == 0) {
+                    val = new BigDecimal("0.01");
+                } else {
+                    val = valCompra
+                            .subtract(valCompra.multiply(dep.multiply(time)));
+                }
+                time.add(new BigDecimal("1.0"));
+            }
+            return depreciacoes;
+        }
     }
 
     public final Double exibirDepreciacao(final BemDTO bem) {
         Double novoValor;
         final Double valCompra = bem.getValorCompra().doubleValue();
-        final Double dep =
-                bem.getGrupoMaterial().getDepreciacao().doubleValue();
+        final Double dep = bem.getGrupoMaterial().getDepreciacao()
+                .doubleValue();
         final Date date = new Date();
-        final LocalDate localDate =
-                date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        final Integer time =
-                localDate.getYear() - bem.getDataAquisicao().getYear();
+        final LocalDate localDate = date.toInstant()
+                .atZone(ZoneId.systemDefault()).toLocalDate();
+        final Integer time = localDate.getYear()
+                - bem.getDataAquisicao().getYear();
         if (time > 0) {
             if (valCompra - (valCompra * (dep * time)) == 0) {
                 novoValor = 0.01;
