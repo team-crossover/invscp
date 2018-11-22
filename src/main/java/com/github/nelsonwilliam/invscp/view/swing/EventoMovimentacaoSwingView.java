@@ -54,6 +54,14 @@ public class EventoMovimentacaoSwingView extends JDialog
     private JLabel fieldMovimentacao;
     private JLabel fieldFuncionario;
 
+    /**
+     * @param eventoMovimentacao Eventos de movimentações cujos valores serão
+     *        exibidos inicialmente.
+     * @param isAdicionar Indica se a janela que será exibida será para adição
+     *        de uma nova ordem de serviço (true) ou para atualização de um
+     *        evento de movimentação existente (false).
+     */
+
     public EventoMovimentacaoSwingView(final JFrame owner,
             final EventoMovimentacaoDTO eventoMovimentacao,
             final boolean isAdicionar) {
