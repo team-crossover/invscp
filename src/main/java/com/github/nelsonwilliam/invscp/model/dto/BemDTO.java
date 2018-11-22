@@ -27,6 +27,8 @@ public class BemDTO implements DTO {
 
     private BigDecimal valorCompra = null;
 
+    private BigDecimal[] depreciacoes = null;
+
     private BemSituacaoEnum situacao = null;
 
     private GrupoMaterialDTO grupoMaterial = null;
@@ -113,6 +115,14 @@ public class BemDTO implements DTO {
 
     public final void setValorCompra(final BigDecimal valorCompra) {
         this.valorCompra = valorCompra;
+    }
+
+    public final BigDecimal[] getDepreciacoes() {
+        return depreciacoes;
+    }
+
+    public final void setDepreciacoes(BigDecimal[] depreciacoes) {
+        this.depreciacoes = depreciacoes;
     }
 
     public final BemSituacaoEnum getSituacao() {

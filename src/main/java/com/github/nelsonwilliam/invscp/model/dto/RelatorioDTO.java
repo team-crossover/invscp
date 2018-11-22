@@ -1,6 +1,7 @@
 package com.github.nelsonwilliam.invscp.model.dto;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -14,14 +15,14 @@ import com.github.nelsonwilliam.invscp.util.Resources;
 
 public class RelatorioDTO implements DTO {
 
-    private static final DateTimeFormatter DATE_FORMATTER =
-            DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter
+            .ofPattern("dd/MM/yyyy");
 
-    private static final DateTimeFormatter DATE_TIME_FORMATTER =
-            DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter
+            .ofPattern("dd/MM/yyyy HH:mm:ss");
 
-    private static final NumberFormat CURRENCY_FORMATTER =
-            NumberFormat.getCurrencyInstance();
+    private static final NumberFormat CURRENCY_FORMATTER = NumberFormat
+            .getCurrencyInstance();
 
     private DepartamentoDTO departamento = null;
 
@@ -30,13 +31,12 @@ public class RelatorioDTO implements DTO {
     private LocalDateTime momentoGeracao = null;
 
     public String toHtml() throws IOException {
-        final String tmpRelatorio =
-                Resources.readResource("html/templates/relatorio.html");
-        final String tmpSala =
-                Resources.readResource("html/templates/relatorio-sala.html");
+        final String tmpRelatorio = Resources
+                .readResource("html/templates/relatorio.html");
+        final String tmpSala = Resources
+                .readResource("html/templates/relatorio-sala.html");
         final String tmpItem = Resources
                 .readResource("html/templates/relatorio-sala-item.html");
-
 
         // Agrupa os bens por sala
         final Map<Integer, SalaDTO> salasPorId = new HashMap<>();
@@ -71,6 +71,8 @@ public class RelatorioDTO implements DTO {
 
             final StringBuilder htmlBens = new StringBuilder();
             for (final BemDTO bem : bens) {
+                final BigDecimal valDepreciado = bem
+                        .getDepreciacoes()[bem.getDepreciacoes().length - 1];
                 htmlBens.append(String.format(tmpItem,
                         Relatorios
                                 .escapeToHtml(bem.getGrupoMaterial().getNome()),
@@ -83,7 +85,7 @@ public class RelatorioDTO implements DTO {
                         bem.getGarantia().format(DATE_FORMATTER),
                         Relatorios.escapeToHtml(bem.getNumeroNotaFiscal()),
                         CURRENCY_FORMATTER.format(bem.getValorCompra()),
-                        CURRENCY_FORMATTER.format(bem.getValorCompra()),
+                        CURRENCY_FORMATTER.format(valDepreciado),
                         bem.getSituacao().getTexto()));
             }
 

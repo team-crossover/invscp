@@ -56,15 +56,12 @@ public class Historico {
             final Bem bem = repo.getById(idBem);
             if (bem != null) {
                 dto.setBem(bem.toDTO());
-                dto.setDepreciacoes(bem.getDepreciacoesPorAno());
             }
         }
         if (idMovimentacoes != null) {
-            final List<MovimentacaoDTO> movimentacoes =
-                    new ArrayList<MovimentacaoDTO>();
+            final List<MovimentacaoDTO> movimentacoes = new ArrayList<MovimentacaoDTO>();
             for (final Integer idMov : idMovimentacoes) {
-                final MovimentacaoRepository repo =
-                        new MovimentacaoRepository();
+                final MovimentacaoRepository repo = new MovimentacaoRepository();
                 final Movimentacao mov = repo.getById(idMov);
                 if (mov != null) {
                     movimentacoes.add(mov.toDTO());
@@ -73,11 +70,9 @@ public class Historico {
             dto.setMovimentacoes(movimentacoes);
         }
         if (idOrdens != null) {
-            final List<OrdemServicoDTO> ordens =
-                    new ArrayList<OrdemServicoDTO>();
+            final List<OrdemServicoDTO> ordens = new ArrayList<OrdemServicoDTO>();
             for (final Integer idOrdem : idOrdens) {
-                final OrdemServicoRepository repo =
-                        new OrdemServicoRepository();
+                final OrdemServicoRepository repo = new OrdemServicoRepository();
                 final OrdemServico ord = repo.getById(idOrdem);
                 if (ord != null) {
                     ordens.add(ord.toDTO());

@@ -12,21 +12,19 @@ import com.github.nelsonwilliam.invscp.util.Resources;
 
 public class HistoricoDTO implements DTO {
 
-    private static final DateTimeFormatter DATE_FORMATTER =
-            DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter
+            .ofPattern("dd/MM/yyyy");
 
-    private static final DateTimeFormatter DATE_TIME_FORMATTER =
-            DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter
+            .ofPattern("dd/MM/yyyy HH:mm:ss");
 
-    private static final NumberFormat CURRENCY_FORMATTER =
-            NumberFormat.getCurrencyInstance();
+    private static final NumberFormat CURRENCY_FORMATTER = NumberFormat
+            .getCurrencyInstance();
 
-    private static final NumberFormat PERCENT_FORMATTER =
-            NumberFormat.getPercentInstance();
+    private static final NumberFormat PERCENT_FORMATTER = NumberFormat
+            .getPercentInstance();
 
     private BemDTO bem = null;
-
-    private BigDecimal[] depreciacoes = null;
 
     private List<MovimentacaoDTO> movimentacoes = null;
 
@@ -37,10 +35,10 @@ public class HistoricoDTO implements DTO {
     private LocalDateTime momentoGeracao = null;
 
     public String toHtml() throws IOException {
-        final String tmpHistorico =
-                Resources.readResource("html/templates/historico.html");
-        final String tmpBaixa =
-                Resources.readResource("html/templates/historico-baixa.html");
+        final String tmpHistorico = Resources
+                .readResource("html/templates/historico.html");
+        final String tmpBaixa = Resources
+                .readResource("html/templates/historico-baixa.html");
         final String tmpDepreciacao = Resources
                 .readResource("html/templates/historico-depreciacao.html");
         final String tmpDepreciacaoItem = Resources
@@ -51,10 +49,10 @@ public class HistoricoDTO implements DTO {
                 .readResource("html/templates/historico-movimentacao.html");
         final String tmpMovimentacaoEvento = Resources.readResource(
                 "html/templates/historico-movimentacao-evento.html");
-        final String tmpOrdens =
-                Resources.readResource("html/templates/historico-os.html");
-        final String tmpOrdensItens =
-                Resources.readResource("html/templates/historico-os-item.html");
+        final String tmpOrdens = Resources
+                .readResource("html/templates/historico-os.html");
+        final String tmpOrdensItens = Resources
+                .readResource("html/templates/historico-os-item.html");
 
         String htmlInfo = String.format(tmpInformacoes,
                 Relatorios.escapeToHtml(bem.getDescricao()),
@@ -81,6 +79,7 @@ public class HistoricoDTO implements DTO {
 
         StringBuilder htmlDepreciacoesItens = new StringBuilder();
         int anoAtual = momentoGeracao.getYear();
+        BigDecimal[] depreciacoes = bem.getDepreciacoes();
         for (int i = 0; i < depreciacoes.length; i++) {
             Integer ano = anoAtual - depreciacoes.length + 1 + i;
             htmlDepreciacoesItens.append(String.format(tmpDepreciacaoItem, ano,
@@ -125,9 +124,9 @@ public class HistoricoDTO implements DTO {
                             + ")"),
                     mov.getEtapa().getTexto(), htmlEventos.toString()));
         }
-        String htmlMovimentacoes =
-                movimentacoes.size() > 0 ? htmlMovimentacoesItens.toString()
-                        : "Não foram efetuadas movimentações deste item.";
+        String htmlMovimentacoes = movimentacoes.size() > 0
+                ? htmlMovimentacoesItens.toString()
+                : "Não foram efetuadas movimentações deste item.";
 
         return String.format(tmpHistorico,
                 Relatorios.escapeToHtml(bem.getDescricao()),
@@ -214,14 +213,6 @@ public class HistoricoDTO implements DTO {
 
     public final void setMomentoGeracao(LocalDateTime newMomentoGeracao) {
         momentoGeracao = newMomentoGeracao;
-    }
-
-    public final BigDecimal[] getDepreciacoes() {
-        return depreciacoes;
-    }
-
-    public final void setDepreciacoes(BigDecimal[] newDepreciacoes) {
-        depreciacoes = newDepreciacoes;
     }
 
 }

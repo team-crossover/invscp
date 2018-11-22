@@ -89,6 +89,7 @@ public class Bem implements Model<BemDTO> {
         dto.setNumeroTombamento(numeroTombamento);
         dto.setSituacao(situacao);
         dto.setValorCompra(valorCompra);
+        dto.setDepreciacoes(this.getDepreciacoesPorAno());
         if (idDepartamento != null) {
             final DepartamentoRepository repo = new DepartamentoRepository();
             final Departamento dept = repo.getById(idDepartamento);
@@ -353,22 +354,20 @@ public class Bem implements Model<BemDTO> {
         LocalDate hoje = LocalDate.now();
         Integer qntAnos = hoje.getYear() - getDataAquisicao().getYear();
 
-        if (qntAnos == 0) {
-            BigDecimal[] depreciacoes = new BigDecimal[1];
-            depreciacoes[0] = valCompra;
-            return depreciacoes;
-        } else {
-            GrupoMaterialRepository gmRepo = new GrupoMaterialRepository();
-            GrupoMaterial gm = gmRepo.getById(getIdGrupoMaterial());
-            BigDecimal depr = gm.getDepreciacao();
-            BigDecimal deprPorAno = valCompra.multiply(depr);
-            BigDecimal[] depreciacoes = new BigDecimal[qntAnos];
-            for (int i = 0; i < qntAnos; i++) {
-                BigDecimal deprEsseAno = deprPorAno.multiply(new BigDecimal(i));
-                depreciacoes[i] = valCompra.subtract(deprEsseAno);
-            }
-            return depreciacoes;
+        GrupoMaterialRepository gmRepo = new GrupoMaterialRepository();
+        GrupoMaterial gm = gmRepo.getById(getIdGrupoMaterial());
+        BigDecimal depr = gm.getDepreciacao();
+        BigDecimal deprPorAno = valCompra.multiply(depr);
+        BigDecimal[] depreciacoes = new BigDecimal[qntAnos + 1];
+        for (int i = 0; i < depreciacoes.length; i++) {
+            BigDecimal deprEsseAno = deprPorAno.multiply(new BigDecimal(i));
+            BigDecimal valDepreciado = valCompra.subtract(deprEsseAno);
+            depreciacoes[i] = valDepreciado.compareTo(new BigDecimal(0.01)) <= 0
+                    ? new BigDecimal(0.01)
+                    : valDepreciado;
+
         }
+        return depreciacoes;
     }
 
     @Override
