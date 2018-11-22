@@ -2,9 +2,9 @@ package com.github.nelsonwilliam.invscp.view;
 
 import java.awt.event.ActionListener;
 
-import com.github.nelsonwilliam.invscp.model.dto.BaixaDTO;
+import com.github.nelsonwilliam.invscp.model.dto.MovimentacaoDTO;
 
-public interface BaixaView extends View {
+public interface MovimentacaoView extends View {
 
     // ----------------------------------------
     // Métodos para notificar ações do usuário.
@@ -17,10 +17,10 @@ public interface BaixaView extends View {
     // -------------------------------------------
 
     /**
-     * Atualiza todos os valores da janela para exibir os dados da baixa
+     * Atualiza todos os valores da janela para exibir os dados da movimentação
      * passada.
      */
-    void updateBaixa(BaixaDTO baixa);
+    void updateMovimentacao(MovimentacaoDTO movimentacao);
 
     /**
      * Exibe uma mensagem de erro com a mensagem especificada. Por exemplo, pode
@@ -48,5 +48,5 @@ public interface BaixaView extends View {
      * Obtém a baixa com os valores atualmente exibidos no formulário que o
      * usuário pode ou não ter alterado.
      */
-    BaixaDTO getBaixa();
+    MovimentacaoDTO getMovimentacao();
 }
