@@ -21,7 +21,8 @@ public class MovimentacaoRepository implements Repository<Movimentacao> {
         try {
             final PreparedStatement s = connection
                     .prepareStatement("SELECT id,etapa,id_bem,id_sala_origem,"
-                            + "id_sala_destino FROM movimentacao ORDER BY id");
+                            + "id_sala_destino,num_guia_transporte"
+                            + " FROM movimentacao ORDER BY id");
             final ResultSet r = s.executeQuery();
             while (r.next()) {
                 final Integer id = (Integer) r.getObject("id");
@@ -31,6 +32,8 @@ public class MovimentacaoRepository implements Repository<Movimentacao> {
                         .getObject("id_sala_origem");
                 final Integer idSalaDestino = (Integer) r
                         .getObject("id_sala_destino");
+                final String numGuiaTransporte = (String) r.
+                        getObject("num_guia_transporte");
 
                 final Movimentacao mov = new Movimentacao();
                 mov.setId(id);
@@ -38,6 +41,7 @@ public class MovimentacaoRepository implements Repository<Movimentacao> {
                 mov.setIdBem(idBem);
                 mov.setIdSalaOrigem(idSalaOrigem);
                 mov.setIdSalaDestino(idSalaDestino);
+                mov.setNumGuiaTransporte(numGuiaTransporte);
                 movs.add(mov);
             }
         } catch (final Exception e) {
@@ -63,12 +67,15 @@ public class MovimentacaoRepository implements Repository<Movimentacao> {
                         .getObject("id_sala_origem");
                 final Integer idSalaDestino = (Integer) r
                         .getObject("id_sala_destino");
+                final String numGuiaTransporte = (String) r.
+                        getObject("num_guia_transporte");
 
                 mov = new Movimentacao();
                 mov.setEtapa(EtapaMovEnum.valueOf(etapa));
                 mov.setIdBem(idBem);
                 mov.setIdSalaOrigem(idSalaOrigem);
                 mov.setIdSalaDestino(idSalaDestino);
+                mov.setNumGuiaTransporte(numGuiaTransporte);
             }
         } catch (final Exception e) {
             e.printStackTrace();
@@ -84,12 +91,14 @@ public class MovimentacaoRepository implements Repository<Movimentacao> {
             if (item.getId() == null) {
                 s = connection.prepareStatement(
                         "INSERT INTO movimentacao(etapa,id_bem,id_sala_origem,"
-                                + "id_sala_destino) VALUES (?,?,?,?)",
+                                + "id_sala_destino,num_guia_transporte)"
+                                + " VALUES (?,?,?,?)",
                         Statement.RETURN_GENERATED_KEYS);
                 s.setObject(1, item.getEtapa(), Types.VARCHAR);
                 s.setObject(2, item.getIdBem(), Types.INTEGER);
                 s.setObject(3, item.getIdSalaOrigem(), Types.INTEGER);
                 s.setObject(4, item.getIdSalaDestino(), Types.INTEGER);
+                s.setObject(5, item.getNumGuiaTransporte(), Types.VARCHAR);
                 s.executeUpdate();
                 // Atualiza o item adicionado com seu novo ID
                 final ResultSet rs = s.getGeneratedKeys();
@@ -107,6 +116,7 @@ public class MovimentacaoRepository implements Repository<Movimentacao> {
                 s.setObject(3, item.getIdBem(), Types.INTEGER);
                 s.setObject(4, item.getIdSalaOrigem(), Types.INTEGER);
                 s.setObject(5, item.getIdSalaDestino(), Types.INTEGER);
+                s.setObject(6, item.getNumGuiaTransporte(), Types.VARCHAR);
                 s.executeUpdate();
             }
 
@@ -136,12 +146,14 @@ public class MovimentacaoRepository implements Repository<Movimentacao> {
             PreparedStatement s;
             s = connection.prepareStatement(
                     "UPDATE movimentacao SET etapa=?, id_bem=?,"
-                            + "id_sala_origem=?, id_sala_destino=? WHERE id=?");
+                            + "id_sala_origem=?, id_sala_destino=?"
+                            + "num_guia_transporte WHERE id=?");
             s.setObject(1, item.getEtapa(), Types.VARCHAR);
             s.setObject(2, item.getIdBem(), Types.INTEGER);
             s.setObject(3, item.getIdSalaOrigem(), Types.INTEGER);
             s.setObject(4, item.getIdSalaDestino(), Types.INTEGER);
-            s.setObject(5, item.getId(), Types.INTEGER);
+            s.setObject(5, item.getNumGuiaTransporte(), Types.VARCHAR);
+            s.setObject(6, item.getId(), Types.INTEGER);
             s.executeUpdate();
             return true;
         } catch (final Exception e) {

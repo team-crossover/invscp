@@ -36,6 +36,8 @@ public class Movimentacao implements Model<MovimentacaoDTO> {
 
     private Integer idSalaDestino = null;
 
+    private String numGuiaTransporte = null;
+
     @Override
     public void setValuesFromDTO(final MovimentacaoDTO dto) {
         setId(dto.getId());
@@ -49,6 +51,7 @@ public class Movimentacao implements Model<MovimentacaoDTO> {
         if (dto.getSalaDestino() != null) {
             setIdSalaDestino(dto.getSalaDestino().getId());
         }
+        setNumGuiaTransporte(dto.getNumGuiaTransporte());
 
     }
 
@@ -84,6 +87,7 @@ public class Movimentacao implements Model<MovimentacaoDTO> {
             eventosDto.add(ev.toDTO());
         }
         dto.setEventos(eventosDto);
+        dto.setNumGuiaTransporte(numGuiaTransporte);
 
         return dto;
     }
@@ -469,6 +473,14 @@ public class Movimentacao implements Model<MovimentacaoDTO> {
 
     public void setIdSalaDestino(final Integer idSalaDestino) {
         this.idSalaDestino = idSalaDestino;
+    }
+
+    public String getNumGuiaTransporte() {
+        return numGuiaTransporte;
+    }
+
+    public void setNumGuiaTransporte(String numGuiaTransporte) {
+        this.numGuiaTransporte = numGuiaTransporte;
     }
 
 }
