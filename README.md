@@ -38,25 +38,20 @@ Legenda:
 
 ## Ambientes
 
-O ambiente de desenvolvimento deve possuir o [JDK (Java SE Development Kit)](https://www.oracle.com/technetwork/pt/java/javase/downloads/jdk8-downloads-2133151.html) versão 8 ou superior.
-Os ambientes de execução do servidor e do cliente devem possuir o [JRE (Java SE Runtime Environment)](https://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html) versão 8 ou superior.
+O ambiente de desenvolvimento deve possuir o [JDK (Java SE Development Kit)](https://www.oracle.com/technetwork/pt/java/javase/downloads/jdk8-downloads-2133151.html) versão 8 ou superior, enquanto o de execução deve possuir o [JRE (Java SE Runtime Environment)](https://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html) versão 8 ou superior.
 
-### Banco de dados
+### Servidor
 
-O ambiente de execução do servidor deve estar executando o banco de dados PostgreSQL 10.5, acessível através do localhost.
+O SGBD PostgreSQL 10.5 deve estar executando na mesma máquina. Deve existir o usuário de banco com nome "invscpAdmin" e senha "12345" e autorização para efetuar login. Além disso, deve existir um banco nomeado "inventory" cujo usuário owner é o invscpAdmin.
 
-Deve existir o usuário com nome "invscpAdmin" e senha "12345" (com autorização para efetuar login).
-Além disso, deve existir um banco de dados nomeado "inventory" e cujo owner é o usuário "invscpAdmin".
+<Ainda não implementado> ~~No mesmo diretório do programa deve existir um arquivo chamado "invscp-server-config.xml" contendo o host do banco de dados, o nome do usuário, a senha do usuário e o nome do banco.~~
 
-Ao ser executado, o InvSCP detectará se o banco de dados "inventory" foi inicializado (teve todas as tabelas criadas). Caso contrário, o script "[createDatabase](src/main/resources/sql/createDatabase.sql)" será executado automaticamente para inicializá-lo. Por padrão, o script popula o banco com um Departamento de Patrimônio e um usuário responsável por ser o Chefe de Patrimônio, cujo login é "admin" e a senha é "admin".
+### Cliente
 
-### Build e execução
+Por padrão, o primeiro usuário a ser criado é o Chefe de Patrimônio, e possui o login "admin" e a senha "admin".
 
-É possível construir uma build do servidor ou do cliente um arquivo JAR através de perfis do Maven. Para isto, podem ser utilizados um dos seguintes comandos:
+<Ainda não implementado> ~~No mesmo diretório do programa deve existir um arquivo chamado "invscp-client-config.xml" contendo o host, a porta do servidor e o tipo de interface a ser utilizada. Um arquivo com valores-padrão é criado caso nenhum exista.~~
 
- - ```mvn package -P executavel-unico``` (gera um arquivo JAR único, incluindo todas as dependências)
- - ```mvn package -P executavel-dir``` (gera um arquivo JAR mas mantém as dependências separadas em uma pasta externa)
- 
-Para rodar o executável gerado, basta executar o JAR:
+## Build
 
-```java -jar nomeDoArquivo.jar```
+Para gerar um novo arquivo .JAR executável do servidor ou do cliente, basta executar o comando do Maven ```mvn package -P executavel-unico``` no projeto apropriado.
