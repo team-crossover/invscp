@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?><project name="Untitled Gantt Project" company="" webLink="http://" view-date="2018-10-29" view-index="0" gantt-divider-location="370" resource-divider-location="300" version="2.8.9" locale="en_US">
+<?xml version="1.0" encoding="UTF-8"?><project name="Untitled Gantt Project" company="" webLink="http://" view-date="2018-10-25" view-index="0" gantt-divider-location="370" resource-divider-location="300" version="2.8.9" locale="en_US">
     <description/>
     <view zooming-state="default:3" id="gantt-chart">
         <field id="tpd3" name="Name" width="247" order="0"/>
         <field id="tpd4" name="Begin date" width="61" order="1"/>
         <field id="tpd5" name="End date" width="58" order="2"/>
         <option id="taskLabelLeft" value="name"/>
-        <option id="color.recent"><![CDATA[#00ccff #00cc99 #00ff66 #f0f0f0 #ffff00 #ff9900 #00ff00 #ff00ff #ff0000]]></option>
+        <option id="color.recent"><![CDATA[#ff0000 #00ccff #00cc99 #00ff66 #f0f0f0 #ffff00 #ff9900 #00ff00 #ff00ff]]></option>
     </view>
     <view id="resource-table">
         <field id="0" name="Name" width="209" order="0"/>
@@ -66,12 +66,12 @@
         <task id="23" name="Adicionar Presenters para Bem, OrdemServico e Baixa" color="#00ccff" meeting="false" start="2018-11-17" duration="2" complete="100" expand="true">
             <depend id="37" type="2" difference="0" hardness="Rubber"/>
         </task>
-        <task id="25" name="Adicionar Model e DTO pra Movimentacao, EventoMovimentacao e relatórios" color="#00ff00" meeting="false" start="2018-11-19" duration="3" complete="86" expand="true">
+        <task id="25" name="Adicionar Model e DTO pra Movimentacao, EventoMovimentacao, relatórios e guia" color="#00ff00" meeting="false" start="2018-11-19" duration="3" complete="86" thirdDate="2018-11-19" thirdDate-constraint="0" expand="true">
             <depend id="26" type="2" difference="0" hardness="Rubber"/>
             <depend id="27" type="2" difference="0" hardness="Strong"/>
             <depend id="28" type="2" difference="0" hardness="Rubber"/>
         </task>
-        <task id="33" name="Lidar com a geração de relatórios (em HTML)" color="#00cc99" shape="0,0,0,1,0,0,1,0,0,1,0,0,1,0,0,0" meeting="false" start="2018-11-19" duration="3" complete="36" expand="true">
+        <task id="33" name="Lidar com a geração de relatórios e guia (em HTML)" color="#00cc99" shape="0,0,0,1,0,0,1,0,0,1,0,0,1,0,0,0" meeting="false" start="2018-11-19" duration="5" complete="85" thirdDate="2018-11-19" thirdDate-constraint="0" expand="true">
             <depend id="28" type="2" difference="0" hardness="Rubber"/>
         </task>
         <task id="26" name="Adaptar banco e Repositories de Movimentacao, EventoMovimentacao e relatórios" color="#ffff00" meeting="false" start="2018-11-22" duration="2" complete="54" expand="true">
@@ -80,12 +80,14 @@
         <task id="27" name="Adicionar Views pra Movimentacao, EventoMovimentacao e relatórios" color="#ff9900" meeting="false" start="2018-11-22" duration="2" complete="16" expand="true">
             <depend id="28" type="2" difference="0" hardness="Rubber"/>
         </task>
-        <task id="28" name="Adicionar Presenters pra Movimentacao, EventoMovimentacao e relatórios" color="#00ccff" meeting="false" start="2018-11-24" duration="1" complete="10" expand="true">
+        <task id="28" name="Adicionar Presenters pra Movimentacao, EventoMovimentacao e relatórios" color="#00ccff" meeting="false" start="2018-11-24" duration="1" complete="23" expand="true">
             <depend id="37" type="2" difference="0" hardness="Rubber"/>
         </task>
         <task id="37" name="Separar em aplicação cliente e aplicação servidor" color="#00ccff" meeting="false" start="2018-11-25" duration="1" complete="18" expand="true">
             <depend id="40" type="2" difference="0" hardness="Strong"/>
         </task>
+        <task id="49" name="Adicionar busca de bens" color="#ff0000" meeting="false" start="2018-11-26" duration="2" complete="0" thirdDate="2018-11-26" thirdDate-constraint="0" expand="true"/>
+        <task id="51" name="Verificar controle de acesso" color="#ff0000" meeting="false" start="2018-11-28" duration="2" complete="0" thirdDate="2018-11-28" thirdDate-constraint="0" expand="true"/>
         <task id="40" name="Verificar/validar e corrigir o sistema" color="#ff0000" shape="0,1,0,1,0,0,1,0,0,1,0,1,1,0,0,0" meeting="false" start="2018-11-26" duration="8" complete="0" expand="true">
             <depend id="44" type="2" difference="0" hardness="Strong"/>
         </task>
