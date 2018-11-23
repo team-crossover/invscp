@@ -117,8 +117,8 @@ public class EventosMovimentacaoSwingView extends JDialog
             }
         });
 
-        // popupItemAlterar = new JMenuItem("Alterar");
-        // popupItemConcluir = new JMenuItem("Concluir");
+        popupItemAlterar = new JMenuItem("Alterar");
+        popupItemConcluir = new JMenuItem("Concluir");
 
         popupMenu = new JPopupMenu();
         popupMenu.addPopupMenuListener(new PopupMenuListener() {
@@ -151,17 +151,13 @@ public class EventosMovimentacaoSwingView extends JDialog
     }
 
     @Override
-    public void addAlterarEventoMovimentacaoListener(
-            final ActionListener listener) {
+    public void addAlterarEventoMovimentacaoListener(ActionListener listener) {
         popupItemAlterar.addActionListener(listener);
-
     }
 
     @Override
-    public void addConcluirEventoMovimentacaoListener(
-            final ActionListener listener) {
+    public void addConcluirEventoMovimentacaoListener(ActionListener listener) {
         popupItemConcluir.addActionListener(listener);
-
     }
 
     @Override

@@ -36,7 +36,6 @@ public class EventoMovimentacaoSwingView extends JDialog
 
     private Integer idEventoMovimentacao;
     private Integer idFuncionario;
-    private Integer idMovimentacao;
 
     private JButton btnConfirmar;
     private JButton btnCancelar;
