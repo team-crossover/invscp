@@ -18,6 +18,8 @@ public class MovimentacaoDTO implements DTO {
 
     private List<EventoMovimentacaoDTO> eventos = null;
 
+    private String numGuiaTransporte = null;
+
     public Integer getId() {
         return id;
     }
@@ -72,6 +74,14 @@ public class MovimentacaoDTO implements DTO {
 
     public final void setEventos(List<EventoMovimentacaoDTO> newEventos) {
         eventos = newEventos;
+    }
+
+    public String getNumGuiaTransporte() {
+        return numGuiaTransporte;
+    }
+
+    public void setNumGuiaTransporte(String numGuiaTransporte) {
+        this.numGuiaTransporte = numGuiaTransporte;
     }
 
 }

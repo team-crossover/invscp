@@ -81,7 +81,8 @@ CREATE TABLE grupo_material (
 
 CREATE TABLE movimentacao ( 
    id serial PRIMARY KEY,
-   etapa character varying(255) NOT NULL
+   etapa character varying(255) NOT NULL,
+   num_guia_transporte character varying(32)
 );
 
 CREATE TABLE evento_movimentacao(
