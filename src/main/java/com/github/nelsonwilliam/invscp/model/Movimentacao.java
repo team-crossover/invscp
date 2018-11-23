@@ -379,7 +379,10 @@ public class Movimentacao implements Model<MovimentacaoDTO> {
     }
 
     public boolean isInterna() {
-        if (idSalaOrigem == idSalaDestino) {
+        SalaRepository salaRepo = new SalaRepository();
+        Sala origem = salaRepo.getById(idSalaOrigem);
+        Sala destino = salaRepo.getById(idSalaDestino);
+        if (origem.equals(destino)) {
             return true;
         } else {
             return false;
