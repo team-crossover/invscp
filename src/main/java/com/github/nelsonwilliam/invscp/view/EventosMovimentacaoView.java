@@ -2,7 +2,6 @@ package com.github.nelsonwilliam.invscp.view;
 
 import java.awt.event.ActionListener;
 import java.util.List;
-import java.util.function.Consumer;
 
 import com.github.nelsonwilliam.invscp.model.dto.EventoMovimentacaoDTO;
 import com.github.nelsonwilliam.invscp.model.dto.MovimentacaoDTO;
@@ -12,10 +11,6 @@ public interface EventosMovimentacaoView extends View {
     // ----------------------------------------
     // Métodos para notificar ações do usuário.
     // ----------------------------------------
-
-    void addAdicionarEventoMovimentacaoListener(ActionListener listener);
-
-    // void addDeletarEventoMovimentacaoListener(ActionListener listener);
 
     /**
      * Adiciona o Listener para quando o usuário informar que quer alterar um
@@ -39,8 +34,6 @@ public interface EventosMovimentacaoView extends View {
     void showSucesso(String message);
 
     void showInfo(String message);
-
-    void showConfirmacao(String message, Consumer<Boolean> responseCallback);
 
     // ---------------------------------------------
     // Métodos para obter os valores de formulários.
