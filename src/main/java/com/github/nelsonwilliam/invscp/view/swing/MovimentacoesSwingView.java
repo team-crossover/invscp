@@ -35,9 +35,6 @@ import com.github.nelsonwilliam.invscp.view.MovimentacoesView;
 public class MovimentacoesSwingView extends JPanel
         implements MovimentacoesView {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = -9210173032768696552L;
 
     private JTable table;

@@ -49,7 +49,7 @@ public class EventosMovimentacaoSwingView extends JDialog
     }
 
     private void initialize() {
-        setTitle("Ordens de serviço");
+        setTitle("Eventos de movimentação");
         setBounds(0, 0, 486, 300);
         setLocationRelativeTo(getOwner());
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

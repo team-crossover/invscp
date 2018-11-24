@@ -52,7 +52,7 @@ public class MovimentacaoSwingView extends JDialog implements MovimentacaoView {
      *        inicialmente.
      * @param isAdicionar Indica se a janela que será exibida será para adição
      *        de uma nova ordem de serviço (true) ou para atualização de uma
-     *        ordem de serviço existente (false).
+     *        movimentação existente (false).
      */
 
     public MovimentacaoSwingView(final JFrame owner,

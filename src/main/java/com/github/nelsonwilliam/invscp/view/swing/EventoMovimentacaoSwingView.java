@@ -45,7 +45,6 @@ public class EventoMovimentacaoSwingView extends JDialog
     private JLabel lblJustificativa;
     private JLabel fieldData;
     private JLabel lblFuncionrio;
-    private JLabel fieldMovimentacao;
     private JLabel fieldFuncionario;
     private JTextPane fieldJustificativa;
 
@@ -88,14 +87,6 @@ public class EventoMovimentacaoSwingView extends JDialog
         btnCancelar.addActionListener((final ActionEvent e) -> {
             close();
         });
-
-        fieldMovimentacao = new JLabel("");
-        GridBagConstraints gbc_label = new GridBagConstraints();
-        gbc_label.anchor = GridBagConstraints.WEST;
-        gbc_label.insets = new Insets(0, 0, 5, 5);
-        gbc_label.gridx = 2;
-        gbc_label.gridy = 1;
-        getContentPane().add(fieldMovimentacao, gbc_label);
 
         lblFuncionrio = new JLabel("Funcionário:");
         GridBagConstraints gbc_lblFuncionrio = new GridBagConstraints();
@@ -212,7 +203,8 @@ public class EventoMovimentacaoSwingView extends JDialog
             throw new NullPointerException();
         }
 
-        // Apenas pode alterar baixa se ela estiver sendo adicionada agora
+        // Apenas pode alterar um evento de movimentação se ela estiver sendo
+        // adicionada agora
         btnConfirmar.setEnabled(isAdicionar);
         fieldData.setEnabled(isAdicionar);
         comboTipo.setEnabled(isAdicionar);
@@ -223,6 +215,8 @@ public class EventoMovimentacaoSwingView extends JDialog
                 .format(DateTimeFormatter.ISO_DATE));
 
         comboTipo.setSelectedItem(eventoMovimentacao.getTipo());
+        fieldFuncionario.setText(eventoMovimentacao.getFuncionario().getNome());
+        fieldJustificativa.setText(eventoMovimentacao.getJustificativa());
 
         revalidate();
         repaint();
