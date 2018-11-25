@@ -28,12 +28,12 @@ public class MovimentacaoRepository implements Repository<Movimentacao> {
                 final Integer id = (Integer) r.getObject("id");
                 final String etapa = (String) r.getObject("etapa");
                 final Integer idBem = (Integer) r.getObject("id_bem");
-                final Integer idSalaOrigem = (Integer) r
-                        .getObject("id_sala_origem");
-                final Integer idSalaDestino = (Integer) r
-                        .getObject("id_sala_destino");
-                final String numGuiaTransporte = (String) r.
-                        getObject("num_guia_transporte");
+                final Integer idSalaOrigem =
+                        (Integer) r.getObject("id_sala_origem");
+                final Integer idSalaDestino =
+                        (Integer) r.getObject("id_sala_destino");
+                final String numGuiaTransporte =
+                        (String) r.getObject("num_guia_transporte");
 
                 final Movimentacao mov = new Movimentacao();
                 mov.setId(id);
@@ -56,21 +56,22 @@ public class MovimentacaoRepository implements Repository<Movimentacao> {
         Movimentacao mov = null;
         try {
             final PreparedStatement s = connection
-                    .prepareStatement("SELECT etapa,id_bem,id_sala_origem,"
-                            + "id_sala_destino FROM movimentacao WHERE id=?");
+                    .prepareStatement("SELECT id,etapa,id_bem,id_sala_origem,"
+                            + "id_sala_destino,num_guia_transporte FROM movimentacao WHERE id=?");
             s.setObject(1, id, Types.INTEGER);
             final ResultSet r = s.executeQuery();
             while (r.next()) {
                 final String etapa = (String) r.getObject("etapa");
                 final Integer idBem = (Integer) r.getObject("id_bem");
-                final Integer idSalaOrigem = (Integer) r
-                        .getObject("id_sala_origem");
-                final Integer idSalaDestino = (Integer) r
-                        .getObject("id_sala_destino");
-                final String numGuiaTransporte = (String) r.
-                        getObject("num_guia_transporte");
+                final Integer idSalaOrigem =
+                        (Integer) r.getObject("id_sala_origem");
+                final Integer idSalaDestino =
+                        (Integer) r.getObject("id_sala_destino");
+                final String numGuiaTransporte =
+                        (String) r.getObject("num_guia_transporte");
 
                 mov = new Movimentacao();
+                mov.setId(id);
                 mov.setEtapa(EtapaMovEnum.valueOf(etapa));
                 mov.setIdBem(idBem);
                 mov.setIdSalaOrigem(idSalaOrigem);
@@ -92,7 +93,7 @@ public class MovimentacaoRepository implements Repository<Movimentacao> {
                 s = connection.prepareStatement(
                         "INSERT INTO movimentacao(etapa,id_bem,id_sala_origem,"
                                 + "id_sala_destino,num_guia_transporte)"
-                                + " VALUES (?,?,?,?)",
+                                + " VALUES (?,?,?,?,?)",
                         Statement.RETURN_GENERATED_KEYS);
                 s.setObject(1, item.getEtapa(), Types.VARCHAR);
                 s.setObject(2, item.getIdBem(), Types.INTEGER);
@@ -110,7 +111,7 @@ public class MovimentacaoRepository implements Repository<Movimentacao> {
             } else {
                 s = connection.prepareStatement(
                         "INSERT INTO movimentacao(id,etapa,id_bem,"
-                                + "id_sala_origem,id_sala_destino) VALUES (?,?,?,?,?)");
+                                + "id_sala_origem,id_sala_destino,num_guia_transporte) VALUES (?,?,?,?,?,?)");
                 s.setObject(1, item.getId(), Types.INTEGER);
                 s.setObject(2, item.getEtapa(), Types.VARCHAR);
                 s.setObject(3, item.getIdBem(), Types.INTEGER);
@@ -146,8 +147,8 @@ public class MovimentacaoRepository implements Repository<Movimentacao> {
             PreparedStatement s;
             s = connection.prepareStatement(
                     "UPDATE movimentacao SET etapa=?, id_bem=?,"
-                            + "id_sala_origem=?, id_sala_destino=?"
-                            + "num_guia_transporte WHERE id=?");
+                            + "id_sala_origem=?, id_sala_destino=?, "
+                            + "num_guia_transporte=? WHERE id=?");
             s.setObject(1, item.getEtapa(), Types.VARCHAR);
             s.setObject(2, item.getIdBem(), Types.INTEGER);
             s.setObject(3, item.getIdSalaOrigem(), Types.INTEGER);
@@ -203,20 +204,36 @@ public class MovimentacaoRepository implements Repository<Movimentacao> {
         final Connection connection = DatabaseConnection.getConnection();
         try {
             final PreparedStatement s = connection.prepareStatement(
-                    "SELECT id FROM movimentacao WHERE id_bem=? AND etapa=? OR etapa=? OR etapa=?");
+                    "SELECT id FROM movimentacao WHERE id_bem=? AND NOT etapa=? AND NOT etapa=?");
             s.setObject(1, idBem, Types.INTEGER);
-            s.setObject(2, EtapaMovEnum.AGUARDANDO_AC_ENTRADA, Types.VARCHAR);
-            s.setObject(3, EtapaMovEnum.AGUARDANDO_AC_SAIDA, Types.VARCHAR);
-            s.setObject(4, EtapaMovEnum.EM_MOVIMENTACAO, Types.VARCHAR);
+            s.setObject(2, EtapaMovEnum.FINALIZADA, Types.VARCHAR);
+            s.setObject(3, EtapaMovEnum.CANCELADA, Types.VARCHAR);
             final ResultSet r = s.executeQuery();
-            if (!r.next()) {
-                return false;
+            if (r.next()) {
+                return true;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return true;
+        return false;
     }
 
+    public boolean existsNumGuiaTransporte(String numeroGuia) {
+        final Connection connection = DatabaseConnection.getConnection();
+        try {
+            final PreparedStatement s = connection.prepareStatement(
+                    "SELECT id FROM movimentacao WHERE num_guia_transporte=?");
+            s.setObject(1, numeroGuia, Types.VARCHAR);
+            final ResultSet r = s.executeQuery();
+            if (r.next()) {
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+    
 }

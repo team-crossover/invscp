@@ -1,4 +1,5 @@
-/* Cria as tabelas e valores iniciais do InvSCP */
+/* Script de criação do banco de dados do InvSCP */
+/* Versão 1 */
 
 /* Deleta as tabelas anteriores */
 
@@ -82,7 +83,7 @@ CREATE TABLE grupo_material (
 CREATE TABLE movimentacao ( 
    id serial PRIMARY KEY,
    etapa character varying(255) NOT NULL,
-   num_guia_transporte character varying(32)
+   num_guia_transporte character varying(32) UNIQUE
 );
 
 CREATE TABLE evento_movimentacao(
@@ -90,6 +91,10 @@ CREATE TABLE evento_movimentacao(
    tipo character varying(255) NOT NULL,
    data date NOT NULL,
    justificativa character varying(255)
+);
+
+CREATE TABLE sistema(
+  versao_db integer NOT NULL
 );
 
 /* Adiciona as chaves estrangeiras */
@@ -199,6 +204,9 @@ INSERT INTO grupo_material (nome, vida_util, depreciacao)
 
 INSERT INTO grupo_material (nome, vida_util, depreciacao)
 	VALUES ('Veículos leves e pesados em geral', 15, 0.2);
+	
+INSERT INTO sistema (versao_db)
+    VALUES (1);
 
 /* Adiciona as restrições de not-null que não existiam antes para permitir a inserção dos valores iniciais */
 

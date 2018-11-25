@@ -12,15 +12,7 @@ public interface EventosMovimentacaoView extends View {
     // Métodos para notificar ações do usuário.
     // ----------------------------------------
 
-    /**
-     * Adiciona o Listener para quando o usuário informar que quer alterar um
-     * evento de movimentação. Espera-se que quando este evento for invocado,
-     * haja exatamente UMA ordem de serviço selecionado (obtível através do
-     * método getSelectedEventosMovimentacaoIds.
-     */
-    void addAlterarEventoMovimentacaoListener(ActionListener listener);
-
-    void addConcluirEventoMovimentacaoListener(ActionListener listener);
+    void addVerEventoMovimentacaoListener(ActionListener listener);
 
     // -------------------------------------------
     // Métodos para atualizar os valores exibidos.

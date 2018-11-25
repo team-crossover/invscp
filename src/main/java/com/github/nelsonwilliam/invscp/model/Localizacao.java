@@ -98,7 +98,7 @@ public class Localizacao implements Model<LocalizacaoDTO> {
         // repetidos/duplicados/já utilizados?Há itens obrigatórios faltando?
         // Etc).
 
-        if (predioRepo.getByLocalizacao(loca).size() > 0) {
+        if (predioRepo.getByIdLocalizacao(loca.getId()).size() > 0) {
             throw new IllegalDeleteException(
                     "Não é possível deletar a localização " + loca.getNome()
                             + " pois existem prédios com esta localização.");

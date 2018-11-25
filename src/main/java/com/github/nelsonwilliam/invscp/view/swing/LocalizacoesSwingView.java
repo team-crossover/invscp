@@ -177,6 +177,9 @@ public class LocalizacoesSwingView extends JPanel implements LocalizacoesView {
                     l.getEndereco(), l.getCep(), l.getCidade(), l.getUf() });
         }
 
+        // Deixa em ordem crescente com base no nome.
+        table.getRowSorter().toggleSortOrder(1);
+        
         revalidate();
         repaint();
     }

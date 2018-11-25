@@ -15,12 +15,15 @@ import com.github.nelsonwilliam.invscp.model.dto.FuncionarioDTO;
 import com.github.nelsonwilliam.invscp.model.dto.GrupoMaterialDTO;
 import com.github.nelsonwilliam.invscp.model.dto.HistoricoDTO;
 import com.github.nelsonwilliam.invscp.model.dto.InventarioDTO;
+import com.github.nelsonwilliam.invscp.model.dto.MovimentacaoDTO;
 import com.github.nelsonwilliam.invscp.model.enums.BemSituacaoEnum;
+import com.github.nelsonwilliam.invscp.model.enums.EtapaMovEnum;
 import com.github.nelsonwilliam.invscp.util.Client;
 import com.github.nelsonwilliam.invscp.util.Relatorios;
 import com.github.nelsonwilliam.invscp.view.BaixaView;
 import com.github.nelsonwilliam.invscp.view.BemView;
 import com.github.nelsonwilliam.invscp.view.BensView;
+import com.github.nelsonwilliam.invscp.view.MovimentacaoView;
 import com.github.nelsonwilliam.invscp.view.OrdensServicoView;
 import com.github.nelsonwilliam.invscp.view.ViewFactory;
 
@@ -57,6 +60,9 @@ public class BensPresenter extends Presenter<BensView> {
         });
         view.addGerarHistoricoListener((final ActionEvent e) -> {
             onHistorico();
+        });
+        view.addMoverBemListener((final ActionEvent e) -> {
+            onMover();
         });
     }
 
@@ -182,6 +188,28 @@ public class BensPresenter extends Presenter<BensView> {
         final BaixaPresenter baixasPresenter =
                 new BaixaPresenter(baixaView, mainPresenter, this);
         baixaView.setVisible(true);
+    }
+    
+    @SuppressWarnings("unused")
+    private void onMover() {
+        final List<Integer> selectedBemIds = view.getSelectedBensIds();
+        if (selectedBemIds.size() != 1) {
+            throw new RuntimeException(
+                    "Para adicionar movimentação, é necessário que apenas um bem esteja selecionado.");
+        }
+
+        final Integer selectedBemId = selectedBemIds.get(0);
+        final BemDTO selectedBem = Client.requestGetBemById(selectedBemId);
+        
+        MovimentacaoDTO novaMov = new MovimentacaoDTO();
+        novaMov.setEtapa(EtapaMovEnum.INICIADA);
+        novaMov.setBem(selectedBem);
+        novaMov.setSalaOrigem(selectedBem.getSala());
+        novaMov.setSalaDestino(selectedBem.getSala());
+        
+        final MovimentacaoView movView = ViewFactory.createMovimentacao(mainPresenter.getView(), novaMov, true);
+        MovimentacaoPresenter movPresenter = new MovimentacaoPresenter(movView, mainPresenter, this);
+        movView.setVisible(true);
     }
 
     public void updateBens() {

@@ -80,9 +80,8 @@ public class OrdensServicoSwingView extends JDialog
                         "Valor", "Situação", "Responsável" }) {
 
             private static final long serialVersionUID = 780952094315363108L;
-            Class<?>[] columnTypes = new Class[] { Integer.class,
-                    String.class, String.class, Float.class, String.class,
-                    String.class };
+            Class<?>[] columnTypes = new Class[] { Integer.class, String.class,
+                    String.class, Float.class, String.class, String.class };
 
             @Override
             public Class<?> getColumnClass(final int columnIndex) {
@@ -190,8 +189,8 @@ public class OrdensServicoSwingView extends JDialog
         btnAdicionar
                 .setEnabled(bem.getSituacao() == BemSituacaoEnum.INCORPORADO);
 
-        final DefaultTableModel tableModel = (DefaultTableModel) table
-                .getModel();
+        final DefaultTableModel tableModel =
+                (DefaultTableModel) table.getModel();
         tableModel.setNumRows(0);
         for (final OrdemServicoDTO o : ordemServico) {
             tableModel.addRow(new Object[] { o.getId(),
@@ -202,6 +201,11 @@ public class OrdensServicoSwingView extends JDialog
                     o.getValor(), o.getSituacao().getTexto(),
                     o.getFuncionario().getNome() });
         }
+
+        // Deixa em ordem decrescente com base no ID, para que as ordens mais
+        // recentes fiquem primeiro.
+        table.getRowSorter().toggleSortOrder(0);
+        table.getRowSorter().toggleSortOrder(0);
 
         revalidate();
         repaint();

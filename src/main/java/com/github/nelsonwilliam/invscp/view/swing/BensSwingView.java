@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
@@ -31,6 +32,7 @@ import com.github.nelsonwilliam.invscp.model.dto.DepartamentoDTO;
 import com.github.nelsonwilliam.invscp.model.dto.GrupoMaterialDTO;
 import com.github.nelsonwilliam.invscp.model.dto.SalaDTO;
 import com.github.nelsonwilliam.invscp.model.enums.BemSituacaoEnum;
+import com.github.nelsonwilliam.invscp.util.Client;
 import com.github.nelsonwilliam.invscp.view.BensView;
 
 public class BensSwingView extends JPanel implements BensView {
@@ -44,6 +46,7 @@ public class BensSwingView extends JPanel implements BensView {
     private JPopupMenu popupMenu; // Popup exibido ao clicar com o botão direito
                                   // em um item da tabela
     private JMenuItem popupItemAlterar;
+    private JMenuItem popupItemMover;
     private JMenuItem popupItemBaixa;
     private JMenuItem popupItemOrdemServico;
     private JMenuItem popupItemHistorico;
@@ -97,11 +100,14 @@ public class BensSwingView extends JPanel implements BensView {
         table.getColumnModel().getColumn(1).setMinWidth(175);
         table.getColumnModel().getColumn(1).setMaxWidth(175);
         table.getColumnModel().getColumn(2).setMinWidth(150);
-        table.getColumnModel().getColumn(3).setMinWidth(100);
-        table.getColumnModel().getColumn(3).setMaxWidth(100);
+        table.getColumnModel().getColumn(3).setMinWidth(150);
+        table.getColumnModel().getColumn(3).setMaxWidth(150);
         table.getColumnModel().getColumn(4).setMinWidth(150);
-        table.getColumnModel().getColumn(5).setMinWidth(150);
-        table.getColumnModel().getColumn(6).setMinWidth(150);
+        table.getColumnModel().getColumn(4).setMaxWidth(150);
+        table.getColumnModel().getColumn(5).setMinWidth(200);
+        table.getColumnModel().getColumn(5).setMaxWidth(200);
+        table.getColumnModel().getColumn(6).setMinWidth(200);
+        table.getColumnModel().getColumn(6).setMaxWidth(200);
         table.setAutoCreateRowSorter(true);
         scrollPane.setBorder(BorderFactory.createLineBorder(Color.gray, 1));
         scrollPane.setViewportView(table);
@@ -117,6 +123,7 @@ public class BensSwingView extends JPanel implements BensView {
         });
 
         popupItemAlterar = new JMenuItem("Alterar");
+        popupItemMover = new JMenuItem("Mover");
         popupItemBaixa = new JMenuItem("Baixa...");
         popupItemOrdemServico = new JMenuItem("Ordens de serviço...");
         popupItemHistorico = new JMenuItem("Gerar histórico...");
@@ -126,15 +133,16 @@ public class BensSwingView extends JPanel implements BensView {
             @Override
             public void popupMenuWillBecomeVisible(final PopupMenuEvent e) {
                 // Garante que ao clicar com o botão direito em um item para
-                // exibir o menu, o o
-                // único item selecionado da tabela será o item clicado.
-                SwingUtilities.invokeLater(() -> {
-                    final int rowAtPoint = table.rowAtPoint(SwingUtilities
-                            .convertPoint(popupMenu, new Point(0, 0), table));
-                    if (rowAtPoint > -1) {
-                        table.setRowSelectionInterval(rowAtPoint, rowAtPoint);
-                    }
-                });
+                // exibir o menu, o único item selecionado da tabela será o item
+                // clicado.
+                final Point mousePoint = MouseInfo.getPointerInfo().getLocation();
+                SwingUtilities.convertPointFromScreen(mousePoint, table);
+                final int rowAtPoint = table.rowAtPoint(mousePoint);
+                if (rowAtPoint > -1) {
+                    table.setRowSelectionInterval(rowAtPoint, rowAtPoint);
+                }
+
+                refreshPopupMenuItems();
             }
 
             @Override
@@ -145,16 +153,10 @@ public class BensSwingView extends JPanel implements BensView {
             public void popupMenuCanceled(final PopupMenuEvent e) {
             }
         });
-        popupMenu.add(popupItemAlterar);
-        popupMenu.addSeparator();
-        popupMenu.add(popupItemBaixa);
-        popupMenu.add(popupItemOrdemServico);
-        popupMenu.addSeparator();
-        popupMenu.add(popupItemHistorico);
         table.setComponentPopupMenu(popupMenu);
 
         panel = new JPanel();
-        GridBagConstraints gbc_panel = new GridBagConstraints();
+        final GridBagConstraints gbc_panel = new GridBagConstraints();
         gbc_panel.anchor = GridBagConstraints.WEST;
         gbc_panel.fill = GridBagConstraints.VERTICAL;
         gbc_panel.insets = new Insets(0, 0, 0, 5);
@@ -162,7 +164,7 @@ public class BensSwingView extends JPanel implements BensView {
         gbc_panel.gridy = 1;
         add(panel, gbc_panel);
 
-        GridBagLayout gbl_panel = new GridBagLayout();
+        final GridBagLayout gbl_panel = new GridBagLayout();
         gbl_panel.columnWidths = new int[] { 135, 135, 0 };
         gbl_panel.rowHeights = new int[] { 25, 0 };
         gbl_panel.columnWeights = new double[] { 0.0, 0.0, Double.MIN_VALUE };
@@ -170,7 +172,7 @@ public class BensSwingView extends JPanel implements BensView {
         panel.setLayout(gbl_panel);
 
         btnAdicionar = new JButton("Adicionar novo");
-        GridBagConstraints gbc_btnAdicionar = new GridBagConstraints();
+        final GridBagConstraints gbc_btnAdicionar = new GridBagConstraints();
         gbc_btnAdicionar.anchor = GridBagConstraints.WEST;
         gbc_btnAdicionar.insets = new Insets(0, 0, 0, 5);
         gbc_btnAdicionar.gridx = 0;
@@ -178,7 +180,7 @@ public class BensSwingView extends JPanel implements BensView {
         panel.add(btnAdicionar, gbc_btnAdicionar);
 
         btnGerarInventario = new JButton("Gerar inventário");
-        GridBagConstraints gbc_btnInventario = new GridBagConstraints();
+        final GridBagConstraints gbc_btnInventario = new GridBagConstraints();
         gbc_btnInventario.anchor = GridBagConstraints.WEST;
         gbc_btnInventario.gridx = 1;
         gbc_btnInventario.gridy = 0;
@@ -190,6 +192,29 @@ public class BensSwingView extends JPanel implements BensView {
         gbc_btnDeletar.gridx = 2;
         gbc_btnDeletar.gridy = 1;
         add(btnDeletar, gbc_btnDeletar);
+    }
+
+    private void refreshPopupMenuItems() {
+        // TODO Não deveria estar usando o Client diretamente. Usar o Presenter
+        // para a comunicação com Model...
+        final Integer selectedBemId = getSelectedBensIds().get(0);
+        final BemDTO bem = Client.requestGetBemById(selectedBemId);
+
+        popupMenu.removeAll();
+
+        popupMenu.add(popupItemAlterar);
+        popupMenu.add(popupItemMover);
+        popupMenu.addSeparator();
+        popupMenu.add(popupItemBaixa);
+        popupMenu.add(popupItemOrdemServico);
+        popupMenu.addSeparator();
+        popupMenu.add(popupItemHistorico);
+
+        popupItemAlterar.setEnabled(bem.getSituacao() == BemSituacaoEnum.INCORPORADO);
+        popupItemMover.setEnabled(bem.getSituacao() == BemSituacaoEnum.INCORPORADO);
+        popupItemBaixa.setEnabled(bem.getSituacao() == BemSituacaoEnum.BAIXADO
+                || bem.getSituacao() == BemSituacaoEnum.INCORPORADO);
+        popupItemBaixa.setText(bem.getSituacao() == BemSituacaoEnum.BAIXADO ? "Ver baixa..." : "Realizar baixa...");
     }
 
     @Override
@@ -213,6 +238,12 @@ public class BensSwingView extends JPanel implements BensView {
     @Override
     public void addAlterarBemListener(final ActionListener listener) {
         popupItemAlterar.addActionListener(listener);
+
+    }
+
+    @Override
+    public void addMoverBemListener(final ActionListener listener) {
+        popupItemMover.addActionListener(listener);
 
     }
 
@@ -250,6 +281,9 @@ public class BensSwingView extends JPanel implements BensView {
                     b.getGrupoMaterial() == null ? "Nenhum"
                             : b.getGrupoMaterial().getNome() });
         }
+
+        // Deixa em ordem crescente com base no número de tombamento.
+        table.getRowSorter().toggleSortOrder(1);
 
         revalidate();
         repaint();

@@ -12,17 +12,17 @@ import com.github.nelsonwilliam.invscp.util.Resources;
 
 public class HistoricoDTO implements DTO {
 
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter
-            .ofPattern("dd/MM/yyyy");
+    private static final DateTimeFormatter DATE_FORMATTER =
+            DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter
-            .ofPattern("dd/MM/yyyy HH:mm:ss");
+    private static final DateTimeFormatter DATE_TIME_FORMATTER =
+            DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 
-    private static final NumberFormat CURRENCY_FORMATTER = NumberFormat
-            .getCurrencyInstance();
+    private static final NumberFormat CURRENCY_FORMATTER =
+            NumberFormat.getCurrencyInstance();
 
-    private static final NumberFormat PERCENT_FORMATTER = NumberFormat
-            .getPercentInstance();
+    private static final NumberFormat PERCENT_FORMATTER =
+            NumberFormat.getPercentInstance();
 
     private BemDTO bem = null;
 
@@ -35,10 +35,10 @@ public class HistoricoDTO implements DTO {
     private LocalDateTime momentoGeracao = null;
 
     public String toHtml() throws IOException {
-        final String tmpHistorico = Resources
-                .readResource("html/templates/historico.html");
-        final String tmpBaixa = Resources
-                .readResource("html/templates/historico-baixa.html");
+        final String tmpHistorico =
+                Resources.readResource("html/templates/historico.html");
+        final String tmpBaixa =
+                Resources.readResource("html/templates/historico-baixa.html");
         final String tmpDepreciacao = Resources
                 .readResource("html/templates/historico-depreciacao.html");
         final String tmpDepreciacaoItem = Resources
@@ -49,12 +49,12 @@ public class HistoricoDTO implements DTO {
                 .readResource("html/templates/historico-movimentacao.html");
         final String tmpMovimentacaoEvento = Resources.readResource(
                 "html/templates/historico-movimentacao-evento.html");
-        final String tmpOrdens = Resources
-                .readResource("html/templates/historico-os.html");
-        final String tmpOrdensItens = Resources
-                .readResource("html/templates/historico-os-item.html");
+        final String tmpOrdens =
+                Resources.readResource("html/templates/historico-os.html");
+        final String tmpOrdensItens =
+                Resources.readResource("html/templates/historico-os-item.html");
 
-        String htmlInfo = String.format(tmpInformacoes,
+        final String htmlInfo = String.format(tmpInformacoes,
                 Relatorios.escapeToHtml(bem.getDescricao()),
                 CURRENCY_FORMATTER.format(bem.getValorCompra()),
                 bem.getNumeroTombamento(),
@@ -69,7 +69,8 @@ public class HistoricoDTO implements DTO {
                 bem.getDataAquisicao().format(DATE_FORMATTER),
                 bem.getSituacao().getTexto());
 
-        String htmlBaixa = baixa == null ? "Não foi efetuada baixa deste bem."
+        final String htmlBaixa = baixa == null
+                ? "Não foi efetuada baixa deste bem."
                 : String.format(tmpBaixa,
                         baixa.getData().format(DATE_FORMATTER),
                         Relatorios.escapeToHtml(baixa.getMotivo().getTexto()),
@@ -77,21 +78,21 @@ public class HistoricoDTO implements DTO {
                                 .escapeToHtml(baixa.getFuncionario().getNome()),
                         Relatorios.escapeToHtml(baixa.getObservacoes()));
 
-        StringBuilder htmlDepreciacoesItens = new StringBuilder();
-        int anoAtual = momentoGeracao.getYear();
-        BigDecimal[] depreciacoes = bem.getDepreciacoes();
+        final StringBuilder htmlDepreciacoesItens = new StringBuilder();
+        final int anoAtual = momentoGeracao.getYear();
+        final BigDecimal[] depreciacoes = bem.getDepreciacoes();
         for (int i = 0; i < depreciacoes.length; i++) {
-            Integer ano = anoAtual - depreciacoes.length + 1 + i;
+            final Integer ano = anoAtual - depreciacoes.length + 1 + i;
             htmlDepreciacoesItens.append(String.format(tmpDepreciacaoItem, ano,
                     CURRENCY_FORMATTER.format(depreciacoes[i])));
         }
 
-        String htmlDepreciacoes = String.format(tmpDepreciacao,
+        final String htmlDepreciacoes = String.format(tmpDepreciacao,
                 htmlDepreciacoesItens.toString(), PERCENT_FORMATTER
                         .format(bem.getGrupoMaterial().getDepreciacao()));
 
-        StringBuilder htmlOrdensItens = new StringBuilder();
-        for (OrdemServicoDTO ordem : ordens) {
+        final StringBuilder htmlOrdensItens = new StringBuilder();
+        for (final OrdemServicoDTO ordem : ordens) {
             htmlOrdensItens.append(String.format(tmpOrdensItens,
                     ordem.getDataCadastro().format(DATE_FORMATTER),
                     ordem.getDataConclusao() == null ? "-"
@@ -100,15 +101,15 @@ public class HistoricoDTO implements DTO {
                     Relatorios.escapeToHtml(ordem.getFuncionario().getNome()),
                     Relatorios.escapeToHtml(ordem.getSituacao().getTexto())));
         }
-        String htmlOrdens = ordens.size() > 0
+        final String htmlOrdens = ordens.size() > 0
                 ? String.format(tmpOrdens, htmlOrdensItens.toString())
                 : "Não existem ordens de serviço para este bem.";
 
-        StringBuilder htmlMovimentacoesItens = new StringBuilder();
-        for (MovimentacaoDTO mov : movimentacoes) {
+        final StringBuilder htmlMovimentacoesItens = new StringBuilder();
+        for (final MovimentacaoDTO mov : movimentacoes) {
 
-            StringBuilder htmlEventos = new StringBuilder();
-            for (EventoMovimentacaoDTO ev : mov.getEventos()) {
+            final StringBuilder htmlEventos = new StringBuilder();
+            for (final EventoMovimentacaoDTO ev : mov.getEventos()) {
                 htmlEventos.append(String.format(tmpMovimentacaoEvento,
                         ev.getTipo().getTexto(),
                         ev.getData().format(DATE_FORMATTER),
@@ -117,16 +118,13 @@ public class HistoricoDTO implements DTO {
             }
 
             htmlMovimentacoesItens.append(String.format(tmpMovimentacao,
-                    Relatorios.escapeToHtml(mov.getSalaOrigem().getNome() + " ("
-                            + mov.getSalaOrigem().getPredio().getNome() + ")"),
-                    Relatorios.escapeToHtml(mov.getSalaDestino().getNome()
-                            + " (" + mov.getSalaDestino().getPredio().getNome()
-                            + ")"),
+                    Relatorios.escapeToHtml(mov.getSalaOrigem().getNome()),
+                    Relatorios.escapeToHtml(mov.getSalaDestino().getNome()),
                     mov.getEtapa().getTexto(), htmlEventos.toString()));
         }
-        String htmlMovimentacoes = movimentacoes.size() > 0
-                ? htmlMovimentacoesItens.toString()
-                : "Não foram efetuadas movimentações deste item.";
+        final String htmlMovimentacoes =
+                movimentacoes.size() > 0 ? htmlMovimentacoesItens.toString()
+                        : "Não foram efetuadas movimentações deste item.";
 
         return String.format(tmpHistorico,
                 Relatorios.escapeToHtml(bem.getDescricao()),
@@ -211,7 +209,7 @@ public class HistoricoDTO implements DTO {
         return momentoGeracao;
     }
 
-    public final void setMomentoGeracao(LocalDateTime newMomentoGeracao) {
+    public final void setMomentoGeracao(final LocalDateTime newMomentoGeracao) {
         momentoGeracao = newMomentoGeracao;
     }
 

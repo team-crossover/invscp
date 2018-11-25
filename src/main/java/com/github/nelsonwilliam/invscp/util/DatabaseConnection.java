@@ -22,20 +22,23 @@ public class DatabaseConnection {
     private static String DATABASE_NAME = "inventory";
     private static String USER = "invscpAdmin";
     private static String PASSWORD = "12345";
+    private static Integer VERSAO_DB = 1;
 
     private static Connection connection;
 
     /**
      * Abre a conexão com o banco de dados.
      *
-     * @throws ClassNotFoundException Se não for encontrado o driver necessário para conexão com o
-     *         banco.
+     * @throws ClassNotFoundException Se não for encontrado o driver necessário
+     *         para conexão com o banco.
      * @throws SQLException Se não for possível conectar-se com o banco.
      */
-    public static void openConnection() throws ClassNotFoundException, SQLException {
+    public static void openConnection()
+            throws ClassNotFoundException, SQLException {
         Class.forName("org.postgresql.Driver");
 
-        final String url = "jdbc:postgresql://" + IP + ":" + PORT + "/" + DATABASE_NAME;
+        final String url =
+                "jdbc:postgresql://" + IP + ":" + PORT + "/" + DATABASE_NAME;
         final Properties props = new Properties();
         props.setProperty("user", USER);
         props.setProperty("password", PASSWORD);
@@ -61,33 +64,51 @@ public class DatabaseConnection {
     }
 
     /**
-     * Verifica se o banco de dados do InvSCP já foi inicializado, ou seja, já teve executou script
-     * de criação.
+     * Verifica se o banco de dados do InvSCP já foi inicializado, ou seja, já
+     * teve executou script de criação.
      *
      * @return Se o banco de dados já foi inicializado.
      * @throws FileNotFoundException
      * @throws SQLException
      */
-    public static boolean databaseWasInitialized() throws FileNotFoundException, SQLException {
-        final String checkScript = Resources.readResource("sql/checkDatabase.sql");
-        final PreparedStatement stmt = connection.prepareStatement(checkScript);
-        final ResultSet result = stmt.executeQuery();
+    public static boolean wasDatabaseInitialized()
+            throws FileNotFoundException, SQLException {
 
-        // Se retornou algo (provavelmente o valor "1") é porque todas as tabelas
-        // existem.
-        return result.next();
+        final PreparedStatement hasSistemaTable = connection.prepareStatement(
+                "SELECT 1 FROM INFORMATION_SCHEMA.Tables WHERE TABLE_NAME='sistema'");
+        final ResultSet result = hasSistemaTable.executeQuery();
+        if (!result.next()) {
+            // Se não retornou nada é porque a tabela sistema não existe, logo,
+            // o banco deve ser inicializado.
+            return false;
+        }
+
+        final PreparedStatement getVersao =
+                connection.prepareStatement("SELECT versao_db FROM sistema");
+        final ResultSet result2 = getVersao.executeQuery();
+        if (result2.next()) {
+            Integer versaoDb = (Integer) result2.getObject("versao_db");
+            return versaoDb == VERSAO_DB;
+        } else {
+            // Se a versão não é a esperada (VERSAO_DB), então o banco deve ser
+            // inicializado.
+            return false;
+        }
     }
 
     /**
-     * Executa o script de criação do banco de dados, apagando quaisquer valores pré-existentes.
+     * Executa o script de criação do banco de dados, apagando quaisquer valores
+     * pré-existentes.
      *
      * @throws SQLException
      * @throws IOException
      */
-    public static void initializeDatabase() throws FileNotFoundException, SQLException {
+    public static void initializeDatabase()
+            throws FileNotFoundException, SQLException {
         final String createScript =
                 Resources.readResource("sql/createDatabase.sql");
-        final PreparedStatement stmt = connection.prepareStatement(createScript);
+        final PreparedStatement stmt =
+                connection.prepareStatement(createScript);
         stmt.executeUpdate();
     }
 }

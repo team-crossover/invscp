@@ -20,6 +20,8 @@ public interface BensView extends View {
 
     void addDeletarBensListener(ActionListener listener);
 
+    void addMoverBemListener(ActionListener listener);
+
     void addGerarInventarioListener(ActionListener listener);
     
     void addGerarHistoricoListener(ActionListener listener);

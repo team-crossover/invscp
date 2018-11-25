@@ -62,6 +62,12 @@ public interface MenuView extends View {
      */
     void addBensListener(ActionListener listener);
 
+    /**
+     * Adiciona um Listener para o quando o usuário informar que deseja acessar
+     * a listagem de movimentações.
+     */
+    void addMovimentacoesListener(ActionListener listener);
+
     // -------------------------------------------
     // Métodos para atualizar os valores exibidos.
     // -------------------------------------------

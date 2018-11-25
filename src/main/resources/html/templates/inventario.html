@@ -10,19 +10,33 @@
         body {
             font-family: Arial, sans-serif;
             font-size: 15px;
+            background-color: #444;
         }
-
+        
         h1,h2,h3 {
             color: #336B6B;
         }
-
-        .tabela {
+        
+        .pagina {
+            background-color: #fff;
+            box-shadow: 5px 5px 10px #0005;
+            border: 1px solid #0000;
+            border-radius: 5px;
+            padding: 0 1em 2em 1em;
+            margin: 2.5em 1.5em;
+            -webkit-box-sizing: border-box; 
+            -moz-box-sizing: border-box;    
+            box-sizing: border-box;        
+        }
+        
+        .relatorio {
+            width: 100%%;
             border: solid 1px #DDEEEE;
             border-collapse: collapse;
             border-spacing: 0;
         }
 
-        .tabela thead th {
+        .relatorio thead th {
             background-color: #DDEFEF;
             border: solid 1px #DDEEEE;
             color: #336B6B;
@@ -31,22 +45,38 @@
             text-shadow: 1px 1px 1px #fff;
         }
 
-        .tabela tbody td {
+        .relatorio tbody td {
             border: solid 1px #DDEEEE;
             color: #333;
             padding: 10px;
             text-shadow: 1px 1px 1px #fff;
         }
+        
+        /* CSS para impressão */
+        @media print {
+            body {
+                background-color: #fff;
+            }
+            .pagina {
+                width: 100%%;
+                border: 0;
+                padding: 0px;
+                box-shadow: 0 0 0 #0000;
+                margin: 0 0;
+            }
+        }
     </style>
 </head>
 
 <body>
-    <h2>Inventário</h1>
+    <div class="pagina">
+        <h2>Inventário</h1>
 
-    <i>Gerado em %2$s</i>
+        <i>Gerado em %2$s</i>
 
-    <div class="departamentos">
-    %1$s
+        <div class="departamentos">
+        %1$s
+        </div>
     </div>
 </body>
 

@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.nelsonwilliam.invscp.model.Departamento;
-import com.github.nelsonwilliam.invscp.model.Predio;
 import com.github.nelsonwilliam.invscp.model.Sala;
 import com.github.nelsonwilliam.invscp.model.enums.TipoSalaEnum;
 import com.github.nelsonwilliam.invscp.util.DatabaseConnection;
@@ -46,19 +45,18 @@ public class SalaRepository implements Repository<Sala> {
         return salas;
     }
 
-    public List<Sala> getByPredio(final Predio predio) {
+    public List<Sala> getByIdPredio(final Integer idPredio) {
         final Connection connection = DatabaseConnection.getConnection();
         final List<Sala> salas = new ArrayList<Sala>();
         try {
             final PreparedStatement s = connection.prepareStatement(
                     "SELECT id,nome,tipo,id_predio,id_departamento FROM sala WHERE id_predio=? ORDER BY id");
-            s.setObject(1, predio.getId(), Types.INTEGER);
+            s.setObject(1, idPredio, Types.INTEGER);
             final ResultSet r = s.executeQuery();
             while (r.next()) {
                 final Integer id = (Integer) r.getObject("id");
                 final String nome = (String) r.getObject("nome");
                 final String tipo = (String) r.getObject("tipo");
-                final Integer idPredio = (Integer) r.getObject("id_predio");
                 final Integer idDepartamento = (Integer) r
                         .getObject("id_departamento");
 

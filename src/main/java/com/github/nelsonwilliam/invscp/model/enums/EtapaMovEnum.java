@@ -2,6 +2,7 @@ package com.github.nelsonwilliam.invscp.model.enums;
 
 public enum EtapaMovEnum {
 
+    INICIADA(0, "Iniciada"),
 	AGUARDANDO_AC_SAIDA(1, "Aguardando aceite de saída"),
 	AGUARDANDO_AC_ENTRADA(2, "Aguardando aceite de entrada"),
 	EM_MOVIMENTACAO(3, "Em movimentação"),

@@ -3,6 +3,7 @@ package com.github.nelsonwilliam.invscp.util;
 import java.security.AccessControlException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import com.github.nelsonwilliam.invscp.exception.IllegalDeleteException;
 import com.github.nelsonwilliam.invscp.exception.IllegalInsertException;
@@ -10,20 +11,25 @@ import com.github.nelsonwilliam.invscp.exception.IllegalUpdateException;
 import com.github.nelsonwilliam.invscp.model.Baixa;
 import com.github.nelsonwilliam.invscp.model.Bem;
 import com.github.nelsonwilliam.invscp.model.Departamento;
+import com.github.nelsonwilliam.invscp.model.EventoMovimentacao;
 import com.github.nelsonwilliam.invscp.model.Funcionario;
 import com.github.nelsonwilliam.invscp.model.GrupoMaterial;
 import com.github.nelsonwilliam.invscp.model.Localizacao;
+import com.github.nelsonwilliam.invscp.model.Movimentacao;
 import com.github.nelsonwilliam.invscp.model.OrdemServico;
 import com.github.nelsonwilliam.invscp.model.Predio;
 import com.github.nelsonwilliam.invscp.model.Sala;
 import com.github.nelsonwilliam.invscp.model.dto.BaixaDTO;
 import com.github.nelsonwilliam.invscp.model.dto.BemDTO;
 import com.github.nelsonwilliam.invscp.model.dto.DepartamentoDTO;
+import com.github.nelsonwilliam.invscp.model.dto.EventoMovimentacaoDTO;
 import com.github.nelsonwilliam.invscp.model.dto.FuncionarioDTO;
 import com.github.nelsonwilliam.invscp.model.dto.GrupoMaterialDTO;
+import com.github.nelsonwilliam.invscp.model.dto.GuiaTransporteDTO;
 import com.github.nelsonwilliam.invscp.model.dto.HistoricoDTO;
 import com.github.nelsonwilliam.invscp.model.dto.InventarioDTO;
 import com.github.nelsonwilliam.invscp.model.dto.LocalizacaoDTO;
+import com.github.nelsonwilliam.invscp.model.dto.MovimentacaoDTO;
 import com.github.nelsonwilliam.invscp.model.dto.OrdemServicoDTO;
 import com.github.nelsonwilliam.invscp.model.dto.PredioDTO;
 import com.github.nelsonwilliam.invscp.model.dto.RelatorioDTO;
@@ -31,11 +37,14 @@ import com.github.nelsonwilliam.invscp.model.dto.SalaDTO;
 import com.github.nelsonwilliam.invscp.model.repository.BaixaRepository;
 import com.github.nelsonwilliam.invscp.model.repository.BemRepository;
 import com.github.nelsonwilliam.invscp.model.repository.DepartamentoRepository;
+import com.github.nelsonwilliam.invscp.model.repository.EventoMovimentacaoRepository;
 import com.github.nelsonwilliam.invscp.model.repository.FuncionarioRepository;
 import com.github.nelsonwilliam.invscp.model.repository.GrupoMaterialRepository;
+import com.github.nelsonwilliam.invscp.model.repository.GuiaTransporteRepository;
 import com.github.nelsonwilliam.invscp.model.repository.HistoricoRepository;
 import com.github.nelsonwilliam.invscp.model.repository.InventarioRepository;
 import com.github.nelsonwilliam.invscp.model.repository.LocalizacaoRepository;
+import com.github.nelsonwilliam.invscp.model.repository.MovimentacaoRepository;
 import com.github.nelsonwilliam.invscp.model.repository.OrdemServicoRepository;
 import com.github.nelsonwilliam.invscp.model.repository.PredioRepository;
 import com.github.nelsonwilliam.invscp.model.repository.RelatorioRepository;
@@ -61,9 +70,98 @@ public class Client {
         // TODO
     }
 
+    // ---------------------
+    // EVENTOS MOVIMENTAÇÃO
+    // ---------------------
+
+    public static void requestValidarInserirEventoMovimentacao(
+            final FuncionarioDTO usuario, final EventoMovimentacaoDTO novo)
+            throws IllegalInsertException {
+        EventoMovimentacao.validarInserir(usuario, novo);
+    }
+
+    public static void requestValidarAlterarEventoMovimentacao(
+            final FuncionarioDTO usuario, final Integer idAntigo,
+            final EventoMovimentacaoDTO novo) throws IllegalUpdateException {
+        EventoMovimentacao.validarAlterar(usuario, idAntigo, novo);
+    }
+
+    public static void requestValidarDeleteEventoMovimentacao(
+            final FuncionarioDTO usuario, final Integer id)
+            throws IllegalDeleteException {
+        EventoMovimentacao.validarDeletar(usuario, id);
+    }
+
+    public static int requestAddEventoMovimentacao(
+            final EventoMovimentacaoDTO item) {
+        final EventoMovimentacaoRepository repo =
+                new EventoMovimentacaoRepository();
+        final EventoMovimentacao itemModel = new EventoMovimentacao();
+        itemModel.setValuesFromDTO(item);
+        repo.add(itemModel);
+        return itemModel.getId();
+    }
+
+    public static void requestUpdateEventoMovimentacao(
+            final EventoMovimentacaoDTO item) {
+        final EventoMovimentacaoRepository repo =
+                new EventoMovimentacaoRepository();
+        final EventoMovimentacao itemModel = new EventoMovimentacao();
+        itemModel.setValuesFromDTO(item);
+        repo.update(itemModel);
+    }
+
+    public static void requestDeleteEventoMovimentacao(final Integer itemId) {
+        final EventoMovimentacaoRepository repo =
+                new EventoMovimentacaoRepository();
+        final EventoMovimentacao placeholderItem = new EventoMovimentacao();
+        placeholderItem.setId(itemId);
+        repo.remove(placeholderItem);
+    }
+
+    public static EventoMovimentacaoDTO requestGetEventoMovimentacaoById(
+            final Integer itemId) {
+        final EventoMovimentacaoRepository repo =
+                new EventoMovimentacaoRepository();
+        final EventoMovimentacao item = repo.getById(itemId);
+        if (item == null) {
+            return null;
+        }
+        return item.toDTO();
+    }
+
+    public static List<EventoMovimentacaoDTO> requestGetEventosMovimentacaoByMovimentacao(
+            MovimentacaoDTO mov) {
+
+        final EventoMovimentacaoRepository repo =
+                new EventoMovimentacaoRepository();
+        final List<EventoMovimentacao> models =
+                repo.getByIdMovimentacao(mov.getId());
+        final List<EventoMovimentacaoDTO> dtos = new ArrayList<>();
+        for (final EventoMovimentacao model : models) {
+            dtos.add(model.toDTO());
+        }
+        return dtos;
+    }
+
+    public static List<String> requestPosInserirEventoMovimentacao(
+            final FuncionarioDTO usuario, final EventoMovimentacaoDTO item) {
+        return EventoMovimentacao.posInserir(usuario, item);
+    }
+
     // -----------
     // RELATÓRIOS
     // -----------
+
+    public static GuiaTransporteDTO requestGerarGuiaTransporte(
+            final MovimentacaoDTO mov, FuncionarioDTO usuario) {
+        final GuiaTransporteRepository repo = new GuiaTransporteRepository();
+        final Movimentacao movModel = new Movimentacao();
+        movModel.setValuesFromDTO(mov);
+        final Funcionario funcModel = new Funcionario();
+        funcModel.setValuesFromDTO(usuario);
+        return repo.getByMovimentacao(movModel, funcModel).toDTO();
+    }
 
     public static RelatorioDTO requestGerarRelatorioDept(
             final DepartamentoDTO dept) {
@@ -73,17 +171,104 @@ public class Client {
         return repo.getByDepartamento(deptModel).toDTO();
     }
 
-    public static HistoricoDTO requestGerarHistorico(
-            final BemDTO bem) {
+    public static HistoricoDTO requestGerarHistorico(final BemDTO bem) {
         final HistoricoRepository repo = new HistoricoRepository();
         final Bem bemModel = new Bem();
         bemModel.setValuesFromDTO(bem);
         return repo.getByBem(bemModel).toDTO();
     }
-    
-    public static InventarioDTO requestGerarInventario () {
+
+    public static InventarioDTO requestGerarInventario() {
         final InventarioRepository repo = new InventarioRepository();
         return repo.get().toDTO();
+    }
+
+    // -------------
+    // MOVIMENTAÇÃO
+    // -------------
+
+    public static void requestValidarInserirMovimentacao(
+            final FuncionarioDTO usuario, final MovimentacaoDTO novo)
+            throws IllegalInsertException {
+        Movimentacao.validarInserir(usuario, novo);
+    }
+
+    public static void requestValidarAlterarMovimentacao(
+            final FuncionarioDTO usuario, final Integer idAntigo,
+            final MovimentacaoDTO novo) throws IllegalUpdateException {
+        Movimentacao.validarAlterar(usuario, idAntigo, novo);
+    }
+
+    public static void requestValidarDeleteMovimentacao(
+            final FuncionarioDTO usuario, final Integer id)
+            throws IllegalDeleteException {
+        Movimentacao.validarDeletar(usuario, id);
+    }
+
+    public static int requestAddMovimentacao(final MovimentacaoDTO item) {
+        final MovimentacaoRepository repo = new MovimentacaoRepository();
+        final Movimentacao itemModel = new Movimentacao();
+        itemModel.setValuesFromDTO(item);
+        repo.add(itemModel);
+        return itemModel.getId();
+    }
+
+    public static void requestUpdateMovimentacao(final MovimentacaoDTO item) {
+        final MovimentacaoRepository repo = new MovimentacaoRepository();
+        final Movimentacao itemModel = new Movimentacao();
+        itemModel.setValuesFromDTO(item);
+        repo.update(itemModel);
+    }
+
+    public static void requestDeleteMovimentacao(final Integer itemId) {
+        final MovimentacaoRepository repo = new MovimentacaoRepository();
+        final Movimentacao placeholderItem = new Movimentacao();
+        placeholderItem.setId(itemId);
+        repo.remove(placeholderItem);
+    }
+
+    public static MovimentacaoDTO requestGetMovimentacaoById(
+            final Integer itemId) {
+        final MovimentacaoRepository repo = new MovimentacaoRepository();
+        final Movimentacao item = repo.getById(itemId);
+        if (item == null) {
+            return null;
+        }
+        return item.toDTO();
+    }
+
+    public static List<MovimentacaoDTO> requestGetMovimentacoes() {
+        final MovimentacaoRepository repo = new MovimentacaoRepository();
+        final List<Movimentacao> models = repo.getAll();
+        final List<MovimentacaoDTO> dtos = new ArrayList<>();
+        for (final Movimentacao model : models) {
+            dtos.add(model.toDTO());
+        }
+        return dtos;
+    }
+
+    public static List<String> requestPosInserirMovimentacao(
+            final FuncionarioDTO usuario, final MovimentacaoDTO item) {
+        return Movimentacao.posInserir(usuario, item);
+    }
+
+    public static String requestGerarNumGuiaTransporte() {
+        final MovimentacaoRepository repo = new MovimentacaoRepository();
+        Random rand = new Random();
+        String guia = null;
+        int tentativas = 0;
+        while (tentativas < 10 && guia == null) {
+            // Gera um número de 9 dígitos
+            Integer guiaNum = 100000000;
+            guiaNum += rand.nextInt(900000000);
+
+            guia = guiaNum.toString();
+            if (repo.existsNumGuiaTransporte(guia)) {
+                guia = null;
+            }
+            tentativas++;
+        }
+        return guia;
     }
 
     // ------
@@ -169,15 +354,14 @@ public class Client {
         Bem.validarInserir(usuario, novo);
     }
 
-    public static void requestValidarAlterarBem(
-            final FuncionarioDTO usuario, final Integer idAntigo,
-            final BemDTO novo) throws IllegalUpdateException {
+    public static void requestValidarAlterarBem(final FuncionarioDTO usuario,
+            final Integer idAntigo, final BemDTO novo)
+            throws IllegalUpdateException {
         Bem.validarAlterar(usuario, idAntigo, novo);
     }
 
-    public static void requestValidarDeleteBem(
-            final FuncionarioDTO usuario, final Integer id)
-            throws IllegalDeleteException {
+    public static void requestValidarDeleteBem(final FuncionarioDTO usuario,
+            final Integer id) throws IllegalDeleteException {
         Bem.validarDeletar(usuario, id);
     }
 
@@ -243,14 +427,13 @@ public class Client {
 
     public static void requestValidarAlterarOrdemServico(
             final FuncionarioDTO usuario, final Integer idAntigo,
-            final OrdemServicoDTO novo)
-            throws IllegalUpdateException {
+            final OrdemServicoDTO novo) throws IllegalUpdateException {
         OrdemServico.validarAlterar(usuario, idAntigo, novo);
     }
 
     public static void requestValidarDeleteOrdemServico(
-            final FuncionarioDTO usuario,
-            final Integer id) throws IllegalDeleteException {
+            final FuncionarioDTO usuario, final Integer id)
+            throws IllegalDeleteException {
         OrdemServico.validarDeletar(usuario, id);
     }
 
@@ -646,6 +829,17 @@ public class Client {
         return dtos;
     }
 
+    public static List<PredioDTO> requestGetPrediosByLocalizacao(
+            LocalizacaoDTO loca) {
+        final PredioRepository repo = new PredioRepository();
+        final List<Predio> models = repo.getByIdLocalizacao(loca.getId());
+        final List<PredioDTO> dtos = new ArrayList<>();
+        for (final Predio model : models) {
+            dtos.add(model.toDTO());
+        }
+        return dtos;
+    }
+
     public static PredioDTO requestGetPredioById(final Integer id) {
         final PredioRepository predioRepo = new PredioRepository();
         final Predio predio = predioRepo.getById(id);
@@ -714,6 +908,16 @@ public class Client {
     public static List<SalaDTO> requestGetSalas() {
         final SalaRepository repo = new SalaRepository();
         final List<Sala> models = repo.getAll();
+        final List<SalaDTO> dtos = new ArrayList<>();
+        for (final Sala model : models) {
+            dtos.add(model.toDTO());
+        }
+        return dtos;
+    }
+
+    public static List<SalaDTO> requestGetSalasByPredio(PredioDTO predio) {
+        final SalaRepository repo = new SalaRepository();
+        final List<Sala> models = repo.getByIdPredio(predio.getId());
         final List<SalaDTO> dtos = new ArrayList<>();
         for (final Sala model : models) {
             dtos.add(model.toDTO());

@@ -49,12 +49,18 @@ public class Departamento implements Model<DepartamentoDTO> {
         if (idChefe != null) {
             final FuncionarioRepository repo = new FuncionarioRepository();
             final Funcionario func = repo.getById(idChefe);
+            // Para evitar loops infinitos ao criar os DTOs
+            // departamentos/chefes, o DTO do chefe não tem o ID do seu
+            // departamento.
             func.setIdDepartamento(null);
             dto.setChefe(func == null ? null : func.toDTO());
         }
         if (idChefeSubstituto != null) {
             final FuncionarioRepository repo = new FuncionarioRepository();
             final Funcionario func = repo.getById(idChefeSubstituto);
+            // Para evitar loops infinitos ao criar os DTOs
+            // departamentos/chefes, o DTO do chefe não tem o ID do seu
+            // departamento.
             func.setIdDepartamento(null);
             dto.setChefeSubstituto(func == null ? null : func.toDTO());
         }
@@ -156,21 +162,21 @@ public class Departamento implements Model<DepartamentoDTO> {
         final DepartamentoRepository deptRepo = new DepartamentoRepository();
 
         if (novoDept.getId() != null) {
-            final Departamento deptExistente = deptRepo
-                    .getById(novoDept.getId());
+            final Departamento deptExistente =
+                    deptRepo.getById(novoDept.getId());
             if (deptExistente != null) {
                 throw new IllegalInsertException(
                         "Não é possível inserir a sala pois o ID já existe.");
             }
         }
 
-        final Integer funcLogadoDeptId = usuario.getDepartamento() == null
-                ? null
-                : usuario.getDepartamento().getId();
-        final boolean funcLogadoEraChefeDept = usuario.getCargo()
-                .isChefeDeDepartamento();
-        final boolean funcLogadoEraChefePatrimonio = usuario.getCargo()
-                .isChefeDePatrimonio();
+        final Integer funcLogadoDeptId =
+                usuario.getDepartamento() == null ? null
+                        : usuario.getDepartamento().getId();
+        final boolean funcLogadoEraChefeDept =
+                usuario.getCargo().isChefeDeDepartamento();
+        final boolean funcLogadoEraChefePatrimonio =
+                usuario.getCargo().isChefeDePatrimonio();
 
         // ------------------
         // CONTROLE DE ACESSO
@@ -321,12 +327,10 @@ public class Departamento implements Model<DepartamentoDTO> {
 
         // Se o novo chefe não possuia departamento, ele deve ser movido para o
         // departamento alterado.
-        final FuncionarioDTO chefe = dept.getChefe();
-        if (chefe.getDepartamento() == null) {
-            chefe.setDepartamento(dept);
-            final Funcionario chefeModel = new Funcionario();
-            chefeModel.setValuesFromDTO(chefe);
-            funcRepo.update(chefeModel);
+        final Funcionario chefe = funcRepo.getById(dept.getChefe().getId());
+        if (chefe.getIdDepartamento() == null) {
+            chefe.setIdDepartamento(dept.getId());
+            funcRepo.update(chefe);
             messages.add("O funcionário " + chefe.getNome()
                     + " foi movido ao departamento " + dept.getNome() + ".");
         }

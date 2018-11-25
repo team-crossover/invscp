@@ -7,9 +7,11 @@ import javax.swing.JFrame;
 import com.github.nelsonwilliam.invscp.model.dto.BaixaDTO;
 import com.github.nelsonwilliam.invscp.model.dto.BemDTO;
 import com.github.nelsonwilliam.invscp.model.dto.DepartamentoDTO;
+import com.github.nelsonwilliam.invscp.model.dto.EventoMovimentacaoDTO;
 import com.github.nelsonwilliam.invscp.model.dto.FuncionarioDTO;
 import com.github.nelsonwilliam.invscp.model.dto.GrupoMaterialDTO;
 import com.github.nelsonwilliam.invscp.model.dto.LocalizacaoDTO;
+import com.github.nelsonwilliam.invscp.model.dto.MovimentacaoDTO;
 import com.github.nelsonwilliam.invscp.model.dto.OrdemServicoDTO;
 import com.github.nelsonwilliam.invscp.model.dto.PredioDTO;
 import com.github.nelsonwilliam.invscp.model.dto.SalaDTO;
@@ -19,6 +21,8 @@ import com.github.nelsonwilliam.invscp.view.swing.BemSwingView;
 import com.github.nelsonwilliam.invscp.view.swing.BensSwingView;
 import com.github.nelsonwilliam.invscp.view.swing.DepartamentoSwingView;
 import com.github.nelsonwilliam.invscp.view.swing.DepartamentosSwingView;
+import com.github.nelsonwilliam.invscp.view.swing.EventoMovimentacaoSwingView;
+import com.github.nelsonwilliam.invscp.view.swing.EventosMovimentacaoSwingView;
 import com.github.nelsonwilliam.invscp.view.swing.FuncionarioSwingView;
 import com.github.nelsonwilliam.invscp.view.swing.FuncionariosSwingView;
 import com.github.nelsonwilliam.invscp.view.swing.LocalizacaoSwingView;
@@ -26,6 +30,8 @@ import com.github.nelsonwilliam.invscp.view.swing.LocalizacoesSwingView;
 import com.github.nelsonwilliam.invscp.view.swing.LoginSwingView;
 import com.github.nelsonwilliam.invscp.view.swing.MainSwingView;
 import com.github.nelsonwilliam.invscp.view.swing.MenuSwingView;
+import com.github.nelsonwilliam.invscp.view.swing.MovimentacaoSwingView;
+import com.github.nelsonwilliam.invscp.view.swing.MovimentacoesSwingView;
 import com.github.nelsonwilliam.invscp.view.swing.OrdemServicoSwingView;
 import com.github.nelsonwilliam.invscp.view.swing.OrdensServicoSwingView;
 import com.github.nelsonwilliam.invscp.view.swing.PredioSwingView;
@@ -235,6 +241,48 @@ public class ViewFactory {
         }
     }
 
+    public static MovimentacoesView createMovimentacoes() {
+
+        switch (ClientSettings.VIEW_IMPL) {
+            case SWING:
+                return new MovimentacoesSwingView();
+            default:
+                throw new IllegalArgumentException();
+        }
+    }
+
+    public static MovimentacaoView createMovimentacao(final MainView main,
+            final MovimentacaoDTO mov, final boolean isAddition) {
+
+        switch (ClientSettings.VIEW_IMPL) {
+            case SWING:
+                return new MovimentacaoSwingView((JFrame) main, mov, isAddition);
+            default:
+                throw new IllegalArgumentException();
+        }
+    }
+
+    public static EventosMovimentacaoView createEventosMovimentacao(final MainView main) {
+
+        switch (ClientSettings.VIEW_IMPL) {
+            case SWING:
+                return new EventosMovimentacaoSwingView((JFrame) main);
+            default:
+                throw new IllegalArgumentException();
+        }
+    }
+
+    public static EventoMovimentacaoView createEventoMovimentacao(final MainView main,
+            final EventoMovimentacaoDTO mov, final boolean isAddition) {
+
+        switch (ClientSettings.VIEW_IMPL) {
+            case SWING:
+                return new EventoMovimentacaoSwingView((JFrame) main, mov, isAddition);
+            default:
+                throw new IllegalArgumentException();
+        }
+    }
+    
     public enum ViewImplementation {
         SWING
     }

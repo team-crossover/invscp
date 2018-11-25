@@ -20,6 +20,18 @@ public class MovimentacaoDTO implements DTO {
 
     private String numGuiaTransporte = null;
 
+    public boolean isInterna() {
+        return salaOrigem.getDepartamento().getId()
+                .equals(salaDestino.getDepartamento().getId());
+    }
+
+    public boolean isParaMesmaCidade() {
+        return salaOrigem.getPredio().getLocalizacao().getUf()
+                .equals(salaDestino.getPredio().getLocalizacao().getUf())
+                && salaOrigem.getPredio().getLocalizacao().getCidade().equals(
+                        salaDestino.getPredio().getLocalizacao().getCidade());
+    }
+
     public Integer getId() {
         return id;
     }
@@ -32,16 +44,8 @@ public class MovimentacaoDTO implements DTO {
         return etapa;
     }
 
-    public String getEtapaString() {
-        return etapa.getTexto();
-    }
-
     public void setEtapa(final EtapaMovEnum etapa) {
         this.etapa = etapa;
-    }
-
-    public void setEtapaString(final String etapaNova) {
-        this.etapa = EtapaMovEnum.valueOfTexto(etapaNova);
     }
 
     public BemDTO getBem() {

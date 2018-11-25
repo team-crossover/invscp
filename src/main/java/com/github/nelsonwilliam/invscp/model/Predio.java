@@ -92,7 +92,7 @@ public class Predio implements Model<PredioDTO> {
         // repetidos/duplicados/já utilizados?Há itens obrigatórios faltando?
         // Etc).
 
-        if (salaRepo.getByPredio(predio).size() > 0) {
+        if (salaRepo.getByIdPredio(predio.getId()).size() > 0) {
             throw new IllegalDeleteException(
                     "Não é possível deletar o prédio " + predio.getNome()
                             + " pois existem salas com este prédio.");
@@ -123,8 +123,8 @@ public class Predio implements Model<PredioDTO> {
         final PredioRepository predioRepo = new PredioRepository();
 
         if (novoPredio.getId() != null) {
-            final Predio predioExistente = predioRepo
-                    .getById(novoPredio.getId());
+            final Predio predioExistente =
+                    predioRepo.getById(novoPredio.getId());
             if (predioExistente != null) {
                 throw new IllegalInsertException(
                         "Não é possível inserir o prédio pois o ID já existe.");

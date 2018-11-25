@@ -1,5 +1,6 @@
 package com.github.nelsonwilliam.invscp.model;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,14 +8,13 @@ import com.github.nelsonwilliam.invscp.exception.CRUDException;
 import com.github.nelsonwilliam.invscp.exception.IllegalDeleteException;
 import com.github.nelsonwilliam.invscp.exception.IllegalInsertException;
 import com.github.nelsonwilliam.invscp.exception.IllegalUpdateException;
-import com.github.nelsonwilliam.invscp.model.dto.BaixaDTO;
-import com.github.nelsonwilliam.invscp.model.dto.BemDTO;
 import com.github.nelsonwilliam.invscp.model.dto.EventoMovimentacaoDTO;
 import com.github.nelsonwilliam.invscp.model.dto.FuncionarioDTO;
 import com.github.nelsonwilliam.invscp.model.dto.MovimentacaoDTO;
 import com.github.nelsonwilliam.invscp.model.enums.BemSituacaoEnum;
 import com.github.nelsonwilliam.invscp.model.enums.CargoEnum;
 import com.github.nelsonwilliam.invscp.model.enums.EtapaMovEnum;
+import com.github.nelsonwilliam.invscp.model.enums.TipoEventoMovEnum;
 import com.github.nelsonwilliam.invscp.model.repository.BaixaRepository;
 import com.github.nelsonwilliam.invscp.model.repository.BemRepository;
 import com.github.nelsonwilliam.invscp.model.repository.EventoMovimentacaoRepository;
@@ -63,27 +63,29 @@ public class Movimentacao implements Model<MovimentacaoDTO> {
         if (idBem != null) {
             final BemRepository repo = new BemRepository();
             final Bem bem = repo.getById(idBem);
-            bem.setIdDepartamento(null);
             dto.setBem(bem == null ? null : bem.toDTO());
         }
         if (idSalaOrigem != null) {
             final SalaRepository repo = new SalaRepository();
             final Sala salaO = repo.getById(idSalaOrigem);
-            salaO.setIdDepartamento(null);
             dto.setSalaOrigem(salaO == null ? null : salaO.toDTO());
         }
         if (idSalaDestino != null) {
             final SalaRepository repo = new SalaRepository();
-            final Sala salaD = repo.getById(idSalaOrigem);
-            salaD.setIdDepartamento(null);
+            final Sala salaD = repo.getById(idSalaDestino);
             dto.setSalaDestino(salaD == null ? null : salaD.toDTO());
         }
 
-        final EventoMovimentacaoRepository eventoRepo = new EventoMovimentacaoRepository();
+        final EventoMovimentacaoRepository eventoRepo =
+                new EventoMovimentacaoRepository();
         final List<EventoMovimentacaoDTO> eventosDto = new ArrayList<>();
-        final List<EventoMovimentacao> eventos = eventoRepo
-                .getByMovimentacao(this);
+        final List<EventoMovimentacao> eventos =
+                eventoRepo.getByIdMovimentacao(id);
         for (EventoMovimentacao ev : eventos) {
+            // Para evitar loops infinitos ao criar os DTOs
+            // movimentacao/eventoMovimentacao, o DTO do evento movimentação
+            // dessa lista não tem o ID da movimentação.
+            ev.setIdMovimentacao(null);
             eventosDto.add(ev.toDTO());
         }
         dto.setEventos(eventosDto);
@@ -100,7 +102,7 @@ public class Movimentacao implements Model<MovimentacaoDTO> {
     }
 
     public static void validarAlterar(final FuncionarioDTO usuario,
-            final Integer idAntigaMov, final BaixaDTO novaMov)
+            final Integer idAntigaMov, final MovimentacaoDTO newNovo)
             throws IllegalUpdateException {
 
         throw new IllegalUpdateException(
@@ -110,10 +112,7 @@ public class Movimentacao implements Model<MovimentacaoDTO> {
     public static void validarInserir(final FuncionarioDTO usuario,
             final MovimentacaoDTO novaMov) throws IllegalInsertException {
 
-        // ---------------
         // IDENTIFICADORES
-        // ---------------
-
         final MovimentacaoRepository movRepo = new MovimentacaoRepository();
 
         if (novaMov.getId() != null) {
@@ -150,214 +149,23 @@ public class Movimentacao implements Model<MovimentacaoDTO> {
                     "Não é possível movimentar este bem pois ele já possui uma movimentação pendente relacionda a ele.");
         }
 
+        if (!novaMov.isParaMesmaCidade()) {
+            if (novaMov.getNumGuiaTransporte() == null) {
+                throw new IllegalInsertException(
+                        "Movimentações entre cidades devem possuir um número de guia de transporte.");
+            }
+
+            if (movRepo
+                    .existsNumGuiaTransporte(novaMov.getNumGuiaTransporte())) {
+                throw new IllegalInsertException(
+                        "Este número de guia de transporte já foi utilizado.");
+            }
+        }
+
         try {
             validarCampos(novaMov);
         } catch (final CRUDException e) {
             throw new IllegalInsertException(e.getMessage());
-        }
-    }
-
-    /**
-     * Metodo a ser usado para validar o registro de um aceite de saída.
-     * 
-     * @param usuario
-     * @param idAntigaMov
-     * @param novaMov
-     * @throws IllegalUpdateException
-     */
-    public static void validarAceiteSaida(final FuncionarioDTO usuario,
-            final Integer idAntigaMov, final MovimentacaoDTO novaMov)
-            throws IllegalUpdateException {
-
-        if (idAntigaMov == null) {
-            throw new IllegalUpdateException(
-                    "Não é possível alterar um bem sem seu ID.");
-        }
-
-        final MovimentacaoRepository movRepo = new MovimentacaoRepository();
-        final Movimentacao antigaMov = movRepo.getById(idAntigaMov);
-
-        if (antigaMov == null) {
-            throw new IllegalUpdateException(
-                    "Não é possível atualizar uma movimentação inexistente.");
-        }
-
-        if (antigaMov.getId() == null) {
-            throw new IllegalUpdateException(
-                    "Não é possível atualizar o ID da movimentação.");
-        }
-
-        if (!antigaMov.getId().equals(novaMov.getId())) {
-            throw new IllegalUpdateException(
-                    "Não é possível atualizar o ID da movimentação.");
-        }
-
-        if (!antigaMov.getIdBem().equals(novaMov.getBem().getId())) {
-            throw new IllegalUpdateException(
-                    "Não é possível alterar o Bem da movimentação.");
-        }
-
-        if (!antigaMov.getIdSalaOrigem()
-                .equals(novaMov.getSalaOrigem().getId())) {
-            throw new IllegalUpdateException(
-                    "Não é possível alterar a sala de origem da movimentação.");
-        }
-
-        if (!antigaMov.getIdSalaDestino()
-                .equals(novaMov.getSalaDestino().getId())) {
-            throw new IllegalUpdateException(
-                    "Não é possível alterar a sala de destino da movimentação.");
-        }
-
-        if (!novaMov.getEtapa().equals(EtapaMovEnum.AGUARDANDO_AC_SAIDA)) {
-            throw new IllegalUpdateException(
-                    "Esta ação não é possível nesta etapa da movimentação.");
-        }
-
-        if (!antigaMov.isInterna()) {
-            throw new IllegalUpdateException(
-                    "Esta ação não é possível para uma movimentação interna.");
-        }
-
-        try {
-            validarCampos(novaMov);
-        } catch (final CRUDException e) {
-            throw new IllegalUpdateException(e.getMessage());
-        }
-    }
-
-    /**
-     * Metodo a ser usado para validar o registro de um aceite de entrada.
-     * 
-     * @param usuario
-     * @param idAntigaMov
-     * @param novaMov
-     * @throws IllegalUpdateException
-     */
-    public static void validarAceiteEntrada(final FuncionarioDTO usuario,
-            final Integer idAntigaMov, final MovimentacaoDTO novaMov)
-            throws IllegalUpdateException {
-
-        if (idAntigaMov == null) {
-            throw new IllegalUpdateException(
-                    "Não é possível alterar um bem sem seu ID.");
-        }
-
-        final MovimentacaoRepository movRepo = new MovimentacaoRepository();
-        final Movimentacao antigaMov = movRepo.getById(idAntigaMov);
-
-        if (antigaMov == null) {
-            throw new IllegalUpdateException(
-                    "Não é possível atualizar uma movimentação inexistente.");
-        }
-
-        if (antigaMov.getId() == null) {
-            throw new IllegalUpdateException(
-                    "Não é possível atualizar o ID da movimentação.");
-        }
-
-        if (!antigaMov.getId().equals(novaMov.getId())) {
-            throw new IllegalUpdateException(
-                    "Não é possível atualizar o ID da movimentação.");
-        }
-
-        if (!antigaMov.getIdBem().equals(novaMov.getBem().getId())) {
-            throw new IllegalUpdateException(
-                    "Não é possível alterar o Bem da movimentação.");
-        }
-
-        if (!antigaMov.getIdSalaOrigem()
-                .equals(novaMov.getSalaOrigem().getId())) {
-            throw new IllegalUpdateException(
-                    "Não é possível alterar a sala de origem da movimentação.");
-        }
-
-        if (!antigaMov.getIdSalaDestino()
-                .equals(novaMov.getSalaDestino().getId())) {
-            throw new IllegalUpdateException(
-                    "Não é possível alterar a sala de destino da movimentação.");
-        }
-
-        if (!novaMov.getEtapa().equals(EtapaMovEnum.AGUARDANDO_AC_ENTRADA)) {
-            throw new IllegalUpdateException(
-                    "Esta ação não é possível nesta etapa da movimentação.");
-        }
-
-        if (!antigaMov.isInterna()) {
-            throw new IllegalUpdateException(
-                    "Esta ação não é possível para uma movimentação interna.");
-        }
-
-        if (!antigaMov.getEtapa().equals(EtapaMovEnum.AGUARDANDO_AC_SAIDA)) {
-            throw new IllegalUpdateException(
-                    "Esta ação só é possível se o aceite de saída para a mivimentação já estiver dado");
-        }
-
-        try {
-            validarCampos(novaMov);
-        } catch (final CRUDException e) {
-            throw new IllegalUpdateException(e.getMessage());
-        }
-    }
-
-    public static void validarCancelar(final FuncionarioDTO usuario,
-            final Integer idAntigaMov, final MovimentacaoDTO novaMov)
-            throws IllegalUpdateException {
-        if (idAntigaMov == null) {
-            throw new IllegalUpdateException(
-                    "Não é possível alterar um bem sem seu ID.");
-        }
-
-        final MovimentacaoRepository movRepo = new MovimentacaoRepository();
-        final Movimentacao antigaMov = movRepo.getById(idAntigaMov);
-
-        if (antigaMov == null) {
-            throw new IllegalUpdateException(
-                    "Não é possível atualizar uma movimentação inexistente.");
-        }
-
-        if (antigaMov.getId() == null) {
-            throw new IllegalUpdateException(
-                    "Não é possível atualizar o ID da movimentação.");
-        }
-
-        if (!antigaMov.getId().equals(novaMov.getId())) {
-            throw new IllegalUpdateException(
-                    "Não é possível atualizar o ID da movimentação.");
-        }
-
-        if (!antigaMov.getIdBem().equals(novaMov.getBem().getId())) {
-            throw new IllegalUpdateException(
-                    "Não é possível alterar o Bem da movimentação.");
-        }
-
-        if (!antigaMov.getIdSalaOrigem()
-                .equals(novaMov.getSalaOrigem().getId())) {
-            throw new IllegalUpdateException(
-                    "Não é possível alterar a sala de origem da movimentação.");
-        }
-
-        if (!antigaMov.getIdSalaDestino()
-                .equals(novaMov.getSalaDestino().getId())) {
-            throw new IllegalUpdateException(
-                    "Não é possível alterar a sala de destino da movimentação.");
-        }
-
-        if (!novaMov.getEtapa().equals(EtapaMovEnum.FINALIZADA)) {
-            throw new IllegalUpdateException(
-                    "Esta ação não é possível para movimentações já finalizadas.");
-        }
-
-        if (!novaMov.getEtapa().equals(EtapaMovEnum.CANCELADA)) {
-            throw new IllegalUpdateException(
-                    "Esta movimentação já foi cancelada.");
-        }
-
-        try {
-
-            validarCampos(novaMov);
-        } catch (final CRUDException e) {
-            throw new IllegalUpdateException(e.getMessage());
         }
     }
 
@@ -378,30 +186,22 @@ public class Movimentacao implements Model<MovimentacaoDTO> {
         }
     }
 
-    public boolean isInterna() {
-        SalaRepository salaRepo = new SalaRepository();
-        Sala origem = salaRepo.getById(idSalaOrigem);
-        Sala destino = salaRepo.getById(idSalaDestino);
-        if (origem.equals(destino)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     /**
      * Metodo a ser usado quando uma movimentação é iniciada.
      * 
      * @param usuario
-     * @param mov
+     * @param movDto
      * @return mensagem
      */
-    public static List<String> posInserir(final BemDTO usuario,
-            final MovimentacaoDTO mov) {
+    public static List<String> posInserir(final FuncionarioDTO usuario,
+            final MovimentacaoDTO movDto) {
 
         final List<String> messages = new ArrayList<String>();
+
+        final MovimentacaoRepository movRepo = new MovimentacaoRepository();
+        final Movimentacao mov = movRepo.getById(movDto.getId());
         final BemRepository bemRepo = new BemRepository();
-        final Bem bem = bemRepo.getById(mov.getBem().getId());
+        final Bem bem = bemRepo.getById(movDto.getBem().getId());
 
         // Colocar o bem com o status "em movimentação"
         bem.setSituacao(BemSituacaoEnum.EM_MOVIMENTACAO);
@@ -409,31 +209,33 @@ public class Movimentacao implements Model<MovimentacaoDTO> {
         messages.add("O bem " + bem.getDescricao()
                 + " está agora 'Em movimentação'.");
 
-        return messages;
+        // Mudar a etapa da movimentação pra "aguardando aceite saída" ou
+        // "finalizada" dependendo se é externa ou interna
+        if (mov.isInterna()) {
+            mov.setEtapa(EtapaMovEnum.EM_MOVIMENTACAO);
+        } else {
+            mov.setEtapa(EtapaMovEnum.AGUARDANDO_AC_SAIDA);
+        }
+        movRepo.update(mov);
 
+        // Adicionar o evento de criação da movimentação
+        final EventoMovimentacaoRepository eventoRepo =
+                new EventoMovimentacaoRepository();
+        EventoMovimentacao evento = new EventoMovimentacao();
+        evento.setData(LocalDate.now());
+        evento.setIdFuncionario(usuario.getId());
+        evento.setIdMovimentacao(movDto.getId());
+        evento.setTipo(TipoEventoMovEnum.CRIACAO);
+        eventoRepo.add(evento);
+
+        return messages;
     }
 
-    /**
-     * Metodo a ser usado quando uma movimentação é Finalizada ou Cancelada.
-     * 
-     * @param usuario
-     * @param mov
-     * @return mensagem
-     */
-    public static List<String> posConcluir(final FuncionarioDTO usuario,
-            final MovimentacaoDTO mov) {
-        final List<String> messages = new ArrayList<String>();
-        final BemRepository bemRepo = new BemRepository();
-        final Bem bem = bemRepo.getById(mov.getBem().getId());
-
-        // Colocar o bem com o status "Incorporado"
-        bem.setSituacao(BemSituacaoEnum.INCORPORADO);
-        bemRepo.update(bem);
-        messages.add("O bem " + bem.getDescricao()
-                + " está agora 'Em movimentação'.");
-
-        return messages;
-
+    public boolean isInterna() {
+        SalaRepository salaRepo = new SalaRepository();
+        Sala origem = salaRepo.getById(idSalaOrigem);
+        Sala destino = salaRepo.getById(idSalaDestino);
+        return origem.getIdDepartamento().equals(destino.getIdDepartamento());
     }
 
     public EtapaMovEnum getEtapa() {

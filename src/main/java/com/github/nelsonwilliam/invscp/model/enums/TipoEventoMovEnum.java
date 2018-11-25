@@ -1,6 +1,6 @@
 package com.github.nelsonwilliam.invscp.model.enums;
 
-public enum TipoMovEnum {
+public enum TipoEventoMovEnum {
 
 	CRIACAO(1, "Criação"),
 	ACEITE_ENTRADA(2, "Aceite de entrada"),
@@ -13,14 +13,14 @@ public enum TipoMovEnum {
     private final int valor;
     private final String texto;
 
-    TipoMovEnum(final int valorOpcao, final String textoOpcao) {
+    TipoEventoMovEnum(final int valorOpcao, final String textoOpcao) {
         valor = valorOpcao;
         texto = textoOpcao;
     }
 
-    public static TipoMovEnum valueOfTexto(final String texto) {
-        final TipoMovEnum[] values = TipoMovEnum.values();
-        for (final TipoMovEnum value : values) {
+    public static TipoEventoMovEnum valueOfTexto(final String texto) {
+        final TipoEventoMovEnum[] values = TipoEventoMovEnum.values();
+        for (final TipoEventoMovEnum value : values) {
             if (value.getTexto().equals(texto)) {
                 return value;
             }

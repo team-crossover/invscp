@@ -8,7 +8,6 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.nelsonwilliam.invscp.model.Localizacao;
 import com.github.nelsonwilliam.invscp.model.Predio;
 import com.github.nelsonwilliam.invscp.util.DatabaseConnection;
 
@@ -38,19 +37,18 @@ public class PredioRepository implements Repository<Predio> {
         }
         return predios;
     }
-
-    public List<Predio> getByLocalizacao(final Localizacao localizacao) {
+    
+    public List<Predio> getByIdLocalizacao(final Integer idLocalizacao) {
         final Connection connection = DatabaseConnection.getConnection();
         final List<Predio> predios = new ArrayList<Predio>();
         try {
             final PreparedStatement s = connection.prepareStatement(
                     "SELECT id,nome,id_localizacao FROM predio WHERE id_localizacao=? ORDER BY id");
-            s.setObject(1, localizacao.getId(), Types.INTEGER);
+            s.setObject(1, idLocalizacao, Types.INTEGER);
             final ResultSet r = s.executeQuery();
             while (r.next()) {
                 final Integer id = (Integer) r.getObject("id");
                 final String nome = (String) r.getObject("nome");
-                final Integer idLocalizacao = (Integer) r.getObject("id_localizacao");
 
                 final Predio predio = new Predio();
                 predio.setId(id);

@@ -4,20 +4,31 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Guia de Transporte de %1$s</title>
+    <title>Guia de Autorização de Transporte</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style type="text/css">
         body {
             font-family: Arial, sans-serif;
             font-size: 15px;
-            width: 600px;
+            background-color: #444;
         }
-
+        
         h1,h2,h3 {
             color: #336B6B;
         }
-
+        
+        .pagina {
+            width: 600px;
+            background-color: #fff;
+            box-shadow: 5px 5px 10px #0005;
+            border: 1px solid #0000;
+            border-radius: 5px;
+            padding: 0px 1em 2em 1em;
+            margin: 2.5em auto;
+        }
+        
         .relatorio {
+            width: 100%%;
             border: solid 1px #DDEEEE;
             border-collapse: collapse;
             border-spacing: 0;
@@ -38,34 +49,50 @@
             padding: 10px;
             text-shadow: 1px 1px 1px #fff;
         }
-
+        
+        /* CSS para impressão */
+        @media print {
+            body {
+                background-color: #fff;
+            }
+            .pagina {
+                width: 100%%;
+                border: 0;
+                padding: 0px;
+                box-shadow: 0 0 0 #0000;
+                margin: 0 0;
+            }
+        }
     </style>
 </head>
 
 <body>
-    <h2>Guia de Autorização de Transporte para o bem "%1$s"</h1>
-    <h3>Numero %2$s</h3>
+    <div class="pagina">
+        <h2>Guia de Autorização de Transporte</h1>
+        <h3>Numero %s</h3>
 
-    <i>Gerado em %3$s</i>
+        <i>Gerado em %s</i>
 
-    <div class="guia">
-        <p>Eu %s, %s desta instituição, autorizo o transporte do bem "%s", identificado abaixo, originalmente localizado na cidade %s-%s para a a cidade %s-%s, conforme as normas desta instituição</p>
+        <div class="guia">
+            <p>Eu, %s, %s desta instituição, autorizo o transporte do bem "%s", identificado abaixo, originalmente localizado na cidade de %s - %s, para a cidade de %s - %s, conforme as normas desta instituição.</p>
+            <br>
+        </div>
+        
+        <div class="info-bem">
+            %s
+        </div>
+        
         <br>
-    </div>
-    <div class="info-bem">
-        %4$s
-    </div>
+        <br>        
+        <div align="center" class="ass">
+            <p>_____________________________</p>
+            <p>Assinatura do responsável</p>
+        </div>
 
-    <div align="center" class="ass">
-        <p>___________________________</p>
-        <p>Assinatura do responsável</p>
-    </div>
-
-    <br>
-    <div align="center" class="data">
-        <p>%s, ____ de ____________ de %s</p>
-    </div>
- 
+        <br>
+        <div align="center" class="data">
+            <p>____ de ____________ de %s</p>
+        </div>
     </div>
 </body>
 

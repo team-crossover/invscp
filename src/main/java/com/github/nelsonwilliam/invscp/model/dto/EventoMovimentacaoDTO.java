@@ -2,13 +2,13 @@ package com.github.nelsonwilliam.invscp.model.dto;
 
 import java.time.LocalDate;
 
-import com.github.nelsonwilliam.invscp.model.enums.TipoMovEnum;
+import com.github.nelsonwilliam.invscp.model.enums.TipoEventoMovEnum;
 
 public class EventoMovimentacaoDTO implements DTO {
 
     private Integer id = null;
 
-    private TipoMovEnum tipo = null;
+    private TipoEventoMovEnum tipo = null;
 
     private LocalDate data = null;
 
@@ -26,20 +26,12 @@ public class EventoMovimentacaoDTO implements DTO {
         this.id = id;
     }
 
-    public TipoMovEnum getTipo() {
+    public TipoEventoMovEnum getTipo() {
         return tipo;
     }
 
-    public String getTipoString() {
-        return tipo.getTexto();
-    }
-
-    public void setTipo(final TipoMovEnum tipo) {
+    public void setTipo(final TipoEventoMovEnum tipo) {
         this.tipo = tipo;
-    }
-
-    public void setTipoString(final String tipoNovo) {
-        this.tipo = TipoMovEnum.valueOfTexto(tipoNovo);
     }
 
     public LocalDate getData() {

@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
@@ -13,7 +14,6 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import javax.swing.BorderFactory;
-import javax.swing.JButton;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -26,10 +26,9 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.table.DefaultTableModel;
 
-import com.github.nelsonwilliam.invscp.model.dto.BemDTO;
 import com.github.nelsonwilliam.invscp.model.dto.MovimentacaoDTO;
-import com.github.nelsonwilliam.invscp.model.dto.SalaDTO;
 import com.github.nelsonwilliam.invscp.model.enums.EtapaMovEnum;
+import com.github.nelsonwilliam.invscp.util.Client;
 import com.github.nelsonwilliam.invscp.view.MovimentacoesView;
 
 public class MovimentacoesSwingView extends JPanel
@@ -38,13 +37,16 @@ public class MovimentacoesSwingView extends JPanel
     private static final long serialVersionUID = -9210173032768696552L;
 
     private JTable table;
-    private JButton btnAdicionar;
-    private JButton btnDeletar;
-    private JPopupMenu popupMenu; // Popup exibido ao clicar com o botão direito
-                                  // em um item da
-                                  // tabela
-    private JMenuItem popupItemAlterar;
-    private JMenuItem popupItemRelatorio;
+    private JPopupMenu popupMenu;
+    private JMenuItem popupItemVer;
+    private JMenuItem popupItemAceitarSaida;
+    private JMenuItem popupItemNegarSaida;
+    private JMenuItem popupItemAceitarEntrada;
+    private JMenuItem popupItemNegarEntrada;
+    private JMenuItem popupItemCancelar;
+    private JMenuItem popupItemFinalizar;
+    private JMenuItem popupItemEventos;
+    private JMenuItem popupItemGerarGuiaTransporte;
 
     public MovimentacoesSwingView() {
         initialize();
@@ -59,23 +61,33 @@ public class MovimentacoesSwingView extends JPanel
         gridBagLayout.rowWeights = new double[] { 1.0, 0.0, Double.MIN_VALUE };
         setLayout(gridBagLayout);
 
-        popupItemAlterar = new JMenuItem("Alterar");
-        popupItemRelatorio = new JMenuItem("Gerar relatório...");
+        popupItemVer = new JMenuItem("Ver");
+
+        popupItemAceitarSaida = new JMenuItem("Aceitar saída");
+        popupItemNegarSaida = new JMenuItem("Recusar saída");
+        popupItemAceitarEntrada = new JMenuItem("Aceitar entrada");
+        popupItemNegarEntrada = new JMenuItem("Recusar entrada");
+        popupItemCancelar = new JMenuItem("Cancelar");
+        popupItemFinalizar = new JMenuItem("Finalizar");
+        popupItemEventos = new JMenuItem("Eventos de movimentação...");
+        popupItemGerarGuiaTransporte =
+                new JMenuItem("Gerar guia de autorização de transporte...");
 
         popupMenu = new JPopupMenu();
         popupMenu.addPopupMenuListener(new PopupMenuListener() {
             @Override
             public void popupMenuWillBecomeVisible(final PopupMenuEvent e) {
                 // Garante que ao clicar com o botão direito em um item para
-                // exibir o menu, o
-                // o único item selecionado da tabela será o item clicado.
-                SwingUtilities.invokeLater(() -> {
-                    final int rowAtPoint = table.rowAtPoint(SwingUtilities
-                            .convertPoint(popupMenu, new Point(0, 0), table));
-                    if (rowAtPoint > -1) {
-                        table.setRowSelectionInterval(rowAtPoint, rowAtPoint);
-                    }
-                });
+                // exibir o menu, o único item selecionado da tabela será o item
+                // clicado.
+                Point mousePoint = MouseInfo.getPointerInfo().getLocation();
+                SwingUtilities.convertPointFromScreen(mousePoint, table);
+                final int rowAtPoint = table.rowAtPoint(mousePoint);
+                if (rowAtPoint > -1) {
+                    table.setRowSelectionInterval(rowAtPoint, rowAtPoint);
+                }
+
+                refreshPopupMenuItems();
             }
 
             @Override
@@ -86,9 +98,6 @@ public class MovimentacoesSwingView extends JPanel
             public void popupMenuCanceled(final PopupMenuEvent e) {
             }
         });
-        popupMenu.add(popupItemAlterar);
-        popupMenu.addSeparator();
-        popupMenu.add(popupItemRelatorio);
 
         final JScrollPane scrollPane = new JScrollPane();
         final GridBagConstraints gbc_scrollPane = new GridBagConstraints();
@@ -102,12 +111,11 @@ public class MovimentacoesSwingView extends JPanel
         table = new JTable();
         table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         table.setModel(new DefaultTableModel(new Object[][] {},
-                new String[] { "ID", "Número de guia de transporte", "Etapa",
-                        "Bem", "Sala de origem", "Sala de destino" }) {
+                new String[] { "ID", "Etapa", "Bem", "Sala de origem",
+                        "Sala de destino", "Nº da guia de transporte" }) {
             private static final long serialVersionUID = -5079273255233169992L;
             Class<?>[] columnTypes = new Class[] { Integer.class, String.class,
-                    EtapaMovEnum.class, BemDTO.class, SalaDTO.class,
-                    SalaDTO.class };
+                    String.class, String.class, String.class, String.class };
 
             @Override
             public Class<?> getColumnClass(final int columnIndex) {
@@ -121,11 +129,15 @@ public class MovimentacoesSwingView extends JPanel
         });
         table.getColumnModel().getColumn(0).setMinWidth(75);
         table.getColumnModel().getColumn(0).setMaxWidth(75);
-        table.getColumnModel().getColumn(1).setMinWidth(100);
-        table.getColumnModel().getColumn(1).setMaxWidth(100);
-        table.getColumnModel().getColumn(2).setMinWidth(200);
-        table.getColumnModel().getColumn(3).setMinWidth(200);
-        table.getColumnModel().getColumn(4).setMinWidth(200);
+        table.getColumnModel().getColumn(1).setMinWidth(200);
+        table.getColumnModel().getColumn(1).setMaxWidth(200);
+        table.getColumnModel().getColumn(2).setMinWidth(175);
+        table.getColumnModel().getColumn(3).setMinWidth(150);
+        table.getColumnModel().getColumn(3).setMaxWidth(150);
+        table.getColumnModel().getColumn(4).setMinWidth(150);
+        table.getColumnModel().getColumn(4).setMaxWidth(150);
+        table.getColumnModel().getColumn(5).setMinWidth(200);
+        table.getColumnModel().getColumn(5).setMaxWidth(200);
         table.setAutoCreateRowSorter(true);
         scrollPane.setBorder(BorderFactory.createLineBorder(Color.gray, 1));
         scrollPane.setViewportView(table);
@@ -140,57 +152,103 @@ public class MovimentacoesSwingView extends JPanel
             }
         });
         table.setComponentPopupMenu(popupMenu);
+    }
 
-        btnAdicionar = new JButton("Adicionar novo");
-        final GridBagConstraints gbc_btnAdicionar = new GridBagConstraints();
-        gbc_btnAdicionar.anchor = GridBagConstraints.SOUTHWEST;
-        gbc_btnAdicionar.insets = new Insets(0, 0, 0, 5);
-        gbc_btnAdicionar.gridx = 1;
-        gbc_btnAdicionar.gridy = 1;
-        add(btnAdicionar, gbc_btnAdicionar);
+    private void refreshPopupMenuItems() {
+        // TODO Não deveria estar usando o Client diretamente. Usar o Presenter
+        // para a comunicação com Model...
+        Integer selectedMovId = getSelectedMovimentacoesIds().get(0);
+        MovimentacaoDTO mov = Client.requestGetMovimentacaoById(selectedMovId);
 
-        btnDeletar = new JButton("Deletar selecionado(s)");
-        final GridBagConstraints gbc_btnDeletar = new GridBagConstraints();
-        gbc_btnDeletar.insets = new Insets(0, 0, 0, 5);
-        gbc_btnDeletar.anchor = GridBagConstraints.SOUTHEAST;
-        gbc_btnDeletar.gridx = 2;
-        gbc_btnDeletar.gridy = 1;
-        add(btnDeletar, gbc_btnDeletar);
+        popupMenu.removeAll();
+        popupMenu.add(popupItemVer);
+
+        if (mov.getEtapa() == EtapaMovEnum.AGUARDANDO_AC_ENTRADA) {
+            popupMenu.addSeparator();
+            popupMenu.add(popupItemAceitarEntrada);
+            popupMenu.add(popupItemNegarEntrada);
+            popupMenu.add(popupItemCancelar);
+        } else if (mov.getEtapa() == EtapaMovEnum.AGUARDANDO_AC_SAIDA) {
+            popupMenu.addSeparator();
+            popupMenu.add(popupItemAceitarSaida);
+            popupMenu.add(popupItemNegarSaida);
+            popupMenu.add(popupItemCancelar);
+        } else if (mov.getEtapa() == EtapaMovEnum.EM_MOVIMENTACAO) {
+            popupMenu.addSeparator();
+            popupMenu.add(popupItemFinalizar);
+            popupMenu.add(popupItemCancelar);
+        }
+
+        popupMenu.addSeparator();
+        popupMenu.add(popupItemEventos);
+
+        if (!mov.isParaMesmaCidade()) {
+            popupMenu.add(popupItemGerarGuiaTransporte);
+        }
     }
 
     @Override
-    public void addAdicionarMovimentacaoListener(
-            final ActionListener listener) {
-        btnAdicionar.addActionListener(listener);
+    public void addVerMovimentacaoListener(final ActionListener listener) {
+        popupItemVer.addActionListener(listener);
     }
 
     @Override
-    public void addDeletarMovimentacoesListener(final ActionListener listener) {
-        btnDeletar.addActionListener(listener);
+    public void addAceitarSaidaListener(final ActionListener listener) {
+        popupItemAceitarSaida.addActionListener(listener);
     }
 
     @Override
-    public void addGerarRelatorioListener(final ActionListener listener) {
-        popupItemRelatorio.addActionListener(listener);
+    public void addNegarSaidaListener(final ActionListener listener) {
+        popupItemNegarSaida.addActionListener(listener);
     }
 
     @Override
-    public void addAlterarMovimentacaoListener(final ActionListener listener) {
-        popupItemAlterar.addActionListener(listener);
+    public void addAceitarEntradaListener(final ActionListener listener) {
+        popupItemAceitarEntrada.addActionListener(listener);
+    }
+
+    @Override
+    public void addNegarEntradaListener(final ActionListener listener) {
+        popupItemNegarEntrada.addActionListener(listener);
+    }
+
+    @Override
+    public void addFinalizarListener(final ActionListener listener) {
+        popupItemFinalizar.addActionListener(listener);
+    }
+
+    @Override
+    public void addCancelarListener(final ActionListener listener) {
+        popupItemCancelar.addActionListener(listener);
+    }
+
+    @Override
+    public void addEventosMovimentacaoListener(final ActionListener listener) {
+        popupItemEventos.addActionListener(listener);
+    }
+
+    @Override
+    public void addGerarGuiaTransporte(final ActionListener listener) {
+        popupItemGerarGuiaTransporte.addActionListener(listener);
     }
 
     @Override
     public void updateMovimentacoes(final List<MovimentacaoDTO> movimentacao) {
-        final DefaultTableModel tableModel = (DefaultTableModel) table
-                .getModel();
+        final DefaultTableModel tableModel =
+                (DefaultTableModel) table.getModel();
         tableModel.setNumRows(0);
         for (final MovimentacaoDTO m : movimentacao) {
-            tableModel.addRow(new Object[] { m.getId(),
-                    m.getNumGuiaTransporte(), m.getEtapa(), m.getBem(),
-                    m.getSalaDestino() == null ? "Nenhum" : m.getSalaDestino(),
-                    m.getSalaOrigem() == null ? "Nenhum"
-                            : m.getSalaOrigem().getNome() });
+            tableModel.addRow(new Object[] { m.getId(), m.getEtapa().getTexto(),
+                    m.getBem().getDescricao(), m.getSalaOrigem().getNome(),
+                    m.getSalaDestino().getNome(),
+                    m.getNumGuiaTransporte() == null ? "Nenhum"
+                            : m.getNumGuiaTransporte() });
         }
+
+        // Deixa em ordem decrescente com base no ID, para que as movimentações
+        // novas fiquem primeiro.
+        table.getRowSorter().toggleSortOrder(0);
+        table.getRowSorter().toggleSortOrder(0);
 
         revalidate();
         repaint();

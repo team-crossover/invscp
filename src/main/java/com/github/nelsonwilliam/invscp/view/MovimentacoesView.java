@@ -12,19 +12,23 @@ public interface MovimentacoesView extends View {
     // Métodos para notificar ações do usuário.
     // ----------------------------------------
 
-    void addAdicionarMovimentacaoListener(ActionListener listener);
+    void addVerMovimentacaoListener(ActionListener listener);
 
-    void addGerarRelatorioListener(ActionListener listener);
+    void addAceitarSaidaListener(ActionListener listener);
 
-    void addDeletarMovimentacoesListener(ActionListener listener);
+    void addNegarSaidaListener(ActionListener listener);
 
-    /**
-     * Adiciona o Listener para quando o usuário informar que quer alterar uma
-     * movimentação. Espera-se que quando este evento for invocado, haja
-     * exatamente UMA movimentação selecionado (obtível através do método
-     * getSelectedMovimentacoesIds.
-     */
-    void addAlterarMovimentacaoListener(ActionListener listener);
+    void addAceitarEntradaListener(ActionListener listener);
+
+    void addNegarEntradaListener(ActionListener listener);
+
+    void addCancelarListener(ActionListener listener);
+
+    void addFinalizarListener(ActionListener listener);
+
+    void addEventosMovimentacaoListener(ActionListener listener);
+
+    void addGerarGuiaTransporte(ActionListener listener);
 
     // -------------------------------------------
     // Métodos para atualizar os valores exibidos.

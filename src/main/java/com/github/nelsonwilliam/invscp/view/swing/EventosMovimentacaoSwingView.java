@@ -30,7 +30,7 @@ import javax.swing.table.DefaultTableModel;
 import com.github.nelsonwilliam.invscp.model.dto.EventoMovimentacaoDTO;
 import com.github.nelsonwilliam.invscp.model.dto.FuncionarioDTO;
 import com.github.nelsonwilliam.invscp.model.dto.MovimentacaoDTO;
-import com.github.nelsonwilliam.invscp.model.enums.TipoMovEnum;
+import com.github.nelsonwilliam.invscp.model.enums.TipoEventoMovEnum;
 import com.github.nelsonwilliam.invscp.view.EventosMovimentacaoView;
 
 public class EventosMovimentacaoSwingView extends JDialog
@@ -40,8 +40,7 @@ public class EventosMovimentacaoSwingView extends JDialog
 
     private JTable table;
     private JPopupMenu popupMenu;
-    private JMenuItem popupItemAlterar;
-    private JMenuItem popupItemConcluir;
+    private JMenuItem popupItemVer;
 
     public EventosMovimentacaoSwingView(final JFrame owner) {
         super(owner);
@@ -50,17 +49,17 @@ public class EventosMovimentacaoSwingView extends JDialog
 
     private void initialize() {
         setTitle("Eventos de movimentação");
-        setBounds(0, 0, 486, 300);
+        setBounds(0, 0, 585, 300);
         setLocationRelativeTo(getOwner());
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         final GridBagLayout gridBagLayout = new GridBagLayout();
         gridBagLayout.columnWidths = new int[] { 15, 0, 121, 249, 0, 15 };
-        gridBagLayout.rowHeights = new int[] { 15, 422, 25, 15, 0 };
-        gridBagLayout.columnWeights = new double[] { 0.0, 0.0, 1.0, 1.0, 0.0,
-                0.0 };
-        gridBagLayout.rowWeights = new double[] { 0.0, 1.0, 0.0, 0.0,
-                Double.MIN_VALUE };
+        gridBagLayout.rowHeights = new int[] { 15, 422, 15, 0 };
+        gridBagLayout.columnWeights =
+                new double[] { 0.0, 0.0, 1.0, 1.0, 0.0, 0.0 };
+        gridBagLayout.rowWeights =
+                new double[] { 0.0, 1.0, 0.0, Double.MIN_VALUE };
         getContentPane().setLayout(gridBagLayout);
 
         final JScrollPane scrollPane = new JScrollPane();
@@ -79,8 +78,9 @@ public class EventosMovimentacaoSwingView extends JDialog
 
             private static final long serialVersionUID = -4677927079422034326L;
 
-            Class<?>[] columnTypes = new Class[] { Integer.class,
-                    TipoMovEnum.class, FuncionarioDTO.class, LocalDate.class };
+            Class<?>[] columnTypes =
+                    new Class[] { Integer.class, TipoEventoMovEnum.class,
+                            FuncionarioDTO.class, LocalDate.class };
 
             @Override
             public Class<?> getColumnClass(final int columnIndex) {
@@ -94,15 +94,11 @@ public class EventosMovimentacaoSwingView extends JDialog
         });
         table.getColumnModel().getColumn(0).setMinWidth(75);
         table.getColumnModel().getColumn(0).setMaxWidth(75);
-        table.getColumnModel().getColumn(1).setMinWidth(125);
-        table.getColumnModel().getColumn(1).setMaxWidth(125);
-        table.getColumnModel().getColumn(2).setMinWidth(125);
-        table.getColumnModel().getColumn(2).setMaxWidth(125);
-        table.getColumnModel().getColumn(3).setMinWidth(125);
-        table.getColumnModel().getColumn(3).setMaxWidth(125);
-        table.getColumnModel().getColumn(4).setMinWidth(150);
-        table.getColumnModel().getColumn(4).setMaxWidth(150);
-        table.getColumnModel().getColumn(5).setMinWidth(200);
+        table.getColumnModel().getColumn(1).setMinWidth(150);
+        table.getColumnModel().getColumn(1).setMaxWidth(150);
+        table.getColumnModel().getColumn(2).setMinWidth(150);
+        table.getColumnModel().getColumn(3).setMinWidth(150);
+        table.getColumnModel().getColumn(3).setMaxWidth(150);
         table.setAutoCreateRowSorter(true);
         scrollPane.setBorder(BorderFactory.createLineBorder(Color.gray, 1));
         scrollPane.setViewportView(table);
@@ -117,8 +113,7 @@ public class EventosMovimentacaoSwingView extends JDialog
             }
         });
 
-        popupItemAlterar = new JMenuItem("Alterar");
-        popupItemConcluir = new JMenuItem("Concluir");
+        popupItemVer = new JMenuItem("Ver");
 
         popupMenu = new JPopupMenu();
         popupMenu.addPopupMenuListener(new PopupMenuListener() {
@@ -144,20 +139,13 @@ public class EventosMovimentacaoSwingView extends JDialog
             public void popupMenuCanceled(final PopupMenuEvent e) {
             }
         });
-        popupMenu.add(popupItemAlterar);
-        popupMenu.addSeparator();
-        popupMenu.add(popupItemConcluir);
+        popupMenu.add(popupItemVer);
         table.setComponentPopupMenu(popupMenu);
     }
 
     @Override
-    public void addAlterarEventoMovimentacaoListener(ActionListener listener) {
-        popupItemAlterar.addActionListener(listener);
-    }
-
-    @Override
-    public void addConcluirEventoMovimentacaoListener(ActionListener listener) {
-        popupItemConcluir.addActionListener(listener);
+    public void addVerEventoMovimentacaoListener(ActionListener listener) {
+        popupItemVer.addActionListener(listener);
     }
 
     @Override
@@ -167,14 +155,19 @@ public class EventosMovimentacaoSwingView extends JDialog
         setTitle("Eventos da movimentacao do bem "
                 + movimentacao.getBem().getDescricao());
 
-        final DefaultTableModel tableModel = (DefaultTableModel) table
-                .getModel();
+        final DefaultTableModel tableModel =
+                (DefaultTableModel) table.getModel();
         tableModel.setNumRows(0);
         for (final EventoMovimentacaoDTO e : eventoMovimentacao) {
-            tableModel.addRow(new Object[] { e.getId(), e.getTipoString(),
+            tableModel.addRow(new Object[] { e.getId(), e.getTipo().getTexto(),
                     e.getFuncionario().getNome(),
                     e.getData().format(DateTimeFormatter.ISO_DATE) });
         }
+
+        // Deixa em ordem decrescente com base no ID, para que os eventos novos
+        // fiquem primeiro.
+        table.getRowSorter().toggleSortOrder(0);
+        table.getRowSorter().toggleSortOrder(0);
 
         revalidate();
         repaint();
@@ -205,7 +198,8 @@ public class EventosMovimentacaoSwingView extends JDialog
 
     @Override
     public List<Integer> getSelectedEventosMovimentacaoIds() {
-        final List<Integer> selectedEventosMovimentacao = new ArrayList<Integer>();
+        final List<Integer> selectedEventosMovimentacao =
+                new ArrayList<Integer>();
         final int[] selectedRows = table.getSelectedRows();
         for (int i = 0; i < selectedRows.length; i++) {
             final int row = table.convertRowIndexToModel(selectedRows[i]);

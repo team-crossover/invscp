@@ -11,6 +11,7 @@ import com.github.nelsonwilliam.invscp.view.LocalizacoesView;
 import com.github.nelsonwilliam.invscp.view.LoginView;
 import com.github.nelsonwilliam.invscp.view.MainView;
 import com.github.nelsonwilliam.invscp.view.MenuView;
+import com.github.nelsonwilliam.invscp.view.MovimentacoesView;
 import com.github.nelsonwilliam.invscp.view.PrediosView;
 import com.github.nelsonwilliam.invscp.view.SalasView;
 import com.github.nelsonwilliam.invscp.view.ViewFactory;
@@ -68,6 +69,9 @@ public class MainPresenter extends Presenter<MainView> {
         });
         menuView.addBensListener((final ActionEvent e) -> {
             showBens();
+        });
+        menuView.addMovimentacoesListener((final ActionEvent e) -> {
+            showMovimentacoes();
         });
     }
 
@@ -164,5 +168,12 @@ public class MainPresenter extends Presenter<MainView> {
         final BensView bensView = ViewFactory.createBens();
         final BensPresenter bensPresenter = new BensPresenter(bensView, this);
         view.updateSelectedView(bensView);
+    }
+
+    @SuppressWarnings("unused")
+    private void showMovimentacoes() {
+        final MovimentacoesView movsView = ViewFactory.createMovimentacoes();
+        final MovimentacoesPresenter movsPresenter = new MovimentacoesPresenter(movsView, this);
+        view.updateSelectedView(movsView);
     }
 }

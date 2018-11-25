@@ -57,7 +57,7 @@ public class DepartamentosSwingView extends JPanel
         setLayout(gridBagLayout);
 
         popupItemAlterar = new JMenuItem("Alterar");
-        popupItemRelatorio = new JMenuItem("Gerar relatório...");
+        popupItemRelatorio = new JMenuItem("Gerar relatório de bens...");
 
         popupMenu = new JPopupMenu();
         popupMenu.addPopupMenuListener(new PopupMenuListener() {
@@ -188,6 +188,9 @@ public class DepartamentosSwingView extends JPanel
                                     : d.getChefeSubstituto().getNome() });
         }
 
+        // Deixa em ordem crescente com base no nome.
+        table.getRowSorter().toggleSortOrder(2);
+        
         revalidate();
         repaint();
     }

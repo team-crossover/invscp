@@ -32,10 +32,7 @@ public class InvSCP {
                 forceInitializeDatabase = true;
             }
         }
-
-        // TODO Remover isto (usado apenas para desenvolvimento)
-        // forceInitializeDatabase = true;
-
+        
         initializeDatabase();
         showMainView();
     }
@@ -68,7 +65,7 @@ public class InvSCP {
 
         try {
             databaseWasInitialized = DatabaseConnection
-                    .databaseWasInitialized();
+                    .wasDatabaseInitialized();
         } catch (FileNotFoundException | SQLException e) {
             System.out.println(
                     "Não foi possível verificar se o banco de dados foi inicializado.");

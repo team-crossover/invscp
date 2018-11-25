@@ -183,6 +183,9 @@ public class FuncionariosSwingView extends JPanel implements FuncionariosView {
                             : f.getDepartamento().getNome() });
         }
 
+        // Deixa em ordem crescente com base no nome.
+        table.getRowSorter().toggleSortOrder(1);
+        
         revalidate();
         repaint();
     }

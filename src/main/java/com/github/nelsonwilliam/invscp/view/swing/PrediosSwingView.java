@@ -173,6 +173,9 @@ public class PrediosSwingView extends JPanel implements PrediosView {
                             : p.getLocalizacao().getNome() });
         }
 
+        // Deixa em ordem crescente com base no nome.
+        table.getRowSorter().toggleSortOrder(1);   
+        
         revalidate();
         repaint();
 
