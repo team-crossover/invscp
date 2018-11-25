@@ -52,6 +52,20 @@ public class Client {
         System.out.println(in.readObject().toString());
     }
 
+    public static void close() throws IOException {
+        try {
+            out.close();
+        }
+        finally {
+            try {
+                in.close();
+            }
+            finally {
+                socket.close();
+            }
+        }
+    }
+
     private static Object[] request(final RequestTypeEnum tipo,
             final Object... args) throws Exception {
 

@@ -41,17 +41,12 @@ public class InvSCPClient {
                 ex.printStackTrace();
             }
 
-            // Cria e exibe a tela main com o menu
-            try {
-                final MenuView menuView = ViewFactory.createMenu();
-                final MainView mainView = ViewFactory.createMain(menuView);
-                final MainPresenter mainPresenter = new MainPresenter(mainView,
-                        menuView);
-                menuView.setVisible(true);
-                mainView.setVisible(true);
-            } catch (final Exception e) {
-                e.printStackTrace();
-            }
+            final MenuView menuView = ViewFactory.createMenu();
+            final MainView mainView = ViewFactory.createMain(menuView);
+            final MainPresenter mainPresenter =
+                    new MainPresenter(mainView, menuView);
+            menuView.setVisible(true);
+            mainView.setVisible(true);
         });
     }
 }

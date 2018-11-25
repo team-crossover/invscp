@@ -16,15 +16,7 @@ import com.github.nelsonwilliam.invscp.shared.util.Resources;
  */
 public class DatabaseConnection {
 
-    // TODO Mover configurações pra ClientSettings.
     // TODO Permitir um banco pra testes.
-
-    private static String IP = "localhost";
-    private static String PORT = "5432";
-    private static String DATABASE_NAME = "inventory";
-    private static String USER = "invscpAdmin";
-    private static String PASSWORD = "12345";
-    private static Integer VERSAO_DB = 1;
 
     private static Connection connection;
 
@@ -39,11 +31,12 @@ public class DatabaseConnection {
             throws ClassNotFoundException, SQLException {
         Class.forName("org.postgresql.Driver");
 
-        final String url =
-                "jdbc:postgresql://" + IP + ":" + PORT + "/" + DATABASE_NAME;
+        final String url = "jdbc:postgresql://" + ServerSettings.DATABASE_HOST
+                + ":" + ServerSettings.DATABASE_PORT + "/"
+                + ServerSettings.DATABASE_NAME;
         final Properties props = new Properties();
-        props.setProperty("user", USER);
-        props.setProperty("password", PASSWORD);
+        props.setProperty("user", ServerSettings.DATABASE_USER);
+        props.setProperty("password", ServerSettings.DATABASE_PASSWORD);
         connection = DriverManager.getConnection(url, props);
     }
 
@@ -89,8 +82,8 @@ public class DatabaseConnection {
                 connection.prepareStatement("SELECT versao_db FROM sistema");
         final ResultSet result2 = getVersao.executeQuery();
         if (result2.next()) {
-            Integer versaoDb = (Integer) result2.getObject("versao_db");
-            return versaoDb == VERSAO_DB;
+            final Integer versaoDb = (Integer) result2.getObject("versao_db");
+            return versaoDb == ServerSettings.DATABASE_VERSAO;
         } else {
             // Se a versão não é a esperada (VERSAO_DB), então o banco deve ser
             // inicializado.

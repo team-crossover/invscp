@@ -12,7 +12,6 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import com.github.nelsonwilliam.invscp.client.view.MenuView;
-import com.github.nelsonwilliam.invscp.shared.model.dto.DepartamentoDTO;
 import com.github.nelsonwilliam.invscp.shared.model.dto.FuncionarioDTO;
 
 public class MenuSwingView extends JPanel implements MenuView {
@@ -99,58 +98,58 @@ public class MenuSwingView extends JPanel implements MenuView {
     }
 
     @Override
-    public void updateUsuario(final FuncionarioDTO funcionario) {
+    public void updateUsuario(final FuncionarioDTO user) {
         pnlSession.removeAll();
         pnlButtons.removeAll();
         pnlLoginLogout.removeAll();
 
-        final boolean isLogado = (funcionario != null);
-        final boolean isChefe = isLogado && funcionario.getCargo().isChefe();
-        final boolean isChefeDePatrimonio = isLogado
-                && funcionario.getCargo().isChefeDePatrimonio();
+        final boolean isLogado = user != null;
+        final boolean isChefe = isLogado && user.getCargo().isChefe();
+        final boolean isChefeDePatrimonio =
+                isLogado && user.getCargo().isChefeDePatrimonio();
 
         // Exibe os botões adequados dependendo do papel do funcionário logado.
         if (!isLogado) {
-            // SESSAO ANONIMA
-            pnlSession.add(lblSessaoAnonima);
+            // SESSAO ANÔNIMA
             pnlLoginLogout.add(btnLogin);
+            pnlSession.add(lblSessaoAnonima);
+            pnlButtons.add(btnBens);
 
         } else {
             // FUNCIONARIO LOGADO
-
-            // Session
-            lblFuncionario.setText(funcionario.getNome());
+            pnlLoginLogout.add(btnLogout);
+            lblFuncionario.setText(user.getNome());
+            lblCargo.setText(user.getCargo().getTexto());
             pnlSession.add(lblFuncionario);
-            lblCargo.setText(funcionario.getCargo().getTexto());
             pnlSession.add(lblCargo);
-            final DepartamentoDTO dept = funcionario.getDepartamento();
-            if (dept != null) {
-                lblDepartamento.setText(dept.getNome());
+            if (user.getDepartamento() != null) {
+                lblDepartamento.setText(user.getDepartamento().getNome());
                 pnlSession.add(lblDepartamento);
             }
 
-            // Buttons
             if (isChefe) {
-                // BOTOES DE CHEFES
-                pnlButtons.add(btnFuncionarios);
-                pnlButtons.add(btnDepartamentos);
-                pnlButtons.add(btnLocalizacoes);
-                pnlButtons.add(btnPredios);
-                pnlButtons.add(btnSalas);
+                if (isChefeDePatrimonio) {
+                    // Chefe de patrimônio
+                    pnlButtons.add(btnFuncionarios);
+                    pnlButtons.add(btnDepartamentos);
+                    pnlButtons.add(btnLocalizacoes);
+                    pnlButtons.add(btnPredios);
+                    pnlButtons.add(btnSalas);
+                    pnlButtons.add(btnBens);
+                    pnlButtons.add(btnMovimentacoes);
+                } else {
+                    // Chefe de departamento
+                    pnlButtons.add(btnFuncionarios);
+                    pnlButtons.add(btnDepartamentos);
+                    pnlButtons.add(btnBens);
+                    pnlButtons.add(btnMovimentacoes);
+                }
+            } else {
+                // Funcionário comum
                 pnlButtons.add(btnBens);
                 pnlButtons.add(btnMovimentacoes);
 
-                if (isChefeDePatrimonio) {
-                    // BOTOES DE CHEFE DE PATIRMONIO
-                    // ...
-                }
-
-            } else {
-                // BOTOES DE FUNCIONARIOS COMUNS
             }
-
-            // Logout
-            pnlLoginLogout.add(btnLogout);
         }
 
         revalidate();

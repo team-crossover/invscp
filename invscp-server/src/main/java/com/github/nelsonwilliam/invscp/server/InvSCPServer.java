@@ -7,6 +7,7 @@ import java.sql.SQLException;
 
 import com.github.nelsonwilliam.invscp.server.util.ClientHandler;
 import com.github.nelsonwilliam.invscp.server.util.DatabaseConnection;
+import com.github.nelsonwilliam.invscp.server.util.ServerSettings;
 
 /**
  * Classe responsável por iniciar a execução do servidor do InvSCP.
@@ -14,8 +15,6 @@ import com.github.nelsonwilliam.invscp.server.util.DatabaseConnection;
 public class InvSCPServer {
 
     private static boolean forceInitializeDatabase;
-
-    private static int port = 9898;
 
     public static void main(final String[] args) throws IOException {
         for (int i = 0; i < args.length; i++) {
@@ -26,19 +25,7 @@ public class InvSCPServer {
 
         connectDatabase();
         initializeDatabase();
-
-        final ServerSocket listener = new ServerSocket(port);
-        System.out.println("Conexão estabelecida na porta " + port + ".");
-        System.out.println("Aguardando clientes...");
-        int clientNumber = 0;
-        try {
-            while (true) {
-                new ClientHandler(listener.accept(), clientNumber++).start();
-            }
-        } finally {
-            System.out.println("");
-            listener.close();
-        }
+        run();
     }
 
     /**
@@ -91,4 +78,24 @@ public class InvSCPServer {
         }
     }
 
+    /*
+     * Lida com as conexões de clientes que forem recebidas.
+     */
+    private static void run() throws IOException {
+        final ServerSocket listener =
+                new ServerSocket(ServerSettings.SERVER_PORT);
+        System.out.println("Conexão estabelecida na porta "
+                + ServerSettings.SERVER_PORT + ".");
+        System.out.println("Aguardando clientes...");
+
+        int clientNumber = 1;
+        try {
+            while (true) {
+                new ClientHandler(listener.accept(), clientNumber++).start();
+            }
+        } finally {
+            System.out.println("");
+            listener.close();
+        }
+    }
 }

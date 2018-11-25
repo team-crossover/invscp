@@ -52,6 +52,7 @@ public class BensSwingView extends JPanel implements BensView {
     private JMenuItem popupItemHistorico;
     private JPanel panel;
 
+
     public BensSwingView() {
         initialize();
     }

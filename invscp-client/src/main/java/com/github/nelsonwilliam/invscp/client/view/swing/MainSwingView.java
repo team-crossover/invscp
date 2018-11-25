@@ -3,10 +3,15 @@ package com.github.nelsonwilliam.invscp.client.view.swing;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.IOException;
+import java.util.function.Consumer;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import com.github.nelsonwilliam.invscp.client.util.Client;
 import com.github.nelsonwilliam.invscp.client.view.MainView;
 import com.github.nelsonwilliam.invscp.client.view.MenuView;
 import com.github.nelsonwilliam.invscp.client.view.View;
@@ -32,8 +37,21 @@ public class MainSwingView extends JFrame implements MainView {
     private void initialize() {
         setTitle("InvSCP");
         setBounds(0, 0, 800, 600);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(final WindowEvent event) {
+                try {
+                    Client.close();
+                    dispose();
+                } catch (final IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    System.exit(0);
+                }
+            }
+        });
 
         final GridBagLayout gridBagLayout = new GridBagLayout();
         gridBagLayout.columnWidths = new int[] { 25, 100, 25, 500, 25 };
@@ -77,6 +95,18 @@ public class MainSwingView extends JFrame implements MainView {
 
         revalidate();
         repaint();
+    }
+
+    @Override
+    public void addCloseListener(final Consumer<WindowEvent> listener) {
+        addWindowListener(new WindowAdapter()
+        {
+            @Override
+            public void windowClosing(final WindowEvent e)
+            {
+                listener.accept(e);
+            }
+        });
     }
 
 }

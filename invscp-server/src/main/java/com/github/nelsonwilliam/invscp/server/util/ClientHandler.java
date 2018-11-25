@@ -1,5 +1,6 @@
 package com.github.nelsonwilliam.invscp.server.util;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -10,8 +11,8 @@ import com.github.nelsonwilliam.invscp.shared.util.Response;
 
 /**
  * Classe que é instanciada para lidar com cada cliente conectado ao servidor.
- * Sua função é receber as requisições do cliente (feitas em {@link Client}) e
- * responder com os objetos apropriados.
+ * Sua função é receber as requisições do cliente e responder com os objetos
+ * apropriados.
  */
 public class ClientHandler extends Thread {
 
@@ -49,6 +50,8 @@ public class ClientHandler extends Thread {
                     out.writeObject(response);
                 }
             }
+        } catch (final EOFException e) {
+            // Ignore
         } catch (final Exception e) {
             System.out.println(
                     "Erro ao lidar com o cliente # " + clientNumber + ": " + e);

@@ -4,9 +4,8 @@ import com.github.nelsonwilliam.invscp.client.view.ViewFactory.ViewImplementatio
 
 public class ClientSettings {
 
-    /**
-     * Define qual implementação da View será utilizada pelo programa.
-     */
+    // TODO Ler estas configurações de um arquivo, em vez de serem hard-coded.
+
     public static ViewImplementation VIEW_IMPL = ViewImplementation.SWING;
 
     public static String SERVER_HOST = "localhost";
