@@ -1,11 +1,15 @@
 package com.github.nelsonwilliam.invscp.model;
 
+import java.io.IOException;
+import java.security.KeyException;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import com.github.nelsonwilliam.invscp.server.InvSCPServer;
 import com.github.nelsonwilliam.invscp.server.model.Bem;
+import com.github.nelsonwilliam.invscp.server.util.ServerSettings;
 import com.github.nelsonwilliam.invscp.shared.exception.IllegalInsertException;
 import com.github.nelsonwilliam.invscp.shared.model.dto.BemDTO;
 
@@ -14,11 +18,13 @@ public class BemTest {
     /**
      * É necessário conectar com e inicializar o banco para poder executar os
      * testes. Este método é executado antes de todos os testes dessa classe.
+     * 
+     * @throws IOException
+     * @throws KeyException
      */
     @BeforeAll
-    public static void prepararBanco() {
-        // TODO Conectar-se a um banco exclusivo para os testes, para não
-        // bagunçar os dados do banco de dados do usuário.
+    public static void prepararBanco() throws KeyException, IOException {
+        ServerSettings.readSettings();
         InvSCPServer.connectDatabase();
         InvSCPServer.initializeDatabase();
     }

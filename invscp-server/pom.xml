@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.github.nelsonwilliam</groupId>
-	<artifactId>invscp</artifactId>
+	<artifactId>invscp-server</artifactId>
 	<packaging>jar</packaging>
 	<version>1.0.0</version>
 

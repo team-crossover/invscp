@@ -185,4 +185,78 @@ public class ServerSettings {
         return logRequests;
     }
 
+    /**
+     * Atualiza o valor atual de serverPort.
+     *
+     * @param newServerPort O novo valor de serverPort.
+     */
+    public static final void setServerPort(final int newServerPort) {
+        serverPort = newServerPort;
+    }
+
+    /**
+     * Atualiza o valor atual de databaseHost.
+     *
+     * @param newDatabaseHost O novo valor de databaseHost.
+     */
+    public static final void setDatabaseHost(final String newDatabaseHost) {
+        databaseHost = newDatabaseHost;
+    }
+
+    /**
+     * Atualiza o valor atual de databasePort.
+     *
+     * @param newDatabasePort O novo valor de databasePort.
+     */
+    public static final void setDatabasePort(final String newDatabasePort) {
+        databasePort = newDatabasePort;
+    }
+
+    /**
+     * Atualiza o valor atual de databaseName.
+     *
+     * @param newDatabaseName O novo valor de databaseName.
+     */
+    public static final void setDatabaseName(final String newDatabaseName) {
+        databaseName = newDatabaseName;
+    }
+
+    /**
+     * Atualiza o valor atual de databaseUser.
+     *
+     * @param newDatabaseUser O novo valor de databaseUser.
+     */
+    public static final void setDatabaseUser(final String newDatabaseUser) {
+        databaseUser = newDatabaseUser;
+    }
+
+    /**
+     * Atualiza o valor atual de databasePassword.
+     *
+     * @param newDatabasePassword O novo valor de databasePassword.
+     */
+    public static final void setDatabasePassword(
+            final String newDatabasePassword) {
+        databasePassword = newDatabasePassword;
+    }
+
+    /**
+     * Atualiza o valor atual de databaseVersion.
+     *
+     * @param newDatabaseVersion O novo valor de databaseVersion.
+     */
+    public static final void setDatabaseVersion(
+            final Integer newDatabaseVersion) {
+        databaseVersion = newDatabaseVersion;
+    }
+
+    /**
+     * Atualiza o valor atual de logRequests.
+     *
+     * @param newLogRequests O novo valor de logRequests.
+     */
+    public static final void setLogRequests(final boolean newLogRequests) {
+        logRequests = newLogRequests;
+    }
+
 }
