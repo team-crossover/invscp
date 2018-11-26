@@ -91,10 +91,7 @@ public class FiltroBemSwingView extends JDialog implements FiltroBemView {
 
         final ListCellRenderer<? super BemSituacaoEnum> bemListRenderer = new DefaultListCellRenderer() {
 
-            /**
-             * 
-             */
-            private static final long serialVersionUID = 1L;
+            private static final long serialVersionUID = -6531942280813288434L;
 
             @Override
             public Component getListCellRendererComponent(final JList<?> list,
