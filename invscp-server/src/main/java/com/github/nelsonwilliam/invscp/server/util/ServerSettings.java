@@ -18,4 +18,6 @@ public class ServerSettings {
 
     public static Integer DATABASE_VERSAO = 1;
 
+    public static boolean LOG_REQUESTS = true;
+
 }

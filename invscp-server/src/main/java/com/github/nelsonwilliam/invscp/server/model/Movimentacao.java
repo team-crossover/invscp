@@ -1,6 +1,7 @@
 package com.github.nelsonwilliam.invscp.server.model;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,7 +82,7 @@ public class Movimentacao implements Model<MovimentacaoDTO> {
         final List<EventoMovimentacaoDTO> eventosDto = new ArrayList<>();
         final List<EventoMovimentacao> eventos =
                 eventoRepo.getByIdMovimentacao(id);
-        for (EventoMovimentacao ev : eventos) {
+        for (final EventoMovimentacao ev : eventos) {
             // Para evitar loops infinitos ao criar os DTOs
             // movimentacao/eventoMovimentacao, o DTO do evento movimentação
             // dessa lista não tem o ID da movimentação.
@@ -188,7 +189,7 @@ public class Movimentacao implements Model<MovimentacaoDTO> {
 
     /**
      * Metodo a ser usado quando uma movimentação é iniciada.
-     * 
+     *
      * @param usuario
      * @param movDto
      * @return mensagem
@@ -196,6 +197,7 @@ public class Movimentacao implements Model<MovimentacaoDTO> {
     public static List<String> posInserir(final FuncionarioDTO usuario,
             final MovimentacaoDTO movDto) {
 
+        System.out.println(LocalTime.now() + " - " + movDto.getId());
         final List<String> messages = new ArrayList<String>();
 
         final MovimentacaoRepository movRepo = new MovimentacaoRepository();
@@ -221,7 +223,7 @@ public class Movimentacao implements Model<MovimentacaoDTO> {
         // Adicionar o evento de criação da movimentação
         final EventoMovimentacaoRepository eventoRepo =
                 new EventoMovimentacaoRepository();
-        EventoMovimentacao evento = new EventoMovimentacao();
+        final EventoMovimentacao evento = new EventoMovimentacao();
         evento.setData(LocalDate.now());
         evento.setIdFuncionario(usuario.getId());
         evento.setIdMovimentacao(movDto.getId());
@@ -232,9 +234,9 @@ public class Movimentacao implements Model<MovimentacaoDTO> {
     }
 
     public boolean isInterna() {
-        SalaRepository salaRepo = new SalaRepository();
-        Sala origem = salaRepo.getById(idSalaOrigem);
-        Sala destino = salaRepo.getById(idSalaDestino);
+        final SalaRepository salaRepo = new SalaRepository();
+        final Sala origem = salaRepo.getById(idSalaOrigem);
+        final Sala destino = salaRepo.getById(idSalaDestino);
         return origem.getIdDepartamento().equals(destino.getIdDepartamento());
     }
 
@@ -284,7 +286,7 @@ public class Movimentacao implements Model<MovimentacaoDTO> {
         return numGuiaTransporte;
     }
 
-    public void setNumGuiaTransporte(String numGuiaTransporte) {
+    public void setNumGuiaTransporte(final String numGuiaTransporte) {
         this.numGuiaTransporte = numGuiaTransporte;
     }
 

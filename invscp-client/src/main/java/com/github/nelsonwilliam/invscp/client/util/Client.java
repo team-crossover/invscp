@@ -45,8 +45,8 @@ public class Client {
 
         socket = new Socket(ClientSettings.SERVER_HOST,
                 ClientSettings.SERVER_PORT);
-        out = new ObjectOutputStream(socket.getOutputStream());
         in = new ObjectInputStream(socket.getInputStream());
+        out = new ObjectOutputStream(socket.getOutputStream());
 
         // Recebe a mensagem de conexão estabelecida
         System.out.println(in.readObject().toString());
@@ -70,13 +70,15 @@ public class Client {
             final Object... args) throws Exception {
 
         try {
-            out.writeObject(new Request(tipo, args));
+            final Object output = new Request(tipo, args);
+            out.writeObject(output);
+
             final Object input = in.readObject();
-            final Response resp = (Response) input;
-            if (resp.isException()) {
-                throw (Exception) resp.getObjs()[0];
+            final Response response = (Response) input;
+            if (response.isException()) {
+                throw (Exception) response.getObjs()[0];
             } else {
-                return resp.getObjs();
+                return response.getObjs();
             }
         } catch (final IOException | ClassNotFoundException e) {
             e.printStackTrace();

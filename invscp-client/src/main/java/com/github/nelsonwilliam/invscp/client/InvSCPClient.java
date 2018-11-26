@@ -2,7 +2,6 @@ package com.github.nelsonwilliam.invscp.client;
 
 import java.awt.EventQueue;
 import java.io.IOException;
-import java.net.UnknownHostException;
 
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -21,10 +20,15 @@ import com.github.nelsonwilliam.invscp.client.view.ViewFactory;
  */
 public class InvSCPClient {
 
-    public static void main(final String[] args)
-            throws UnknownHostException, ClassNotFoundException, IOException {
+    public static void main(final String[] args) {
 
-        Client.connect();
+        try {
+            Client.connect();
+        } catch (ClassNotFoundException | IOException e) {
+            System.out.println("Não foi possível conectar com o servidor.");
+            System.exit(1);
+        }
+
         showMainView();
     }
 

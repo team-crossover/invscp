@@ -54,6 +54,7 @@ public class Server {
     public Response receive(final Request request) {
         final RequestTypeEnum type = request.getTipo();
         final Object[] args = request.getArgs();
+
         switch (type) {
             case VALIDAR_INSERIR_EVENTO_MOVIMENTACAO:
                 return validarInserirEventoMovimentacao(

@@ -16,7 +16,7 @@ public class InvSCPServer {
 
     private static boolean forceInitializeDatabase;
 
-    public static void main(final String[] args) throws IOException {
+    public static void main(final String[] args) {
         for (int i = 0; i < args.length; i++) {
             if (args[i].equals("--forceInitialization")) {
                 forceInitializeDatabase = true;
@@ -81,9 +81,15 @@ public class InvSCPServer {
     /*
      * Lida com as conexões de clientes que forem recebidas.
      */
-    private static void run() throws IOException {
-        final ServerSocket listener =
-                new ServerSocket(ServerSettings.SERVER_PORT);
+    private static void run() {
+        ServerSocket listener = null;
+        try {
+            listener = new ServerSocket(ServerSettings.SERVER_PORT);
+        } catch (final IOException e) {
+            System.out.println("Não foi possível iniciar o servidor: " + e);
+            return;
+        }
+
         System.out.println("Conexão estabelecida na porta "
                 + ServerSettings.SERVER_PORT + ".");
         System.out.println("Aguardando clientes...");
@@ -91,11 +97,23 @@ public class InvSCPServer {
         int clientNumber = 1;
         try {
             while (true) {
-                new ClientHandler(listener.accept(), clientNumber++).start();
+                try {
+                    new ClientHandler(listener.accept(), clientNumber++)
+                            .start();
+                } catch (final IOException e) {
+                    System.out.println(
+                            "Não foi possível lidar com novo cliente: " + e);
+                }
             }
         } finally {
-            System.out.println("");
-            listener.close();
+            try {
+                listener.close();
+            } catch (final IOException e) {
+                System.out.println(
+                        "Não foi possível encerrar a conexão com cliente: "
+                                + e);
+                return;
+            }
         }
     }
 }

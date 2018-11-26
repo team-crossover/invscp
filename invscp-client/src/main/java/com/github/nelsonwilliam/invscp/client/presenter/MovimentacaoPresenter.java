@@ -61,10 +61,11 @@ public class MovimentacaoPresenter extends Presenter<MovimentacaoView> {
             final MovimentacaoDTO movNovo) {
 
         // Gera um número de guia de autorização se for para outra cidade
-        if (!movNovo.isParaMesmaCidade()) {           
-            String guia = Client.requestGerarNumGuiaTransporte();
+        if (!movNovo.isParaMesmaCidade()) {
+            final String guia = Client.requestGerarNumGuiaTransporte();
             if (guia == null) {
-                view.showError("Não foi possível gerar uma guia de transporte. Tente novamente.");
+                view.showError(
+                        "Não foi possível gerar uma guia de transporte. Tente novamente.");
                 return;
             }
             movNovo.setNumGuiaTransporte(guia);
@@ -77,22 +78,25 @@ public class MovimentacaoPresenter extends Presenter<MovimentacaoView> {
             return;
         }
 
-        Integer newId = Client.requestAddMovimentacao(movNovo);
-        movNovo.setId(newId);
+        final int newId = Client.requestAddMovimentacao(movNovo);
+        final MovimentacaoDTO addedMov =
+                Client.requestGetMovimentacaoById(newId);
         view.showSucesso();
         view.close();
 
         // Executa as pós-alterações e exibe as mensagens resultantes.
         final List<String> messages =
-                Client.requestPosInserirMovimentacao(usuario, movNovo);
+                Client.requestPosInserirMovimentacao(usuario, addedMov);
         for (final String message : messages) {
             view.showInfo(message);
         }
 
-        if (movimentacoesPresenter != null)
+        if (movimentacoesPresenter != null) {
             movimentacoesPresenter.updateMovimentacoes();
-        if (bensPresenter != null)
+        }
+        if (bensPresenter != null) {
             bensPresenter.updateBens();
+        }
     }
 
     private void onConfirmarAtualizacao(final FuncionarioDTO usuario,
@@ -110,9 +114,11 @@ public class MovimentacaoPresenter extends Presenter<MovimentacaoView> {
         view.showSucesso();
         view.close();
 
-        if (movimentacoesPresenter != null)
+        if (movimentacoesPresenter != null) {
             movimentacoesPresenter.updateMovimentacoes();
-        if (bensPresenter != null)
+        }
+        if (bensPresenter != null) {
             bensPresenter.updateBens();
+        }
     }
 }
