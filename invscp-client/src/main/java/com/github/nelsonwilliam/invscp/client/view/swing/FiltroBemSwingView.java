@@ -9,9 +9,11 @@ import java.awt.event.ActionListener;
 import java.util.List;
 
 import javax.swing.BorderFactory;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -21,6 +23,7 @@ import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
 
 import com.github.nelsonwilliam.invscp.client.view.FiltroBemView;
+import com.github.nelsonwilliam.invscp.shared.model.dto.BemDTO;
 import com.github.nelsonwilliam.invscp.shared.model.dto.DepartamentoDTO;
 import com.github.nelsonwilliam.invscp.shared.model.dto.FiltroBemDTO;
 import com.github.nelsonwilliam.invscp.shared.model.enums.BemSituacaoEnum;
@@ -40,6 +43,7 @@ public class FiltroBemSwingView extends JDialog implements FiltroBemView {
     private JList<DepartamentoDTO> listDepartamentos;
     private JScrollPane scrollDepartamentos;
     private JLabel lblDepartamento;
+    private JComboBox<BemSituacaoEnum> situacao;
 
     public FiltroBemSwingView(final JFrame owner) {
         super(owner, "Filtrar bens", ModalityType.APPLICATION_MODAL);
@@ -85,13 +89,39 @@ public class FiltroBemSwingView extends JDialog implements FiltroBemView {
         gbc_lblSituacao.gridy = 2;
         getContentPane().add(lblSituacao, gbc_lblSituacao);
 
-        labelSituacao = new JLabel((String) null);
-        final GridBagConstraints gbc_label = new GridBagConstraints();
-        gbc_label.anchor = GridBagConstraints.WEST;
-        gbc_label.insets = new Insets(0, 0, 5, 5);
-        gbc_label.gridx = 1;
-        gbc_label.gridy = 2;
-        getContentPane().add(labelSituacao, gbc_label);
+        final ListCellRenderer<? super BemSituacaoEnum> bemListRenderer = new DefaultListCellRenderer() {
+
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public Component getListCellRendererComponent(final JList<?> list,
+                    final Object value, final int index,
+                    final boolean isSelected, final boolean cellHasFocus) {
+                if (value == null) {
+                    return super.getListCellRendererComponent(list, "Nenhum",
+                            index, isSelected, cellHasFocus);
+                } else {
+                    final String nome = ((BemDTO) value).getDescricao();
+                    return super.getListCellRendererComponent(list, nome, index,
+                            isSelected, cellHasFocus);
+                }
+            }
+        };
+
+        situacao = new JComboBox<BemSituacaoEnum>();
+        situacao.setModel(new DefaultComboBoxModel<BemSituacaoEnum>(
+                BemSituacaoEnum.values()));
+        situacao.setRenderer(bemListRenderer);
+
+        final GridBagConstraints gbc_tipo = new GridBagConstraints();
+        gbc_tipo.insets = new Insets(0, 0, 5, 5);
+        gbc_tipo.fill = GridBagConstraints.HORIZONTAL;
+        gbc_tipo.gridx = 1;
+        gbc_tipo.gridy = 2;
+        getContentPane().add(situacao, gbc_tipo);
 
         lblNmeroDeTombamento = new JLabel("Número de tombamento:");
         final GridBagConstraints gbc_lblNmeroDeTombamento = new GridBagConstraints();
