@@ -25,7 +25,7 @@ Os artefatos gerados até então para o projeto são:
 
 As atividades planejadas para o projeto estão dispostas no diagrama Gantt abaixo:
 
-![Diagrama](https://user-images.githubusercontent.com/6721656/48981882-39de6d00-f0c2-11e8-8fb1-abb2f3adc14a.png)
+![Diagrama](https://user-images.githubusercontent.com/6721656/48994200-17cc0580-f129-11e8-8e41-6d40c845d4db.png)
 
 Legenda:
 
@@ -42,15 +42,15 @@ O ambiente de desenvolvimento deve possuir o [JDK (Java SE Development Kit)](htt
 
 ### Servidor
 
-O SGBD PostgreSQL 10.5 deve estar executando na mesma máquina. Deve existir o usuário de banco com nome "invscpAdmin" e senha "12345" e autorização para efetuar login. Além disso, deve existir um banco nomeado "inventory" cujo usuário owner é o invscpAdmin.
+O SGBD PostgreSQL 10.5 deve estar executando na mesma máquina. Por padrão, o banco de dados deve possuir o nome "inventory" e pertencer ao usuário de nome "invscpAdmin" e senha "123445", com autorização para efetuar login.
 
-<Ainda não implementado> ~~No mesmo diretório do programa deve existir um arquivo chamado "invscp-server-config.xml" contendo o host do banco de dados, o nome do usuário, a senha do usuário e o nome do banco.~~
+No mesmo diretório do programa será criado um arquivo de configurações chamado ```server.properties``` no qual é possível especificar configurações como porta do servidor, host/porta/nome/usuário/senha/versão do banco de dados e preferências de logs.
 
 ### Cliente
 
 Por padrão, o primeiro usuário a ser criado é o Chefe de Patrimônio, e possui o login "admin" e a senha "admin".
 
-<Ainda não implementado> ~~No mesmo diretório do programa deve existir um arquivo chamado "invscp-client-config.xml" contendo o host, a porta do servidor e o tipo de interface a ser utilizada. Um arquivo com valores-padrão é criado caso nenhum exista.~~
+No mesmo diretório do programa será criado um arquivo de configurações chamado ```client.properties``` no qual é possível especificar configurações como host/porta do servidor e qual view utilizar (atualmente apenas 'SWING' é suportado).
 
 ## Build
 

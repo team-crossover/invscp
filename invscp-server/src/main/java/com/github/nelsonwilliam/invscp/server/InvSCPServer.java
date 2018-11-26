@@ -3,6 +3,7 @@ package com.github.nelsonwilliam.invscp.server;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.security.KeyException;
 import java.sql.SQLException;
 
 import com.github.nelsonwilliam.invscp.server.util.ClientHandler;
@@ -21,6 +22,14 @@ public class InvSCPServer {
             if (args[i].equals("--forceInitialization")) {
                 forceInitializeDatabase = true;
             }
+        }
+
+        try {
+            ServerSettings.readSettings();
+        } catch (final IOException | KeyException e) {
+            System.out.println("Não foi possível ler as configurações.");
+            System.out.println(e.getMessage());
+            System.exit(1);
         }
 
         connectDatabase();
@@ -84,14 +93,14 @@ public class InvSCPServer {
     private static void run() {
         ServerSocket listener = null;
         try {
-            listener = new ServerSocket(ServerSettings.SERVER_PORT);
+            listener = new ServerSocket(ServerSettings.getServerPort());
         } catch (final IOException e) {
             System.out.println("Não foi possível iniciar o servidor: " + e);
             return;
         }
 
         System.out.println("Conexão estabelecida na porta "
-                + ServerSettings.SERVER_PORT + ".");
+                + ServerSettings.getServerPort() + ".");
         System.out.println("Aguardando clientes...");
 
         int clientNumber = 1;

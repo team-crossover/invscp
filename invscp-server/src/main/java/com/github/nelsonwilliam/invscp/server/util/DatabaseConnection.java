@@ -31,12 +31,13 @@ public class DatabaseConnection {
             throws ClassNotFoundException, SQLException {
         Class.forName("org.postgresql.Driver");
 
-        final String url = "jdbc:postgresql://" + ServerSettings.DATABASE_HOST
-                + ":" + ServerSettings.DATABASE_PORT + "/"
-                + ServerSettings.DATABASE_NAME;
+        final String url =
+                "jdbc:postgresql://" + ServerSettings.getDatabaseHost() + ":"
+                        + ServerSettings.getDatabasePort() + "/"
+                        + ServerSettings.getDatabaseName();
         final Properties props = new Properties();
-        props.setProperty("user", ServerSettings.DATABASE_USER);
-        props.setProperty("password", ServerSettings.DATABASE_PASSWORD);
+        props.setProperty("user", ServerSettings.getDatabaseUser());
+        props.setProperty("password", ServerSettings.getDatabasePassword());
         connection = DriverManager.getConnection(url, props);
     }
 
@@ -83,7 +84,7 @@ public class DatabaseConnection {
         final ResultSet result2 = getVersao.executeQuery();
         if (result2.next()) {
             final Integer versaoDb = (Integer) result2.getObject("versao_db");
-            return versaoDb == ServerSettings.DATABASE_VERSAO;
+            return versaoDb == ServerSettings.getDatabaseVersion();
         } else {
             // Se a versão não é a esperada (VERSAO_DB), então o banco deve ser
             // inicializado.

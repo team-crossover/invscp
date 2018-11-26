@@ -42,7 +42,7 @@ import com.github.nelsonwilliam.invscp.shared.model.dto.SalaDTO;
 public class ViewFactory {
 
     public static DepartamentosView createDepartamentos() {
-        switch (ClientSettings.VIEW_IMPL) {
+        switch (ClientSettings.getViewImpl()) {
             case SWING:
                 return new DepartamentosSwingView();
             default:
@@ -55,7 +55,7 @@ public class ViewFactory {
             final List<FuncionarioDTO> chefes,
             final List<FuncionarioDTO> chefesSubsts) {
 
-        switch (ClientSettings.VIEW_IMPL) {
+        switch (ClientSettings.getViewImpl()) {
             case SWING:
                 return new DepartamentoSwingView((JFrame) main, dept,
                         isAddition, chefes, chefesSubsts);
@@ -66,7 +66,7 @@ public class ViewFactory {
 
     public static FuncionariosView createFuncionarios() {
 
-        switch (ClientSettings.VIEW_IMPL) {
+        switch (ClientSettings.getViewImpl()) {
             case SWING:
                 return new FuncionariosSwingView();
             default:
@@ -78,7 +78,7 @@ public class ViewFactory {
             final FuncionarioDTO func, final boolean isAddition,
             final List<DepartamentoDTO> departamentos) {
 
-        switch (ClientSettings.VIEW_IMPL) {
+        switch (ClientSettings.getViewImpl()) {
             case SWING:
                 return new FuncionarioSwingView((JFrame) main, func, isAddition,
                         departamentos);
@@ -90,7 +90,7 @@ public class ViewFactory {
     public static LocalizacaoView createLocalizacao(final MainView main,
             final LocalizacaoDTO loca, final boolean isAddition) {
 
-        switch (ClientSettings.VIEW_IMPL) {
+        switch (ClientSettings.getViewImpl()) {
             case SWING:
                 return new LocalizacaoSwingView((JFrame) main, loca,
                         isAddition);
@@ -101,7 +101,7 @@ public class ViewFactory {
 
     public static LocalizacoesView createLocalizacoes() {
 
-        switch (ClientSettings.VIEW_IMPL) {
+        switch (ClientSettings.getViewImpl()) {
             case SWING:
                 return new LocalizacoesSwingView();
             default:
@@ -111,7 +111,7 @@ public class ViewFactory {
 
     public static LoginView createLogin(final MainView main) {
 
-        switch (ClientSettings.VIEW_IMPL) {
+        switch (ClientSettings.getViewImpl()) {
             case SWING:
                 return new LoginSwingView((JFrame) main);
             default:
@@ -121,7 +121,7 @@ public class ViewFactory {
 
     public static MainView createMain(final MenuView menu) {
 
-        switch (ClientSettings.VIEW_IMPL) {
+        switch (ClientSettings.getViewImpl()) {
             case SWING:
                 return new MainSwingView(menu);
             default:
@@ -131,7 +131,7 @@ public class ViewFactory {
 
     public static MenuView createMenu() {
 
-        switch (ClientSettings.VIEW_IMPL) {
+        switch (ClientSettings.getViewImpl()) {
             case SWING:
                 return new MenuSwingView();
             default:
@@ -141,7 +141,7 @@ public class ViewFactory {
 
     public static PrediosView createPredios() {
 
-        switch (ClientSettings.VIEW_IMPL) {
+        switch (ClientSettings.getViewImpl()) {
             case SWING:
                 return new PrediosSwingView();
             default:
@@ -153,7 +153,7 @@ public class ViewFactory {
             final PredioDTO predio, final boolean isAddition,
             final List<LocalizacaoDTO> locas) {
 
-        switch (ClientSettings.VIEW_IMPL) {
+        switch (ClientSettings.getViewImpl()) {
             case SWING:
                 return new PredioSwingView((JFrame) main, predio, isAddition,
                         locas);
@@ -164,7 +164,7 @@ public class ViewFactory {
 
     public static SalasView createSalas() {
 
-        switch (ClientSettings.VIEW_IMPL) {
+        switch (ClientSettings.getViewImpl()) {
             case SWING:
                 return new SalasSwingView();
             default:
@@ -176,7 +176,7 @@ public class ViewFactory {
             final boolean isAddition, final List<PredioDTO> predios,
             final List<DepartamentoDTO> departamentos) {
 
-        switch (ClientSettings.VIEW_IMPL) {
+        switch (ClientSettings.getViewImpl()) {
             case SWING:
                 return new SalaSwingView((JFrame) main, sala, isAddition,
                         predios, departamentos);
@@ -187,7 +187,7 @@ public class ViewFactory {
 
     public static BensView createBens() {
 
-        switch (ClientSettings.VIEW_IMPL) {
+        switch (ClientSettings.getViewImpl()) {
             case SWING:
                 return new BensSwingView();
             default:
@@ -199,7 +199,7 @@ public class ViewFactory {
             final boolean isAddition, final List<DepartamentoDTO> depts,
             final List<GrupoMaterialDTO> gruposMateriais) {
 
-        switch (ClientSettings.VIEW_IMPL) {
+        switch (ClientSettings.getViewImpl()) {
             case SWING:
                 return new BemSwingView((JFrame) main, bem, isAddition, depts,
                         gruposMateriais);
@@ -211,7 +211,7 @@ public class ViewFactory {
     public static BaixaView createBaixa(final MainView main, final BaixaDTO bem,
             final boolean isAddition) {
 
-        switch (ClientSettings.VIEW_IMPL) {
+        switch (ClientSettings.getViewImpl()) {
             case SWING:
                 return new BaixaSwingView((JFrame) main, bem, isAddition);
             default:
@@ -221,7 +221,7 @@ public class ViewFactory {
 
     public static OrdensServicoView createOrdensServico(final MainView main) {
 
-        switch (ClientSettings.VIEW_IMPL) {
+        switch (ClientSettings.getViewImpl()) {
             case SWING:
                 return new OrdensServicoSwingView((JFrame) main);
             default:
@@ -232,7 +232,7 @@ public class ViewFactory {
     public static OrdemServicoView createOrdemServico(final MainView main,
             final OrdemServicoDTO ordemServico, final boolean isAddition) {
 
-        switch (ClientSettings.VIEW_IMPL) {
+        switch (ClientSettings.getViewImpl()) {
             case SWING:
                 return new OrdemServicoSwingView((JFrame) main, ordemServico,
                         isAddition);
@@ -243,7 +243,7 @@ public class ViewFactory {
 
     public static MovimentacoesView createMovimentacoes() {
 
-        switch (ClientSettings.VIEW_IMPL) {
+        switch (ClientSettings.getViewImpl()) {
             case SWING:
                 return new MovimentacoesSwingView();
             default:
@@ -254,7 +254,7 @@ public class ViewFactory {
     public static MovimentacaoView createMovimentacao(final MainView main,
             final MovimentacaoDTO mov, final boolean isAddition) {
 
-        switch (ClientSettings.VIEW_IMPL) {
+        switch (ClientSettings.getViewImpl()) {
             case SWING:
                 return new MovimentacaoSwingView((JFrame) main, mov, isAddition);
             default:
@@ -264,7 +264,7 @@ public class ViewFactory {
 
     public static EventosMovimentacaoView createEventosMovimentacao(final MainView main) {
 
-        switch (ClientSettings.VIEW_IMPL) {
+        switch (ClientSettings.getViewImpl()) {
             case SWING:
                 return new EventosMovimentacaoSwingView((JFrame) main);
             default:
@@ -275,14 +275,14 @@ public class ViewFactory {
     public static EventoMovimentacaoView createEventoMovimentacao(final MainView main,
             final EventoMovimentacaoDTO mov, final boolean isAddition) {
 
-        switch (ClientSettings.VIEW_IMPL) {
+        switch (ClientSettings.getViewImpl()) {
             case SWING:
                 return new EventoMovimentacaoSwingView((JFrame) main, mov, isAddition);
             default:
                 throw new IllegalArgumentException();
         }
     }
-    
+
     public enum ViewImplementation {
         SWING
     }

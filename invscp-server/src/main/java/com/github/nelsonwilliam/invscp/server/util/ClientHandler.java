@@ -48,7 +48,7 @@ public class ClientHandler extends Thread {
                 final Object input = in.readObject();
                 if (input != null && input instanceof Request) {
                     final Request request = (Request) input;
-                    if (ServerSettings.LOG_REQUESTS) {
+                    if (ServerSettings.isLogRequests()) {
                         System.out
                                 .println(LocalTime.now() + ": #" + clientNumber
                                         + " requested "

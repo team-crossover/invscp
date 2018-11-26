@@ -2,6 +2,7 @@ package com.github.nelsonwilliam.invscp.client;
 
 import java.awt.EventQueue;
 import java.io.IOException;
+import java.security.KeyException;
 
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -10,6 +11,7 @@ import org.pushingpixels.substance.api.skin.SubstanceMistAquaLookAndFeel;
 
 import com.github.nelsonwilliam.invscp.client.presenter.MainPresenter;
 import com.github.nelsonwilliam.invscp.client.util.Client;
+import com.github.nelsonwilliam.invscp.client.util.ClientSettings;
 import com.github.nelsonwilliam.invscp.client.view.MainView;
 import com.github.nelsonwilliam.invscp.client.view.MenuView;
 import com.github.nelsonwilliam.invscp.client.view.ViewFactory;
@@ -23,9 +25,18 @@ public class InvSCPClient {
     public static void main(final String[] args) {
 
         try {
+            ClientSettings.readSettings();
+        } catch (final IOException | KeyException e) {
+            System.out.println("Não foi possível ler as configurações.");
+            System.out.println(e.getMessage());
+            System.exit(1);
+        }
+
+        try {
             Client.connect();
         } catch (ClassNotFoundException | IOException e) {
-            System.out.println("Não foi possível conectar com o servidor.");
+            System.out
+                    .println("Não foi possível conectar com o servidor: " + e);
             System.exit(1);
         }
 

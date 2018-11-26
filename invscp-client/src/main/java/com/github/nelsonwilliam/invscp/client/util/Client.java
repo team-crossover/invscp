@@ -43,8 +43,8 @@ public class Client {
     public static void connect()
             throws UnknownHostException, IOException, ClassNotFoundException {
 
-        socket = new Socket(ClientSettings.SERVER_HOST,
-                ClientSettings.SERVER_PORT);
+        socket = new Socket(ClientSettings.getServerHost(),
+                ClientSettings.getServerPort());
         in = new ObjectInputStream(socket.getInputStream());
         out = new ObjectOutputStream(socket.getOutputStream());
 

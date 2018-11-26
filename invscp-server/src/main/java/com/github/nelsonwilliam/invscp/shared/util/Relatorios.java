@@ -10,7 +10,9 @@ public class Relatorios {
             throws IOException {
 
         final File file = new File(path);
-        file.getParentFile().mkdirs();
+        if (file.getParent() != null) {
+            file.getParentFile().mkdirs();
+        }
 
         PrintWriter writer = null;
         try {
