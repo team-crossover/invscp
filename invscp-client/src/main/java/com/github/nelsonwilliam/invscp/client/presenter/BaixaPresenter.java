@@ -55,13 +55,14 @@ public class BaixaPresenter extends Presenter<BaixaView> {
             return;
         }
 
-        Client.requestAddBaixa(baixaNovo);
+        final int addedId = Client.requestAddBaixa(baixaNovo);
+        final BaixaDTO addedBaixa = Client.requestGetBaixaById(addedId);
         view.showSucesso();
         view.close();
 
         // Executa as pós-inserções e exibe as mensagens resultantes.
         final List<String> messages =
-                Client.requestPosInserirBaixa(usuario, baixaNovo);
+                Client.requestPosInserirBaixa(usuario, addedBaixa);
         for (final String message : messages) {
             view.showInfo(message);
         }

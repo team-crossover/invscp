@@ -19,7 +19,6 @@ import com.github.nelsonwilliam.invscp.shared.model.dto.EventoMovimentacaoDTO;
 import com.github.nelsonwilliam.invscp.shared.model.dto.FuncionarioDTO;
 import com.github.nelsonwilliam.invscp.shared.model.dto.MovimentacaoDTO;
 import com.github.nelsonwilliam.invscp.shared.model.enums.BemSituacaoEnum;
-import com.github.nelsonwilliam.invscp.shared.model.enums.CargoEnum;
 import com.github.nelsonwilliam.invscp.shared.model.enums.EtapaMovEnum;
 import com.github.nelsonwilliam.invscp.shared.model.enums.TipoEventoMovEnum;
 
@@ -127,10 +126,6 @@ public class Movimentacao implements Model<MovimentacaoDTO> {
         // CONTROLE DE ACESSO
         if (usuario == null) {
             throw new IllegalInsertException("Você não está logado.");
-        }
-        if (usuario.getCargo() == CargoEnum.FUNCIONARIO) {
-            throw new IllegalInsertException(
-                    "Você não pode iniciar movimentações.");
         }
 
         // VALIDADE DE DADOS

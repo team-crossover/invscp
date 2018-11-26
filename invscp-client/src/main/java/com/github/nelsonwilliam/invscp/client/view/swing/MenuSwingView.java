@@ -130,19 +130,18 @@ public class MenuSwingView extends JPanel implements MenuView {
             if (isChefe) {
                 if (isChefeDePatrimonio) {
                     // Chefe de patrimônio
-                    pnlButtons.add(btnFuncionarios);
-                    pnlButtons.add(btnDepartamentos);
-                    pnlButtons.add(btnLocalizacoes);
-                    pnlButtons.add(btnPredios);
-                    pnlButtons.add(btnSalas);
                     pnlButtons.add(btnBens);
                     pnlButtons.add(btnMovimentacoes);
+                    pnlButtons.add(btnSalas);
+                    pnlButtons.add(btnPredios);
+                    pnlButtons.add(btnLocalizacoes);
+                    pnlButtons.add(btnDepartamentos);
+                    pnlButtons.add(btnFuncionarios);
                 } else {
                     // Chefe de departamento
-                    pnlButtons.add(btnFuncionarios);
-                    pnlButtons.add(btnDepartamentos);
                     pnlButtons.add(btnBens);
                     pnlButtons.add(btnMovimentacoes);
+                    pnlButtons.add(btnFuncionarios);
                 }
             } else {
                 // Funcionário comum

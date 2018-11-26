@@ -56,13 +56,15 @@ public class OrdemServicoPresenter extends Presenter<OrdemServicoView> {
             return;
         }
 
-        Client.requestAddOrdemServico(ordemServicoNovo);
+        final int addedId = Client.requestAddOrdemServico(ordemServicoNovo);
+        final OrdemServicoDTO addedOrdem =
+                Client.requestGetOrdemServicoById(addedId);
         view.showSucesso();
         view.close();
 
         // Executa as pós-inserções e exibe as mensagens resultantes.
         final List<String> messages =
-                Client.requestPosInserirOrdemServico(usuario, ordemServicoNovo);
+                Client.requestPosInserirOrdemServico(usuario, addedOrdem);
         for (final String message : messages) {
             view.showInfo(message);
         }

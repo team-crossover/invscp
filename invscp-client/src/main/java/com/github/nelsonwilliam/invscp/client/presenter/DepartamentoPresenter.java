@@ -55,21 +55,23 @@ public class DepartamentoPresenter extends Presenter<DepartamentoView> {
             return;
         }
 
-        Client.requestAddDepartamento(deptNovo);
+        final int addedId = Client.requestAddDepartamento(deptNovo);
+        final DepartamentoDTO addedDept =
+                Client.requestGetDepartamentoById(addedId);
         view.showSucesso();
         view.close();
 
         // Executa as pós-alterações e exibe as mensagens resultantes.
-        final List<String> messages = Client
-                .requestPosAlterarDepartamento(usuario, deptNovo);
+        final List<String> messages =
+                Client.requestPosAlterarDepartamento(usuario, addedDept);
         for (final String message : messages) {
             view.showInfo(message);
         }
 
         // Se o departamento do funcionario logado tiver sido alterado, força a
         // reatualização da exibição da tela para este usuário
-        if (usuario.getDepartamento() != null
-                && usuario.getDepartamento().getId().equals(deptNovo.getId())) {
+        if (usuario.getDepartamento() != null && usuario.getDepartamento()
+                .getId().equals(addedDept.getId())) {
             mainPresenter.setIdUsuario(usuario.getId());
         }
 
@@ -93,8 +95,8 @@ public class DepartamentoPresenter extends Presenter<DepartamentoView> {
         view.close();
 
         // Executa as pós-alterações e exibe as mensagens resultantes.
-        final List<String> messages = Client
-                .requestPosAlterarDepartamento(usuario, deptAtualizado);
+        final List<String> messages =
+                Client.requestPosAlterarDepartamento(usuario, deptAtualizado);
         for (final String message : messages) {
             view.showInfo(message);
         }

@@ -28,6 +28,7 @@ import javax.swing.table.DefaultTableModel;
 
 import com.github.nelsonwilliam.invscp.client.util.Client;
 import com.github.nelsonwilliam.invscp.client.view.MovimentacoesView;
+import com.github.nelsonwilliam.invscp.shared.model.dto.FuncionarioDTO;
 import com.github.nelsonwilliam.invscp.shared.model.dto.MovimentacaoDTO;
 import com.github.nelsonwilliam.invscp.shared.model.enums.EtapaMovEnum;
 
@@ -48,7 +49,10 @@ public class MovimentacoesSwingView extends JPanel
     private JMenuItem popupItemEventos;
     private JMenuItem popupItemGerarGuiaTransporte;
 
-    public MovimentacoesSwingView() {
+    private final FuncionarioDTO usuario;
+
+    public MovimentacoesSwingView(final FuncionarioDTO usuario) {
+        this.usuario = usuario;
         initialize();
     }
 
@@ -80,7 +84,8 @@ public class MovimentacoesSwingView extends JPanel
                 // Garante que ao clicar com o botão direito em um item para
                 // exibir o menu, o único item selecionado da tabela será o item
                 // clicado.
-                Point mousePoint = MouseInfo.getPointerInfo().getLocation();
+                final Point mousePoint =
+                        MouseInfo.getPointerInfo().getLocation();
                 SwingUtilities.convertPointFromScreen(mousePoint, table);
                 final int rowAtPoint = table.rowAtPoint(mousePoint);
                 if (rowAtPoint > -1) {
@@ -152,38 +157,64 @@ public class MovimentacoesSwingView extends JPanel
             }
         });
         table.setComponentPopupMenu(popupMenu);
+
+        // Deixa em ordem decrescente com base no ID, para que as movimentações
+        // novas fiquem primeiro.
+        table.getRowSorter().toggleSortOrder(0);
+        table.getRowSorter().toggleSortOrder(0);
     }
 
     private void refreshPopupMenuItems() {
         // TODO Não deveria estar usando o Client diretamente. Usar o Presenter
         // para a comunicação com Model...
-        Integer selectedMovId = getSelectedMovimentacoesIds().get(0);
-        MovimentacaoDTO mov = Client.requestGetMovimentacaoById(selectedMovId);
+        final Integer selectedMovId = getSelectedMovimentacoesIds().get(0);
+        final MovimentacaoDTO mov =
+                Client.requestGetMovimentacaoById(selectedMovId);
 
         popupMenu.removeAll();
-        popupMenu.add(popupItemVer);
 
-        if (mov.getEtapa() == EtapaMovEnum.AGUARDANDO_AC_ENTRADA) {
-            popupMenu.addSeparator();
-            popupMenu.add(popupItemAceitarEntrada);
-            popupMenu.add(popupItemNegarEntrada);
-            popupMenu.add(popupItemCancelar);
-        } else if (mov.getEtapa() == EtapaMovEnum.AGUARDANDO_AC_SAIDA) {
+        final boolean bemMesmoDeptUsuario =
+                usuario != null && usuario.getDepartamento().getId()
+                        .equals(mov.getBem().getDepartamento().getId());
+        final boolean origemMesmoDeptUsuario =
+                usuario != null && usuario.getDepartamento().getId()
+                        .equals(mov.getSalaOrigem().getDepartamento().getId());
+        final boolean destinoMesmoDeptUsuario =
+                usuario != null && usuario.getDepartamento().getId()
+                        .equals(mov.getSalaDestino().getDepartamento().getId());
+        final boolean usuarioLogado = usuario != null;
+        final boolean usuarioChefeDept =
+                usuarioLogado && usuario.getCargo().isChefeDeDepartamento();
+        final boolean usuarioChefePatr =
+                usuarioLogado && usuario.getCargo().isChefeDePatrimonio();
+
+        if (usuarioLogado) {
+            popupMenu.add(popupItemVer);
+        }
+
+        if ((usuarioChefePatr || (usuarioChefeDept && origemMesmoDeptUsuario))
+                && mov.getEtapa() == EtapaMovEnum.AGUARDANDO_AC_SAIDA) {
             popupMenu.addSeparator();
             popupMenu.add(popupItemAceitarSaida);
             popupMenu.add(popupItemNegarSaida);
-            popupMenu.add(popupItemCancelar);
-        } else if (mov.getEtapa() == EtapaMovEnum.EM_MOVIMENTACAO) {
+        } else if ((usuarioChefePatr
+                || (usuarioChefeDept && destinoMesmoDeptUsuario))
+                && mov.getEtapa() == EtapaMovEnum.AGUARDANDO_AC_ENTRADA) {
             popupMenu.addSeparator();
-            popupMenu.add(popupItemFinalizar);
-            popupMenu.add(popupItemCancelar);
+            popupMenu.add(popupItemAceitarEntrada);
+            popupMenu.add(popupItemNegarEntrada);
         }
 
-        popupMenu.addSeparator();
-        popupMenu.add(popupItemEventos);
-
-        if (!mov.isParaMesmaCidade()) {
+        if (usuarioChefePatr || (usuarioChefeDept && bemMesmoDeptUsuario)) {
+            if (mov.getEtapa() == EtapaMovEnum.EM_MOVIMENTACAO) {
+                popupMenu.addSeparator();
+                popupMenu.add(popupItemFinalizar);
+            }
+            popupMenu.add(popupItemCancelar);
+            popupMenu.addSeparator();
+            popupMenu.add(popupItemEventos);
             popupMenu.add(popupItemGerarGuiaTransporte);
+            popupItemGerarGuiaTransporte.setEnabled(!mov.isParaMesmaCidade());
         }
     }
 
@@ -244,11 +275,6 @@ public class MovimentacoesSwingView extends JPanel
                     m.getNumGuiaTransporte() == null ? "Nenhum"
                             : m.getNumGuiaTransporte() });
         }
-
-        // Deixa em ordem decrescente com base no ID, para que as movimentações
-        // novas fiquem primeiro.
-        table.getRowSorter().toggleSortOrder(0);
-        table.getRowSorter().toggleSortOrder(0);
 
         revalidate();
         repaint();

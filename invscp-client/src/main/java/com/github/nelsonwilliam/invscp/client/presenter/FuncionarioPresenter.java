@@ -53,13 +53,15 @@ public class FuncionarioPresenter extends Presenter<FuncionarioView> {
             return;
         }
 
-        Client.requestAddFuncionario(funcNovo);
+        final int addedId = Client.requestAddFuncionario(funcNovo);
+        final FuncionarioDTO addedFunc =
+                Client.requestGetFuncionarioById(addedId);
         view.showSucesso();
         view.close();
 
         // Se o funcionário atualizado é o que estava logado, atualiza o main
         // para garantir dados atualizados são exibidos no menu.
-        if (usuario.getId().equals(funcNovo.getId())) {
+        if (usuario.getId().equals(addedFunc.getId())) {
             mainPresenter.setIdUsuario(usuario.getId());
             return;
         }

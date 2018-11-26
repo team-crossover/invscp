@@ -31,6 +31,7 @@ import com.github.nelsonwilliam.invscp.client.util.Client;
 import com.github.nelsonwilliam.invscp.client.view.BensView;
 import com.github.nelsonwilliam.invscp.shared.model.dto.BemDTO;
 import com.github.nelsonwilliam.invscp.shared.model.dto.DepartamentoDTO;
+import com.github.nelsonwilliam.invscp.shared.model.dto.FuncionarioDTO;
 import com.github.nelsonwilliam.invscp.shared.model.dto.GrupoMaterialDTO;
 import com.github.nelsonwilliam.invscp.shared.model.dto.SalaDTO;
 import com.github.nelsonwilliam.invscp.shared.model.enums.BemSituacaoEnum;
@@ -40,6 +41,7 @@ public class BensSwingView extends JPanel implements BensView {
     private static final long serialVersionUID = 5043497852744311548L;
 
     private JTable table;
+    private JButton btnFiltrar;
     private JButton btnAdicionar;
     private JButton btnDeletar;
     private JButton btnGerarInventario;
@@ -52,17 +54,19 @@ public class BensSwingView extends JPanel implements BensView {
     private JMenuItem popupItemHistorico;
     private JPanel panel;
 
+    private final FuncionarioDTO usuario;
 
-    public BensSwingView() {
+    public BensSwingView(final FuncionarioDTO usuario) {
+        this.usuario = usuario;
         initialize();
     }
 
     private void initialize() {
         setBounds(0, 0, 673, 500);
         final GridBagLayout gridBagLayout = new GridBagLayout();
-        gridBagLayout.columnWidths = new int[] { 0, 199, 249 };
+        gridBagLayout.columnWidths = new int[] { 0, 199, 150 };
         gridBagLayout.rowHeights = new int[] { 422, 25, 0 };
-        gridBagLayout.columnWeights = new double[] { 0.0, 1.0, 1.0 };
+        gridBagLayout.columnWeights = new double[] { 0.0, 1.0, 0.0 };
         gridBagLayout.rowWeights = new double[] { 1.0, 0.0, Double.MIN_VALUE };
         setLayout(gridBagLayout);
 
@@ -136,7 +140,8 @@ public class BensSwingView extends JPanel implements BensView {
                 // Garante que ao clicar com o botão direito em um item para
                 // exibir o menu, o único item selecionado da tabela será o item
                 // clicado.
-                final Point mousePoint = MouseInfo.getPointerInfo().getLocation();
+                final Point mousePoint =
+                        MouseInfo.getPointerInfo().getLocation();
                 SwingUtilities.convertPointFromScreen(mousePoint, table);
                 final int rowAtPoint = table.rowAtPoint(mousePoint);
                 if (rowAtPoint > -1) {
@@ -158,32 +163,41 @@ public class BensSwingView extends JPanel implements BensView {
 
         panel = new JPanel();
         final GridBagConstraints gbc_panel = new GridBagConstraints();
-        gbc_panel.anchor = GridBagConstraints.WEST;
-        gbc_panel.fill = GridBagConstraints.VERTICAL;
+        gbc_panel.fill = GridBagConstraints.BOTH;
         gbc_panel.insets = new Insets(0, 0, 0, 5);
         gbc_panel.gridx = 1;
         gbc_panel.gridy = 1;
         add(panel, gbc_panel);
 
         final GridBagLayout gbl_panel = new GridBagLayout();
-        gbl_panel.columnWidths = new int[] { 135, 135, 0 };
+        gbl_panel.columnWidths = new int[] { 75, 75, 75, 0, 0 };
         gbl_panel.rowHeights = new int[] { 25, 0 };
-        gbl_panel.columnWeights = new double[] { 0.0, 0.0, Double.MIN_VALUE };
+        gbl_panel.columnWeights =
+                new double[] { 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE };
         gbl_panel.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
         panel.setLayout(gbl_panel);
+
+        btnFiltrar = new JButton("Filtrar");
+        final GridBagConstraints gbc_btnFiltrar = new GridBagConstraints();
+        gbc_btnFiltrar.anchor = GridBagConstraints.WEST;
+        gbc_btnFiltrar.insets = new Insets(0, 0, 0, 5);
+        gbc_btnFiltrar.gridx = 0;
+        gbc_btnFiltrar.gridy = 0;
+        panel.add(btnFiltrar, gbc_btnFiltrar);
 
         btnAdicionar = new JButton("Adicionar novo");
         final GridBagConstraints gbc_btnAdicionar = new GridBagConstraints();
         gbc_btnAdicionar.anchor = GridBagConstraints.WEST;
         gbc_btnAdicionar.insets = new Insets(0, 0, 0, 5);
-        gbc_btnAdicionar.gridx = 0;
+        gbc_btnAdicionar.gridx = 1;
         gbc_btnAdicionar.gridy = 0;
         panel.add(btnAdicionar, gbc_btnAdicionar);
 
         btnGerarInventario = new JButton("Gerar inventário");
         final GridBagConstraints gbc_btnInventario = new GridBagConstraints();
+        gbc_btnInventario.insets = new Insets(0, 0, 0, 5);
         gbc_btnInventario.anchor = GridBagConstraints.WEST;
-        gbc_btnInventario.gridx = 1;
+        gbc_btnInventario.gridx = 2;
         gbc_btnInventario.gridy = 0;
         panel.add(btnGerarInventario, gbc_btnInventario);
 
@@ -193,6 +207,9 @@ public class BensSwingView extends JPanel implements BensView {
         gbc_btnDeletar.gridx = 2;
         gbc_btnDeletar.gridy = 1;
         add(btnDeletar, gbc_btnDeletar);
+
+        // Deixa em ordem crescente com base no número de tombamento.
+        table.getRowSorter().toggleSortOrder(1);
     }
 
     private void refreshPopupMenuItems() {
@@ -203,19 +220,64 @@ public class BensSwingView extends JPanel implements BensView {
 
         popupMenu.removeAll();
 
-        popupMenu.add(popupItemAlterar);
-        popupMenu.add(popupItemMover);
-        popupMenu.addSeparator();
-        popupMenu.add(popupItemBaixa);
-        popupMenu.add(popupItemOrdemServico);
-        popupMenu.addSeparator();
-        popupMenu.add(popupItemHistorico);
+        final boolean mesmoDeptUsuario =
+                usuario != null && usuario.getDepartamento().getId()
+                        .equals(bem.getDepartamento().getId());
+        final boolean incorporado =
+                bem.getSituacao() == BemSituacaoEnum.INCORPORADO;
+        final boolean baixado = bem.getSituacao() == BemSituacaoEnum.BAIXADO;
 
-        popupItemAlterar.setEnabled(bem.getSituacao() == BemSituacaoEnum.INCORPORADO);
-        popupItemMover.setEnabled(bem.getSituacao() == BemSituacaoEnum.INCORPORADO);
-        popupItemBaixa.setEnabled(bem.getSituacao() == BemSituacaoEnum.BAIXADO
-                || bem.getSituacao() == BemSituacaoEnum.INCORPORADO);
-        popupItemBaixa.setText(bem.getSituacao() == BemSituacaoEnum.BAIXADO ? "Ver baixa..." : "Realizar baixa...");
+        if (usuario == null) {
+            // INTERESSADO
+            popupItemAlterar.setText("Ver");
+            popupItemAlterar.setEnabled(true);
+            popupMenu.add(popupItemAlterar);
+
+        } else if (!usuario.getCargo().isChefe()) {
+            // FUNCIONARIO
+            popupItemAlterar.setText("Ver");
+            popupItemAlterar.setEnabled(true);
+            popupItemMover.setEnabled(incorporado && mesmoDeptUsuario);
+            popupMenu.add(popupItemAlterar);
+            popupMenu.add(popupItemMover);
+
+        } else if (usuario.getCargo().isChefeDeDepartamento()) {
+            // CHEFE DE DEPT
+            popupItemAlterar.setText(
+                    mesmoDeptUsuario && incorporado ? "Alterar" : "Ver");
+            popupItemAlterar.setEnabled(true);
+            popupItemMover.setEnabled(incorporado && mesmoDeptUsuario);
+            popupItemOrdemServico.setEnabled(mesmoDeptUsuario);
+            popupItemHistorico.setEnabled(mesmoDeptUsuario);
+            popupMenu.add(popupItemAlterar);
+            popupMenu.add(popupItemMover);
+            popupMenu.addSeparator();
+            popupMenu.add(popupItemOrdemServico);
+            popupMenu.add(popupItemHistorico);
+
+        } else if (usuario.getCargo().isChefeDePatrimonio()) {
+            // CHEFE DE PATR
+            popupItemAlterar.setText("Alterar");
+            popupItemAlterar.setEnabled(true);
+            popupItemBaixa.setText(baixado ? "Ver baixa" : "Baixar");
+            popupItemBaixa.setEnabled(incorporado || baixado);
+            popupItemMover.setEnabled(incorporado);
+            popupItemOrdemServico.setEnabled(true);
+            popupItemHistorico.setEnabled(true);
+            popupMenu.add(popupItemAlterar);
+            popupMenu.add(popupItemMover);
+            popupMenu.addSeparator();
+            popupMenu.add(popupItemBaixa);
+            popupMenu.add(popupItemOrdemServico);
+            popupMenu.add(popupItemHistorico);
+
+        }
+    }
+
+    @Override
+    public void addFiltrarListener(final ActionListener listener) {
+        btnFiltrar.addActionListener(listener);
+
     }
 
     @Override
@@ -268,6 +330,13 @@ public class BensSwingView extends JPanel implements BensView {
 
     @Override
     public void updateBens(final List<BemDTO> bens) {
+        btnFiltrar.setVisible(true);
+        btnAdicionar
+                .setVisible(usuario != null && usuario.getCargo().isChefe());
+        btnGerarInventario.setVisible(
+                usuario != null && usuario.getCargo().isChefeDePatrimonio());
+        btnDeletar.setVisible(usuario != null && usuario.getCargo().isChefe());
+
         final DefaultTableModel tableModel =
                 (DefaultTableModel) table.getModel();
         tableModel.setNumRows(0);
@@ -282,9 +351,6 @@ public class BensSwingView extends JPanel implements BensView {
                     b.getGrupoMaterial() == null ? "Nenhum"
                             : b.getGrupoMaterial().getNome() });
         }
-
-        // Deixa em ordem crescente com base no número de tombamento.
-        table.getRowSorter().toggleSortOrder(1);
 
         revalidate();
         repaint();

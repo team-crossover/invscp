@@ -145,6 +145,9 @@ public class SalasSwingView extends JPanel implements SalasView {
         gbc_btnDeletar.gridx = 2;
         gbc_btnDeletar.gridy = 1;
         add(btnDeletar, gbc_btnDeletar);
+
+        // Deixa em ordem crescente com base no nome.
+        table.getRowSorter().toggleSortOrder(1);
     }
 
     @Override
@@ -175,9 +178,6 @@ public class SalasSwingView extends JPanel implements SalasView {
                     s.getTipo() == null ? "Nenhum" : s.getTipo().getTexto() });
         }
 
-        // Deixa em ordem crescente com base no nome.
-        table.getRowSorter().toggleSortOrder(1);     
-        
         revalidate();
         repaint();
 

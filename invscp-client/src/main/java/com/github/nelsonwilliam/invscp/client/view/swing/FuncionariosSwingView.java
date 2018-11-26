@@ -153,6 +153,9 @@ public class FuncionariosSwingView extends JPanel implements FuncionariosView {
         gbc_btnDeletar.gridx = 2;
         gbc_btnDeletar.gridy = 1;
         add(btnDeletar, gbc_btnDeletar);
+
+        // Deixa em ordem crescente com base no nome.
+        table.getRowSorter().toggleSortOrder(1);
     }
 
     @Override
@@ -183,9 +186,6 @@ public class FuncionariosSwingView extends JPanel implements FuncionariosView {
                             : f.getDepartamento().getNome() });
         }
 
-        // Deixa em ordem crescente com base no nome.
-        table.getRowSorter().toggleSortOrder(1);
-        
         revalidate();
         repaint();
     }

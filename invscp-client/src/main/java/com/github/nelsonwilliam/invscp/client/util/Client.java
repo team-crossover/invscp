@@ -437,10 +437,11 @@ public class Client {
         }
     }
 
-    public static void requestAddBaixa(final BaixaDTO item) {
+    public static int requestAddBaixa(final BaixaDTO item) {
 
         try {
-            request(RequestTypeEnum.ADD_BAIXA, item);
+            final Object[] objs = request(RequestTypeEnum.ADD_BAIXA, item);
+            return (int) objs[0];
         } catch (final Exception e) {
             throw new RuntimeException(e.getMessage());
         }
@@ -559,10 +560,11 @@ public class Client {
         }
     }
 
-    public static void requestAddBem(final BemDTO item) {
+    public static int requestAddBem(final BemDTO item) {
 
         try {
-            request(RequestTypeEnum.ADD_BEM, item);
+            final Object[] objs = request(RequestTypeEnum.ADD_BEM, item);
+            return (int) objs[0];
         } catch (final Exception e) {
             throw new RuntimeException(e.getMessage());
         }
@@ -671,10 +673,12 @@ public class Client {
         }
     }
 
-    public static void requestAddOrdemServico(final OrdemServicoDTO item) {
+    public static int requestAddOrdemServico(final OrdemServicoDTO item) {
 
         try {
-            request(RequestTypeEnum.ADD_ORDEM_SERVICO, item);
+            final Object[] objs =
+                    request(RequestTypeEnum.ADD_ORDEM_SERVICO, item);
+            return (int) objs[0];
         } catch (final Exception e) {
             throw new RuntimeException(e.getMessage());
         }
@@ -835,10 +839,12 @@ public class Client {
         }
     }
 
-    public static void requestAddFuncionario(final FuncionarioDTO item) {
+    public static int requestAddFuncionario(final FuncionarioDTO item) {
 
         try {
-            request(RequestTypeEnum.ADD_FUNCIONARIO, item);
+            final Object[] objs =
+                    request(RequestTypeEnum.ADD_FUNCIONARIO, item);
+            return (int) objs[0];
         } catch (final Exception e) {
             throw new RuntimeException(e.getMessage());
         }
@@ -987,10 +993,12 @@ public class Client {
         }
     }
 
-    public static void requestAddDepartamento(final DepartamentoDTO item) {
+    public static int requestAddDepartamento(final DepartamentoDTO item) {
 
         try {
-            request(RequestTypeEnum.ADD_DEPARTAMENTO, item);
+            final Object[] objs =
+                    request(RequestTypeEnum.ADD_DEPARTAMENTO, item);
+            return (int) objs[0];
         } catch (final Exception e) {
             throw new RuntimeException(e.getMessage());
         }
@@ -1102,10 +1110,12 @@ public class Client {
         }
     }
 
-    public static void requestAddLocalizacao(final LocalizacaoDTO item) {
+    public static int requestAddLocalizacao(final LocalizacaoDTO item) {
 
         try {
-            request(RequestTypeEnum.ADD_LOCALIZACAO, item);
+            final Object[] objs =
+                    request(RequestTypeEnum.ADD_LOCALIZACAO, item);
+            return (int) objs[0];
         } catch (final Exception e) {
             throw new RuntimeException(e.getMessage());
         }
@@ -1200,10 +1210,11 @@ public class Client {
         }
     }
 
-    public static void requestAddPredio(final PredioDTO item) {
+    public static int requestAddPredio(final PredioDTO item) {
 
         try {
-            request(RequestTypeEnum.ADD_PREDIO, item);
+            final Object[] objs = request(RequestTypeEnum.ADD_PREDIO, item);
+            return (int) objs[0];
         } catch (final Exception e) {
             throw new RuntimeException(e.getMessage());
         }
@@ -1323,10 +1334,11 @@ public class Client {
         }
     }
 
-    public static void requestAddSala(final SalaDTO salaDto) {
+    public static int requestAddSala(final SalaDTO salaDto) {
 
         try {
-            request(RequestTypeEnum.ADD_SALA, salaDto);
+            final Object[] objs = request(RequestTypeEnum.ADD_SALA, salaDto);
+            return (int) objs[0];
         } catch (final Exception e) {
             throw new RuntimeException(e.getMessage());
         }

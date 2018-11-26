@@ -151,6 +151,9 @@ public class DepartamentosSwingView extends JPanel
         gbc_btnDeletar.gridx = 2;
         gbc_btnDeletar.gridy = 1;
         add(btnDeletar, gbc_btnDeletar);
+
+        // Deixa em ordem crescente com base no nome.
+        table.getRowSorter().toggleSortOrder(2);
     }
 
     @Override
@@ -188,9 +191,6 @@ public class DepartamentosSwingView extends JPanel
                                     : d.getChefeSubstituto().getNome() });
         }
 
-        // Deixa em ordem crescente com base no nome.
-        table.getRowSorter().toggleSortOrder(2);
-        
         revalidate();
         repaint();
     }

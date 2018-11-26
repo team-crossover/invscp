@@ -45,6 +45,8 @@ public class FuncionarioSwingView extends JDialog implements FuncionarioView {
     private JList<DepartamentoDTO> listDepartamentos;
     private JScrollPane scrollDepartamentos;
 
+    private final FuncionarioDTO usuario;
+
     /**
      * @param funcionario FuncionarioDTO cujos valores serão exibidos
      *        inicialmente.
@@ -54,12 +56,14 @@ public class FuncionarioSwingView extends JDialog implements FuncionarioView {
      */
     public FuncionarioSwingView(final JFrame owner,
             final FuncionarioDTO funcionario, final boolean isAdicionar,
+            final FuncionarioDTO usuario,
             final List<DepartamentoDTO> departamentos) {
 
         super(owner,
                 isAdicionar ? "Adicionar funcionário" : "Alterar funcionário",
                 ModalityType.APPLICATION_MODAL);
         this.isAdicionar = isAdicionar;
+        this.usuario = usuario;
         initialize();
         updateFuncionario(funcionario, departamentos);
     }
@@ -261,6 +265,10 @@ public class FuncionarioSwingView extends JDialog implements FuncionarioView {
         fieldEmail.setText(funcionario.getEmail());
         fieldLogin.setText(funcionario.getLogin());
         fieldSenha.setText(funcionario.getSenha());
+        listDepartamentos.setEnabled(true);
+        if (usuario != null && usuario.getCargo().isChefeDeDepartamento()) {
+            listDepartamentos.setEnabled(false);
+        }
 
         // Exibe os departamentos na lista de departamentos e seleciona o atual,
         // se tiver, ou 'Nenhum', se não tiver.

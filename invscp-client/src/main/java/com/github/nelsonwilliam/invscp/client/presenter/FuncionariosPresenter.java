@@ -38,11 +38,14 @@ public class FuncionariosPresenter extends Presenter<FuncionariosView> {
     @SuppressWarnings("unused")
     private void onAdicionarFuncionario() {
         final FuncionarioDTO novoFunc = new FuncionarioDTO();
+        novoFunc.setDepartamento(mainPresenter.getUsuario().getDepartamento());
+
         final List<DepartamentoDTO> depts = Client
                 .requestGetPossiveisDepartamentosParaFuncionario(novoFunc);
 
         final FuncionarioView funcView = ViewFactory.createFuncionario(
-                mainPresenter.getView(), novoFunc, true, depts);
+                mainPresenter.getView(), novoFunc, true,
+                mainPresenter.getUsuario(), depts);
         final FuncionarioPresenter funcPresenter = new FuncionarioPresenter(
                 funcView, mainPresenter, this);
         funcView.setVisible(true);
@@ -103,7 +106,8 @@ public class FuncionariosPresenter extends Presenter<FuncionariosView> {
                         selectedFuncionario);
 
         final FuncionarioView funcView = ViewFactory.createFuncionario(
-                mainPresenter.getView(), selectedFuncionario, false, depts);
+                mainPresenter.getView(), selectedFuncionario, false,
+                mainPresenter.getUsuario(), depts);
         final FuncionarioPresenter funcPresenter = new FuncionarioPresenter(
                 funcView, mainPresenter, this);
         funcView.setVisible(true);

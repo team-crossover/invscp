@@ -7,7 +7,7 @@ import java.security.KeyException;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import org.pushingpixels.substance.api.skin.SubstanceMistAquaLookAndFeel;
+import org.pushingpixels.substance.api.skin.SubstanceBusinessLookAndFeel;
 
 import com.github.nelsonwilliam.invscp.client.presenter.MainPresenter;
 import com.github.nelsonwilliam.invscp.client.util.Client;
@@ -51,7 +51,7 @@ public class InvSCPClient {
         EventQueue.invokeLater(() -> {
             // Define a aparência do Swing
             try {
-                UIManager.setLookAndFeel(new SubstanceMistAquaLookAndFeel());
+                UIManager.setLookAndFeel(new SubstanceBusinessLookAndFeel());
             } catch (final UnsupportedLookAndFeelException ex) {
                 ex.printStackTrace();
             }

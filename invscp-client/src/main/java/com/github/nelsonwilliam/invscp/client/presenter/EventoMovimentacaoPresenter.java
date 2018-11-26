@@ -23,7 +23,7 @@ public class EventoMovimentacaoPresenter
         super(view);
         this.mainPresenter = mainPresenter;
         this.eventosMovimentacaoPresenter = eventosMovimentacaoPresenter;
-        this.movimentacoesPresenter = null;
+        movimentacoesPresenter = null;
         setupViewListeners();
     }
 
@@ -32,7 +32,7 @@ public class EventoMovimentacaoPresenter
             final MovimentacoesPresenter movimentacoesPresenter) {
         super(view);
         this.mainPresenter = mainPresenter;
-        this.eventosMovimentacaoPresenter = null;
+        eventosMovimentacaoPresenter = null;
         this.movimentacoesPresenter = movimentacoesPresenter;
         setupViewListeners();
     }
@@ -61,32 +61,36 @@ public class EventoMovimentacaoPresenter
     }
 
     private void onConfirmarAdicao(final FuncionarioDTO usuario,
-            final EventoMovimentacaoDTO eventoMovimentacaoNovo) {
+            final EventoMovimentacaoDTO evento) {
 
         try {
             Client.requestValidarInserirEventoMovimentacao(usuario,
-                    eventoMovimentacaoNovo);
+                    evento);
         } catch (final IllegalInsertException e) {
             view.showError(e.getMessage());
             return;
         }
 
-        Client.requestAddEventoMovimentacao(eventoMovimentacaoNovo);
+        final int addedId = Client.requestAddEventoMovimentacao(evento);
+        final EventoMovimentacaoDTO addedEvento =
+                Client.requestGetEventoMovimentacaoById(addedId);
         view.showSucesso();
         view.close();
 
         // Executa as pós-inserções e exibe as mensagens resultantes.
         final List<String> messages =
                 Client.requestPosInserirEventoMovimentacao(usuario,
-                        eventoMovimentacaoNovo);
+                        addedEvento);
         for (final String message : messages) {
             view.showInfo(message);
         }
 
-        if (eventosMovimentacaoPresenter != null)
+        if (eventosMovimentacaoPresenter != null) {
             eventosMovimentacaoPresenter.updateEventosMovimentacao();
-        if (movimentacoesPresenter != null)
+        }
+        if (movimentacoesPresenter != null) {
             movimentacoesPresenter.updateMovimentacoes();
+        }
     }
 
     private void onConfirmarAtualizacao(final FuncionarioDTO usuario,
@@ -105,9 +109,11 @@ public class EventoMovimentacaoPresenter
         view.showSucesso();
         view.close();
 
-        if (eventosMovimentacaoPresenter != null)
+        if (eventosMovimentacaoPresenter != null) {
             eventosMovimentacaoPresenter.updateEventosMovimentacao();
-        if (movimentacoesPresenter != null)
+        }
+        if (movimentacoesPresenter != null) {
             movimentacoesPresenter.updateMovimentacoes();
+        }
     }
 }

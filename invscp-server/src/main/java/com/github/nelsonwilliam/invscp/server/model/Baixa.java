@@ -113,12 +113,12 @@ public class Baixa implements Model<BaixaDTO> {
                 throw new IllegalInsertException(
                         "Você não tem permissão para baixar bens");
             }
-            if (!usuario.getDepartamento()
-                    .equals(novaBaixa.getBem().getDepartamento())) {
+            if (!usuario.getDepartamento().getId()
+                    .equals(novaBaixa.getBem().getDepartamento().getId())) {
                 throw new IllegalInsertException(
                         "Você não tem permissão para baixar bens");
             }
-            if (!usuario.equals(novaBaixa.getFuncionario())) {
+            if (!usuario.getId().equals(novaBaixa.getFuncionario().getId())) {
                 throw new IllegalInsertException(
                         "Você não tem permissão para baixar este item em nome de outro funcionário");
             }
@@ -126,8 +126,8 @@ public class Baixa implements Model<BaixaDTO> {
 
         // VALIDADE DE DADOS
         final BemRepository bemRepo = new BemRepository();
-        final Integer idDoBem = bemRepo.getById(novaBaixa.getBem().getId())
-                .getId();
+        final Integer idDoBem =
+                bemRepo.getById(novaBaixa.getBem().getId()).getId();
         if (baixaRepo.existsBemBaixado(idDoBem)) {
             throw new IllegalInsertException(
                     "Não é possível baixar o bem pois ele já foi baixado.");

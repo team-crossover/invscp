@@ -158,6 +158,11 @@ public class OrdensServicoSwingView extends JDialog
         gbc_btnAdicionar.gridx = 1;
         gbc_btnAdicionar.gridy = 2;
         getContentPane().add(btnAdicionar, gbc_btnAdicionar);
+
+        // Deixa em ordem decrescente com base no ID, para que as ordens mais
+        // recentes fiquem primeiro.
+        table.getRowSorter().toggleSortOrder(0);
+        table.getRowSorter().toggleSortOrder(0);
     }
 
     @Override
@@ -201,11 +206,6 @@ public class OrdensServicoSwingView extends JDialog
                     o.getValor(), o.getSituacao().getTexto(),
                     o.getFuncionario().getNome() });
         }
-
-        // Deixa em ordem decrescente com base no ID, para que as ordens mais
-        // recentes fiquem primeiro.
-        table.getRowSorter().toggleSortOrder(0);
-        table.getRowSorter().toggleSortOrder(0);
 
         revalidate();
         repaint();

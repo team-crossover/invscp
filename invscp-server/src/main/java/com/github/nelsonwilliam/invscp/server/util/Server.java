@@ -596,7 +596,7 @@ public class Server {
         final Baixa itemModel = new Baixa();
         itemModel.setValuesFromDTO(item);
         repo.add(itemModel);
-        return new Response();
+        return new Response(itemModel.getId());
     }
 
     public static Response updateBaixa(final BaixaDTO item) {
@@ -696,7 +696,7 @@ public class Server {
         final Bem itemModel = new Bem();
         itemModel.setValuesFromDTO(item);
         repo.add(itemModel);
-        return new Response();
+        return new Response(itemModel.getId());
     }
 
     public static Response updateBem(final BemDTO item) {
@@ -792,7 +792,7 @@ public class Server {
         final OrdemServico itemModel = new OrdemServico();
         itemModel.setValuesFromDTO(item);
         repo.add(itemModel);
-        return new Response();
+        return new Response(itemModel.getId());
     }
 
     public static Response updateOrdemServico(final OrdemServicoDTO item) {
@@ -925,7 +925,7 @@ public class Server {
         final Funcionario itemModel = new Funcionario();
         itemModel.setValuesFromDTO(item);
         repo.add(itemModel);
-        return new Response();
+        return new Response(itemModel.getId());
     }
 
     public static Response updateFuncionario(final FuncionarioDTO item) {
@@ -1066,7 +1066,7 @@ public class Server {
         final Departamento itemModel = new Departamento();
         itemModel.setValuesFromDTO(item);
         repo.add(itemModel);
-        return new Response();
+        return new Response(itemModel.getId());
     }
 
     public static Response updateDepartamento(final DepartamentoDTO item) {
@@ -1170,7 +1170,7 @@ public class Server {
         final Localizacao itemModel = new Localizacao();
         itemModel.setValuesFromDTO(item);
         repo.add(itemModel);
-        return new Response();
+        return new Response(itemModel.getId());
     }
 
     public static Response updateLocalizacao(final LocalizacaoDTO item) {
@@ -1253,7 +1253,7 @@ public class Server {
         final Predio itemModel = new Predio();
         itemModel.setValuesFromDTO(item);
         repo.add(itemModel);
-        return new Response();
+        return new Response(itemModel.getId());
     }
 
     public static Response updatePredio(final PredioDTO item) {
@@ -1353,7 +1353,7 @@ public class Server {
         final Sala sala = new Sala();
         sala.setValuesFromDTO(salaDto);
         repo.add(sala);
-        return new Response();
+        return new Response(sala.getId());
     }
 
     public static Response updateSala(final SalaDTO salaDto) {

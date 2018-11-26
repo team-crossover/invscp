@@ -155,12 +155,14 @@ public class MovimentacoesPresenter extends Presenter<MovimentacoesView> {
         }
 
         final Integer newId = Client.requestAddEventoMovimentacao(ev);
-        ev.setId(newId);
+        final EventoMovimentacaoDTO addedEvento =
+                Client.requestGetEventoMovimentacaoById(newId);
         view.showSucesso("Movimentação finalizada.");
 
         // Executa as pós-alterações e exibe as mensagens resultantes.
         final List<String> messages =
-                Client.requestPosInserirEventoMovimentacao(usuario, ev);
+                Client.requestPosInserirEventoMovimentacao(usuario,
+                        addedEvento);
         for (final String message : messages) {
             view.showInfo(message);
         }

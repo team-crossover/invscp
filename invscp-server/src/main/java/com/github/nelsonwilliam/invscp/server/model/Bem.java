@@ -89,7 +89,7 @@ public class Bem implements Model<BemDTO> {
         dto.setNumeroTombamento(numeroTombamento);
         dto.setSituacao(situacao);
         dto.setValorCompra(valorCompra);
-        dto.setDepreciacoes(this.getDepreciacoesPorAno());
+        dto.setDepreciacoes(getDepreciacoesPorAno());
         if (idDepartamento != null) {
             final DepartamentoRepository repo = new DepartamentoRepository();
             final Departamento dept = repo.getById(idDepartamento);
@@ -350,18 +350,18 @@ public class Bem implements Model<BemDTO> {
      * @return
      */
     public BigDecimal[] getDepreciacoesPorAno() {
-        BigDecimal valCompra = this.getValorCompra();
-        LocalDate hoje = LocalDate.now();
-        Integer qntAnos = hoje.getYear() - getDataAquisicao().getYear();
+        final BigDecimal valCompra = getValorCompra();
+        final LocalDate hoje = LocalDate.now();
+        final Integer qntAnos = hoje.getYear() - getDataAquisicao().getYear();
 
-        GrupoMaterialRepository gmRepo = new GrupoMaterialRepository();
-        GrupoMaterial gm = gmRepo.getById(getIdGrupoMaterial());
-        BigDecimal depr = gm.getDepreciacao();
-        BigDecimal deprPorAno = valCompra.multiply(depr);
-        BigDecimal[] depreciacoes = new BigDecimal[qntAnos + 1];
+        final GrupoMaterialRepository gmRepo = new GrupoMaterialRepository();
+        final GrupoMaterial gm = gmRepo.getById(getIdGrupoMaterial());
+        final BigDecimal depr = gm.getDepreciacao();
+        final BigDecimal deprPorAno = valCompra.multiply(depr);
+        final BigDecimal[] depreciacoes = new BigDecimal[qntAnos + 1];
         for (int i = 0; i < depreciacoes.length; i++) {
-            BigDecimal deprEsseAno = deprPorAno.multiply(new BigDecimal(i));
-            BigDecimal valDepreciado = valCompra.subtract(deprEsseAno);
+            final BigDecimal deprEsseAno = deprPorAno.multiply(new BigDecimal(i));
+            final BigDecimal valDepreciado = valCompra.subtract(deprEsseAno);
             depreciacoes[i] = valDepreciado.compareTo(new BigDecimal(0.01)) <= 0
                     ? new BigDecimal(0.01)
                     : valDepreciado;

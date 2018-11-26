@@ -9,6 +9,7 @@ import java.util.List;
 
 import com.github.nelsonwilliam.invscp.client.util.Client;
 import com.github.nelsonwilliam.invscp.client.view.BaixaView;
+import com.github.nelsonwilliam.invscp.client.view.BemFiltrarView;
 import com.github.nelsonwilliam.invscp.client.view.BemView;
 import com.github.nelsonwilliam.invscp.client.view.BensView;
 import com.github.nelsonwilliam.invscp.client.view.MovimentacaoView;
@@ -64,6 +65,9 @@ public class BensPresenter extends Presenter<BensView> {
         view.addMoverBemListener((final ActionEvent e) -> {
             onMover();
         });
+        view.addFiltrarListener((final ActionEvent e) -> {
+            onFiltrar();
+        });
     }
 
     @SuppressWarnings("unused")
@@ -74,6 +78,7 @@ public class BensPresenter extends Presenter<BensView> {
         novoBem.setDataCadastro(LocalDate.now());
         novoBem.setGarantia(LocalDate.now());
         novoBem.setSala(Client.requestGetSalaDeposito());
+        novoBem.setDepartamento(mainPresenter.getUsuario().getDepartamento());
 
         final List<DepartamentoDTO> bens =
                 Client.requestGetPossiveisDepartamentosParaBem(novoBem);
@@ -81,7 +86,7 @@ public class BensPresenter extends Presenter<BensView> {
                 Client.requestGetPossiveisGruposMateriaisParaBem(novoBem);
 
         final BemView bemView = ViewFactory.createBem(mainPresenter.getView(),
-                novoBem, true, bens, grupos);
+                novoBem, true, mainPresenter.getUsuario(), bens, grupos);
         final BemPresenter bemPresenter =
                 new BemPresenter(bemView, mainPresenter, this);
         bemView.setVisible(true);
@@ -140,7 +145,7 @@ public class BensPresenter extends Presenter<BensView> {
                 Client.requestGetPossiveisGruposMateriaisParaBem(selectedBem);
 
         final BemView bemView = ViewFactory.createBem(mainPresenter.getView(),
-                selectedBem, false, bens, grupos);
+                selectedBem, false, mainPresenter.getUsuario(), bens, grupos);
         final BemPresenter bemPresenter =
                 new BemPresenter(bemView, mainPresenter, this);
         bemView.setVisible(true);
@@ -189,7 +194,7 @@ public class BensPresenter extends Presenter<BensView> {
                 new BaixaPresenter(baixaView, mainPresenter, this);
         baixaView.setVisible(true);
     }
-    
+
     @SuppressWarnings("unused")
     private void onMover() {
         final List<Integer> selectedBemIds = view.getSelectedBensIds();
@@ -200,15 +205,15 @@ public class BensPresenter extends Presenter<BensView> {
 
         final Integer selectedBemId = selectedBemIds.get(0);
         final BemDTO selectedBem = Client.requestGetBemById(selectedBemId);
-        
-        MovimentacaoDTO novaMov = new MovimentacaoDTO();
+
+        final MovimentacaoDTO novaMov = new MovimentacaoDTO();
         novaMov.setEtapa(EtapaMovEnum.INICIADA);
         novaMov.setBem(selectedBem);
         novaMov.setSalaOrigem(selectedBem.getSala());
         novaMov.setSalaDestino(selectedBem.getSala());
-        
+
         final MovimentacaoView movView = ViewFactory.createMovimentacao(mainPresenter.getView(), novaMov, true);
-        MovimentacaoPresenter movPresenter = new MovimentacaoPresenter(movView, mainPresenter, this);
+        final MovimentacaoPresenter movPresenter = new MovimentacaoPresenter(movView, mainPresenter, this);
         movView.setVisible(true);
     }
 
@@ -272,6 +277,15 @@ public class BensPresenter extends Presenter<BensView> {
 
         view.showSucesso("Inventário gerado e salvo em:\n"
                 + file.toPath().toAbsolutePath());
+    }
+
+    @SuppressWarnings("unused")
+    public void onFiltrar() {
+        final BemFiltrarView filtrarView =
+                ViewFactory.createBemFiltrar(mainPresenter.getView());
+        final BemFiltrarPresenter filtrarPresenter =
+                new BemFiltrarPresenter(filtrarView, mainPresenter, this);
+        filtrarView.setVisible(true);
     }
 
 }

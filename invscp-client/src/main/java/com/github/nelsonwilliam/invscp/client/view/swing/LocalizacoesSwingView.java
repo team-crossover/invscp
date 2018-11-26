@@ -149,6 +149,9 @@ public class LocalizacoesSwingView extends JPanel implements LocalizacoesView {
         gbc_btnDeletar.gridx = 2;
         gbc_btnDeletar.gridy = 1;
         add(btnDeletar, gbc_btnDeletar);
+
+        // Deixa em ordem crescente com base no nome.
+        table.getRowSorter().toggleSortOrder(1);
     }
 
     @Override
@@ -177,9 +180,6 @@ public class LocalizacoesSwingView extends JPanel implements LocalizacoesView {
                     l.getEndereco(), l.getCep(), l.getCidade(), l.getUf() });
         }
 
-        // Deixa em ordem crescente com base no nome.
-        table.getRowSorter().toggleSortOrder(1);
-        
         revalidate();
         repaint();
     }

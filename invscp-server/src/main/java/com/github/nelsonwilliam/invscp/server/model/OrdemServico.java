@@ -115,12 +115,12 @@ public class OrdemServico implements Model<OrdemServicoDTO> {
                 throw new IllegalInsertException(
                         "Você não tem permissão para inserir este item");
             }
-            if (!usuario.getDepartamento()
-                    .equals(novaOs.getBem().getDepartamento())) {
+            if (!usuario.getDepartamento().getId()
+                    .equals(novaOs.getBem().getDepartamento().getId())) {
                 throw new IllegalInsertException(
                         "Você não tem permissão para inserir este item");
             }
-            if (!usuario.equals(novaOs.getFuncionario())) {
+            if (!usuario.getId().equals(novaOs.getFuncionario().getId())) {
                 throw new IllegalInsertException(
                         "Você não tem permissão para inserir este item em nome de outro funcionário");
             }
@@ -201,7 +201,7 @@ public class OrdemServico implements Model<OrdemServicoDTO> {
                 throw new IllegalUpdateException(
                         "Você não tem permissão para alterar este item");
             }
-            if (!usuario.equals(novaOs.getFuncionario())) {
+            if (!usuario.getId().equals(novaOs.getFuncionario().getId())) {
                 throw new IllegalUpdateException(
                         "Você não tem permissão para alterar este item em nome de outro funcionário");
             }

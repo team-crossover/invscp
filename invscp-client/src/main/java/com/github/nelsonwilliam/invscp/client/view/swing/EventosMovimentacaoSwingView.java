@@ -141,10 +141,15 @@ public class EventosMovimentacaoSwingView extends JDialog
         });
         popupMenu.add(popupItemVer);
         table.setComponentPopupMenu(popupMenu);
+
+        // Deixa em ordem decrescente com base no ID, para que os eventos novos
+        // fiquem primeiro.
+        table.getRowSorter().toggleSortOrder(0);
+        table.getRowSorter().toggleSortOrder(0);
     }
 
     @Override
-    public void addVerEventoMovimentacaoListener(ActionListener listener) {
+    public void addVerEventoMovimentacaoListener(final ActionListener listener) {
         popupItemVer.addActionListener(listener);
     }
 
@@ -163,11 +168,6 @@ public class EventosMovimentacaoSwingView extends JDialog
                     e.getFuncionario().getNome(),
                     e.getData().format(DateTimeFormatter.ISO_DATE) });
         }
-
-        // Deixa em ordem decrescente com base no ID, para que os eventos novos
-        // fiquem primeiro.
-        table.getRowSorter().toggleSortOrder(0);
-        table.getRowSorter().toggleSortOrder(0);
 
         revalidate();
         repaint();

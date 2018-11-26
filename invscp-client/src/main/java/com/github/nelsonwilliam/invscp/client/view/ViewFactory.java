@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 
 import com.github.nelsonwilliam.invscp.client.util.ClientSettings;
 import com.github.nelsonwilliam.invscp.client.view.swing.BaixaSwingView;
+import com.github.nelsonwilliam.invscp.client.view.swing.BemFiltrarSwingView;
 import com.github.nelsonwilliam.invscp.client.view.swing.BemSwingView;
 import com.github.nelsonwilliam.invscp.client.view.swing.BensSwingView;
 import com.github.nelsonwilliam.invscp.client.view.swing.DepartamentoSwingView;
@@ -76,12 +77,13 @@ public class ViewFactory {
 
     public static FuncionarioView createFuncionario(final MainView main,
             final FuncionarioDTO func, final boolean isAddition,
+            final FuncionarioDTO usuario,
             final List<DepartamentoDTO> departamentos) {
 
         switch (ClientSettings.getViewImpl()) {
             case SWING:
                 return new FuncionarioSwingView((JFrame) main, func, isAddition,
-                        departamentos);
+                        usuario, departamentos);
             default:
                 throw new IllegalArgumentException();
         }
@@ -185,24 +187,25 @@ public class ViewFactory {
         }
     }
 
-    public static BensView createBens() {
+    public static BensView createBens(final FuncionarioDTO usuario) {
 
         switch (ClientSettings.getViewImpl()) {
             case SWING:
-                return new BensSwingView();
+                return new BensSwingView(usuario);
             default:
                 throw new IllegalArgumentException();
         }
     }
 
     public static BemView createBem(final MainView main, final BemDTO bem,
-            final boolean isAddition, final List<DepartamentoDTO> depts,
+            final boolean isAddition, final FuncionarioDTO usuario,
+            final List<DepartamentoDTO> depts,
             final List<GrupoMaterialDTO> gruposMateriais) {
 
         switch (ClientSettings.getViewImpl()) {
             case SWING:
-                return new BemSwingView((JFrame) main, bem, isAddition, depts,
-                        gruposMateriais);
+                return new BemSwingView((JFrame) main, bem, isAddition, usuario,
+                        depts, gruposMateriais);
             default:
                 throw new IllegalArgumentException();
         }
@@ -241,11 +244,12 @@ public class ViewFactory {
         }
     }
 
-    public static MovimentacoesView createMovimentacoes() {
+    public static MovimentacoesView createMovimentacoes(
+            final FuncionarioDTO usuario) {
 
         switch (ClientSettings.getViewImpl()) {
             case SWING:
-                return new MovimentacoesSwingView();
+                return new MovimentacoesSwingView(usuario);
             default:
                 throw new IllegalArgumentException();
         }
@@ -256,13 +260,15 @@ public class ViewFactory {
 
         switch (ClientSettings.getViewImpl()) {
             case SWING:
-                return new MovimentacaoSwingView((JFrame) main, mov, isAddition);
+                return new MovimentacaoSwingView((JFrame) main, mov,
+                        isAddition);
             default:
                 throw new IllegalArgumentException();
         }
     }
 
-    public static EventosMovimentacaoView createEventosMovimentacao(final MainView main) {
+    public static EventosMovimentacaoView createEventosMovimentacao(
+            final MainView main) {
 
         switch (ClientSettings.getViewImpl()) {
             case SWING:
@@ -272,12 +278,24 @@ public class ViewFactory {
         }
     }
 
-    public static EventoMovimentacaoView createEventoMovimentacao(final MainView main,
-            final EventoMovimentacaoDTO mov, final boolean isAddition) {
+    public static EventoMovimentacaoView createEventoMovimentacao(
+            final MainView main, final EventoMovimentacaoDTO mov,
+            final boolean isAddition) {
 
         switch (ClientSettings.getViewImpl()) {
             case SWING:
-                return new EventoMovimentacaoSwingView((JFrame) main, mov, isAddition);
+                return new EventoMovimentacaoSwingView((JFrame) main, mov,
+                        isAddition);
+            default:
+                throw new IllegalArgumentException();
+        }
+    }
+
+    public static BemFiltrarView createBemFiltrar(final MainView main) {
+
+        switch (ClientSettings.getViewImpl()) {
+            case SWING:
+                return new BemFiltrarSwingView((JFrame) main);
             default:
                 throw new IllegalArgumentException();
         }
