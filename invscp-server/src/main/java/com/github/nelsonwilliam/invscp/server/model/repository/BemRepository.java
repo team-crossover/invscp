@@ -13,6 +13,7 @@ import java.util.List;
 
 import com.github.nelsonwilliam.invscp.server.model.Bem;
 import com.github.nelsonwilliam.invscp.server.util.DatabaseConnection;
+import com.github.nelsonwilliam.invscp.shared.model.dto.FiltroBemDTO;
 import com.github.nelsonwilliam.invscp.shared.model.enums.BemSituacaoEnum;
 
 public class BemRepository implements Repository<Bem> {
@@ -25,7 +26,7 @@ public class BemRepository implements Repository<Bem> {
             final PreparedStatement s = connection.prepareStatement(
                     "SELECT id,descricao,numero_tombamento,data_cadastro,data_aquisicao,"
                             + "numero_nota_fiscal,especificacao,garantia,marca,valor_compra,situacao,"
-                            + "id_sala,id_departamento,id_grupo_material FROM bem ORDER BY id ASC");
+                            + "id_sala,id_departamento,id_grupo_material FROM bem");
             final ResultSet r = s.executeQuery();
             while (r.next()) {
                 final Integer id = (Integer) r.getObject("id");
@@ -76,7 +77,127 @@ public class BemRepository implements Repository<Bem> {
 
     }
 
-    public boolean existsNumTombamento(Long numTombamento) {
+    public List<Bem> getAllFiltered(final FiltroBemDTO filtro) {
+        final Connection connection = DatabaseConnection.getConnection();
+        final List<Bem> bens = new ArrayList<Bem>();
+        try {
+            final StringBuilder sql = new StringBuilder(
+                    "SELECT id,descricao,numero_tombamento,data_cadastro,data_aquisicao,"
+                            + "numero_nota_fiscal,especificacao,garantia,marca,valor_compra,situacao,"
+                            + "id_sala,id_departamento,id_grupo_material FROM bem");
+
+            boolean addedWhere = false;
+            if (filtro.getDescricao() != null && !filtro.getDescricao().isEmpty()) {
+                if (!addedWhere) {
+                    sql.append(" WHERE");
+                    addedWhere = true;
+                } else {
+                    sql.append(" AND");
+                }
+                sql.append(" descricao ILIKE ?");
+            }
+            if (filtro.getIdDepartamento() != null) {
+                if (!addedWhere) {
+                    sql.append(" WHERE");
+                    addedWhere = true;
+                } else {
+                    sql.append(" AND");
+                }
+                sql.append(" id_departamento=?");
+            }
+            if (filtro.getNumeroTombamento() != null) {
+                if (!addedWhere) {
+                    sql.append(" WHERE");
+                    addedWhere = true;
+                } else {
+                    sql.append(" AND");
+                }
+                sql.append(" CAST(numero_tombamento AS VARCHAR) LIKE ?");
+            }
+            if (filtro.getSituacao() != null) {
+                if (!addedWhere) {
+                    sql.append(" WHERE");
+                    addedWhere = true;
+                } else {
+                    sql.append(" AND");
+                }
+                sql.append(" situacao=?");
+            }
+
+            final PreparedStatement s = connection.prepareStatement(sql.toString());
+            int index = 1;
+            if (filtro.getDescricao() != null
+                    && !filtro.getDescricao().isEmpty()) {
+                s.setObject(index, "%" + filtro.getDescricao() + "%",
+                        Types.VARCHAR);
+                index++;
+            }
+            if (filtro.getIdDepartamento() != null) {
+                s.setObject(index, filtro.getIdDepartamento(), Types.INTEGER);
+                index++;
+            }
+            if (filtro.getNumeroTombamento() != null) {
+                s.setObject(index, "%" + filtro.getNumeroTombamento() + "%",
+                        Types.VARCHAR);
+                index++;
+            }
+            if (filtro.getSituacao() != null) {
+                s.setObject(index, filtro.getSituacao().toString(),
+                        Types.VARCHAR);
+                index++;
+            }
+
+            final ResultSet r = s.executeQuery();
+            while (r.next()) {
+                final Integer id = (Integer) r.getObject("id");
+                final String descricao = (String) r.getObject("descricao");
+                final Long numTombamento =
+                        (Long) r.getObject("numero_tombamento");
+                final LocalDate dataCadastro =
+                        ((Date) r.getObject("data_cadastro")).toLocalDate();
+                final LocalDate dataAquisicao =
+                        ((Date) r.getObject("data_aquisicao")).toLocalDate();
+                final String numNotaFiscal =
+                        (String) r.getObject("numero_nota_fiscal");
+                final String especificacao =
+                        (String) r.getObject("especificacao");
+                final LocalDate garantia =
+                        ((Date) r.getObject("garantia")).toLocalDate();
+                final String marca = (String) r.getObject("marca");
+                final BigDecimal valorCompra =
+                        (BigDecimal) r.getObject("valor_compra");
+                final String situacao = (String) r.getObject("situacao");
+                final Integer idSala = (Integer) r.getObject("id_sala");
+                final Integer idDepartamento =
+                        (Integer) r.getObject("id_departamento");
+                final Integer idGrupoMaterial =
+                        (Integer) r.getObject("id_grupo_material");
+
+                final Bem bem = new Bem();
+                bem.setId(id);
+                bem.setDescricao(descricao);
+                bem.setNumeroTombamento(numTombamento);
+                bem.setDataAquisicao(dataAquisicao);
+                bem.setDataCadastro(dataCadastro);
+                bem.setNumeroNotaFiscal(numNotaFiscal);
+                bem.setEspecificacao(especificacao);
+                bem.setGarantia(garantia);
+                bem.setMarca(marca);
+                bem.setValorCompra(valorCompra);
+                bem.setSituacao(BemSituacaoEnum.valueOf(situacao));
+                bem.setIdSala(idSala);
+                bem.setIdDepartamento(idDepartamento);
+                bem.setIdGrupoMaterial(idGrupoMaterial);
+                bens.add(bem);
+            }
+        } catch (final Exception e) {
+            e.printStackTrace();
+        }
+        return bens;
+
+    }
+
+    public boolean existsNumTombamento(final Long numTombamento) {
         final Connection connection = DatabaseConnection.getConnection();
         try {
             final PreparedStatement s = connection.prepareStatement(
@@ -86,7 +207,7 @@ public class BemRepository implements Repository<Bem> {
             if (!r.next()) {
                 return false;
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             e.printStackTrace();
         }
 

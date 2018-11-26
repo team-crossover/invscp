@@ -14,6 +14,7 @@ import com.github.nelsonwilliam.invscp.shared.model.dto.BaixaDTO;
 import com.github.nelsonwilliam.invscp.shared.model.dto.BemDTO;
 import com.github.nelsonwilliam.invscp.shared.model.dto.DepartamentoDTO;
 import com.github.nelsonwilliam.invscp.shared.model.dto.EventoMovimentacaoDTO;
+import com.github.nelsonwilliam.invscp.shared.model.dto.FiltroBemDTO;
 import com.github.nelsonwilliam.invscp.shared.model.dto.FuncionarioDTO;
 import com.github.nelsonwilliam.invscp.shared.model.dto.GrupoMaterialDTO;
 import com.github.nelsonwilliam.invscp.shared.model.dto.GuiaTransporteDTO;
@@ -603,6 +604,18 @@ public class Client {
 
         try {
             final Object[] objs = request(RequestTypeEnum.GET_BENS);
+            return (List<BemDTO>) objs[0];
+        } catch (final Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public static List<BemDTO> requestGetBensFiltrados(
+            final FiltroBemDTO filtro) {
+
+        try {
+            final Object[] objs =
+                    request(RequestTypeEnum.GET_BENS_FILTRADOS, filtro);
             return (List<BemDTO>) objs[0];
         } catch (final Exception e) {
             throw new RuntimeException(e.getMessage());

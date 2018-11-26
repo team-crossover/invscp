@@ -6,7 +6,7 @@ import javax.swing.JFrame;
 
 import com.github.nelsonwilliam.invscp.client.util.ClientSettings;
 import com.github.nelsonwilliam.invscp.client.view.swing.BaixaSwingView;
-import com.github.nelsonwilliam.invscp.client.view.swing.BemFiltrarSwingView;
+import com.github.nelsonwilliam.invscp.client.view.swing.FiltroBemSwingView;
 import com.github.nelsonwilliam.invscp.client.view.swing.BemSwingView;
 import com.github.nelsonwilliam.invscp.client.view.swing.BensSwingView;
 import com.github.nelsonwilliam.invscp.client.view.swing.DepartamentoSwingView;
@@ -291,11 +291,11 @@ public class ViewFactory {
         }
     }
 
-    public static BemFiltrarView createBemFiltrar(final MainView main) {
+    public static FiltroBemView createFiltroBem(final MainView main) {
 
         switch (ClientSettings.getViewImpl()) {
             case SWING:
-                return new BemFiltrarSwingView((JFrame) main);
+                return new FiltroBemSwingView((JFrame) main);
             default:
                 throw new IllegalArgumentException();
         }

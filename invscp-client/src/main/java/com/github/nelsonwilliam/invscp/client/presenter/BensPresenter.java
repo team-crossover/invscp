@@ -9,9 +9,9 @@ import java.util.List;
 
 import com.github.nelsonwilliam.invscp.client.util.Client;
 import com.github.nelsonwilliam.invscp.client.view.BaixaView;
-import com.github.nelsonwilliam.invscp.client.view.BemFiltrarView;
 import com.github.nelsonwilliam.invscp.client.view.BemView;
 import com.github.nelsonwilliam.invscp.client.view.BensView;
+import com.github.nelsonwilliam.invscp.client.view.FiltroBemView;
 import com.github.nelsonwilliam.invscp.client.view.MovimentacaoView;
 import com.github.nelsonwilliam.invscp.client.view.OrdensServicoView;
 import com.github.nelsonwilliam.invscp.client.view.ViewFactory;
@@ -19,6 +19,7 @@ import com.github.nelsonwilliam.invscp.shared.exception.IllegalDeleteException;
 import com.github.nelsonwilliam.invscp.shared.model.dto.BaixaDTO;
 import com.github.nelsonwilliam.invscp.shared.model.dto.BemDTO;
 import com.github.nelsonwilliam.invscp.shared.model.dto.DepartamentoDTO;
+import com.github.nelsonwilliam.invscp.shared.model.dto.FiltroBemDTO;
 import com.github.nelsonwilliam.invscp.shared.model.dto.FuncionarioDTO;
 import com.github.nelsonwilliam.invscp.shared.model.dto.GrupoMaterialDTO;
 import com.github.nelsonwilliam.invscp.shared.model.dto.HistoricoDTO;
@@ -31,6 +32,8 @@ import com.github.nelsonwilliam.invscp.shared.util.Relatorios;
 public class BensPresenter extends Presenter<BensView> {
 
     private final MainPresenter mainPresenter;
+
+    private FiltroBemDTO filtroBens = null;
 
     public BensPresenter(final BensView view,
             final MainPresenter mainPresenter) {
@@ -68,6 +71,24 @@ public class BensPresenter extends Presenter<BensView> {
         view.addFiltrarListener((final ActionEvent e) -> {
             onFiltrar();
         });
+    }
+
+    /**
+     * Obtém o valor atual de filtroBens
+     *
+     * @return O valor atual de filtroBens.
+     */
+    public final FiltroBemDTO getFiltroBens() {
+        return filtroBens;
+    }
+
+    /**
+     * Atualiza o valor atual de filtroBens.
+     *
+     * @param newFiltroBens O novo valor de filtroBens.
+     */
+    public final void setFiltroBens(final FiltroBemDTO newFiltroBens) {
+        filtroBens = newFiltroBens;
     }
 
     @SuppressWarnings("unused")
@@ -218,7 +239,8 @@ public class BensPresenter extends Presenter<BensView> {
     }
 
     public void updateBens() {
-        final List<BemDTO> bens = Client.requestGetBens();
+        final List<BemDTO> bens = filtroBens == null ? Client.requestGetBens()
+                : Client.requestGetBensFiltrados(filtroBens);
         view.updateBens(bens);
     }
 
@@ -281,10 +303,10 @@ public class BensPresenter extends Presenter<BensView> {
 
     @SuppressWarnings("unused")
     public void onFiltrar() {
-        final BemFiltrarView filtrarView =
-                ViewFactory.createBemFiltrar(mainPresenter.getView());
-        final BemFiltrarPresenter filtrarPresenter =
-                new BemFiltrarPresenter(filtrarView, mainPresenter, this);
+        final FiltroBemView filtrarView =
+                ViewFactory.createFiltroBem(mainPresenter.getView());
+        final FiltroBemPresenter filtrarPresenter =
+                new FiltroBemPresenter(filtrarView, mainPresenter, this);
         filtrarView.setVisible(true);
     }
 

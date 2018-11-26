@@ -4,20 +4,23 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 
-import com.github.nelsonwilliam.invscp.client.view.BemFiltrarView;
+import com.github.nelsonwilliam.invscp.client.view.FiltroBemView;
+import com.github.nelsonwilliam.invscp.shared.model.dto.DepartamentoDTO;
+import com.github.nelsonwilliam.invscp.shared.model.dto.FiltroBemDTO;
 
-public class BemFiltrarSwingView  extends JDialog implements BemFiltrarView {
+public class FiltroBemSwingView  extends JDialog implements FiltroBemView {
 
     private static final long serialVersionUID = -276032841299039698L;
 
     private JButton btnConfirmar;
 
-    public BemFiltrarSwingView(final JFrame owner) {
+    public FiltroBemSwingView(final JFrame owner) {
         super(owner, "Filtrar bens", ModalityType.APPLICATION_MODAL);
         initialize();
     }
@@ -58,6 +61,19 @@ public class BemFiltrarSwingView  extends JDialog implements BemFiltrarView {
     public void close() {
         super.setVisible(false);
         super.dispose();
+    }
+
+    @Override
+    public void updateFiltro(final FiltroBemDTO newFiltro,
+            final List<DepartamentoDTO> newDepartamentos) {
+        // TODO Auto-generated method stub
+    }
+
+    @Override
+    public FiltroBemDTO getFiltro() {
+        final FiltroBemDTO filtro = new FiltroBemDTO();
+        // TODO Auto-generated method stub
+        return filtro;
     }
 
 }

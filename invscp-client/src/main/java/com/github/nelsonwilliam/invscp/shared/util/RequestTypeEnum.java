@@ -107,5 +107,6 @@ public enum RequestTypeEnum implements Serializable {
     VALIDAR_INSERIR_ORDEM_SERVICO,
     VALIDAR_INSERIR_PREDIO,
     VALIDAR_INSERIR_SALA,
+    GET_BENS_FILTRADOS,
 
 }

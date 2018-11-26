@@ -38,6 +38,7 @@ import com.github.nelsonwilliam.invscp.shared.model.dto.BaixaDTO;
 import com.github.nelsonwilliam.invscp.shared.model.dto.BemDTO;
 import com.github.nelsonwilliam.invscp.shared.model.dto.DepartamentoDTO;
 import com.github.nelsonwilliam.invscp.shared.model.dto.EventoMovimentacaoDTO;
+import com.github.nelsonwilliam.invscp.shared.model.dto.FiltroBemDTO;
 import com.github.nelsonwilliam.invscp.shared.model.dto.FuncionarioDTO;
 import com.github.nelsonwilliam.invscp.shared.model.dto.GrupoMaterialDTO;
 import com.github.nelsonwilliam.invscp.shared.model.dto.LocalizacaoDTO;
@@ -121,6 +122,8 @@ public class Server {
                 return getBemById((Integer) args[0]);
             case GET_BENS:
                 return getBens();
+            case GET_BENS_FILTRADOS:
+                return getBensFiltrados((FiltroBemDTO) args[0]);
             case GET_DEPARTAMENTOS:
                 return getDepartamentos();
             case GET_DEPARTAMENTO_BY_ID:
@@ -736,6 +739,18 @@ public class Server {
             dtos.add(model.toDTO());
         }
         return new Response(dtos);
+    }
+
+    public static Response getBensFiltrados(final FiltroBemDTO filtro) {
+
+        final BemRepository repo = new BemRepository();
+        final List<Bem> models = repo.getAllFiltered(filtro);
+        final List<BemDTO> dtos = new ArrayList<>();
+        for (final Bem model : models) {
+            dtos.add(model.toDTO());
+        }
+        return new Response(dtos);
+
     }
 
     public static Response getPossiveisGruposMateriaisParaBem(

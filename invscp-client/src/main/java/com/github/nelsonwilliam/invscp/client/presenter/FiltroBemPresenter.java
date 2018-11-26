@@ -2,15 +2,16 @@ package com.github.nelsonwilliam.invscp.client.presenter;
 
 import java.awt.event.ActionEvent;
 
-import com.github.nelsonwilliam.invscp.client.view.BemFiltrarView;
-import com.github.nelsonwilliam.invscp.shared.model.dto.FuncionarioDTO;
+import com.github.nelsonwilliam.invscp.client.view.FiltroBemView;
+import com.github.nelsonwilliam.invscp.shared.model.dto.FiltroBemDTO;
 
-public class BemFiltrarPresenter extends Presenter<BemFiltrarView> {
+public class FiltroBemPresenter extends Presenter<FiltroBemView> {
 
+    @SuppressWarnings("unused")
     private final MainPresenter mainPresenter;
     private final BensPresenter bensPresenter;
 
-    public BemFiltrarPresenter(final BemFiltrarView view,
+    public FiltroBemPresenter(final FiltroBemView view,
             final MainPresenter mainPresenter,
             final BensPresenter bensPresenter) {
         super(view);
@@ -26,12 +27,12 @@ public class BemFiltrarPresenter extends Presenter<BemFiltrarView> {
     }
 
     private void onConfirmar() {
-        final FuncionarioDTO usuario = mainPresenter.getUsuario();
-
-        // ...
-
-        view.close();
+        final FiltroBemDTO filtro = view.getFiltro();
+        if (!filtro.isEmpty()) {
+        bensPresenter.setFiltroBens(filtro);
         bensPresenter.updateBens();
+        }
+        view.close();
     }
 
 }
