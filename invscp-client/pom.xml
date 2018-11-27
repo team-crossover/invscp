@@ -48,7 +48,7 @@
 	</licenses>
 
 	<dependencies>
-	
+
 		<dependency>
 			<groupId>org.pushing-pixels</groupId>
 			<artifactId>radiance-substance</artifactId>

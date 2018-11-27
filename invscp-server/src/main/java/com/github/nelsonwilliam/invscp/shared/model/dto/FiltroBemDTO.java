@@ -6,17 +6,23 @@ public class FiltroBemDTO implements DTO {
 
     private static final long serialVersionUID = -2777572098127366339L;
 
-    private String descricao;
+    private String descricao = null;
 
-    private Integer numeroTombamento;
+    private String numeroTombamento = null;
 
-    private BemSituacaoEnum situacao;
+    private BemSituacaoEnum situacao = null;
 
-    private Integer idDepartamento;
+    private DepartamentoDTO departamento = null;
+
+    public boolean isEmpty() {
+        return (descricao == null || descricao.isEmpty())
+                && numeroTombamento == null && situacao == null
+                && departamento == null;
+    }
 
     /**
      * Obtém o valor atual de descricao
-     * 
+     *
      * @return O valor atual de descricao.
      */
     public final String getDescricao() {
@@ -25,7 +31,7 @@ public class FiltroBemDTO implements DTO {
 
     /**
      * Atualiza o valor atual de descricao.
-     * 
+     *
      * @param newDescricao O novo valor de descricao.
      */
     public final void setDescricao(final String newDescricao) {
@@ -34,25 +40,25 @@ public class FiltroBemDTO implements DTO {
 
     /**
      * Obtém o valor atual de numeroTombamento
-     * 
+     *
      * @return O valor atual de numeroTombamento.
      */
-    public final Integer getNumeroTombamento() {
+    public final String getNumeroTombamento() {
         return numeroTombamento;
     }
 
     /**
      * Atualiza o valor atual de numeroTombamento.
-     * 
+     *
      * @param newNumeroTombamento O novo valor de numeroTombamento.
      */
-    public final void setNumeroTombamento(final Integer newNumeroTombamento) {
+    public final void setNumeroTombamento(final String newNumeroTombamento) {
         numeroTombamento = newNumeroTombamento;
     }
 
     /**
      * Obtém o valor atual de situacao
-     * 
+     *
      * @return O valor atual de situacao.
      */
     public final BemSituacaoEnum getSituacao() {
@@ -61,7 +67,7 @@ public class FiltroBemDTO implements DTO {
 
     /**
      * Atualiza o valor atual de situacao.
-     * 
+     *
      * @param newSituacao O novo valor de situacao.
      */
     public final void setSituacao(final BemSituacaoEnum newSituacao) {
@@ -69,30 +75,21 @@ public class FiltroBemDTO implements DTO {
     }
 
     /**
-     * Obtém o valor atual de idDepartamento
-     * 
-     * @return O valor atual de idDepartamento.
+     * Obtém o valor atual de departamento
+     *
+     * @return O valor atual de departamento.
      */
-    public final Integer getIdDepartamento() {
-        return idDepartamento;
+    public final DepartamentoDTO getDepartamento() {
+        return departamento;
     }
 
     /**
-     * Atualiza o valor atual de idDepartamento.
-     * 
-     * @param newIdDepartamento O novo valor de idDepartamento.
+     * Atualiza o valor atual de departamento.
+     *
+     * @param newIdDepartamento O novo valor de departamento.
      */
-    public final void setIdDepartamento(final Integer newIdDepartamento) {
-        idDepartamento = newIdDepartamento;
-    }
-
-    /**
-     * Obtém o valor atual de serialversionuid
-     * 
-     * @return O valor atual de serialversionuid.
-     */
-    public static final long getSerialversionuid() {
-        return serialVersionUID;
+    public final void setDepartamento(final DepartamentoDTO newDepartamento) {
+        departamento = newDepartamento;
     }
 
 }

@@ -6,13 +6,13 @@ import javax.swing.JFrame;
 
 import com.github.nelsonwilliam.invscp.client.util.ClientSettings;
 import com.github.nelsonwilliam.invscp.client.view.swing.BaixaSwingView;
-import com.github.nelsonwilliam.invscp.client.view.swing.FiltroBemSwingView;
 import com.github.nelsonwilliam.invscp.client.view.swing.BemSwingView;
 import com.github.nelsonwilliam.invscp.client.view.swing.BensSwingView;
 import com.github.nelsonwilliam.invscp.client.view.swing.DepartamentoSwingView;
 import com.github.nelsonwilliam.invscp.client.view.swing.DepartamentosSwingView;
 import com.github.nelsonwilliam.invscp.client.view.swing.EventoMovimentacaoSwingView;
 import com.github.nelsonwilliam.invscp.client.view.swing.EventosMovimentacaoSwingView;
+import com.github.nelsonwilliam.invscp.client.view.swing.FiltroBemSwingView;
 import com.github.nelsonwilliam.invscp.client.view.swing.FuncionarioSwingView;
 import com.github.nelsonwilliam.invscp.client.view.swing.FuncionariosSwingView;
 import com.github.nelsonwilliam.invscp.client.view.swing.LocalizacaoSwingView;
@@ -32,6 +32,7 @@ import com.github.nelsonwilliam.invscp.shared.model.dto.BaixaDTO;
 import com.github.nelsonwilliam.invscp.shared.model.dto.BemDTO;
 import com.github.nelsonwilliam.invscp.shared.model.dto.DepartamentoDTO;
 import com.github.nelsonwilliam.invscp.shared.model.dto.EventoMovimentacaoDTO;
+import com.github.nelsonwilliam.invscp.shared.model.dto.FiltroBemDTO;
 import com.github.nelsonwilliam.invscp.shared.model.dto.FuncionarioDTO;
 import com.github.nelsonwilliam.invscp.shared.model.dto.GrupoMaterialDTO;
 import com.github.nelsonwilliam.invscp.shared.model.dto.LocalizacaoDTO;
@@ -291,11 +292,12 @@ public class ViewFactory {
         }
     }
 
-    public static FiltroBemView createFiltroBem(final MainView main) {
+    public static FiltroBemView createFiltroBem(final MainView main,
+            final FiltroBemDTO filtro, final List<DepartamentoDTO> depts) {
 
         switch (ClientSettings.getViewImpl()) {
             case SWING:
-                return new FiltroBemSwingView((JFrame) main);
+                return new FiltroBemSwingView((JFrame) main, filtro, depts);
             default:
                 throw new IllegalArgumentException();
         }

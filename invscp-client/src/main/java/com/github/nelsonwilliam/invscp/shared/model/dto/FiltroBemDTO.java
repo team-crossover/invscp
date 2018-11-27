@@ -8,16 +8,16 @@ public class FiltroBemDTO implements DTO {
 
     private String descricao = null;
 
-    private Integer numeroTombamento = null;
+    private String numeroTombamento = null;
 
     private BemSituacaoEnum situacao = null;
 
-    private Integer idDepartamento = null;
+    private DepartamentoDTO departamento = null;
 
     public boolean isEmpty() {
         return (descricao == null || descricao.isEmpty())
                 && numeroTombamento == null && situacao == null
-                && idDepartamento == null;
+                && departamento == null;
     }
 
     /**
@@ -43,7 +43,7 @@ public class FiltroBemDTO implements DTO {
      *
      * @return O valor atual de numeroTombamento.
      */
-    public final Integer getNumeroTombamento() {
+    public final String getNumeroTombamento() {
         return numeroTombamento;
     }
 
@@ -52,7 +52,7 @@ public class FiltroBemDTO implements DTO {
      *
      * @param newNumeroTombamento O novo valor de numeroTombamento.
      */
-    public final void setNumeroTombamento(final Integer newNumeroTombamento) {
+    public final void setNumeroTombamento(final String newNumeroTombamento) {
         numeroTombamento = newNumeroTombamento;
     }
 
@@ -75,30 +75,21 @@ public class FiltroBemDTO implements DTO {
     }
 
     /**
-     * Obtém o valor atual de idDepartamento
+     * Obtém o valor atual de departamento
      *
-     * @return O valor atual de idDepartamento.
+     * @return O valor atual de departamento.
      */
-    public final Integer getIdDepartamento() {
-        return idDepartamento;
+    public final DepartamentoDTO getDepartamento() {
+        return departamento;
     }
 
     /**
-     * Atualiza o valor atual de idDepartamento.
+     * Atualiza o valor atual de departamento.
      *
-     * @param newIdDepartamento O novo valor de idDepartamento.
+     * @param newIdDepartamento O novo valor de departamento.
      */
-    public final void setIdDepartamento(final Integer newIdDepartamento) {
-        idDepartamento = newIdDepartamento;
-    }
-
-    /**
-     * Obtém o valor atual de serialversionuid
-     *
-     * @return O valor atual de serialversionuid.
-     */
-    public static final long getSerialversionuid() {
-        return serialVersionUID;
+    public final void setDepartamento(final DepartamentoDTO newDepartamento) {
+        departamento = newDepartamento;
     }
 
 }

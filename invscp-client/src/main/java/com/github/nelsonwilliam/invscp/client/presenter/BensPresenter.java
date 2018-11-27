@@ -303,8 +303,13 @@ public class BensPresenter extends Presenter<BensView> {
 
     @SuppressWarnings("unused")
     public void onFiltrar() {
+        final FiltroBemDTO filtro =
+                filtroBens == null ? new FiltroBemDTO() : filtroBens;
+        final List<DepartamentoDTO> depts = Client.requestGetDepartamentos();
+
         final FiltroBemView filtrarView =
-                ViewFactory.createFiltroBem(mainPresenter.getView());
+                ViewFactory.createFiltroBem(mainPresenter.getView(), filtro,
+                        depts);
         final FiltroBemPresenter filtrarPresenter =
                 new FiltroBemPresenter(filtrarView, mainPresenter, this);
         filtrarView.setVisible(true);

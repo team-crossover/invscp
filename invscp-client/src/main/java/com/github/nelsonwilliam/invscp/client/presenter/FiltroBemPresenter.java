@@ -28,10 +28,12 @@ public class FiltroBemPresenter extends Presenter<FiltroBemView> {
 
     private void onConfirmar() {
         final FiltroBemDTO filtro = view.getFiltro();
-        if (!filtro.isEmpty()) {
-        bensPresenter.setFiltroBens(filtro);
-        bensPresenter.updateBens();
+        if (filtro != null & !filtro.isEmpty()) {
+            bensPresenter.setFiltroBens(filtro);
+        } else {
+            bensPresenter.setFiltroBens(null);
         }
+        bensPresenter.updateBens();
         view.close();
     }
 

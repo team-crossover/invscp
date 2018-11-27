@@ -96,7 +96,7 @@ public class BemRepository implements Repository<Bem> {
                 }
                 sql.append(" descricao ILIKE ?");
             }
-            if (filtro.getIdDepartamento() != null) {
+            if (filtro.getDepartamento() != null) {
                 if (!addedWhere) {
                     sql.append(" WHERE");
                     addedWhere = true;
@@ -132,8 +132,9 @@ public class BemRepository implements Repository<Bem> {
                         Types.VARCHAR);
                 index++;
             }
-            if (filtro.getIdDepartamento() != null) {
-                s.setObject(index, filtro.getIdDepartamento(), Types.INTEGER);
+            if (filtro.getDepartamento() != null) {
+                s.setObject(index, filtro.getDepartamento().getId(),
+                        Types.INTEGER);
                 index++;
             }
             if (filtro.getNumeroTombamento() != null) {
