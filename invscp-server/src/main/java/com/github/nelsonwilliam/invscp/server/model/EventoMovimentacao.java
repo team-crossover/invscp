@@ -99,7 +99,6 @@ public class EventoMovimentacao implements Model<EventoMovimentacaoDTO> {
                         .getMovimentacao().getBem().getDepartamento().getId()) {
             throw new IllegalInsertException(
                     "Você não pode inserir eventos de movimentações.");
-
         }
 
         // VALIDADE DE DADOS
@@ -159,8 +158,9 @@ public class EventoMovimentacao implements Model<EventoMovimentacaoDTO> {
             throw new IllegalInsertException(
                     "Você não pode inserir eventos de movimentações.");
         }
-        if (usuario.getDepartamento().getId() != evDto.getMovimentacao()
-                .getSalaOrigem().getDepartamento().getId()) {
+        if (usuario.getCargo() != CargoEnum.CHEFE_DEPT
+                && usuario.getDepartamento().getId() != evDto.getMovimentacao()
+                        .getSalaOrigem().getDepartamento().getId()) {
             throw new IllegalInsertException(
                     "Você não pode inserir eventos de movimentações.");
         }
@@ -193,8 +193,9 @@ public class EventoMovimentacao implements Model<EventoMovimentacaoDTO> {
             throw new IllegalInsertException(
                     "Você não pode inserir eventos de movimentações.");
         }
-        if (usuario.getDepartamento().getId() != evDto.getMovimentacao()
-                .getSalaDestino().getDepartamento().getId()) {
+        if (usuario.getCargo() != CargoEnum.CHEFE_DEPT
+                && usuario.getDepartamento().getId() != evDto.getMovimentacao()
+                        .getSalaDestino().getDepartamento().getId()) {
             throw new IllegalInsertException(
                     "Você não pode inserir eventos de movimentações.");
         }
@@ -226,8 +227,9 @@ public class EventoMovimentacao implements Model<EventoMovimentacaoDTO> {
             throw new IllegalInsertException(
                     "Você não pode negar eventos de movimentações.");
         }
-        if (usuario.getDepartamento().getId() != evDto.getMovimentacao()
-                .getSalaOrigem().getDepartamento().getId()) {
+        if (usuario.getCargo() != CargoEnum.CHEFE_DEPT
+                && usuario.getDepartamento().getId() != evDto.getMovimentacao()
+                        .getSalaOrigem().getDepartamento().getId()) {
             throw new IllegalInsertException(
                     "Você não pode negar eventos de movimentações.");
         }
@@ -260,8 +262,9 @@ public class EventoMovimentacao implements Model<EventoMovimentacaoDTO> {
             throw new IllegalInsertException(
                     "Você não pode negar eventos de movimentações.");
         }
-        if (usuario.getDepartamento().getId() != evDto.getMovimentacao()
-                .getSalaDestino().getDepartamento().getId()) {
+        if (usuario.getCargo() != CargoEnum.CHEFE_DEPT
+                && usuario.getDepartamento().getId() != evDto.getMovimentacao()
+                        .getSalaDestino().getDepartamento().getId()) {
             throw new IllegalInsertException(
                     "Você não pode negar eventos de movimentações.");
         }
@@ -288,8 +291,9 @@ public class EventoMovimentacao implements Model<EventoMovimentacaoDTO> {
             throw new IllegalInsertException(
                     "Você não pode finalizar eventos de movimentações.");
         }
-        if (usuario.getDepartamento().getId() != evDto.getMovimentacao()
-                .getBem().getDepartamento().getId()) {
+        if (usuario.getCargo() != CargoEnum.CHEFE_DEPT
+                && usuario.getDepartamento().getId() != evDto.getMovimentacao()
+                        .getBem().getDepartamento().getId()) {
             throw new IllegalInsertException(
                     "Você não pode finalizar eventos de movimentações fora do seu departamento.");
         }
@@ -306,20 +310,31 @@ public class EventoMovimentacao implements Model<EventoMovimentacaoDTO> {
             throw new IllegalInsertException(
                     "Esta ação não é possível nesta etapa da movimentação.");
         }
+
+        // CONTROLE DE ACESSO
+        if (usuario == null) {
+            throw new IllegalInsertException("Você não está logado.");
+        }
+        if (usuario.getCargo() == CargoEnum.FUNCIONARIO
+                || usuario.getCargo() == CargoEnum.INTERESSADO) {
+            throw new IllegalInsertException(
+                    "Você não pode cancelar eventos de movimentações.");
+        }
+        if (usuario.getCargo() != CargoEnum.CHEFE_DEPT
+                && usuario.getDepartamento().getId() != evDto.getMovimentacao()
+                        .getBem().getDepartamento().getId()) {
+            throw new IllegalInsertException(
+                    "Você não pode cancelar eventos de movimentações fora do seu departamento.");
+        }
     }
 
     private static void validarCampos(EventoMovimentacaoDTO evento)
             throws CRUDException {
         if (evento.getData() == null) {
             throw new CRUDException("A 'Data' não pode ser vazia");
-
         }
         if (evento.getFuncionario() == null) {
             throw new CRUDException("'Funcionario' não pode ser vazio");
-        }
-        if (evento.getJustificativa() == null
-                || evento.getJustificativa().isEmpty()) {
-            throw new CRUDException("'Justificativa' é um campo obrigatório");
         }
         if (evento.getMovimentacao() == null) {
             throw new CRUDException("'Movimentação' não pode ser vazia");

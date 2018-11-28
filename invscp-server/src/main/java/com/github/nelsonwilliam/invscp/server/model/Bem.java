@@ -203,8 +203,8 @@ public class Bem implements Model<BemDTO> {
                 throw new IllegalInsertException(
                         "Você não tem permissão para inserir bens");
             }
-            if (!usuario.getDepartamento().getId().equals(
-                    bemRepo.getById(novoBem.getId()).getIdDepartamento())) {
+            if (!usuario.getDepartamento().getId()
+                    .equals(novoBem.getDepartamento().getId())) {
                 throw new IllegalInsertException(
                         "Você não tem permissão para inserir bens");
             }
@@ -350,6 +350,9 @@ public class Bem implements Model<BemDTO> {
         }
         if (bem.getSala() == null) {
             throw new CRUDException("'Sala' é um campo obrigatório.");
+        }
+        if (bem.getEspecificacao() == null) {
+            throw new CRUDException("'Especificação' é um campo obrigatório.");
         }
         // Situação é definida pelo sistema
         if (bem.getSituacao() == null) {

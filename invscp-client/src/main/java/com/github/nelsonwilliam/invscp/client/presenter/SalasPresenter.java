@@ -45,7 +45,7 @@ public class SalasPresenter extends Presenter<SalasView> {
                 .requestGetPossiveisDepartamentosParaSala(novoSala);
 
         final SalaView salaView = ViewFactory.createSala(
-                mainPresenter.getView(), novoSala, false, predios, depts);
+                mainPresenter.getView(), novoSala, true, predios, depts);
         final SalaPresenter salaPresenter = new SalaPresenter(salaView,
                 mainPresenter, this);
         salaView.setVisible(true);

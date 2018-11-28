@@ -160,7 +160,7 @@ public class Movimentacao implements Model<MovimentacaoDTO> {
         if (novaMov.getSalaOrigem().getId()
                 .equals(novaMov.getSalaDestino().getId())) {
             throw new IllegalInsertException(
-                    "A sala de origem não pode ser a mesma que a sada de destino");
+                    "A sala de origem não pode ser a mesma que a sala de destino");
         }
 
         try {
