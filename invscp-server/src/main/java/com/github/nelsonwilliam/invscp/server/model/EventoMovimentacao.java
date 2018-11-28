@@ -74,12 +74,11 @@ public class EventoMovimentacao implements Model<EventoMovimentacaoDTO> {
             EventoMovimentacaoDTO novoEvento) throws IllegalInsertException {
 
         // IDENTIFICADORES
-        final EventoMovimentacaoRepository evRepo =
-                new EventoMovimentacaoRepository();
+        final EventoMovimentacaoRepository evRepo = new EventoMovimentacaoRepository();
 
         if (novoEvento.getId() != null) {
-            final EventoMovimentacao movExistente =
-                    evRepo.getById(novoEvento.getId());
+            final EventoMovimentacao movExistente = evRepo
+                    .getById(novoEvento.getId());
             if (movExistente != null) {
                 throw new IllegalInsertException(
                         "Não é possível inserir o evento de movimentação pois o ID já existe.");
@@ -90,9 +89,17 @@ public class EventoMovimentacao implements Model<EventoMovimentacaoDTO> {
         if (usuario == null) {
             throw new IllegalInsertException("Você não está logado.");
         }
-        if (usuario.getCargo() == CargoEnum.FUNCIONARIO) {
+        if (usuario.getCargo() == CargoEnum.INTERESSADO) {
             throw new IllegalInsertException(
                     "Você não pode inserir eventos de movimentações.");
+        }
+        // "Funcionários" só podem movimentar bens do pŕoprio departamento
+        if (usuario.getCargo() == CargoEnum.FUNCIONARIO
+                && usuario.getDepartamento().getId() != novoEvento
+                        .getMovimentacao().getBem().getDepartamento().getId()) {
+            throw new IllegalInsertException(
+                    "Você não pode inserir eventos de movimentações.");
+
         }
 
         // VALIDADE DE DADOS
@@ -103,26 +110,26 @@ public class EventoMovimentacao implements Model<EventoMovimentacaoDTO> {
         }
 
         switch (novoEvento.getTipo()) {
-            case ACEITE_ENTRADA:
-                validarInserirAceiteEntrada(usuario, novoEvento);
-                break;
-            case ACEITE_SAIDA:
-                validarInserirAceiteSaida(usuario, novoEvento);
-                break;
-            case NEGACAO_ENTRADA:
-                validarInserirNegacaoEntrada(usuario, novoEvento);
-                break;
-            case NEGACAO_SAIDA:
-                validarInserirNegacaoSaida(usuario, novoEvento);
-                break;
-            case FINALIZACAO:
-                validarInserirFinalizacao(usuario, novoEvento);
-                break;
-            case CANCELAMENTO:
-                validarInserirCancelamento(usuario, novoEvento);
-                break;
-            default:
-                throw new IllegalInsertException("Tipo de evento inválido.");
+        case ACEITE_ENTRADA:
+            validarInserirAceiteEntrada(usuario, novoEvento);
+            break;
+        case ACEITE_SAIDA:
+            validarInserirAceiteSaida(usuario, novoEvento);
+            break;
+        case NEGACAO_ENTRADA:
+            validarInserirNegacaoEntrada(usuario, novoEvento);
+            break;
+        case NEGACAO_SAIDA:
+            validarInserirNegacaoSaida(usuario, novoEvento);
+            break;
+        case FINALIZACAO:
+            validarInserirFinalizacao(usuario, novoEvento);
+            break;
+        case CANCELAMENTO:
+            validarInserirCancelamento(usuario, novoEvento);
+            break;
+        default:
+            throw new IllegalInsertException("Tipo de evento inválido.");
         }
     }
 
@@ -141,6 +148,21 @@ public class EventoMovimentacao implements Model<EventoMovimentacaoDTO> {
         if (isInterna) {
             throw new IllegalInsertException(
                     "Esta ação não é possível para uma movimentação interna.");
+        }
+
+        // CONTROLE DE ACESSO
+        if (usuario == null) {
+            throw new IllegalInsertException("Você não está logado.");
+        }
+        if (usuario.getCargo() == CargoEnum.FUNCIONARIO
+                || usuario.getCargo() == CargoEnum.INTERESSADO) {
+            throw new IllegalInsertException(
+                    "Você não pode inserir eventos de movimentações.");
+        }
+        if (usuario.getDepartamento().getId() != evDto.getMovimentacao()
+                .getSalaOrigem().getDepartamento().getId()) {
+            throw new IllegalInsertException(
+                    "Você não pode inserir eventos de movimentações.");
         }
     }
 
@@ -161,6 +183,21 @@ public class EventoMovimentacao implements Model<EventoMovimentacaoDTO> {
             throw new IllegalInsertException(
                     "Esta ação não é possível para uma movimentação interna.");
         }
+
+        // CONTROLE DE ACESSO
+        if (usuario == null) {
+            throw new IllegalInsertException("Você não está logado.");
+        }
+        if (usuario.getCargo() == CargoEnum.FUNCIONARIO
+                || usuario.getCargo() == CargoEnum.INTERESSADO) {
+            throw new IllegalInsertException(
+                    "Você não pode inserir eventos de movimentações.");
+        }
+        if (usuario.getDepartamento().getId() != evDto.getMovimentacao()
+                .getSalaDestino().getDepartamento().getId()) {
+            throw new IllegalInsertException(
+                    "Você não pode inserir eventos de movimentações.");
+        }
     }
 
     private static void validarInserirNegacaoSaida(final FuncionarioDTO usuario,
@@ -178,6 +215,21 @@ public class EventoMovimentacao implements Model<EventoMovimentacaoDTO> {
         if (isInterna) {
             throw new IllegalInsertException(
                     "Esta ação não é possível para uma movimentação interna.");
+        }
+
+        // CONTROLE DE ACESSO
+        if (usuario == null) {
+            throw new IllegalInsertException("Você não está logado.");
+        }
+        if (usuario.getCargo() == CargoEnum.FUNCIONARIO
+                || usuario.getCargo() == CargoEnum.INTERESSADO) {
+            throw new IllegalInsertException(
+                    "Você não pode negar eventos de movimentações.");
+        }
+        if (usuario.getDepartamento().getId() != evDto.getMovimentacao()
+                .getSalaOrigem().getDepartamento().getId()) {
+            throw new IllegalInsertException(
+                    "Você não pode negar eventos de movimentações.");
         }
     }
 
@@ -198,6 +250,21 @@ public class EventoMovimentacao implements Model<EventoMovimentacaoDTO> {
             throw new IllegalInsertException(
                     "Esta ação não é possível para uma movimentação interna.");
         }
+
+        // CONTROLE DE ACESSO
+        if (usuario == null) {
+            throw new IllegalInsertException("Você não está logado.");
+        }
+        if (usuario.getCargo() == CargoEnum.FUNCIONARIO
+                || usuario.getCargo() == CargoEnum.INTERESSADO) {
+            throw new IllegalInsertException(
+                    "Você não pode negar eventos de movimentações.");
+        }
+        if (usuario.getDepartamento().getId() != evDto.getMovimentacao()
+                .getSalaDestino().getDepartamento().getId()) {
+            throw new IllegalInsertException(
+                    "Você não pode negar eventos de movimentações.");
+        }
     }
 
     private static void validarInserirFinalizacao(final FuncionarioDTO usuario,
@@ -210,6 +277,21 @@ public class EventoMovimentacao implements Model<EventoMovimentacaoDTO> {
                         .equals(EtapaMovEnum.INICIADA)) {
             throw new IllegalInsertException(
                     "Esta ação não é possível nesta etapa da movimentação.");
+        }
+
+        // CONTROLE DE ACESSO
+        if (usuario == null) {
+            throw new IllegalInsertException("Você não está logado.");
+        }
+        if (usuario.getCargo() == CargoEnum.FUNCIONARIO
+                || usuario.getCargo() == CargoEnum.INTERESSADO) {
+            throw new IllegalInsertException(
+                    "Você não pode finalizar eventos de movimentações.");
+        }
+        if (usuario.getDepartamento().getId() != evDto.getMovimentacao()
+                .getBem().getDepartamento().getId()) {
+            throw new IllegalInsertException(
+                    "Você não pode finalizar eventos de movimentações fora do seu departamento.");
         }
     }
 
@@ -228,7 +310,23 @@ public class EventoMovimentacao implements Model<EventoMovimentacaoDTO> {
 
     private static void validarCampos(EventoMovimentacaoDTO evento)
             throws CRUDException {
-        // TODO
+        if (evento.getData() == null) {
+            throw new CRUDException("A 'Data' não pode ser vazia");
+
+        }
+        if (evento.getFuncionario() == null) {
+            throw new CRUDException("'Funcionario' não pode ser vazio");
+        }
+        if (evento.getJustificativa() == null
+                || evento.getJustificativa().isEmpty()) {
+            throw new CRUDException("'Justificativa' é um campo obrigatório");
+        }
+        if (evento.getMovimentacao() == null) {
+            throw new CRUDException("'Movimentação' não pode ser vazia");
+        }
+        if (evento.getTipo() == null) {
+            throw new CRUDException("'Tipo' não pode ser vazio");
+        }
     }
 
     public static void validarAlterar(FuncionarioDTO usuario, Integer idAntigo,
@@ -249,20 +347,20 @@ public class EventoMovimentacao implements Model<EventoMovimentacaoDTO> {
             EventoMovimentacaoDTO evento) {
 
         switch (evento.getTipo()) {
-            case ACEITE_ENTRADA:
-                return posInserirAceiteEntrada(usuario, evento);
-            case ACEITE_SAIDA:
-                return posInserirAceiteSaida(usuario, evento);
-            case NEGACAO_ENTRADA:
-                return posInserirNegacaoEntrada(usuario, evento);
-            case NEGACAO_SAIDA:
-                return posInserirNegacaoSaida(usuario, evento);
-            case FINALIZACAO:
-                return posInserirFinalizacao(usuario, evento);
-            case CANCELAMENTO:
-                return posInserirCancelamento(usuario, evento);
-            default:
-                return new ArrayList<String>();
+        case ACEITE_ENTRADA:
+            return posInserirAceiteEntrada(usuario, evento);
+        case ACEITE_SAIDA:
+            return posInserirAceiteSaida(usuario, evento);
+        case NEGACAO_ENTRADA:
+            return posInserirNegacaoEntrada(usuario, evento);
+        case NEGACAO_SAIDA:
+            return posInserirNegacaoSaida(usuario, evento);
+        case FINALIZACAO:
+            return posInserirFinalizacao(usuario, evento);
+        case CANCELAMENTO:
+            return posInserirCancelamento(usuario, evento);
+        default:
+            return new ArrayList<String>();
         }
     }
 
@@ -288,7 +386,7 @@ public class EventoMovimentacao implements Model<EventoMovimentacaoDTO> {
         Movimentacao mov = movRepo.getById(evento.getMovimentacao().getId());
         mov.setEtapa(EtapaMovEnum.EM_MOVIMENTACAO);
         movRepo.update(mov);
-        
+
         return messages;
     }
 

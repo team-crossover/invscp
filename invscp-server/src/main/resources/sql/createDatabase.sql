@@ -181,6 +181,8 @@ BEGIN
         WHERE id = departamentoId;
 END $$;
 
+INSERT INTO grupo_material (nome, vida_util, depreciacao) VALUES ('Sem depreciação', -1, 0);
+
 INSERT INTO grupo_material (nome, vida_util, depreciacao)
 	VALUES ('Aeronaves e embarcações', 25, 0.05);
 
@@ -204,7 +206,7 @@ INSERT INTO grupo_material (nome, vida_util, depreciacao)
 
 INSERT INTO grupo_material (nome, vida_util, depreciacao)
 	VALUES ('Veículos leves e pesados em geral', 15, 0.2);
-	
+
 INSERT INTO sistema (versao_db)
     VALUES (1);
 

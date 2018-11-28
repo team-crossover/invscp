@@ -76,11 +76,10 @@ public class Movimentacao implements Model<MovimentacaoDTO> {
             dto.setSalaDestino(salaD == null ? null : salaD.toDTO());
         }
 
-        final EventoMovimentacaoRepository eventoRepo =
-                new EventoMovimentacaoRepository();
+        final EventoMovimentacaoRepository eventoRepo = new EventoMovimentacaoRepository();
         final List<EventoMovimentacaoDTO> eventosDto = new ArrayList<>();
-        final List<EventoMovimentacao> eventos =
-                eventoRepo.getByIdMovimentacao(id);
+        final List<EventoMovimentacao> eventos = eventoRepo
+                .getByIdMovimentacao(id);
         for (final EventoMovimentacao ev : eventos) {
             // Para evitar loops infinitos ao criar os DTOs
             // movimentacao/eventoMovimentacao, o DTO do evento movimentação
@@ -158,6 +157,12 @@ public class Movimentacao implements Model<MovimentacaoDTO> {
             }
         }
 
+        if (novaMov.getSalaOrigem().getId()
+                .equals(novaMov.getSalaDestino().getId())) {
+            throw new IllegalInsertException(
+                    "A sala de origem não pode ser a mesma que a sada de destino");
+        }
+
         try {
             validarCampos(novaMov);
         } catch (final CRUDException e) {
@@ -216,8 +221,7 @@ public class Movimentacao implements Model<MovimentacaoDTO> {
         movRepo.update(mov);
 
         // Adicionar o evento de criação da movimentação
-        final EventoMovimentacaoRepository eventoRepo =
-                new EventoMovimentacaoRepository();
+        final EventoMovimentacaoRepository eventoRepo = new EventoMovimentacaoRepository();
         final EventoMovimentacao evento = new EventoMovimentacao();
         evento.setData(LocalDate.now());
         evento.setIdFuncionario(usuario.getId());

@@ -221,6 +221,12 @@ public class Bem implements Model<BemDTO> {
             throw new IllegalInsertException(
                     "O 'Numero de tombamento' inserido já foi utilizado");
         }
+
+        if (novoBem.getDataAquisicao().isAfter(novoBem.getGarantia())) {
+            throw new IllegalInsertException(
+                    "A data do campo 'Garantia' não pode ser anterior à data de aquisição do bem");
+        }
+
     }
 
     public static void validarAlterar(final FuncionarioDTO usuario,
@@ -296,6 +302,16 @@ public class Bem implements Model<BemDTO> {
         } catch (final CRUDException e) {
             throw new IllegalUpdateException(e.getMessage());
         }
+
+        if (bemRepo.existsNumTombamento(novoBem.getNumeroTombamento())) {
+            throw new IllegalUpdateException(
+                    "O 'Numero de tombamento' inserido já foi utilizado");
+        }
+
+        if (novoBem.getDataAquisicao().isAfter(novoBem.getGarantia())) {
+            throw new IllegalUpdateException(
+                    "A data do campo 'Garantia' não pode ser anterior à data de aquisição do bem");
+        }
     }
 
     private static void validarCampos(final BemDTO bem) throws CRUDException {
@@ -346,7 +362,7 @@ public class Bem implements Model<BemDTO> {
      * Retorna uma lista com o valor do bem depreciado para todos os anos desde
      * a compra do bem. O primeiro valor corresponde ao ano de compra, enquanto
      * o último valor corresponde ao ano atual.
-     * 
+     *
      * @return
      */
     public BigDecimal[] getDepreciacoesPorAno() {
@@ -360,7 +376,8 @@ public class Bem implements Model<BemDTO> {
         final BigDecimal deprPorAno = valCompra.multiply(depr);
         final BigDecimal[] depreciacoes = new BigDecimal[qntAnos + 1];
         for (int i = 0; i < depreciacoes.length; i++) {
-            final BigDecimal deprEsseAno = deprPorAno.multiply(new BigDecimal(i));
+            final BigDecimal deprEsseAno = deprPorAno
+                    .multiply(new BigDecimal(i));
             final BigDecimal valDepreciado = valCompra.subtract(deprEsseAno);
             depreciacoes[i] = valDepreciado.compareTo(new BigDecimal(0.01)) <= 0
                     ? new BigDecimal(0.01)
