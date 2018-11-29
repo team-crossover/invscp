@@ -17,9 +17,6 @@ public class Funcionario implements Model<FuncionarioDTO> {
 
     private String login = null;
 
-    // TODO Armazenar apenas uma hash da senha, e não a senha inteira, para
-    // maior segurança.
-
     private String senha = null;
 
     private String nome = null;
@@ -351,8 +348,6 @@ public class Funcionario implements Model<FuncionarioDTO> {
             return CargoEnum.FUNCIONARIO;
         }
     }
-
-    // TODO Colocar esses metodos abaixo dentro de getCargo()
 
     private Departamento getDepartamento() {
         if (getIdDepartamento() == null) {

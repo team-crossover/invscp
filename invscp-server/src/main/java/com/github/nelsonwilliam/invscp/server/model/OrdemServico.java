@@ -273,7 +273,7 @@ public class OrdemServico implements Model<OrdemServicoDTO> {
         bem.setSituacao(BemSituacaoEnum.INCORPORADO);
         bemRepo.update(bem);
         messages.add("O bem " + bem.getDescricao()
-                + " não está mais 'em conserto'.");
+                + " não está mais 'Em conserto'.");
 
         return messages;
     }
