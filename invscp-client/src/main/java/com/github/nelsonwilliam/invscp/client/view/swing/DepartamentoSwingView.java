@@ -32,8 +32,11 @@ public class DepartamentoSwingView extends JDialog implements DepartamentoView {
 
     private final boolean isAdicionar;
 
+    @SuppressWarnings("unused")
+    private FuncionarioDTO usuario;
+
     private Integer idDepartamento;
-    private boolean deDepartamento;
+    private boolean dePatrimonio;
 
     private GridBagLayout gridBagLayout;
     private JButton btnConfirmar;
@@ -55,14 +58,15 @@ public class DepartamentoSwingView extends JDialog implements DepartamentoView {
     public DepartamentoSwingView(final JFrame owner,
             final DepartamentoDTO departamento, final boolean isAdicionar,
             final List<FuncionarioDTO> chefes,
-            final List<FuncionarioDTO> chefesSubsts) {
+            final List<FuncionarioDTO> chefesSubsts,
+            final FuncionarioDTO usuario) {
 
-        super(owner,
-                isAdicionar ? "Adicionar departamento" : "Alterar departamento",
+        super(owner, isAdicionar ? "Adicionar departamento" : "Departamento",
                 ModalityType.APPLICATION_MODAL);
         this.isAdicionar = isAdicionar;
+        this.usuario = usuario;
         initialize();
-        updateDepartamento(departamento, chefes, chefesSubsts);
+        updateDepartamento(departamento, chefes, chefesSubsts, usuario);
     }
 
     private void initialize() {
@@ -201,7 +205,8 @@ public class DepartamentoSwingView extends JDialog implements DepartamentoView {
     @Override
     public void updateDepartamento(final DepartamentoDTO departamento,
             final List<FuncionarioDTO> chefes,
-            final List<FuncionarioDTO> chefesSubsts) {
+            final List<FuncionarioDTO> chefesSubsts,
+            final FuncionarioDTO usuario) {
         if (departamento == null) {
             throw new NullPointerException();
         }
@@ -210,12 +215,12 @@ public class DepartamentoSwingView extends JDialog implements DepartamentoView {
         // possível
         // retorná-lo na hora de salvar o departamento.
         idDepartamento = departamento.getId();
-        deDepartamento = departamento.getId() != null
+        dePatrimonio = departamento.getId() != null
                 && departamento.getDePatrimonio();
 
         // Exibe uma label indicando que é de patrimônio.
         getContentPane().remove(lblDePatrimonio);
-        if (deDepartamento) {
+        if (dePatrimonio) {
             gridBagLayout.rowHeights[1] = 25;
             final GridBagConstraints gbc_lblDePatrimonio = new GridBagConstraints();
             gbc_lblDePatrimonio.anchor = GridBagConstraints.CENTER;
@@ -278,6 +283,16 @@ public class DepartamentoSwingView extends JDialog implements DepartamentoView {
             }
         }
 
+        final boolean ehChefePatrimonio = (usuario != null
+                && usuario.getCargo().isChefeDePatrimonio());
+        btnConfirmar.setEnabled(ehChefePatrimonio);
+        lblDePatrimonio.setEnabled(ehChefePatrimonio);
+        fieldNome.setEnabled(ehChefePatrimonio);
+        listChefe.setEnabled(ehChefePatrimonio);
+        listChefeSubstituto.setEnabled(ehChefePatrimonio);
+        scrollPane.setEnabled(ehChefePatrimonio);
+        scrollPane_1.setEnabled(ehChefePatrimonio);
+
         revalidate();
         repaint();
     }
@@ -311,7 +326,7 @@ public class DepartamentoSwingView extends JDialog implements DepartamentoView {
         final DepartamentoDTO departamento = new DepartamentoDTO();
         departamento.setId(idDepartamento);
         departamento.setNome(fieldNome.getText());
-        departamento.setDePatrimonio(deDepartamento);
+        departamento.setDePatrimonio(dePatrimonio);
         departamento.setChefe(listChefe.getSelectedValue());
         departamento.setChefeSubstituto(listChefeSubstituto.getSelectedValue());
         return departamento;

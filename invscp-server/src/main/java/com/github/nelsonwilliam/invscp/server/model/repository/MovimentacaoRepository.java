@@ -28,12 +28,12 @@ public class MovimentacaoRepository implements Repository<Movimentacao> {
                 final Integer id = (Integer) r.getObject("id");
                 final String etapa = (String) r.getObject("etapa");
                 final Integer idBem = (Integer) r.getObject("id_bem");
-                final Integer idSalaOrigem =
-                        (Integer) r.getObject("id_sala_origem");
-                final Integer idSalaDestino =
-                        (Integer) r.getObject("id_sala_destino");
-                final String numGuiaTransporte =
-                        (String) r.getObject("num_guia_transporte");
+                final Integer idSalaOrigem = (Integer) r
+                        .getObject("id_sala_origem");
+                final Integer idSalaDestino = (Integer) r
+                        .getObject("id_sala_destino");
+                final String numGuiaTransporte = (String) r
+                        .getObject("num_guia_transporte");
 
                 final Movimentacao mov = new Movimentacao();
                 mov.setId(id);
@@ -63,12 +63,12 @@ public class MovimentacaoRepository implements Repository<Movimentacao> {
             while (r.next()) {
                 final String etapa = (String) r.getObject("etapa");
                 final Integer idBem = (Integer) r.getObject("id_bem");
-                final Integer idSalaOrigem =
-                        (Integer) r.getObject("id_sala_origem");
-                final Integer idSalaDestino =
-                        (Integer) r.getObject("id_sala_destino");
-                final String numGuiaTransporte =
-                        (String) r.getObject("num_guia_transporte");
+                final Integer idSalaOrigem = (Integer) r
+                        .getObject("id_sala_origem");
+                final Integer idSalaDestino = (Integer) r
+                        .getObject("id_sala_destino");
+                final String numGuiaTransporte = (String) r
+                        .getObject("num_guia_transporte");
 
                 mov = new Movimentacao();
                 mov.setId(id);
@@ -235,5 +235,40 @@ public class MovimentacaoRepository implements Repository<Movimentacao> {
 
         return false;
     }
-    
+
+    public boolean exitsInSala(Integer idSala) {
+        final Connection connection = DatabaseConnection.getConnection();
+        try {
+            final PreparedStatement s = connection.prepareStatement(
+                    "SELECT id FROM movimentacao WHERE id_sala_origem=? OR id_sala_destino=?");
+            s.setObject(1, idSala, Types.INTEGER);
+            s.setObject(2, idSala, Types.INTEGER);
+            final ResultSet r = s.executeQuery();
+            if (!r.next()) {
+                return false;
+            }
+        } catch (final Exception e) {
+            e.printStackTrace();
+        }
+
+        return true;
+    }
+
+    public boolean existsBemRelacionado(Integer idBem) {
+        final Connection connection = DatabaseConnection.getConnection();
+        try {
+            final PreparedStatement s = connection.prepareStatement(
+                    "SELECT id FROM movimentacao WHERE id_bem=?");
+            s.setObject(1, idBem, Types.INTEGER);
+            final ResultSet r = s.executeQuery();
+            if (!r.next()) {
+                return false;
+            }
+        } catch (final Exception e) {
+            e.printStackTrace();
+        }
+
+        return true;
+    }
+
 }

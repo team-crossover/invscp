@@ -82,21 +82,11 @@ public class Localizacao implements Model<LocalizacaoDTO> {
                     "Não foi possível encontrar a localização desejada.");
         }
 
-        // ------------------
         // CONTROLE DE ACESSO
-        // ------------------
-        // Verificar controle de acesso (O usuário pode alterar esse tipo
-        // de elemento, com esses atributos? Etc.).
-
-        // TODO ...
-
-        // -----------------
-        // VALIDADE DE DADOS
-        // -----------------
-        // Verificar validade dos dados (Os novos atributos do elemento são
-        // válidos? Há itens que não podem ser modificados? Há itens
-        // repetidos/duplicados/já utilizados?Há itens obrigatórios faltando?
-        // Etc).
+        if (!usuario.getCargo().isChefeDePatrimonio()) {
+            throw new IllegalDeleteException(
+                    "Você não tem permissão para deletar localizações.");
+        }
 
         if (predioRepo.getByIdLocalizacao(loca.getId()).size() > 0) {
             throw new IllegalDeleteException(
@@ -138,21 +128,11 @@ public class Localizacao implements Model<LocalizacaoDTO> {
             }
         }
 
-        // ------------------
         // CONTROLE DE ACESSO
-        // ------------------
-        // Verificar controle de acesso (O usuário pode alterar esse tipo
-        // de elemento, com esses atributos? Etc.).
-
-        // TODO ...
-
-        // -----------------
-        // VALIDADE DE DADOS
-        // -----------------
-        // Verificar validade dos dados (Os novos atributos do elemento são
-        // válidos? Há itens que não podem ser modificados? Há itens
-        // repetidos/duplicados/já utilizados?Há itens obrigatórios faltando?
-        // Etc).
+        if (!usuario.getCargo().isChefeDePatrimonio()) {
+            throw new IllegalInsertException(
+                    "Você não tem permissão para inserir localizações.");
+        }
 
         try {
             validarCampos(newLocaNova);
@@ -208,21 +188,11 @@ public class Localizacao implements Model<LocalizacaoDTO> {
                     "Não é possível alterar o ID da localização.");
         }
 
-        // ------------------
         // CONTROLE DE ACESSO
-        // ------------------
-        // Verificar controle de acesso (O usuário pode alterar esse tipo
-        // de elemento, com esses atributos? Etc.).
-
-        // TODO ...
-
-        // -----------------
-        // VALIDADE DE DADOS
-        // -----------------
-        // Verificar validade dos dados (Os novos atributos do elemento são
-        // válidos? Há itens que não podem ser modificados? Há itens
-        // repetidos/duplicados/já utilizados?Há itens obrigatórios faltando?
-        // Etc).
+        if (!usuario.getCargo().isChefeDePatrimonio()) {
+            throw new IllegalUpdateException(
+                    "Você não tem permissão para alterar localizações.");
+        }
 
         try {
             validarCampos(novaLoca);

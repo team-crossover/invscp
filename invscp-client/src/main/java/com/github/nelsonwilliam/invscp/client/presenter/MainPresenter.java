@@ -82,8 +82,8 @@ public class MainPresenter extends Presenter<MainView> {
     @SuppressWarnings("unused")
     private void showLogin() {
         final LoginView loginView = ViewFactory.createLogin(view);
-        final LoginPresenter loginPresenter =
-                new LoginPresenter(loginView, this);
+        final LoginPresenter loginPresenter = new LoginPresenter(loginView,
+                this);
         loginView.setVisible(true);
     }
 
@@ -101,9 +101,10 @@ public class MainPresenter extends Presenter<MainView> {
             return;
         }
 
-        final DepartamentosView deptView = ViewFactory.createDepartamentos();
-        final DepartamentosPresenter deptPresenter =
-                new DepartamentosPresenter(deptView, this);
+        final DepartamentosView deptView = ViewFactory
+                .createDepartamentos(usuario);
+        final DepartamentosPresenter deptPresenter = new DepartamentosPresenter(
+                deptView, this);
         view.updateSelectedView(deptView);
     }
 
@@ -116,8 +117,8 @@ public class MainPresenter extends Presenter<MainView> {
         }
 
         final FuncionariosView funcView = ViewFactory.createFuncionarios();
-        final FuncionariosPresenter funcPresenter =
-                new FuncionariosPresenter(funcView, this);
+        final FuncionariosPresenter funcPresenter = new FuncionariosPresenter(
+                funcView, this);
         view.updateSelectedView(funcView);
     }
 
@@ -130,8 +131,8 @@ public class MainPresenter extends Presenter<MainView> {
         }
 
         final LocalizacoesView locaView = ViewFactory.createLocalizacoes();
-        final LocalizacoesPresenter locaPresenter =
-                new LocalizacoesPresenter(locaView, this);
+        final LocalizacoesPresenter locaPresenter = new LocalizacoesPresenter(
+                locaView, this);
         view.updateSelectedView(locaView);
     }
 
@@ -144,8 +145,8 @@ public class MainPresenter extends Presenter<MainView> {
         }
 
         final PrediosView predView = ViewFactory.createPredios();
-        final PrediosPresenter predPresenter =
-                new PrediosPresenter(predView, this);
+        final PrediosPresenter predPresenter = new PrediosPresenter(predView,
+                this);
         view.updateSelectedView(predView);
     }
 
@@ -158,8 +159,8 @@ public class MainPresenter extends Presenter<MainView> {
         }
 
         final SalasView salasView = ViewFactory.createSalas();
-        final SalasPresenter salasPresenter =
-                new SalasPresenter(salasView, this);
+        final SalasPresenter salasPresenter = new SalasPresenter(salasView,
+                this);
         view.updateSelectedView(salasView);
     }
 
@@ -172,10 +173,10 @@ public class MainPresenter extends Presenter<MainView> {
 
     @SuppressWarnings("unused")
     private void showMovimentacoes() {
-        final MovimentacoesView movsView =
-                ViewFactory.createMovimentacoes(getUsuario());
-        final MovimentacoesPresenter movsPresenter =
-                new MovimentacoesPresenter(movsView, this);
+        final MovimentacoesView movsView = ViewFactory
+                .createMovimentacoes(getUsuario());
+        final MovimentacoesPresenter movsPresenter = new MovimentacoesPresenter(
+                movsView, this);
         view.updateSelectedView(movsView);
     }
 }

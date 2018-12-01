@@ -23,7 +23,8 @@ public interface DepartamentoView extends View {
      * passado.
      */
     void updateDepartamento(DepartamentoDTO departamento,
-            List<FuncionarioDTO> chefes, List<FuncionarioDTO> chefesSubst);
+            List<FuncionarioDTO> chefes, List<FuncionarioDTO> chefesSubst,
+            FuncionarioDTO usuario);
 
     /**
      * Exibe uma mensagem de erro com a mensagem especificada. Por exemplo, pode

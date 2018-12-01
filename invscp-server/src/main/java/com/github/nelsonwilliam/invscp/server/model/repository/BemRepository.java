@@ -87,7 +87,8 @@ public class BemRepository implements Repository<Bem> {
                             + "id_sala,id_departamento,id_grupo_material FROM bem");
 
             boolean addedWhere = false;
-            if (filtro.getDescricao() != null && !filtro.getDescricao().isEmpty()) {
+            if (filtro.getDescricao() != null
+                    && !filtro.getDescricao().isEmpty()) {
                 if (!addedWhere) {
                     sql.append(" WHERE");
                     addedWhere = true;
@@ -124,7 +125,8 @@ public class BemRepository implements Repository<Bem> {
                 sql.append(" situacao=?");
             }
 
-            final PreparedStatement s = connection.prepareStatement(sql.toString());
+            final PreparedStatement s = connection
+                    .prepareStatement(sql.toString());
             int index = 1;
             if (filtro.getDescricao() != null
                     && !filtro.getDescricao().isEmpty()) {
@@ -152,27 +154,27 @@ public class BemRepository implements Repository<Bem> {
             while (r.next()) {
                 final Integer id = (Integer) r.getObject("id");
                 final String descricao = (String) r.getObject("descricao");
-                final Long numTombamento =
-                        (Long) r.getObject("numero_tombamento");
-                final LocalDate dataCadastro =
-                        ((Date) r.getObject("data_cadastro")).toLocalDate();
-                final LocalDate dataAquisicao =
-                        ((Date) r.getObject("data_aquisicao")).toLocalDate();
-                final String numNotaFiscal =
-                        (String) r.getObject("numero_nota_fiscal");
-                final String especificacao =
-                        (String) r.getObject("especificacao");
-                final LocalDate garantia =
-                        ((Date) r.getObject("garantia")).toLocalDate();
+                final Long numTombamento = (Long) r
+                        .getObject("numero_tombamento");
+                final LocalDate dataCadastro = ((Date) r
+                        .getObject("data_cadastro")).toLocalDate();
+                final LocalDate dataAquisicao = ((Date) r
+                        .getObject("data_aquisicao")).toLocalDate();
+                final String numNotaFiscal = (String) r
+                        .getObject("numero_nota_fiscal");
+                final String especificacao = (String) r
+                        .getObject("especificacao");
+                final LocalDate garantia = ((Date) r.getObject("garantia"))
+                        .toLocalDate();
                 final String marca = (String) r.getObject("marca");
-                final BigDecimal valorCompra =
-                        (BigDecimal) r.getObject("valor_compra");
+                final BigDecimal valorCompra = (BigDecimal) r
+                        .getObject("valor_compra");
                 final String situacao = (String) r.getObject("situacao");
                 final Integer idSala = (Integer) r.getObject("id_sala");
-                final Integer idDepartamento =
-                        (Integer) r.getObject("id_departamento");
-                final Integer idGrupoMaterial =
-                        (Integer) r.getObject("id_grupo_material");
+                final Integer idDepartamento = (Integer) r
+                        .getObject("id_departamento");
+                final Integer idGrupoMaterial = (Integer) r
+                        .getObject("id_grupo_material");
 
                 final Bem bem = new Bem();
                 bem.setId(id);
@@ -213,6 +215,24 @@ public class BemRepository implements Repository<Bem> {
         }
 
         return true;
+    }
+
+    public boolean exitsInSala(Integer idSala) {
+        final Connection connection = DatabaseConnection.getConnection();
+        try {
+            final PreparedStatement s = connection
+                    .prepareStatement("SELECT id FROM bem WHERE id_sala=?");
+            s.setObject(1, idSala, Types.INTEGER);
+            final ResultSet r = s.executeQuery();
+            if (!r.next()) {
+                return false;
+            }
+        } catch (final Exception e) {
+            e.printStackTrace();
+        }
+
+        return true;
+
     }
 
     @Override

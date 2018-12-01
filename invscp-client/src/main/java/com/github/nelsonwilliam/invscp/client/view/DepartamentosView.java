@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import com.github.nelsonwilliam.invscp.shared.model.dto.DepartamentoDTO;
+import com.github.nelsonwilliam.invscp.shared.model.dto.FuncionarioDTO;
 
 public interface DepartamentosView extends View {
 
@@ -30,7 +31,8 @@ public interface DepartamentosView extends View {
     // Métodos para atualizar os valores exibidos.
     // -------------------------------------------
 
-    void updateDepartamentos(List<DepartamentoDTO> departamentos);
+    void updateDepartamentos(List<DepartamentoDTO> departamentos,
+            FuncionarioDTO usuario);
 
     void showError(String message);
 

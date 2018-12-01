@@ -43,36 +43,38 @@ import com.github.nelsonwilliam.invscp.shared.model.dto.SalaDTO;
 
 public class ViewFactory {
 
-    public static DepartamentosView createDepartamentos() {
+    public static DepartamentosView createDepartamentos(
+            final FuncionarioDTO usuario) {
         switch (ClientSettings.getViewImpl()) {
-            case SWING:
-                return new DepartamentosSwingView();
-            default:
-                throw new IllegalArgumentException();
+        case SWING:
+            return new DepartamentosSwingView(usuario);
+        default:
+            throw new IllegalArgumentException();
         }
     }
 
     public static DepartamentoView createDepartamento(final MainView main,
             final DepartamentoDTO dept, final boolean isAddition,
             final List<FuncionarioDTO> chefes,
-            final List<FuncionarioDTO> chefesSubsts) {
+            final List<FuncionarioDTO> chefesSubsts,
+            final FuncionarioDTO usuario) {
 
         switch (ClientSettings.getViewImpl()) {
-            case SWING:
-                return new DepartamentoSwingView((JFrame) main, dept,
-                        isAddition, chefes, chefesSubsts);
-            default:
-                throw new IllegalArgumentException();
+        case SWING:
+            return new DepartamentoSwingView((JFrame) main, dept, isAddition,
+                    chefes, chefesSubsts, usuario);
+        default:
+            throw new IllegalArgumentException();
         }
     }
 
     public static FuncionariosView createFuncionarios() {
 
         switch (ClientSettings.getViewImpl()) {
-            case SWING:
-                return new FuncionariosSwingView();
-            default:
-                throw new IllegalArgumentException();
+        case SWING:
+            return new FuncionariosSwingView();
+        default:
+            throw new IllegalArgumentException();
         }
     }
 
@@ -82,11 +84,11 @@ public class ViewFactory {
             final List<DepartamentoDTO> departamentos) {
 
         switch (ClientSettings.getViewImpl()) {
-            case SWING:
-                return new FuncionarioSwingView((JFrame) main, func, isAddition,
-                        usuario, departamentos);
-            default:
-                throw new IllegalArgumentException();
+        case SWING:
+            return new FuncionarioSwingView((JFrame) main, func, isAddition,
+                    usuario, departamentos);
+        default:
+            throw new IllegalArgumentException();
         }
     }
 
@@ -94,61 +96,60 @@ public class ViewFactory {
             final LocalizacaoDTO loca, final boolean isAddition) {
 
         switch (ClientSettings.getViewImpl()) {
-            case SWING:
-                return new LocalizacaoSwingView((JFrame) main, loca,
-                        isAddition);
-            default:
-                throw new IllegalArgumentException();
+        case SWING:
+            return new LocalizacaoSwingView((JFrame) main, loca, isAddition);
+        default:
+            throw new IllegalArgumentException();
         }
     }
 
     public static LocalizacoesView createLocalizacoes() {
 
         switch (ClientSettings.getViewImpl()) {
-            case SWING:
-                return new LocalizacoesSwingView();
-            default:
-                throw new IllegalArgumentException();
+        case SWING:
+            return new LocalizacoesSwingView();
+        default:
+            throw new IllegalArgumentException();
         }
     }
 
     public static LoginView createLogin(final MainView main) {
 
         switch (ClientSettings.getViewImpl()) {
-            case SWING:
-                return new LoginSwingView((JFrame) main);
-            default:
-                throw new IllegalArgumentException();
+        case SWING:
+            return new LoginSwingView((JFrame) main);
+        default:
+            throw new IllegalArgumentException();
         }
     }
 
     public static MainView createMain(final MenuView menu) {
 
         switch (ClientSettings.getViewImpl()) {
-            case SWING:
-                return new MainSwingView(menu);
-            default:
-                throw new IllegalArgumentException();
+        case SWING:
+            return new MainSwingView(menu);
+        default:
+            throw new IllegalArgumentException();
         }
     }
 
     public static MenuView createMenu() {
 
         switch (ClientSettings.getViewImpl()) {
-            case SWING:
-                return new MenuSwingView();
-            default:
-                throw new IllegalArgumentException();
+        case SWING:
+            return new MenuSwingView();
+        default:
+            throw new IllegalArgumentException();
         }
     }
 
     public static PrediosView createPredios() {
 
         switch (ClientSettings.getViewImpl()) {
-            case SWING:
-                return new PrediosSwingView();
-            default:
-                throw new IllegalArgumentException();
+        case SWING:
+            return new PrediosSwingView();
+        default:
+            throw new IllegalArgumentException();
         }
     }
 
@@ -157,21 +158,21 @@ public class ViewFactory {
             final List<LocalizacaoDTO> locas) {
 
         switch (ClientSettings.getViewImpl()) {
-            case SWING:
-                return new PredioSwingView((JFrame) main, predio, isAddition,
-                        locas);
-            default:
-                throw new IllegalArgumentException();
+        case SWING:
+            return new PredioSwingView((JFrame) main, predio, isAddition,
+                    locas);
+        default:
+            throw new IllegalArgumentException();
         }
     }
 
     public static SalasView createSalas() {
 
         switch (ClientSettings.getViewImpl()) {
-            case SWING:
-                return new SalasSwingView();
-            default:
-                throw new IllegalArgumentException();
+        case SWING:
+            return new SalasSwingView();
+        default:
+            throw new IllegalArgumentException();
         }
     }
 
@@ -180,21 +181,21 @@ public class ViewFactory {
             final List<DepartamentoDTO> departamentos) {
 
         switch (ClientSettings.getViewImpl()) {
-            case SWING:
-                return new SalaSwingView((JFrame) main, sala, isAddition,
-                        predios, departamentos);
-            default:
-                throw new IllegalArgumentException();
+        case SWING:
+            return new SalaSwingView((JFrame) main, sala, isAddition, predios,
+                    departamentos);
+        default:
+            throw new IllegalArgumentException();
         }
     }
 
     public static BensView createBens(final FuncionarioDTO usuario) {
 
         switch (ClientSettings.getViewImpl()) {
-            case SWING:
-                return new BensSwingView(usuario);
-            default:
-                throw new IllegalArgumentException();
+        case SWING:
+            return new BensSwingView(usuario);
+        default:
+            throw new IllegalArgumentException();
         }
     }
 
@@ -204,11 +205,11 @@ public class ViewFactory {
             final List<GrupoMaterialDTO> gruposMateriais) {
 
         switch (ClientSettings.getViewImpl()) {
-            case SWING:
-                return new BemSwingView((JFrame) main, bem, isAddition, usuario,
-                        depts, gruposMateriais);
-            default:
-                throw new IllegalArgumentException();
+        case SWING:
+            return new BemSwingView((JFrame) main, bem, isAddition, usuario,
+                    depts, gruposMateriais);
+        default:
+            throw new IllegalArgumentException();
         }
     }
 
@@ -216,20 +217,20 @@ public class ViewFactory {
             final boolean isAddition) {
 
         switch (ClientSettings.getViewImpl()) {
-            case SWING:
-                return new BaixaSwingView((JFrame) main, bem, isAddition);
-            default:
-                throw new IllegalArgumentException();
+        case SWING:
+            return new BaixaSwingView((JFrame) main, bem, isAddition);
+        default:
+            throw new IllegalArgumentException();
         }
     }
 
     public static OrdensServicoView createOrdensServico(final MainView main) {
 
         switch (ClientSettings.getViewImpl()) {
-            case SWING:
-                return new OrdensServicoSwingView((JFrame) main);
-            default:
-                throw new IllegalArgumentException();
+        case SWING:
+            return new OrdensServicoSwingView((JFrame) main);
+        default:
+            throw new IllegalArgumentException();
         }
     }
 
@@ -237,11 +238,11 @@ public class ViewFactory {
             final OrdemServicoDTO ordemServico, final boolean isAddition) {
 
         switch (ClientSettings.getViewImpl()) {
-            case SWING:
-                return new OrdemServicoSwingView((JFrame) main, ordemServico,
-                        isAddition);
-            default:
-                throw new IllegalArgumentException();
+        case SWING:
+            return new OrdemServicoSwingView((JFrame) main, ordemServico,
+                    isAddition);
+        default:
+            throw new IllegalArgumentException();
         }
     }
 
@@ -249,10 +250,10 @@ public class ViewFactory {
             final FuncionarioDTO usuario) {
 
         switch (ClientSettings.getViewImpl()) {
-            case SWING:
-                return new MovimentacoesSwingView(usuario);
-            default:
-                throw new IllegalArgumentException();
+        case SWING:
+            return new MovimentacoesSwingView(usuario);
+        default:
+            throw new IllegalArgumentException();
         }
     }
 
@@ -260,11 +261,10 @@ public class ViewFactory {
             final MovimentacaoDTO mov, final boolean isAddition) {
 
         switch (ClientSettings.getViewImpl()) {
-            case SWING:
-                return new MovimentacaoSwingView((JFrame) main, mov,
-                        isAddition);
-            default:
-                throw new IllegalArgumentException();
+        case SWING:
+            return new MovimentacaoSwingView((JFrame) main, mov, isAddition);
+        default:
+            throw new IllegalArgumentException();
         }
     }
 
@@ -272,10 +272,10 @@ public class ViewFactory {
             final MainView main) {
 
         switch (ClientSettings.getViewImpl()) {
-            case SWING:
-                return new EventosMovimentacaoSwingView((JFrame) main);
-            default:
-                throw new IllegalArgumentException();
+        case SWING:
+            return new EventosMovimentacaoSwingView((JFrame) main);
+        default:
+            throw new IllegalArgumentException();
         }
     }
 
@@ -284,11 +284,11 @@ public class ViewFactory {
             final boolean isAddition) {
 
         switch (ClientSettings.getViewImpl()) {
-            case SWING:
-                return new EventoMovimentacaoSwingView((JFrame) main, mov,
-                        isAddition);
-            default:
-                throw new IllegalArgumentException();
+        case SWING:
+            return new EventoMovimentacaoSwingView((JFrame) main, mov,
+                    isAddition);
+        default:
+            throw new IllegalArgumentException();
         }
     }
 
@@ -296,10 +296,10 @@ public class ViewFactory {
             final FiltroBemDTO filtro, final List<DepartamentoDTO> depts) {
 
         switch (ClientSettings.getViewImpl()) {
-            case SWING:
-                return new FiltroBemSwingView((JFrame) main, filtro, depts);
-            default:
-                throw new IllegalArgumentException();
+        case SWING:
+            return new FiltroBemSwingView((JFrame) main, filtro, depts);
+        default:
+            throw new IllegalArgumentException();
         }
     }
 

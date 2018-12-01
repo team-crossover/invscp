@@ -28,11 +28,14 @@ import javax.swing.table.DefaultTableModel;
 
 import com.github.nelsonwilliam.invscp.client.view.DepartamentosView;
 import com.github.nelsonwilliam.invscp.shared.model.dto.DepartamentoDTO;
+import com.github.nelsonwilliam.invscp.shared.model.dto.FuncionarioDTO;
 
 public class DepartamentosSwingView extends JPanel
         implements DepartamentosView {
 
     private static final long serialVersionUID = 8975992154717828680L;
+
+    private FuncionarioDTO usuario;
 
     private JTable table;
     private JButton btnAdicionar;
@@ -43,7 +46,8 @@ public class DepartamentosSwingView extends JPanel
     private JMenuItem popupItemAlterar;
     private JMenuItem popupItemRelatorio;
 
-    public DepartamentosSwingView() {
+    public DepartamentosSwingView(FuncionarioDTO usuario) {
+        this.usuario = usuario;
         initialize();
     }
 
@@ -56,7 +60,11 @@ public class DepartamentosSwingView extends JPanel
         gridBagLayout.rowWeights = new double[] { 1.0, 0.0, Double.MIN_VALUE };
         setLayout(gridBagLayout);
 
-        popupItemAlterar = new JMenuItem("Alterar");
+        if (usuario != null && usuario.getCargo().isChefeDePatrimonio()) {
+            popupItemAlterar = new JMenuItem("Alterar");
+        } else {
+            popupItemAlterar = new JMenuItem("Ver");
+        }
         popupItemRelatorio = new JMenuItem("Gerar relatório de bens...");
 
         popupMenu = new JPopupMenu();
@@ -178,18 +186,38 @@ public class DepartamentosSwingView extends JPanel
     }
 
     @Override
-    public void updateDepartamentos(final List<DepartamentoDTO> departamentos) {
+    public void updateDepartamentos(final List<DepartamentoDTO> departamentos,
+            FuncionarioDTO usuario) {
         final DefaultTableModel tableModel = (DefaultTableModel) table
                 .getModel();
+        final boolean ehChefePatrimonio = (usuario != null
+                && usuario.getCargo().isChefeDePatrimonio());
+        final boolean ehChefeDepartamento = (usuario != null
+                && usuario.getCargo().isChefeDeDepartamento());
+
         tableModel.setNumRows(0);
         for (final DepartamentoDTO d : departamentos) {
-            tableModel.addRow(
-                    new Object[] { d.getId(), d.getDePatrimonio(), d.getNome(),
-                            d.getChefe() == null ? "Nenhum"
-                                    : d.getChefe().getNome(),
-                            d.getChefeSubstituto() == null ? "Nenhum"
-                                    : d.getChefeSubstituto().getNome() });
+            if (ehChefePatrimonio) {
+                tableModel.addRow(new Object[] { d.getId(), d.getDePatrimonio(),
+                        d.getNome(),
+                        d.getChefe() == null ? "Nenhum"
+                                : d.getChefe().getNome(),
+                        d.getChefeSubstituto() == null ? "Nenhum"
+                                : d.getChefeSubstituto().getNome() });
+            } else if (ehChefeDepartamento
+                    && d.getId().equals(usuario.getDepartamento().getId())) {
+                tableModel.addRow(new Object[] { d.getId(), d.getDePatrimonio(),
+                        d.getNome(),
+                        d.getChefe() == null ? "Nenhum"
+                                : d.getChefe().getNome(),
+                        d.getChefeSubstituto() == null ? "Nenhum"
+                                : d.getChefeSubstituto().getNome() });
+            }
+
         }
+
+        btnAdicionar.setEnabled(ehChefePatrimonio);
+        btnDeletar.setEnabled(ehChefePatrimonio);
 
         revalidate();
         repaint();

@@ -140,8 +140,8 @@ public class BensSwingView extends JPanel implements BensView {
                 // Garante que ao clicar com o botão direito em um item para
                 // exibir o menu, o único item selecionado da tabela será o item
                 // clicado.
-                final Point mousePoint =
-                        MouseInfo.getPointerInfo().getLocation();
+                final Point mousePoint = MouseInfo.getPointerInfo()
+                        .getLocation();
                 SwingUtilities.convertPointFromScreen(mousePoint, table);
                 final int rowAtPoint = table.rowAtPoint(mousePoint);
                 if (rowAtPoint > -1) {
@@ -172,8 +172,8 @@ public class BensSwingView extends JPanel implements BensView {
         final GridBagLayout gbl_panel = new GridBagLayout();
         gbl_panel.columnWidths = new int[] { 75, 75, 75, 0, 0 };
         gbl_panel.rowHeights = new int[] { 25, 0 };
-        gbl_panel.columnWeights =
-                new double[] { 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE };
+        gbl_panel.columnWeights = new double[] { 0.0, 0.0, 0.0, 1.0,
+                Double.MIN_VALUE };
         gbl_panel.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
         panel.setLayout(gbl_panel);
 
@@ -220,11 +220,11 @@ public class BensSwingView extends JPanel implements BensView {
 
         popupMenu.removeAll();
 
-        final boolean mesmoDeptUsuario =
-                usuario != null && usuario.getDepartamento().getId()
+        final boolean mesmoDeptUsuario = usuario != null
+                && usuario.getDepartamento().getId()
                         .equals(bem.getDepartamento().getId());
-        final boolean incorporado =
-                bem.getSituacao() == BemSituacaoEnum.INCORPORADO;
+        final boolean incorporado = bem
+                .getSituacao() == BemSituacaoEnum.INCORPORADO;
         final boolean baixado = bem.getSituacao() == BemSituacaoEnum.BAIXADO;
 
         if (usuario == null) {
@@ -337,8 +337,8 @@ public class BensSwingView extends JPanel implements BensView {
                 usuario != null && usuario.getCargo().isChefeDePatrimonio());
         btnDeletar.setVisible(usuario != null && usuario.getCargo().isChefe());
 
-        final DefaultTableModel tableModel =
-                (DefaultTableModel) table.getModel();
+        final DefaultTableModel tableModel = (DefaultTableModel) table
+                .getModel();
         tableModel.setNumRows(0);
         for (final BemDTO b : bens) {
             tableModel.addRow(new Object[] { b.getId(), b.getNumeroTombamento(),

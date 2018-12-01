@@ -162,28 +162,23 @@ public class Departamento implements Model<DepartamentoDTO> {
         final DepartamentoRepository deptRepo = new DepartamentoRepository();
 
         if (novoDept.getId() != null) {
-            final Departamento deptExistente =
-                    deptRepo.getById(novoDept.getId());
+            final Departamento deptExistente = deptRepo
+                    .getById(novoDept.getId());
             if (deptExistente != null) {
                 throw new IllegalInsertException(
                         "Não é possível inserir a sala pois o ID já existe.");
             }
         }
 
-        final Integer funcLogadoDeptId =
-                usuario.getDepartamento() == null ? null
-                        : usuario.getDepartamento().getId();
-        final boolean funcLogadoEraChefeDept =
-                usuario.getCargo().isChefeDeDepartamento();
-        final boolean funcLogadoEraChefePatrimonio =
-                usuario.getCargo().isChefeDePatrimonio();
+        final Integer funcLogadoDeptId = usuario.getDepartamento() == null
+                ? null
+                : usuario.getDepartamento().getId();
+        final boolean funcLogadoEraChefeDept = usuario.getCargo()
+                .isChefeDeDepartamento();
+        final boolean funcLogadoEraChefePatrimonio = usuario.getCargo()
+                .isChefeDePatrimonio();
 
-        // ------------------
         // CONTROLE DE ACESSO
-        // ------------------
-        // Verificar controle de acesso (O usuário pode alterar esse tipo
-        // de elemento, com esses atributos? Etc.).
-
         if (novoDept.getId() == null && !funcLogadoEraChefePatrimonio) {
             throw new IllegalInsertException(
                     "Apenas chefes de patrimônio podem criar novos departamentos.");
@@ -195,14 +190,6 @@ public class Departamento implements Model<DepartamentoDTO> {
             throw new IllegalInsertException(
                     "Apenas chefes de patrimônio e chefes do próprio departamento podem alterá-lo.");
         }
-
-        // -----------------
-        // VALIDADE DE DADOS
-        // -----------------
-        // Verificar validade dos dados (Os novos atributos do elemento são
-        // válidos? Há itens que não podem ser modificados? Há itens
-        // repetidos/duplicados/já utilizados?Há itens obrigatórios faltando?
-        // Etc).
 
         try {
             validarCampos(novoDept);
@@ -258,21 +245,17 @@ public class Departamento implements Model<DepartamentoDTO> {
                     "Não é possível alterar o ID do departamento.");
         }
 
-        // ------------------
-        // CONTROLE DE ACESSO
-        // ------------------
-        // Verificar controle de acesso (O usuário pode alterar esse tipo
-        // de elemento, com esses atributos? Etc.).
-
-        // TODO ...
-
-        // -----------------
-        // VALIDADE DE DADOS
-        // -----------------
-        // Verificar validade dos dados (Os novos atributos do elemento são
-        // válidos? Há itens que não podem ser modificados? Há itens
-        // repetidos/duplicados/já utilizados?Há itens obrigatórios faltando?
-        // Etc).
+        // Controle de Acesso
+        if (!usuario.getCargo().isChefeDePatrimonio()) {
+            if (!usuario.getCargo().isChefeDeDepartamento()) {
+                throw new IllegalUpdateException(
+                        "Você não tem permissão para alterar departamentos.");
+            } else if (!usuario.getDepartamento().getId()
+                    .equals(antigoDept.getId())) {
+                throw new IllegalUpdateException(
+                        "Você não tem permissão para alterar um departamento que não é o seu.");
+            }
+        }
 
         try {
             validarCampos(novoDept);

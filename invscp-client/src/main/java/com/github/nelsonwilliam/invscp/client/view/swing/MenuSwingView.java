@@ -105,8 +105,8 @@ public class MenuSwingView extends JPanel implements MenuView {
 
         final boolean isLogado = user != null;
         final boolean isChefe = isLogado && user.getCargo().isChefe();
-        final boolean isChefeDePatrimonio =
-                isLogado && user.getCargo().isChefeDePatrimonio();
+        final boolean isChefeDePatrimonio = isLogado
+                && user.getCargo().isChefeDePatrimonio();
 
         // Exibe os botões adequados dependendo do papel do funcionário logado.
         if (!isLogado) {
@@ -142,6 +142,7 @@ public class MenuSwingView extends JPanel implements MenuView {
                     pnlButtons.add(btnBens);
                     pnlButtons.add(btnMovimentacoes);
                     pnlButtons.add(btnFuncionarios);
+                    pnlButtons.add(btnDepartamentos);
                 }
             } else {
                 // Funcionário comum

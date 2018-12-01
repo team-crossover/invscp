@@ -171,6 +171,11 @@ public class Bem implements Model<BemDTO> {
             throw new IllegalDeleteException(
                     "O prazo para remoção deste bem já expirou.");
         }
+
+        if (movRepo.existsBemRelacionado(idBem)) {
+            throw new IllegalDeleteException(
+                    "Não é possível deletar este bem pois ele possui uma movimentação cadastrada relacionda a ele.");
+        }
     }
 
     public static void validarInserir(final FuncionarioDTO usuario,

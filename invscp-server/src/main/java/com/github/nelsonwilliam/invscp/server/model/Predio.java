@@ -76,21 +76,11 @@ public class Predio implements Model<PredioDTO> {
                     "Não foi possível encontrar o prédio desejada.");
         }
 
-        // ------------------
         // CONTROLE DE ACESSO
-        // ------------------
-        // Verificar controle de acesso (O usuário pode alterar esse tipo
-        // de elemento, com esses atributos? Etc.).
-
-        // TODO ...
-
-        // -----------------
-        // VALIDADE DE DADOS
-        // -----------------
-        // Verificar validade dos dados (Os novos atributos do elemento são
-        // válidos? Há itens que não podem ser modificados? Há itens
-        // repetidos/duplicados/já utilizados?Há itens obrigatórios faltando?
-        // Etc).
+        if (!usuario.getCargo().isChefeDePatrimonio()) {
+            throw new IllegalDeleteException(
+                    "Você não tem permissão para deletar pŕedios.");
+        }
 
         if (salaRepo.getByIdPredio(predio.getId()).size() > 0) {
             throw new IllegalDeleteException(
@@ -123,29 +113,19 @@ public class Predio implements Model<PredioDTO> {
         final PredioRepository predioRepo = new PredioRepository();
 
         if (novoPredio.getId() != null) {
-            final Predio predioExistente =
-                    predioRepo.getById(novoPredio.getId());
+            final Predio predioExistente = predioRepo
+                    .getById(novoPredio.getId());
             if (predioExistente != null) {
                 throw new IllegalInsertException(
                         "Não é possível inserir o prédio pois o ID já existe.");
             }
         }
 
-        // ------------------
         // CONTROLE DE ACESSO
-        // ------------------
-        // Verificar controle de acesso (O usuário pode alterar esse tipo
-        // de elemento, com esses atributos? Etc.).
-
-        // TODO ...
-
-        // -----------------
-        // VALIDADE DE DADOS
-        // -----------------
-        // Verificar validade dos dados (Os novos atributos do elemento são
-        // válidos? Há itens que não podem ser modificados? Há itens
-        // repetidos/duplicados/já utilizados?Há itens obrigatórios faltando?
-        // Etc).
+        if (!usuario.getCargo().isChefeDePatrimonio()) {
+            throw new IllegalInsertException(
+                    "Você não tem permissão para inserir pŕedios.");
+        }
 
         try {
             validarCampos(novoPredio);
@@ -200,21 +180,11 @@ public class Predio implements Model<PredioDTO> {
                     "Não é possível alterar o ID do prédio.");
         }
 
-        // ------------------
         // CONTROLE DE ACESSO
-        // ------------------
-        // Verificar controle de acesso (O usuário pode alterar esse tipo
-        // de elemento, com esses atributos? Etc.).
-
-        // TODO ...
-
-        // -----------------
-        // VALIDADE DE DADOS
-        // -----------------
-        // Verificar validade dos dados (Os novos atributos do elemento são
-        // válidos? Há itens que não podem ser modificados? Há itens
-        // repetidos/duplicados/já utilizados?Há itens obrigatórios faltando?
-        // Etc).
+        if (!usuario.getCargo().isChefeDePatrimonio()) {
+            throw new IllegalUpdateException(
+                    "Você não tem permissão para alterar pŕedios.");
+        }
 
         try {
             validarCampos(novoPredio);

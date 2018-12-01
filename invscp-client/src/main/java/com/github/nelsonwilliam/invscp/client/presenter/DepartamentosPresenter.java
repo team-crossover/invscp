@@ -46,19 +46,20 @@ public class DepartamentosPresenter extends Presenter<DepartamentosView> {
     @SuppressWarnings("unused")
     private void onAdicionarDepartamento() {
         final DepartamentoDTO novoDept = new DepartamentoDTO();
-        final List<FuncionarioDTO> chefes =
-                Client.requestGetPossiveisChefesParaDepartamento(novoDept);
-
+        final List<FuncionarioDTO> chefes = Client
+                .requestGetPossiveisChefesParaDepartamento(novoDept);
+        final FuncionarioDTO usuario = mainPresenter.getUsuario();
         final DepartamentoView deptView = ViewFactory.createDepartamento(
-                mainPresenter.getView(), novoDept, true, chefes, chefes);
-        final DepartamentoPresenter deptPresenter =
-                new DepartamentoPresenter(deptView, mainPresenter, this);
+                mainPresenter.getView(), novoDept, true, chefes, chefes,
+                usuario);
+        final DepartamentoPresenter deptPresenter = new DepartamentoPresenter(
+                deptView, mainPresenter, this);
         deptView.setVisible(true);
     }
 
     private void onDeletarDepartamentos() {
-        final List<Integer> selectedDeptIds =
-                view.getSelectedDepartamentosIds();
+        final List<Integer> selectedDeptIds = view
+                .getSelectedDepartamentosIds();
         if (selectedDeptIds.size() < 1) {
             view.showError("Nenhum item foi selecionado.");
             return;
@@ -97,49 +98,49 @@ public class DepartamentosPresenter extends Presenter<DepartamentosView> {
 
     @SuppressWarnings("unused")
     private void onAlterarDepartamento() {
-        final List<Integer> selectedDeptIds =
-                view.getSelectedDepartamentosIds();
+        final List<Integer> selectedDeptIds = view
+                .getSelectedDepartamentosIds();
         if (selectedDeptIds.size() != 1) {
             throw new RuntimeException(
                     "Para alterar um elemento é necessário que apenas um esteja selecionado.");
         }
 
         final Integer selectedDeptId = selectedDeptIds.get(0);
-        final DepartamentoDTO selectedDepartamento =
-                Client.requestGetDepartamentoById(selectedDeptId);
-        final List<FuncionarioDTO> chefes =
-                Client.requestGetPossiveisChefesParaDepartamento(
+        final DepartamentoDTO selectedDepartamento = Client
+                .requestGetDepartamentoById(selectedDeptId);
+        final List<FuncionarioDTO> chefes = Client
+                .requestGetPossiveisChefesParaDepartamento(
                         selectedDepartamento);
-
-        final DepartamentoView deptView =
-                ViewFactory.createDepartamento(mainPresenter.getView(),
-                        selectedDepartamento, false, chefes, chefes);
-        final DepartamentoPresenter deptPresenter =
-                new DepartamentoPresenter(deptView, mainPresenter, this);
+        final FuncionarioDTO usuario = mainPresenter.getUsuario();
+        final DepartamentoView deptView = ViewFactory.createDepartamento(
+                mainPresenter.getView(), selectedDepartamento, false, chefes,
+                chefes, usuario);
+        final DepartamentoPresenter deptPresenter = new DepartamentoPresenter(
+                deptView, mainPresenter, this);
         deptView.setVisible(true);
     }
 
     private void onGerarRelatorio() {
-        final List<Integer> selectedDeptIds =
-                view.getSelectedDepartamentosIds();
+        final List<Integer> selectedDeptIds = view
+                .getSelectedDepartamentosIds();
         if (selectedDeptIds.size() != 1) {
             throw new RuntimeException(
                     "Para gerar relatório de departamento é necessário que apenas um esteja selecionado.");
         }
 
         final Integer selectedDeptId = selectedDeptIds.get(0);
-        final DepartamentoDTO selectedDepartamento =
-                Client.requestGetDepartamentoById(selectedDeptId);
+        final DepartamentoDTO selectedDepartamento = Client
+                .requestGetDepartamentoById(selectedDeptId);
 
-        final RelatorioDTO relatorio =
-                Client.requestGerarRelatorioDept(selectedDepartamento);
+        final RelatorioDTO relatorio = Client
+                .requestGerarRelatorioDept(selectedDepartamento);
 
-        final String fileName = "relatorio-dept-"
-                + selectedDepartamento.getId() + "_"
+        final String fileName = "relatorio-dept-" + selectedDepartamento.getId()
+                + "_"
                 + relatorio.getMomentoGeracao().format(
                         DateTimeFormatter.ofPattern("dd-MM-yyyy_HH-mm-ss"))
                 + ".html";
-        
+
         String htmlText = null;
         File file = null;
         try {
@@ -151,13 +152,13 @@ public class DepartamentosPresenter extends Presenter<DepartamentosView> {
             return;
         }
 
-        view.showSucesso(
-                "Relatório gerado e salvo em:\n" + file.toPath().toAbsolutePath());
+        view.showSucesso("Relatório gerado e salvo em:\n"
+                + file.toPath().toAbsolutePath());
     }
 
     public void updateDepartamentos() {
         final List<DepartamentoDTO> depts = Client.requestGetDepartamentos();
-        view.updateDepartamentos(depts);
+        view.updateDepartamentos(depts, mainPresenter.getUsuario());
     }
 
 }

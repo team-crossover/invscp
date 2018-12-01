@@ -1,6 +1,8 @@
 package com.github.nelsonwilliam.invscp.server.model;
 
+import com.github.nelsonwilliam.invscp.server.model.repository.BemRepository;
 import com.github.nelsonwilliam.invscp.server.model.repository.DepartamentoRepository;
+import com.github.nelsonwilliam.invscp.server.model.repository.MovimentacaoRepository;
 import com.github.nelsonwilliam.invscp.server.model.repository.PredioRepository;
 import com.github.nelsonwilliam.invscp.server.model.repository.SalaRepository;
 import com.github.nelsonwilliam.invscp.shared.exception.CRUDException;
@@ -90,23 +92,24 @@ public class Sala implements Model<SalaDTO> {
                     "Não foi possível encontrar a sala desejada.");
         }
 
-        // ------------------
         // CONTROLE DE ACESSO
-        // ------------------
-        // Verificar controle de acesso (O usuário pode alterar esse tipo
-        // de elemento, com esses atributos? Etc.).
+        if (!usuario.getCargo().isChefeDePatrimonio()) {
+            throw new IllegalDeleteException(
+                    "Você não tem permissão para deletar salas.");
+        }
 
-        // TODO ...
+        // VALIDAÇÃO DE DADOS
+        BemRepository bemRepo = new BemRepository();
+        if (bemRepo.exitsInSala(idSala)) {
+            throw new IllegalDeleteException(
+                    "Não é possível remover esta sala pois existem bens cadastrados nela");
+        }
 
-        // -----------------
-        // VALIDADE DE DADOS
-        // -----------------
-        // Verificar validade dos dados (Os novos atributos do elemento são
-        // válidos? Há itens que não podem ser modificados? Há itens
-        // repetidos/duplicados/já utilizados?Há itens obrigatórios faltando?
-        // Etc).
-
-        // TODO Verificar se algum bem depende dessa sala.
+        MovimentacaoRepository movRepo = new MovimentacaoRepository();
+        if (movRepo.exitsInSala(idSala)) {
+            throw new IllegalDeleteException(
+                    "Não é possível remover esta sala pois existem movimentações relacionadas a ela");
+        }
 
         if (sala.getTipo() == TipoSalaEnum.DEPOSITO) {
             throw new IllegalDeleteException(
@@ -146,21 +149,11 @@ public class Sala implements Model<SalaDTO> {
             }
         }
 
-        // ------------------
         // CONTROLE DE ACESSO
-        // ------------------
-        // Verificar controle de acesso (O usuário pode alterar esse tipo
-        // de elemento, com esses atributos? Etc.).
-
-        // TODO ...
-
-        // -----------------
-        // VALIDADE DE DADOS
-        // -----------------
-        // Verificar validade dos dados (Os novos atributos do elemento são
-        // válidos? Há itens que não podem ser modificados? Há itens
-        // repetidos/duplicados/já utilizados?Há itens obrigatórios faltando?
-        // Etc).
+        if (!usuario.getCargo().isChefeDePatrimonio()) {
+            throw new IllegalInsertException(
+                    "Você não tem permissão para inserir salas.");
+        }
 
         try {
             validarCampos(novaSala);
@@ -215,21 +208,11 @@ public class Sala implements Model<SalaDTO> {
                     "Não é possível alterar o ID da sala.");
         }
 
-        // ------------------
         // CONTROLE DE ACESSO
-        // ------------------
-        // Verificar controle de acesso (O usuário pode alterar esse tipo
-        // de elemento, com esses atributos? Etc.).
-
-        // TODO ...
-
-        // -----------------
-        // VALIDADE DE DADOS
-        // -----------------
-        // Verificar validade dos dados (Os novos atributos do elemento são
-        // válidos? Há itens que não podem ser modificados? Há itens
-        // repetidos/duplicados/já utilizados?Há itens obrigatórios faltando?
-        // Etc).
+        if (!usuario.getCargo().isChefeDePatrimonio()) {
+            throw new IllegalUpdateException(
+                    "Você não tem permissão para alterar salas.");
+        }
 
         if (antigaSala != null && antigaSala.getTipo() == TipoSalaEnum.DEPOSITO
                 && novaSala.getTipo() != TipoSalaEnum.DEPOSITO) {

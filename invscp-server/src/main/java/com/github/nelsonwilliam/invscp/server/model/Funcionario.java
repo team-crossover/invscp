@@ -91,13 +91,17 @@ public class Funcionario implements Model<FuncionarioDTO> {
                     "Não foi possível encontrar o funcionário desejado.");
         }
 
-        // ------------------
         // CONTROLE DE ACESSO
-        // ------------------
-        // Verificar controle de acesso (O usuário pode alterar esse tipo
-        // de elemento, com esses atributos? Etc.).
-
-        // TODO ...
+        if (!usuario.getCargo().isChefeDePatrimonio()) {
+            if (!usuario.getCargo().isChefeDeDepartamento()) {
+                throw new IllegalDeleteException(
+                        "Você não tem permissão para deletar funcionários.");
+            } else if (usuario.getDepartamento().getId() != func
+                    .getIdDepartamento()) {
+                throw new IllegalDeleteException(
+                        "Você não tem permissão para deletar funcionários fora do seu departamento.");
+            }
+        }
 
         // -----------------
         // VALIDADE DE DADOS
@@ -146,21 +150,17 @@ public class Funcionario implements Model<FuncionarioDTO> {
             }
         }
 
-        // ------------------
         // CONTROLE DE ACESSO
-        // ------------------
-        // Verificar controle de acesso (O usuário pode alterar esse tipo
-        // de elemento, com esses atributos? Etc.).
-
-        // TODO ...
-
-        // -----------------
-        // VALIDADE DE DADOS
-        // -----------------
-        // Verificar validade dos dados (Os novos atributos do elemento são
-        // válidos? Há itens que não podem ser modificados? Há itens
-        // repetidos/duplicados/já utilizados?Há itens obrigatórios faltando?
-        // Etc).
+        if (!usuario.getCargo().isChefeDePatrimonio()) {
+            if (!usuario.getCargo().isChefeDeDepartamento()) {
+                throw new IllegalInsertException(
+                        "Você não tem permissão para inserir funcionários.");
+            } else if (usuario.getDepartamento().getId() != novoFunc
+                    .getDepartamento().getId()) {
+                throw new IllegalInsertException(
+                        "Você não tem permissão para inserir funcionários fora do seu departamento.");
+            }
+        }
 
         try {
             validarCampos(novoFunc);
@@ -218,26 +218,25 @@ public class Funcionario implements Model<FuncionarioDTO> {
 
         final boolean eraChefe = antigoFunc.getCargo().isChefe();
 
-        // ------------------
         // CONTROLE DE ACESSO
-        // ------------------
-        // Verificar controle de acesso (O usuário pode alterar esse tipo
-        // de elemento, com esses atributos? Etc.).
+        if (!usuario.getCargo().isChefeDePatrimonio()) {
+            if (!usuario.getCargo().isChefeDeDepartamento()) {
+                throw new IllegalUpdateException(
+                        "Você não tem permissão para alterar funcionários.");
+            } else if (usuario.getDepartamento().getId() != antigoFunc
+                    .getIdDepartamento()) {
+                throw new IllegalUpdateException(
+                        "Você não tem permissão para alterar funcionários fora do seu departamento.");
+            }
+        }
 
-        // TODO ...
-
-        // -----------------
         // VALIDADE DE DADOS
-        // -----------------
-        // Verificar validade dos dados (Os novos atributos do elemento são
-        // válidos? Há itens que não podem ser modificados? Há itens
-        // repetidos/duplicados/já utilizados?Há itens obrigatórios faltando?
-        // Etc).
-
-        if (eraChefe && !antigoFunc.getIdDepartamento()
-                .equals(novoFunc.getDepartamento().getId())) {
-            throw new IllegalUpdateException(
-                    "O 'departamento' deste funcionário não pode ser alterado pois ele(a) é chefe de seu departamento atual.");
+        if (novoFunc.getDepartamento() != null) {
+            if (eraChefe && !antigoFunc.getIdDepartamento()
+                    .equals(novoFunc.getDepartamento().getId())) {
+                throw new IllegalUpdateException(
+                        "O 'departamento' deste funcionário não pode ser alterado pois ele(a) é chefe de seu departamento atual.");
+            }
         }
 
         try {
