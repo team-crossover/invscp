@@ -256,7 +256,7 @@ public class Bem implements Model<BemDTO> {
         }
 
         if (antigoBem.getId() == null) {
-            throw new IllegalUpdateException("Não é remover o ID do Bem.");
+            throw new IllegalUpdateException("Não é possível remover o ID do Bem.");
         }
 
         if (!antigoBem.getId().equals(novoBem.getId())) {
