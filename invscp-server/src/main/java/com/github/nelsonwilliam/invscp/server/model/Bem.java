@@ -308,7 +308,9 @@ public class Bem implements Model<BemDTO> {
             throw new IllegalUpdateException(e.getMessage());
         }
 
-        if (bemRepo.existsNumTombamento(novoBem.getNumeroTombamento())) {
+        if (!antigoBem.getNumeroTombamento()
+                .equals(novoBem.getNumeroTombamento())
+                && bemRepo.existsNumTombamento(novoBem.getNumeroTombamento())) {
             throw new IllegalUpdateException(
                     "O 'Numero de tombamento' inserido já foi utilizado");
         }
