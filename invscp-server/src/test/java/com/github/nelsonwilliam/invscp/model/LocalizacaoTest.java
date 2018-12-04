@@ -12,7 +12,6 @@ import com.github.nelsonwilliam.invscp.server.model.Localizacao;
 import com.github.nelsonwilliam.invscp.shared.exception.IllegalDeleteException;
 import com.github.nelsonwilliam.invscp.shared.exception.IllegalInsertException;
 import com.github.nelsonwilliam.invscp.shared.exception.IllegalUpdateException;
-import com.github.nelsonwilliam.invscp.shared.model.dto.BemDTO;
 import com.github.nelsonwilliam.invscp.shared.model.dto.FuncionarioDTO;
 import com.github.nelsonwilliam.invscp.shared.model.dto.LocalizacaoDTO;
 

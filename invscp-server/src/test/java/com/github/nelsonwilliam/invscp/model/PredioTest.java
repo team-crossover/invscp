@@ -8,13 +8,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import com.github.nelsonwilliam.invscp.server.model.Departamento;
-import com.github.nelsonwilliam.invscp.server.model.Localizacao;
 import com.github.nelsonwilliam.invscp.server.model.Predio;
 import com.github.nelsonwilliam.invscp.shared.exception.IllegalDeleteException;
 import com.github.nelsonwilliam.invscp.shared.exception.IllegalInsertException;
 import com.github.nelsonwilliam.invscp.shared.exception.IllegalUpdateException;
-import com.github.nelsonwilliam.invscp.shared.model.dto.DepartamentoDTO;
 import com.github.nelsonwilliam.invscp.shared.model.dto.FuncionarioDTO;
 import com.github.nelsonwilliam.invscp.shared.model.dto.PredioDTO;
 
