@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.github.nelsonwilliam</groupId>
-	<artifactId>invscp-server</artifactId>
+	<artifactId>invscp-client</artifactId>
 	<packaging>jar</packaging>
 	<version>1.0.0</version>
 
@@ -14,7 +14,7 @@
 		<project.githubRepository>invscp</project.githubRepository>
 		<project.mainClassName>client.InvSCPClient</project.mainClassName>
 
-		<project.mainClass>${project.groupId}.${project.artifactId}.${project.mainClassName}</project.mainClass>
+		<project.mainClass>com.github.nelsonwilliam.ivscp.client.InvSCPClient</project.mainClass>
 
 		<java.version>8</java.version>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
