@@ -166,8 +166,9 @@ public class Bem implements Model<BemDTO> {
         }
 
         final LocalDate hoje = LocalDate.now();
-        if (bem.getDataCadastro() != null && bem.getDataCadastro()
-                .getMonthValue() > hoje.getMonthValue()) {
+        if (bem.getDataCadastro() != null
+                && (bem.getDataCadastro().getMonthValue() > hoje.getMonthValue()
+                        || bem.getDataCadastro().getYear() > hoje.getYear())) {
             throw new IllegalDeleteException(
                     "O prazo para remoção deste bem já expirou.");
         }
