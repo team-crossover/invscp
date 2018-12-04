@@ -13,6 +13,7 @@ import com.github.nelsonwilliam.invscp.server.model.Localizacao;
 import com.github.nelsonwilliam.invscp.shared.exception.IllegalDeleteException;
 import com.github.nelsonwilliam.invscp.shared.exception.IllegalInsertException;
 import com.github.nelsonwilliam.invscp.shared.exception.IllegalUpdateException;
+import com.github.nelsonwilliam.invscp.shared.exception.CRUDException;
 import com.github.nelsonwilliam.invscp.shared.model.dto.DepartamentoDTO;
 import com.github.nelsonwilliam.invscp.shared.model.dto.FuncionarioDTO;
 
@@ -65,7 +66,7 @@ public class DepartamentoTest {
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// TESTES PARA validarAlterar
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
+
 	/**
 	 * Alterar um departamento sem informar um id (null) deve causar uma exceção.
 	 */
@@ -91,13 +92,11 @@ public class DepartamentoTest {
 			Departamento.validarAlterar(usuario, 0, dep);
 		});
 	}
-	
-	
-	
+
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// TESTES PARA validarExcluir
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
+
 	/**
 	 * Excluir um deparatmento sem informar um id (null) deve causar uma exceção.
 	 */
@@ -109,7 +108,7 @@ public class DepartamentoTest {
 			Departamento.validarDeletar(usuario, null);
 		});
 	}
-	
+
 	/**
 	 * Excluir uma Departamento inexistente deve causar uma exceção.
 	 */
@@ -119,6 +118,23 @@ public class DepartamentoTest {
 
 		Assertions.assertThrows(IllegalDeleteException.class, () -> {
 			Localizacao.validarDeletar(usuario, 0);
+		});
+	}
+
+	/**
+	 * Ao colocar um chefe de departamento vazio deve ser disparado uma exceção
+	 */
+	@Test
+	public void testaChefeDepartamentoObrigatorio() {
+		final DepartamentoDTO depDto = new DepartamentoDTO();
+
+		depDto.setNome("teste");
+		depDto.setDePatrimonio(false);
+		depDto.setChefe(null);
+		depDto.setChefeSubstituto(null);
+
+		Assertions.assertThrows(CRUDException.class, () -> {
+			Departamento.validarCampos(depDto);
 		});
 	}
 }

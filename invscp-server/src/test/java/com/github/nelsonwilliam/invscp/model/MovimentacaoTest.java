@@ -4,7 +4,15 @@ import java.io.IOException;
 import java.security.KeyException;
 
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
+import com.github.nelsonwilliam.invscp.server.model.Departamento;
+import com.github.nelsonwilliam.invscp.server.model.Movimentacao;
+import com.github.nelsonwilliam.invscp.shared.exception.IllegalInsertException;
+import com.github.nelsonwilliam.invscp.shared.model.dto.DepartamentoDTO;
+import com.github.nelsonwilliam.invscp.shared.model.dto.FuncionarioDTO;
 
 public class MovimentacaoTest {
 
@@ -15,15 +23,39 @@ public class MovimentacaoTest {
 		teste = new TesteGeral();
 		teste.prepararBanco();
 
-		System.out.println("Registros de teste inseridos");
+		teste.insereLocalizacaoTeste();
+		teste.inserePredioTeste();
+		teste.insereFuncionarioTeste();
+		teste.insereChefeDepartamentoTeste();
+		teste.insereChefeSubDepartamentoTeste();
+		teste.insereDepartamentoTeste();
+		teste.insereSalaTeste();
+		teste.insereSalaIITeste();
 	}
 	
 	@AfterAll
 	public static void posCondicaoGeralTeste() throws KeyException, IOException {
-		System.out.println("Teste executados");
-
-		System.out.println("Registros de teste deletados");
+		teste.deletarSalaIITeste();
+		teste.deletarSalaTeste();
+		teste.deletarFuncionarioComDepartamentoTeste();
+		teste.deletarDepartamentoTeste();
+		teste.deletarFuncionarioTeste();
+		teste.deletarChefeSubDepartamentoTeste();
+		teste.deletarChefeDepartamentoTeste();
+		teste.deletarPredioTeste();
+		teste.deletarLocalizacaoTeste();
 	}
 	
-	
+	/**
+	 * Verifica se uma movimentação realizada com salas do mesmo departamento é dada com interna
+	 */
+	@Test
+	public void validaMovimentacaoInterna() {
+		Movimentacao mov = new Movimentacao();
+
+		mov.setIdSalaOrigem(teste.getIdSalaInserido());
+		mov.setIdSalaDestino(teste.getIdSalaIInserido());
+
+		Assertions.assertTrue(mov.isInterna());
+	}
 }

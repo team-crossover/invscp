@@ -35,6 +35,7 @@ public class TesteGeral {
 	private static GrupoMaterial itemGrupoMaterialTeste;
 	private static Departamento itemDepartamentoTeste;
 	private static Sala itemSalaTeste;
+	private static Sala itemSalaIITeste;
 	private static Bem itemBemTeste;
 
 	public int getIdLocalizacaoInserido() {
@@ -71,6 +72,10 @@ public class TesteGeral {
 	
 	public int getIdSalaInserido() {
 		return itemSalaTeste.getId();
+	}
+	
+	public int getIdSalaIInserido() {
+		return itemSalaIITeste.getId();
 	}
 	
 	public int getIdBemInserido() {
@@ -246,6 +251,25 @@ public class TesteGeral {
 			}
 		}
 	}
+	
+	public void insereSalaIITeste() {
+		SalaRepository salaRepository = new SalaRepository();
+		itemSalaIITeste = new Sala();
+
+		itemSalaIITeste.setNome("Sala 2 teste - JUnit temporario");
+		itemSalaIITeste.setTipo(TipoSalaEnum.DEPOSITO);
+		itemSalaIITeste.setIdPredio(itemPredioTeste.getId());
+		itemSalaIITeste.setIdDepartamento(itemDepartamentoTeste.getId());
+
+		salaRepository.add(itemSalaIITeste);
+
+		// Pesquisa o idSala adicionado
+		for (Sala item : salaRepository.getAll()) {
+			if (item.getNome() == "Sala teste - JUnit temporario") {
+				itemSalaIITeste.setId(item.getId());
+			}
+		}
+	}
 
 	public void insereGrupoMaterialTeste() {
 		GrupoMaterialRepository grupoMaterialRepository = new GrupoMaterialRepository();
@@ -308,6 +332,11 @@ public class TesteGeral {
 	public void deletarSalaTeste() {
 		SalaRepository salaRepository = new SalaRepository();
 		salaRepository.remove(itemSalaTeste);
+	}
+	
+	public void deletarSalaIITeste() {
+		SalaRepository salaRepository = new SalaRepository();
+		salaRepository.remove(itemSalaIITeste);
 	}
 	
 	public void deletarFuncionarioComDepartamentoTeste() {

@@ -269,7 +269,7 @@ public class Departamento implements Model<DepartamentoDTO> {
      * Valida regras de negócio comuns tanto para inserção quanto para
      * alteração.
      */
-    private static void validarCampos(final DepartamentoDTO dept)
+    public static void validarCampos(final DepartamentoDTO dept)
             throws CRUDException {
 
         final DepartamentoRepository deptRepo = new DepartamentoRepository();
