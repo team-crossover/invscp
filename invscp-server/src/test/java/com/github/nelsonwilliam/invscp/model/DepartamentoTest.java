@@ -15,7 +15,6 @@ import com.github.nelsonwilliam.invscp.shared.exception.IllegalInsertException;
 import com.github.nelsonwilliam.invscp.shared.exception.IllegalUpdateException;
 import com.github.nelsonwilliam.invscp.shared.model.dto.DepartamentoDTO;
 import com.github.nelsonwilliam.invscp.shared.model.dto.FuncionarioDTO;
-import com.github.nelsonwilliam.invscp.shared.model.dto.LocalizacaoDTO;
 
 public class DepartamentoTest {
 

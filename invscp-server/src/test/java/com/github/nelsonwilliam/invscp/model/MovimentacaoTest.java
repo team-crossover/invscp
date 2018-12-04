@@ -24,4 +24,6 @@ public class MovimentacaoTest {
 
 		System.out.println("Registros de teste deletados");
 	}
+	
+	
 }
