@@ -143,7 +143,7 @@ public class TesteGeral {
 		// Pesquisa o id adicionado
 		for (Funcionario item : funcRep.getAll()) {
 			if (item.getNome() == "Funcionario teste - JUnit temporario") {
-				itemChefeTeste.setId(item.getId());
+				itemFuncionarioTeste.setId(item.getId());
 			}
 		}
 	}

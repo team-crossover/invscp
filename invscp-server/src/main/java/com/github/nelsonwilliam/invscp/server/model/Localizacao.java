@@ -180,7 +180,7 @@ public class Localizacao implements Model<LocalizacaoDTO> {
 
         if (novaLoca.getId() == null) {
             throw new IllegalUpdateException(
-                    "Não é remover o ID da localização.");
+                    "Não é possível remover o ID da localização.");
         }
 
         if (!antigaLoca.getId().equals(novaLoca.getId())) {

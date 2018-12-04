@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import com.github.nelsonwilliam.invscp.server.model.Localizacao;
+import com.github.nelsonwilliam.invscp.shared.exception.IllegalDeleteException;
 import com.github.nelsonwilliam.invscp.shared.exception.IllegalInsertException;
 import com.github.nelsonwilliam.invscp.shared.exception.IllegalUpdateException;
 import com.github.nelsonwilliam.invscp.shared.model.dto.BemDTO;
@@ -25,17 +26,13 @@ public class LocalizacaoTest {
 		teste.prepararBanco();
 
 		teste.insereLocalizacaoTeste();
-
-		System.out.println("Registros de teste inseridos");
+		teste.insereFuncionarioTeste();
 	}
 
 	@AfterAll
 	public static void posCondicaoGeralTeste() throws KeyException, IOException {
-		System.out.println("Testes executados");
-
 		teste.deletarLocalizacaoTeste();
-
-		System.out.println("Registros de teste deletados");
+		teste.deletarFuncionarioTeste();
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -46,12 +43,12 @@ public class LocalizacaoTest {
 	 * Insere uma localizacao sem informar um id (null) deve causar uma exceção.
 	 */
 	@Test
-	public void inserirBemJaExistente() {
+	public void inserirLocalizacaoJaExistente() {
 		final FuncionarioDTO usuario = new FuncionarioDTO();
 		final LocalizacaoDTO novaLocal = new LocalizacaoDTO();
 
 		novaLocal.setId(teste.getIdLocalizacaoInserido());
-		
+
 		Assertions.assertThrows(IllegalInsertException.class, () -> {
 			Localizacao.validarInserir(usuario, novaLocal);
 		});
@@ -60,9 +57,60 @@ public class LocalizacaoTest {
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// TESTES PARA validarAlterar
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	/**
+	 * Alterar uma localizacao sem informar um id (null) deve causar uma exceção.
+	 */
+	@Test
+	public void alterarLocalizacaoSemId() {
+		final FuncionarioDTO usuario = new FuncionarioDTO();
+		final LocalizacaoDTO novaLocal = new LocalizacaoDTO();
 
+		Assertions.assertThrows(IllegalUpdateException.class, () -> {
+			Localizacao.validarAlterar(usuario, null, novaLocal);
+		});
+	}
+
+	/**
+	 * Alterar uma localizacao inexistente deve causar uma exceção.
+	 */
+	@Test
+	public void alterarLocalizacaoInexistente() {
+		final FuncionarioDTO usuario = new FuncionarioDTO();
+		final LocalizacaoDTO novaLocal = new LocalizacaoDTO();
+
+		Assertions.assertThrows(IllegalUpdateException.class, () -> {
+			Localizacao.validarAlterar(usuario, 0, novaLocal);
+		});
+	}
+	
+	
+	
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// TESTES PARA validarExcluir
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	/**
+	 * Excluir uma localizacao sem informar um id (null) deve causar uma exceção.
+	 */
+	@Test
+	public void deletarLocalizacaoSemId() {
+		final FuncionarioDTO usuario = new FuncionarioDTO();
 
+		Assertions.assertThrows(IllegalDeleteException.class, () -> {
+			Localizacao.validarDeletar(usuario, null);
+		});
+	}
+	
+	/**
+	 * Excluir uma localizacao inexistente deve causar uma exceção.
+	 */
+	@Test
+	public void deletarLocalizacaoInexistente() {
+		final FuncionarioDTO usuario = new FuncionarioDTO();
+
+		Assertions.assertThrows(IllegalDeleteException.class, () -> {
+			Localizacao.validarDeletar(usuario, 0);
+		});
+	}
 }

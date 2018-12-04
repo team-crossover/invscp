@@ -8,18 +8,14 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import com.github.nelsonwilliam.invscp.server.model.Departamento;
-import com.github.nelsonwilliam.invscp.server.model.Localizacao;
-import com.github.nelsonwilliam.invscp.server.model.Predio;
+import com.github.nelsonwilliam.invscp.server.model.Sala;
 import com.github.nelsonwilliam.invscp.shared.exception.IllegalDeleteException;
 import com.github.nelsonwilliam.invscp.shared.exception.IllegalInsertException;
 import com.github.nelsonwilliam.invscp.shared.exception.IllegalUpdateException;
-import com.github.nelsonwilliam.invscp.shared.model.dto.DepartamentoDTO;
 import com.github.nelsonwilliam.invscp.shared.model.dto.FuncionarioDTO;
-import com.github.nelsonwilliam.invscp.shared.model.dto.PredioDTO;
+import com.github.nelsonwilliam.invscp.shared.model.dto.SalaDTO;
 
-public class PredioTest {
-
+public class SalaTest {
 	private static TesteGeral teste;
 
 	@BeforeAll
@@ -29,10 +25,22 @@ public class PredioTest {
 
 		teste.insereLocalizacaoTeste();
 		teste.inserePredioTeste();
+		teste.insereFuncionarioTeste();
+		teste.insereChefeDepartamentoTeste();
+		teste.insereChefeSubDepartamentoTeste();
+		teste.insereDepartamentoTeste();
+		teste.insereFuncionarioComDepartamentoTeste();
+		teste.insereSalaTeste();
 	}
 
 	@AfterAll
 	public static void posCondicaoGeralTeste() throws KeyException, IOException {
+		teste.deletarSalaTeste();
+		teste.deletarFuncionarioComDepartamentoTeste();
+		teste.deletarDepartamentoTeste();
+		teste.deletarFuncionarioTeste();
+		teste.deletarChefeSubDepartamentoTeste();
+		teste.deletarChefeDepartamentoTeste();
 		teste.deletarPredioTeste();
 		teste.deletarLocalizacaoTeste();
 	}
@@ -42,17 +50,17 @@ public class PredioTest {
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	/**
-	 * Insere um Predio sem informar um id (null) deve causar uma exceção.
+	 * Insere uma Sala já existente
 	 */
 	@Test
-	public void inserirPredioJaExistente() {
+	public void inserirSalaJaExistente() {
 		final FuncionarioDTO usuario = new FuncionarioDTO();
-		final PredioDTO novoPred = new PredioDTO();
+		final SalaDTO novaSala = new SalaDTO();
 
-		novoPred.setId(teste.getIdPredioInserido());
+		novaSala.setId(teste.getIdSalaInserido());
 
 		Assertions.assertThrows(IllegalInsertException.class, () -> {
-			Predio.validarInserir(usuario, novoPred);
+			Sala.validarInserir(usuario, novaSala);
 		});
 	}
 
@@ -61,28 +69,28 @@ public class PredioTest {
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Alterar um Predio sem informar um id (null) deve causar uma exceção.
+	 * Alterar uma Sala sem informar um id (null) deve causar uma exceção.
 	 */
 	@Test
-	public void alterarPredioSemId() {
+	public void alterarSalaSemId() {
 		final FuncionarioDTO usuario = new FuncionarioDTO();
-		final PredioDTO pred = new PredioDTO();
+		final SalaDTO sala = new SalaDTO();
 
 		Assertions.assertThrows(IllegalUpdateException.class, () -> {
-			Predio.validarAlterar(usuario, null, pred);
+			Sala.validarAlterar(usuario, null, sala);
 		});
 	}
 
 	/**
-	 * Alterar um Predio inexistente deve causar uma exceção.
+	 * Alterar uma localizacao inexistente deve causar uma exceção.
 	 */
 	@Test
-	public void alterarPredioInexistente() {
+	public void alterarSalaInexistente() {
 		final FuncionarioDTO usuario = new FuncionarioDTO();
-		final PredioDTO pred = new PredioDTO();
+		final SalaDTO sala = new SalaDTO();
 
 		Assertions.assertThrows(IllegalUpdateException.class, () -> {
-			Predio.validarAlterar(usuario, 0, pred);
+			Sala.validarAlterar(usuario, 0, sala);
 		});
 	}
 	
@@ -93,26 +101,26 @@ public class PredioTest {
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Excluir um Predio sem informar um id (null) deve causar uma exceção.
+	 * Excluir uma Sala sem informar um id (null) deve causar uma exceção.
 	 */
 	@Test
-	public void deletarPredioSemId() {
+	public void deletarSalaSemId() {
 		final FuncionarioDTO usuario = new FuncionarioDTO();
 
 		Assertions.assertThrows(IllegalDeleteException.class, () -> {
-			Predio.validarDeletar(usuario, null);
+			Sala.validarDeletar(usuario, null);
 		});
 	}
 	
 	/**
-	 * Excluir uma Predio inexistente deve causar uma exceção.
+	 * Excluir uma Sala inexistente deve causar uma exceção.
 	 */
 	@Test
-	public void deletarPredioInexistente() {
+	public void deletarLocalizacaoInexistente() {
 		final FuncionarioDTO usuario = new FuncionarioDTO();
 
 		Assertions.assertThrows(IllegalDeleteException.class, () -> {
-			Predio.validarDeletar(usuario, 0);
+			Sala.validarDeletar(usuario, 0);
 		});
 	}
 }

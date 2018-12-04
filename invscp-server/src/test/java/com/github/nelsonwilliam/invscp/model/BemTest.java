@@ -36,14 +36,10 @@ public class BemTest {
 		teste.insereSalaTeste();
 		teste.insereGrupoMaterialTeste();
 		teste.insereBemPatrimonialTeste();
-
-		System.out.println("Registros de teste inseridos");
 	}
 
 	@AfterAll
 	public static void posCondicaoGeralTeste() throws KeyException, IOException {
-		System.out.println("Teste executados");
-
 		teste.deletarBemPatrimonialTeste();
 		teste.deletarGrupoMaterialTeste();
 		teste.deletarSalaTeste();
@@ -54,8 +50,6 @@ public class BemTest {
 		teste.deletarChefeDepartamentoTeste();
 		teste.deletarPredioTeste();
 		teste.deletarLocalizacaoTeste();
-
-		System.out.println("Registros de teste deletados");
 	}
 
 	/**
