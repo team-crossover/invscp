@@ -40,18 +40,19 @@ Legenda:
 
 O ambiente de desenvolvimento deve possuir o [JDK (Java SE Development Kit)](https://www.oracle.com/technetwork/pt/java/javase/downloads/jdk8-downloads-2133151.html) versão 8 ou superior, enquanto o de execução deve possuir o [JRE (Java SE Runtime Environment)](https://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html) versão 8 ou superior.
 
+### Banco de dados
+
+A máquina do banco de dados deve estar executando o PostgreSQL 10.5. Por padrão, o banco de dados deve possuir o nome "inventory" e pertencer ao usuário de nome "invscpAdmin" e senha "123445", com autorização para efetuar login.
+
 ### Servidor
 
-O SGBD PostgreSQL 10.5 deve estar executando na mesma máquina. Por padrão, o banco de dados deve possuir o nome "inventory" e pertencer ao usuário de nome "invscpAdmin" e senha "123445", com autorização para efetuar login.
+Ao executar o invscp-servidor pela primeira vez, será criado no diretório do programa um arquivo de configurações chamado ```server.properties```. Neste arquivo é possível especificar configurações como a porta do servidor, o host/porta/nome/usuário/senha/versão do banco de dados e preferências de logs.
 
-No mesmo diretório do programa será criado um arquivo de configurações chamado ```server.properties``` no qual é possível especificar configurações como porta do servidor, host/porta/nome/usuário/senha/versão do banco de dados e preferências de logs.
+Além disso, a primeira execução que consiga conectar-se com o banco de dados irá populá-lo com valores padrão. Inicialmente é criado um único usuário chamado Chefe de Patrimônio, com login "admin" e senha "admin". Também são criados localização, prédio e sala padrão.
 
 ### Cliente
-
-Por padrão, o primeiro usuário a ser criado é o Chefe de Patrimônio, e possui o login "admin" e a senha "admin".
-
-No mesmo diretório do programa será criado um arquivo de configurações chamado ```client.properties``` no qual é possível especificar configurações como host/porta do servidor e qual view utilizar (atualmente apenas 'SWING' é suportado).
+Ao executar o invscp-client pela primeira vez, séra criado no diretório do programa um arquivo de configurações chamado ```client.properties``` no qual é possível especificar configurações como host/porta do servidor e qual implementação de view utilizar (atualmente apenas 'SWING' é suportado).
 
 ## Build
 
-Para gerar um novo arquivo .JAR executável do servidor ou do cliente, basta executar o comando do Maven ```mvn package -P executavel-unico``` no projeto apropriado.
+Para gerar um novo arquivo .JAR executável do servidor ou do cliente, basta executar o comando do Maven ```mvn package -P executavel-unico``` no projeto apropriado. Então, basta usar ```java -jar nome-do-arquivo.jar``` para executar.

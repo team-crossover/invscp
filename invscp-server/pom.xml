@@ -14,7 +14,7 @@
 		<project.githubRepository>invscp</project.githubRepository>
 		<project.mainClassName>server.InvSCPServer</project.mainClassName>
 
-		<project.mainClass>${project.groupId}.${project.artifactId}.${project.mainClassName}</project.mainClass>
+		<project.mainClass>com.github.nelsonwilliam.invscp.server.InvSCPServer</project.mainClass>
 
 		<java.version>8</java.version>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
