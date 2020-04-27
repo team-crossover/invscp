@@ -1,8 +1,9 @@
-﻿# InvSCP
+# InvSCP
+Sistema de controle de patrimônio.
 
-Projeto InvSCP do Grupo 3 da disciplina "Integração 1" de Engenharia de Software, 2018/2
+Trabalho feito para a disciplina de Integração 1, do semestre 2018-2, do curso de graduação em Engenharia de Software da Universidade Federal de Goiás.
 
-## Grupo
+## Membros
 
 Este repositório pertence ao Grupo 3 (G3), composto pelos seguintes membros:
 
@@ -57,3 +58,6 @@ Ao executar o invscp-client pela primeira vez, séra criado no diretório do pro
 ## Build
 
 Para gerar um novo arquivo .JAR executável do servidor ou do cliente, basta executar o comando do Maven ```mvn package -P executavel-unico``` no projeto apropriado. Então, basta usar ```java -jar nome-do-arquivo.jar``` para executar.
+
+## Licença
+[MIT License](LICENSE)
